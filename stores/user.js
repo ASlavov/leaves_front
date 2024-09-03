@@ -1,6 +1,6 @@
 import { defineStore, setActivePinia, createPinia } from 'pinia';
 import { ref } from 'vue';
-import userApiComposable from '@/composables/userApiComposable';
+import authUser from '@/composables/userApiComposable';
 
 const pinia = createPinia();
 export default { store: setActivePinia(pinia) }
@@ -9,10 +9,11 @@ export const useUserStore = defineStore('userStore', () => {
     const loading = ref(false);
     const error = ref(null);
 
-    async function fetchUserCredentials(userId) {
+    async function authUser(userName, userPass) {
         loading.value = true;
-        const { load } = userApiComposable({
-            "userId": userId
+        const { load } = authUser({
+            "userId": userId,
+
         });
 
         try {
@@ -25,7 +26,7 @@ export const useUserStore = defineStore('userStore', () => {
             error.value = err;
             console.error('Error fetching response:', err);
         } finally {
-            userData.value = processUserCredentials(result);
+            userData.value = processUserCredentials('');
             loading.value = false;
         }
     }
@@ -40,5 +41,5 @@ export const useUserStore = defineStore('userStore', () => {
         return result;
     }
 
-    return { userData, loading, error, fetchUserCredentials };
+    return { userData, loading, error, fetchUserCredentials: authUser };
 });
