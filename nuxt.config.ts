@@ -25,12 +25,16 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // The private keys which are only available within server-side
-    apiSecret: '123',
+    apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
     // Keys within public, will be also exposed to the client-side
     public: {
       users: {
-        apiBase: '/users',
-        auth: '/auth',
+        apiBase: 'http://127.0.0.1:8000/api',
+        auth: '/getToken',
+      },
+      leaves: {
+        apiBase: 'http://127.0.0.1:8000/api',
+        getAll: '/user_leaves'
       }
     }
   },

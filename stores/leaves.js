@@ -1,29 +1,24 @@
 import { defineStore, setActivePinia, createPinia } from 'pinia';
 import { ref } from 'vue';
-import { authUserComposable } from '@/composables/userApiComposable';
+import { leavesComposable } from '@/composables/leavesApiComposable';
 
 const pinia = createPinia();
 export default { store: setActivePinia(pinia) }
-export const useUserStore = defineStore('userStore', () => {
-    const userData = ref([]);
+export const useLeavesStore = defineStore('leavesStore', () => {
+    const leavesData = ref([]);
     const loading = ref(false);
     const error = ref(null);
 
-    async function authUser(userName, userPass) {
-        // Set loading to true at the start of the function
-        loading.value = true;
+
+    async function getAll() {
 
         try {
             // Call the composable with the necessary parameters
-            const result = await authUserComposable({
-                email: userName,
-                password: userPass,
-            });
+            const result = await leavesComposable();
 
             if (result) {
-                console.log(result);
                 // Process the result and store it in userData
-                userData.token = result;
+                leavesData.data = result;
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -31,17 +26,10 @@ export const useUserStore = defineStore('userStore', () => {
             console.error('Error fetching response:', err);
         } finally {
             // Ensure loading is set to false and any post-processing is done
-            console.log(userData.token);
             loading.value = false;
         }
+
     }
 
-
-    function processUserCredentials(result) {
-        return {
-            myValue: 'Test Val'
-        }
-    }
-
-    return { userData, loading, error, authUser };
+    return { leavesData, loading, error, getAll };
 });
