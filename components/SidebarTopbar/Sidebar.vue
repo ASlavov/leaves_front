@@ -74,12 +74,9 @@
     <!-- ========== END MAIN CONTENT ========== -->
 </template>
 
-<script>
-import Sidebar from '~/components/Search.vue'
-import MyAccount from '~/components/MyAccount.vue'
-import SidebarMenu from '~/components/SidebarMenu.vue'
-import UserNotification from '~/components/UserNotification.vue'
-export default {
-    // name: 'Sidebar, MyAccount, SidebarMenu'
-}
+<script setup>
+import Search from '~/components/SidebarTopbar/Search.vue'
+import MyAccount from '~/components/SidebarTopbar/MyAccount.vue'
+import SidebarMenu from '~/components/SidebarTopbar/SidebarMenu.vue'
+import UserNotification from '~/components/SidebarTopbar/UserNotification.vue'
 </script>
