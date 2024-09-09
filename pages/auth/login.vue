@@ -21,7 +21,7 @@
             <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
             <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Να με θυμάσαι</span>
           </label>
-          <NuxtLink to="auth/forgot-password" class="text-sm text-blue-700">Ξέχασα τον κωδικό μου</NuxtLink>
+          <NuxtLink to="../auth/forgot-password" class="text-sm text-blue-700">Ξέχασα τον κωδικό μου</NuxtLink>
         </div>
         <button type="submit"
           class="w-full px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-500 focus:outline-none">

@@ -17,7 +17,7 @@
           </button>
         </form>
         <div class="mt-4 text-center">
-          <a href="/login" class="text-sm text-blue-700">Επιστροφή στην είσοδο</a>
+          <a href="../auth/login" class="text-sm text-blue-700">Επιστροφή στην είσοδο</a>
         </div>
       </div>
     </div>
