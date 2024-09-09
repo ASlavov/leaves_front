@@ -5,7 +5,7 @@ import { authUserComposable } from '@/composables/userApiComposable';
 const pinia = createPinia();
 export default { store: setActivePinia(pinia) }
 export const useUserStore = defineStore('userStore', () => {
-    const userData = ref([]);
+    const userData = ref({});
     const loading = ref(false);
     const error = ref(null);
 
@@ -20,10 +20,9 @@ export const useUserStore = defineStore('userStore', () => {
                 password: userPass,
             });
 
-            if (result) {
-                console.log(result);
+            if (result && result.userId) {
                 // Process the result and store it in userData
-                userData.token = result;
+                userData.value = { ...userData.value, userId: result.userId };
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -31,17 +30,10 @@ export const useUserStore = defineStore('userStore', () => {
             console.error('Error fetching response:', err);
         } finally {
             // Ensure loading is set to false and any post-processing is done
-            console.log(userData.token);
             loading.value = false;
         }
     }
 
-
-    function processUserCredentials(result) {
-        return {
-            myValue: 'Test Val'
-        }
-    }
 
     return { userData, loading, error, authUser };
 });

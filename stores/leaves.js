@@ -10,15 +10,15 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     const error = ref(null);
 
 
-    async function getAll() {
+    async function getAll(userId) {
 
         try {
             // Call the composable with the necessary parameters
-            const result = await leavesComposable();
+            const result = await leavesComposable(userId);
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.data = result;
+                leavesData.value.data = result;
             }
         } catch (err) {
             // Handle errors and set the error state
