@@ -1,6 +1,6 @@
 
-export const authUserComposable = async (params) => {
-    return $fetch('/api/authUser', {
+const getUserProfileComposable = async (params) => {
+    return $fetch('/api/user/getProfile', {
         method: 'POST',
         body: {
             email: params.email,
@@ -8,15 +8,4 @@ export const authUserComposable = async (params) => {
         },
     });
 }
-const userApiComposables = async (params) => {
-    const config = useRuntimeConfig()
-
-    return await $fetch(config.public.users.apiBase + '/getAll', {
-        method: 'GET',
-        query: params,
-        /*headers: {
-            Authorization: `Bearer ${token}`
-        }*/
-    });
-}
-export default userApiComposables;
+export default getUserProfileComposable;

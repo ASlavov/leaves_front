@@ -1,6 +1,5 @@
 // server/sessionStore.ts
-import { randomBytes } from 'crypto';
-
+import {randomBytes} from 'crypto';
 
 
 const sessionStore = new Map();  // Simple in-memory store (for demonstration)
@@ -15,8 +14,7 @@ export function createSession(userId: string, token: string) {
 // Function to get a session
 export function getSession(sessionId: string) {
     //console.log(sessionId);
-    const session = sessionStore.get(sessionId);
-    return session;
+    return sessionStore.get(sessionId);
 }
 
 // Function to delete a session

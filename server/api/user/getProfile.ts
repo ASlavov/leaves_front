@@ -1,4 +1,4 @@
-import {defineEventHandler, parseCookies, readBody} from 'h3'; // Import cookie helper from h3
+import { defineEventHandler, parseCookies, readBody } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 import { getSession } from '~/server/sessionStore';
 
@@ -20,21 +20,10 @@ export default defineEventHandler(async (event) => {
 
         const {
             userId,
-            leaveTypeId,
-            startDate,
-            endDate,
-            reason
         } = body;
 
-        const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeave}`, {
-            method: 'POST',
-            body: {
-                "id": userId,
-                "leave_type_id": leaveTypeId,
-                "start_date": startDate,
-                "end_date": endDate,
-                "reason": reason
-            },
+        const response = await $fetch(`${config.public.apiBase}${config.public.user.getSingleUser}`, {
+            method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },

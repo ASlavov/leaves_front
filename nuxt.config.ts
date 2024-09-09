@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   ],
 
   plugins: [
-      "~/plugins/preline.client.ts"
+      "~/plugins/preline.client.ts",
   ],
 
   postcss: {
@@ -21,19 +21,24 @@ export default defineNuxtConfig({
   modules: [
       '@pinia/nuxt'
   ],
-
+  imports: {
+    dirs: ['stores'],  // If your stores are in the "stores" folder
+  },
 
   runtimeConfig: {
     // The private keys which are only available within server-side
     apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
     // Keys within public, will be also exposed to the client-side
     public: {
-      users: {
-        apiBase: 'http://127.0.0.1:8000/api',
+      apiBase: 'http://127.0.0.1:8000/api',
+      auth: {
         auth: '/getToken',
+        tokenRefresh: '/refreshToken'
+      },
+      user: {
+        getSingleUser: '/user',
       },
       leaves: {
-        apiBase: 'http://127.0.0.1:8000/api',
         getAll: '/user_leaves',
         newLeave: '/new_leave',
       }
