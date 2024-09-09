@@ -1,48 +1,26 @@
-<!-- components/Sidebar.vue -->
 <template>
-    <!-- ========== HEADER ========== -->
     <header
         class="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 lg:ps-[260px] dark:bg-neutral-800 dark:border-neutral-700">
         <nav class="px-4 sm:px-6 flex basis-full items-center w-full mx-auto">
             <div class="me-5 lg:me-0 lg:hidden">
-                <!-- Logo -->
                 <a class="flex-none rounded-md text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
                     href="/home" aria-label="Leaves">
                     <img src="https://whyagency.gr/wp-content/uploads/2023/10/logo_dark.png" width="150">
                 </a>
-                <!-- End Logo -->
             </div>
-
             <div class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3">
-
                 <Search />
-
-
                 <div class="flex flex-row items-center justify-end gap-1">
-                    <button type="button"
-                        class="size-[38px] relative inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
-                        </svg>
-                        <span class="sr-only">Notifications</span>
-                    </button>
+                    <UserNotification />
                     <MyAccount />
                 </div>
             </div>
         </nav>
     </header>
-    <!-- ========== END HEADER ========== -->
-
-    <!-- ========== MAIN CONTENT ========== -->
     <div class="-mt-px">
-        <!-- Breadcrumb -->
         <div
             class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 lg:px-8 lg:hidden dark:bg-neutral-800 dark:border-neutral-700">
             <div class="flex items-center py-2">
-                <!-- Navigation Toggle -->
                 <button type="button"
                     class="size-8 flex justify-center items-center gap-x-2 border border-gray-200 text-gray-800 hover:text-gray-500 rounded-lg focus:outline-none focus:text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:text-neutral-200 dark:hover:text-neutral-500 dark:focus:text-neutral-500"
                     aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-application-sidebar"
@@ -56,9 +34,6 @@
                         <path d="m8 9 3 3-3 3" />
                     </svg>
                 </button>
-                <!-- End Navigation Toggle -->
-
-                <!-- Breadcrumb -->
                 <ol class="ms-3 flex items-center whitespace-nowrap">
                     <li class="flex items-center text-sm text-gray-800 dark:text-neutral-400">
                         Menu
@@ -68,14 +43,9 @@
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </li>
-                    <li class="text-sm font-semibold text-gray-800 truncate dark:text-neutral-400" aria-current="page">
-                        Home page
-                    </li>
                 </ol>
-                <!-- End Breadcrumb -->
             </div>
         </div>
-        <!-- End Breadcrumb -->
     </div>
 
     <!-- Sidebar -->
@@ -97,52 +67,7 @@
                 </a>
                 <!-- End Logo -->
             </div>
-
-            <!-- Content -->
-            <div
-                class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-                <nav class="hs-accordion-group p-3 w-full flex flex-col flex-wrap" data-hs-accordion-always-open>
-                    <ul class="flex flex-col space-y-3">
-                        <li>
-                            <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-md text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
-                                href="#">
-                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                                Προφίλ
-                            </a>
-                        </li>
-                        <li>
-                            <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-md text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
-                                href="#">
-                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                                Ημερολόγιο
-                            </a>
-                        </li>
-                        <li>
-                            <a class="flex items-center gap-x-3.5 py-2 px-2.5 text-md text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
-                                href="#">
-                                <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                                Ρυθμίσεις
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-            <!-- End Content -->
+            <SidebarMenu />
         </div>
     </div>
     <!-- End Sidebar -->
@@ -152,7 +77,9 @@
 <script>
 import Sidebar from '~/components/Search.vue'
 import MyAccount from '~/components/MyAccount.vue'
+import SidebarMenu from '~/components/SidebarMenu.vue'
+import UserNotification from '~/components/UserNotification.vue'
 export default {
-    name: 'Sidebar, MyAccount'
+    // name: 'Sidebar, MyAccount, SidebarMenu'
 }
 </script>
