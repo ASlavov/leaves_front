@@ -1,10 +1,11 @@
 
-const authUser = async (params) => {
-    const config = useRuntimeConfig()
-
-    return await $fetch(config.public.users.apiBase + config.public.users.auth, {
+export const authUserComposable = async (params) => {
+    return $fetch('/api/authUser', {
         method: 'POST',
-        query: params,
+        body: {
+            email: params.email,
+            password: params.password
+        },
     });
 }
 const userApiComposables = async (params) => {
@@ -13,9 +14,9 @@ const userApiComposables = async (params) => {
     return await $fetch(config.public.users.apiBase + '/getAll', {
         method: 'GET',
         query: params,
-        headers: {
+        /*headers: {
             Authorization: `Bearer ${token}`
-        }
+        }*/
     });
 }
 export default userApiComposables;
