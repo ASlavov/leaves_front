@@ -1,25 +1,3 @@
-/*
-// @ts-ignore
-import { useUserStore } from '@/stores/user';
-
-
-// server/api/authUser.ts
-export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const body = await readBody(event); // This will get the request body (params)
-    const userStore = useUserStore();
-    // You can now access the private apiSecret here
-    const response = await $fetch(config.public.leaves.apiBase + config.public.leaves.getAll, {
-        method: 'GET',
-        headers: {
-            "Authorization": userStore.userData.token,
-        },
-    });
-
-    return response;
-});
-*/
-
 import {defineEventHandler, parseCookies, readBody} from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 import { getSession } from '~/server/sessionStore';
@@ -29,11 +7,11 @@ export default defineEventHandler(async (event) => {
 
     const body = await readBody(event); // Get login details (email, password) from the request body
     const { userId } = body;
-    console.log(userId);
     // Retrieve the token from the 'auth_token' cookie set during login
-    const { auth_token } = getSession();
-
-    if (!auth_token) {
+    const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);
+    console.log('userId:', userId);
+    if (!token) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Not authenticated',
@@ -45,7 +23,7 @@ export default defineEventHandler(async (event) => {
         const response = await $fetch(`${config.public.leaves.apiBase}${config.public.leaves.getAll}/${userId}`, {
             method: 'GET',
             headers: {
-                Authorization: `Bearer ${auth_token}`, // Use the token in the Authorization header
+                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },
         });
 

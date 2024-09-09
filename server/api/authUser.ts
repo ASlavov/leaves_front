@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
                 'Content-Type': 'application/json',
                 "X-CSRF-TOKEN": config.apiSecret,
             },
-            //responseType: 'text', // Use text because you mentioned the response is a string
         });
 
         if (result) {

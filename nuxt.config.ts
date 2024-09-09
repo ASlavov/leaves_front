@@ -34,7 +34,8 @@ export default defineNuxtConfig({
       },
       leaves: {
         apiBase: 'http://127.0.0.1:8000/api',
-        getAll: '/user_leaves'
+        getAll: '/user_leaves',
+        newLeave: '/new_leave',
       }
     }
   },

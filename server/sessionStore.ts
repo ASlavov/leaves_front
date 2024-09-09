@@ -14,7 +14,9 @@ export function createSession(userId: string, token: string) {
 
 // Function to get a session
 export function getSession(sessionId: string) {
-    return sessionStore.get(sessionId);
+    //console.log(sessionId);
+    const session = sessionStore.get(sessionId);
+    return session;
 }
 
 // Function to delete a session
