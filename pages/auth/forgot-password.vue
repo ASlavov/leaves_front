@@ -9,7 +9,7 @@
             <input id="email" name="email" type="email" required
               class="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Εισάγετε το email σας" aria-describedby="email-error">
-            <p id="email-error" class="text-sm text-red-600" v-if="emailError">{{ emailError }}</p>
+            <p id="email-error" class="text-sm text-red-600"></p>
           </div>
           <button type="submit"
             class="w-full px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-500 focus:outline-none">
@@ -17,7 +17,7 @@
           </button>
         </form>
         <div class="mt-4 text-center">
-          <a href="../auth/login" class="text-sm text-blue-700">Επιστροφή στην είσοδο</a>
+          <NuxtLink to="../auth/login" class="text-sm text-blue-700">Επιστροφή στην είσοδο</NuxtLink>
         </div>
       </div>
     </div>
