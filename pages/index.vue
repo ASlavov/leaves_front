@@ -4,10 +4,10 @@
       <button type="button" @click="fetchAuth('developers@whyagency.gr', '@@developers@@')" class="py-3 px-4 inline-flex items-center gap-x-2 -mt-px -ms-px first:rounded-t-md last:rounded-b-md sm:first:rounded-s-md sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-md text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
         Login
       </button>
-      <button type="button" @click="fetchAllLeaves(userData.userId)" class="py-3 px-4 inline-flex items-center gap-x-2 -mt-px -ms-px first:rounded-t-md last:rounded-b-md sm:first:rounded-s-md sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-md text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+      <button type="button" @click="fetchAllLeaves(userId)" class="py-3 px-4 inline-flex items-center gap-x-2 -mt-px -ms-px first:rounded-t-md last:rounded-b-md sm:first:rounded-s-md sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-md text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
         Get All Leaves
       </button>
-      <button type="button" @click="newLeave(userData.userId, 1, '2024-09-18', '2024-09-19', 'Family vacation')" class="py-3 px-4 inline-flex items-center gap-x-2 -mt-px -ms-px first:rounded-t-md last:rounded-b-md sm:first:rounded-s-md sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-md text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
+      <button type="button" @click="newLeave(userId, 1, '2024-09-18', '2024-09-19', 'Family vacation')" class="py-3 px-4 inline-flex items-center gap-x-2 -mt-px -ms-px first:rounded-t-md last:rounded-b-md sm:first:rounded-s-md sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-md text-sm font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
         Post new Leave
       </button>
     </div>
@@ -16,8 +16,8 @@
         Loading...
       </div>
       <div v-else>
-        <div v-if="userData.userId">
-          {{ userData.userId }}
+        <div v-if="userId">
+          {{ userId }}
         </div>
         <div v-else>
           No Data for user!
@@ -28,8 +28,8 @@
         Loading...
       </div>
       <div v-else>
-        <div v-if="leavesData.data">
-          {{ leavesData.data }}
+        <div v-if="leavesData">
+          {{ leavesData }}
         </div>
         <div v-else>
           No Data for leaves!
@@ -40,31 +40,45 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useUserStore } from '@/stores/user';
-import { useLeavesStore } from '@/stores/leaves';
 
-const userStore = useUserStore();
-const leavesStore = useLeavesStore();
+import { computed, onMounted } from 'vue';
+import { useCentralStore } from '@/stores/centralStore';
 
-onMounted(() => {
-  //userStore.fetchUserCredentials('Takis');
-});
+const centralStore = useCentralStore();
+const userStore = centralStore.userStore;
+const leavesStore = centralStore.leavesStore;
+const authStore = centralStore.authStore;
 
 const fetchAuth = async (userName, userPass) => {
-  await userStore.authUser(userName, userPass).then(() => {
-    console.log(userStore.userData.userId);
+  await authStore.authUser(userName, userPass).then(() => {
+
   });
 }
-const fetchAllLeaves = (userId) => {
-  leavesStore.getAll(userId);
+const fetchAllLeaves = async (userId) => {
+  await leavesStore.getAll(userId);
 }
 
-const newLeave = (userId, leaveTypeId, startDate, endDate, reason) => {
-  leavesStore.newLeave(userId, leaveTypeId, startDate, endDate, reason);
+const newLeave = async (userId, leaveTypeId, startDate, endDate, reason) => {
+  await leavesStore.newLeave(userId, leaveTypeId, startDate, endDate, reason);
 }
 
 // Use computed to make reactive
-const userData = computed(() => userStore.userData);
+const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
+
+onMounted(async () => {
+  try {
+    // Restore session first
+    await authStore.restoreSession();
+
+    // If session restoration is successful, load leaves
+    if (userId.value) { // Ensure userId is available after restoring session
+      await leavesStore.getAll(userId.value);
+    }
+  } catch (error) {
+    console.error("Error during session restoration or loading leaves:", error);
+  }
+});
+
+
 </script>

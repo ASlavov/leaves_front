@@ -2,8 +2,8 @@ import { defineStore, setActivePinia, createPinia } from 'pinia';
 import { ref } from 'vue';
 import {getUserLeavesComposable, newLeaveComposable} from '@/composables/leavesApiComposable';
 
-const pinia = createPinia();
-export default { store: setActivePinia(pinia) }
+/*const pinia = createPinia();
+export default { store: setActivePinia(pinia) }*/
 export const useLeavesStore = defineStore('leavesStore', () => {
     const leavesData = ref([]);
     const loading = ref(false);
@@ -18,7 +18,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.value.data = result;
+                leavesData.value = result;
             }
         } catch (err) {
             // Handle errors and set the error state

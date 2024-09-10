@@ -1,39 +1,29 @@
-import { defineStore, setActivePinia, createPinia } from 'pinia';
+import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { authUserComposable } from '@/composables/userApiComposable';
+import * as console from "node:console";
 
-const pinia = createPinia();
-export default { store: setActivePinia(pinia) }
 export const useUserStore = defineStore('userStore', () => {
-    const userData = ref({});
+    const userId = ref(null);
     const loading = ref(false);
-    const error = ref(null);
+    const profile = ref({});  // You can add more user-related data here
 
-    async function authUser(userName, userPass) {
-        // Set loading to true at the start of the function
-        loading.value = true;
+    // Function to set the userId
+    function setUserId(id) {
+        userId.value = id;
+    }
 
-        try {
-            // Call the composable with the necessary parameters
-            const result = await authUserComposable({
-                email: userName,
-                password: userPass,
-            });
-
-            if (result && result.userId) {
-                // Process the result and store it in userData
-                userData.value = { ...userData.value, userId: result.userId };
+    // Optionally, load user profile data based on userId
+    async function loadUserProfile() {
+        if (userId.value) {
+            try {
+                const result = await $fetch(`/api/user/${userId.value}`);
+                profile.value = result;
+            } catch (err) {
+                console.error('Error fetching user profile:', err);
             }
-        } catch (err) {
-            // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
-        } finally {
-            // Ensure loading is set to false and any post-processing is done
-            loading.value = false;
         }
     }
 
 
-    return { userData, loading, error, authUser };
+    return { userId, profile, setUserId, loading, loadUserProfile };
 });

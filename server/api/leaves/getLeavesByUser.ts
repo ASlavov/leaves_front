@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     // Retrieve the token from the 'auth_token' cookie set during login
     const sessionId = getCookie(event, 'session_id') || '';
     const { token } = getSession(sessionId);
-    console.log('userId:', userId);
+    //console.log('userId:', userId);
     if (!token) {
         throw createError({
             statusCode: 403,
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         // Use the token to make a GET request to the external API
-        const response = await $fetch(`${config.public.leaves.apiBase}${config.public.leaves.getAll}/${userId}`, {
+        const response = await $fetch(`${config.public.apiBase}${config.public.leaves.getAll}/${userId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
