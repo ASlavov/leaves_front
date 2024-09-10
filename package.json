@@ -11,10 +11,11 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.4",
-    "pinia": "^2.1.7",
     "apexcharts": "^3.53.0",
     "chart.js": "^4.4.4",
+    "flatpickr": "^4.6.13",
     "nuxt": "^3.13.0",
+    "pinia": "^2.1.7",
     "preline": "^2.4.1",
     "vue": "latest",
     "vue-chartjs": "^5.3.1",
