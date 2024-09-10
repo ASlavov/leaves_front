@@ -1,10 +1,9 @@
 
-const getUserProfileComposable = async (params) => {
+const getUserProfileComposable = async (userId) => {
     return $fetch('/api/user/getProfile', {
         method: 'POST',
         body: {
-            email: params.email,
-            password: params.password
+            userId: userId
         },
     });
 }

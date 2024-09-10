@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import * as console from "node:console";
+import getUserProfileComposable from "~/composables/userApiComposable.js";
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref(null);
     const loading = ref(false);
-    const profile = ref({});  // You can add more user-related data here
+    //const profile = ref({});  // You can add more user-related data here
+    const userInfo = ref({});
 
     // Function to set the userId
     function setUserId(id) {
@@ -16,8 +18,8 @@ export const useUserStore = defineStore('userStore', () => {
     async function loadUserProfile() {
         if (userId.value) {
             try {
-                const result = await $fetch(`/api/user/${userId.value}`);
-                profile.value = result;
+                const fullProfile = await getUserProfileComposable(userId.value);
+                userInfo.value = fullProfile;
             } catch (err) {
                 console.error('Error fetching user profile:', err);
             }
@@ -25,5 +27,5 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
 
-    return { userId, profile, setUserId, loading, loadUserProfile };
+    return { userId, userInfo, setUserId, loading, loadUserProfile };
 });
