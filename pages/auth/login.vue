@@ -42,6 +42,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'redirect-if-authenticated',  // Apply the middleware to this page
+});
+
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
