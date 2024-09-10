@@ -9,7 +9,6 @@
     </div>
     <!-- End Content -->
 </template>
-
 <script>
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
 import LeavesMetric from '~/components/Home/LeavesMetric.vue'

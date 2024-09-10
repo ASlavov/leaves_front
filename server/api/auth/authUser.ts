@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
             },
         });
 
-        if (result) {
+        if (result && result !== "user not auth") {
             const {
                 user_id,
                 token

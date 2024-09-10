@@ -9,6 +9,7 @@ export default defineNuxtConfig({
 
   plugins: [
       "~/plugins/preline.client.ts",
+      "~/plugins/fetchInterceptor.js",
   ],
 
   postcss: {

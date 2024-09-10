@@ -6,11 +6,12 @@ import authUserComposable from '~/composables/authApiComposable.js';
 export const useAuthStore = defineStore('authStore', () => {
     const loading = ref(false);
     const error = ref(null);
-
+    const isAuthenticated = computed(() => !!token.value);  // Authenticated if token exists
     const userStore = useUserStore();  // Access the user store
 
     async function authUser(userName, userPass) {
         loading.value = true;
+        error.value = null;  // Clear any previous errors
 
         try {
             // Call the composable to handle the authentication
@@ -21,10 +22,11 @@ export const useAuthStore = defineStore('authStore', () => {
 
             if (result && result.userId) {
                 // Save userId in the user store
-                userStore.setUserId(result.userId);  // Use user store to set userId
+                userStore.setUserId(result.userId);
             }
         } catch (err) {
-            error.value = err;
+            // Store the error message
+            error.value = 'Invalid email or password';
             console.error('Error during authentication:', err);
         } finally {
             loading.value = false;
@@ -34,7 +36,7 @@ export const useAuthStore = defineStore('authStore', () => {
     // Restore session from the cookie (auto-called on page load)
     async function restoreSession() {
         try {
-            const result = await $fetch('/api/session', {
+            const result = await $fetch('/api/auth/session', {
                 method: 'GET',
             });
 
