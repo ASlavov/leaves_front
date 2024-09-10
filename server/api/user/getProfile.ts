@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
             userId,
         } = body;
 
-        const response = await $fetch(`${config.public.apiBase}${config.public.user.getSingleUser}`, {
+        const response = await $fetch(`${config.public.apiBase}${config.public.user.getSingleUser}/${userId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
