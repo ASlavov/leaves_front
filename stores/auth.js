@@ -50,5 +50,16 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
-    return { loading, error, authUser, restoreSession };
+    async function logout() {
+        try {
+            const result = await $fetch('/api/auth/authLogout', {
+                method: 'GET',
+            });
+        } catch (err) {
+            console.error('Failed to delete session:', err);
+            error.value = err;
+        }
+    }
+
+    return { loading, error, authUser, restoreSession, logout };
 });
