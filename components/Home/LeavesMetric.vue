@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto">
-        <h3 class="py-4">Υπόλοιπα άδειας</h3>
+        <h3 class="py-4 font-semibold text-lg">Υπόλοιπα άδειας</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Metrics />
             <Metrics />
