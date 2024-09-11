@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
 
     // Call the local API to check session (make sure this endpoint works as expected)
-    const { data } = await useFetch('/api/auth/authSession');
+    const { data } = await useFetch('/api/auth/checkSessionExists');
 
     // If the user is not authenticated, redirect to the login page
     if (!data.value?.authenticated) {

@@ -1,7 +1,20 @@
-
-const authUserComposable = async (params) => {
+// Check if session exists
+export const checkSessionExists = async () => {
     try {
-        const response = await $fetch('/api/auth/authUser', {
+        const result = await $fetch('/api/auth/checkSessionExists', {
+            method: 'GET',
+        });
+
+        return result && result.authenticated;
+    } catch (error) {
+        throw new Error('User has no session');
+    }
+};
+
+// Authenticate user
+export const authUser = async (params) => {
+    try {
+        const response = await $fetch('/api/auth/login', {
             method: 'POST',
             body: {
                 email: params.email,
@@ -9,16 +22,38 @@ const authUserComposable = async (params) => {
             },
         });
 
-        // If the response contains a token or userId, return the result
         if (response.userId) {
             return response;
         }
 
-        // If no token/userId, throw an error to catch in the auth store
         throw new Error('Invalid credentials');
     } catch (error) {
-        // Rethrow any error to be caught by the store
         throw new Error('Invalid credentials');
     }
-}
-export default authUserComposable;
+};
+
+// Restore session
+export const refreshSession = async () => {
+    try {
+        const result = await $fetch('/api/auth/refreshSession', {
+            method: 'GET',
+        });
+
+        return result;
+    } catch (error) {
+        throw new Error('Failed to restore session');
+    }
+};
+
+// Logout user
+export const logoutUser = async () => {
+    try {
+        const result = await $fetch('/api/auth/logout', {
+            method: 'GET',
+        });
+
+        return result;
+    } catch (error) {
+        throw new Error('Failed to delete session');
+    }
+};
