@@ -1,11 +1,13 @@
 import { defineStore, setActivePinia, createPinia } from 'pinia';
 import { ref } from 'vue';
-import {getUserLeavesComposable, newLeaveComposable} from '@/composables/leavesApiComposable';
+import { getUserLeavesComposable, newLeaveComposable, getLeavesStatusesComposable } from '@/composables/leavesApiComposable';
 
-/*const pinia = createPinia();
-export default { store: setActivePinia(pinia) }*/
 export const useLeavesStore = defineStore('leavesStore', () => {
-    const leavesData = ref([]);
+    const leavesData = ref({
+        currentUser: {},
+        leavesTypes: {},
+        leavesStatuses: {},
+    });
     const loading = ref(false);
     const error = ref(null);
 
@@ -18,7 +20,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.value = result;
+                leavesData.value.currentUser = result;
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -52,5 +54,47 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
     }
 
-    return { leavesData, loading, error, getAll, newLeave };
+    async function getLeavesTypes() {
+
+        try {
+            // Call the composable with the necessary parameters
+            const result = await getLeavesTypesComposable();
+
+            if (result) {
+                // Process the result and store it in userData
+                leavesData.value.leavesTypes = result;
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            error.value = err;
+            console.error('Error fetching response:', err);
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+
+    }
+
+    async function getLeavesStatuses() {
+
+        try {
+            // Call the composable with the necessary parameters
+            const result = await getLeavesStatusesComposable();
+
+            if (result) {
+                // Process the result and store it in userData
+                leavesData.value.leavesStatuses = result;
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            error.value = err;
+            console.error('Error fetching response:', err);
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+
+    }
+
+    return { leavesData, loading, error, getAll, newLeave, getLeavesTypes, getLeavesStatuses };
 });

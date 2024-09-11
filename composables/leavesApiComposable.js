@@ -18,7 +18,17 @@ export const newLeaveComposable = (body) => {
     });
 };
 
+export const getLeavesTypesComposable = () => {
+    const config = useRuntimeConfig()
 
+    return $fetch('/api/leaves/getLeavesTypes', {
+        method: 'POST',
+    });
+};
+export const getLeavesStatusesComposable = () => {
+    const config = useRuntimeConfig()
 
-const leavesApiComposable = () => {};
-export default leavesApiComposable;
+    return $fetch('/api/leaves/getLeavesStatuses', {
+        method: 'POST',
+    });
+};
