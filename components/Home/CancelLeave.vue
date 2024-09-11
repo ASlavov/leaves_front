@@ -33,30 +33,68 @@
 
                         <form class="cancel-leave">
 
-                            <div class="">
+                            <div class="max-h-60 overflow-y-auto">
+
                                 <label for="hs-radioradio-on-right"
                                     class="my-2 flex items-center justify-between p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-                                    <span class="text-sm text-gray-400 mx-auto">27/12 - 29/12<br><span class="text-sm text-black">3 ημέρες</span></span>
-                                    <span class="text-sm text-black-600 dark:text-neutral-400 mx-auto">Πληρωμένη άδεια</span>
-                                    <span class="text-sm ms-auto">Αποδεκτή..</span>
                                     <input type="radio" name="hs-radio-on-right"
                                         class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                                         id="hs-radio-on-right">
+                                    <span class="text-xs text-gray-400 mx-auto">27/12 - 29/12<br><span
+                                            class="text-sm text-black font-semibold">3 ημέρες</span></span>
+                                    <span
+                                        class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold">Πληρωμένη
+                                        άδεια</span>
+                                    <span class="text-sm ms-auto text-green-700 font-semibold">Αποδεκτή</span>
                                 </label>
 
                                 <label for="hs-radioradio-on-right"
-                                    class="my-2 flex p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
-                                    <span class="text-sm text-gray-500 dark:text-neutral-400">Checked radio</span>
+                                    class="my-2 flex items-center justify-between p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
                                     <input type="radio" name="hs-radio-on-right"
                                         class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
-                                        id="hs-radioradio-on-right" checked="">
+                                        id="hs-radio-on-right">
+                                    <span class="text-xs text-gray-400 mx-auto">27/12 - 29/12<br><span
+                                            class="text-sm text-black font-semibold">3 ημέρες</span></span>
+                                    <span
+                                        class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold">Πληρωμένη
+                                        άδεια</span>
+                                    <span class="text-sm ms-auto text-green-700 font-semibold">Αποδεκτή</span>
                                 </label>
+
+                                <label for="hs-radioradio-on-right"
+                                    class="my-2 flex items-center justify-between p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                    <input type="radio" name="hs-radio-on-right"
+                                        class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                        id="hs-radio-on-right">
+                                    <span class="text-xs text-gray-400 mx-auto">27/12 - 29/12<br><span
+                                            class="text-sm text-black font-semibold">3 ημέρες</span></span>
+                                    <span
+                                        class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold">Πληρωμένη
+                                        άδεια</span>
+                                    <span class="text-sm ms-auto text-green-700 font-semibold">Αποδεκτή</span>
+                                </label>
+
+                                <label for="hs-radioradio-on-right"
+                                    class="my-2 flex items-center justify-between p-3 w-full bg-white border border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+                                    <input type="radio" name="hs-radio-on-right"
+                                        class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
+                                        id="hs-radio-on-right">
+                                    <span class="text-xs text-gray-400 mx-auto">27/12 - 29/12<br><span
+                                            class="text-sm text-black font-semibold">3 ημέρες</span></span>
+                                    <span
+                                        class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold">Πληρωμένη
+                                        άδεια</span>
+                                    <span class="text-sm ms-auto text-green-700 font-semibold">Αποδεκτή</span>
+                                </label>
+
                             </div>
 
 
                             <div class="space-y-3 pt-5">
+                                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3">Σχόλια
+                                    (προαιρετικό)</label>
                                 <textarea class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg"
-                                    rows="3" placeholder="This is a textarea placeholder"></textarea>
+                                    rows="3" placeholder="Τα σχόλια σας"></textarea>
                             </div>
 
 
