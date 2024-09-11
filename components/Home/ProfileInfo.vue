@@ -10,18 +10,15 @@
             </div>
             <!-- Info Details -->
             <div class="pt-4 space-y-2">
-                <p><span class="font-bold">Όνομα: </span><span class="text-gray-500">Αλέξανδρος</span></p>
-                <p><span class="font-bold">Επώνυμο: </span><span class="text-gray-500"> Γυφτομήτρος</span>
+                <p><span class="font-bold">Όνομα: </span><span class="text-gray-500">{{ userName }}</span></p>
+                <p><span class="font-bold">Επώνυμο: </span><span class="text-gray-500"> {{ userName }}</span>
                 </p>
-                <p><span class="font-bold">Τίτλος: </span><span class="text-gray-500"> Senior UI/UX
-                        Designer</span></p>
+                <p><span class="font-bold">Τίτλος: </span><span class="text-gray-500"> {{ userTitle }}</span></p>
                 <p><span class="font-bold">Email: </span><span class="text-gray-500">
-                        agyftomitros@whyagency.gr</span></p>
-                <p><span class="font-bold">Κινητό: </span><span class="text-gray-500"> +30 697
-                        3320818</span></p>
-                <p><span class="font-bold">Εσωτ. Τηλέφωνο: </span><span class="text-gray-500"> 05</span></p>
-                <p><span class="font-bold">Γκρουπ: </span><span class="text-gray-500"> Creative group
-                        02</span></p>
+                    {{ userEmail }}</span></p>
+                <p><span class="font-bold">Κινητό: </span><span class="text-gray-500"> {{userphone}}</span></p>
+                <p><span class="font-bold">Εσωτ. Τηλέφωνο: </span><span class="text-gray-500"> {{ user_internal_phone }}</span></p>
+                <p><span class="font-bold">Γκρουπ: </span><span class="text-gray-500"> {{ user_department }}</span></p>
             </div>
         </div>
         <div class="info-actions pt-10 pb-5 flex gap-4">
@@ -35,6 +32,26 @@
         </div>
     </div>
 </template>
+
+
+
+<script setup>
+import { useRouter } from 'vue-router';
+import { useCentralStore } from '@/stores/centralStore.js';
+import {computed} from "vue";
+
+const router = useRouter();
+const { authStore, userStore } = useCentralStore();
+
+const userEmail = computed(() => userStore.userInfo.email);
+const userName = computed(() => userStore.userInfo.name);
+const userTitle = computed(() => userStore.userInfo.profile.job_title);
+const userphone = computed(() => userStore.userInfo.profile.phone);
+const user_internal_phone = computed(() => userStore.userInfo.profile.internal_phone);
+const user_department = computed(() => userStore.userInfo.department.name);
+
+console.log(userStore.userInfo);
+</script>
 
 <script>
 export default {
