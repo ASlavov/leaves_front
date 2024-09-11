@@ -57,6 +57,9 @@ export default defineNuxtConfig({
         newDepartment: '/create_department',
         editDepartment: '/edit_department',
         deleteDepartment: '/delete_department',
+      },
+      notifications: {
+        getNotifications: '/user-notifications'
       }
     }
   },

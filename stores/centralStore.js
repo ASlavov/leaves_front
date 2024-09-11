@@ -3,13 +3,15 @@ import { computed } from "vue";
 import { useAuthStore } from '~/stores/auth.js';   // Import the auth store
 import { useUserStore } from '~/stores/user.js';   // Import the user store
 import { useLeavesStore } from '~/stores/leaves.js'; // Import the leaves store
-import { useDepartmentsStore } from "~/stores/departments.js";   // Import the departments store
+import { useDepartmentsStore } from "~/stores/departments.js"; // Import the departments store
+import { useNotificationsStore } from "~/stores/notifications.js";   // Import the notifications store
 
 export const useCentralStore = defineStore('centralStore', () => {
     const authStore = useAuthStore();
     const userStore = useUserStore();
     const leavesStore = useLeavesStore();
     const departmentsStore = useDepartmentsStore();
+    const notificationsStore = useNotificationsStore();
 
     const loading = ref(false);
     async function init(){
@@ -32,6 +34,9 @@ export const useCentralStore = defineStore('centralStore', () => {
                 if(!Object.keys(leavesStore.leavesData.leavesStatuses).length) {
                     await leavesStore.getLeavesStatuses();
                 }
+                if(!Object.keys(notificationsStore.notificationsData).length) {
+                    await notificationsStore.getNotifications();
+                }
             }
         }
         catch (err) {
@@ -40,6 +45,7 @@ export const useCentralStore = defineStore('centralStore', () => {
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
+            notificationsStore.beginPolling();
         }
     }
 
@@ -65,12 +71,14 @@ export const useCentralStore = defineStore('centralStore', () => {
     const proxiedUserStore = new Proxy(userStore, proxyHandler);
     const proxiedLeavesStore = new Proxy(leavesStore, proxyHandler);
     const proxiedDepartmentsStore = new Proxy(departmentsStore, proxyHandler);
+    const proxiedNotificationsStore = new Proxy(notificationsStore, proxyHandler);
 
     return {
+        init,
         authStore: proxiedAuthStore,
         userStore: proxiedUserStore,
         leavesStore: proxiedLeavesStore,
         departmentsStore: proxiedDepartmentsStore,
-        init,
+        notificationsStore: proxiedNotificationsStore,
     };
 });
