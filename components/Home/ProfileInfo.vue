@@ -55,7 +55,6 @@ const userphone = computed(() => userStore.userInfo?.profile?.phone);
 const user_internal_phone = computed(() => userStore.userInfo?.profile?.internal_phone);
 const user_department = computed(() => userStore.userInfo?.department?.name);
 
-console.log(userStore.userInfo);
 </script>
 
 <script>

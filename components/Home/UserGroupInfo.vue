@@ -14,7 +14,6 @@ const router = useRouter();
 const { authStore, userStore } = useCentralStore();
 const user_department = computed(() => userStore.userInfo?.department?.name);
 
-console.log(userStore.userInfo);
 </script>
 
 <script>
