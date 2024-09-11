@@ -81,5 +81,5 @@ const logout = async () => {
   }
 };
 
-const userEmail = computed(() => userStore.userInfo.email);
+const userEmail = computed(() => userStore.userInfo?.email);
 </script>
