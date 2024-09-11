@@ -43,14 +43,14 @@ import {computed} from "vue";
 const router = useRouter();
 const { authStore, userStore } = useCentralStore();
 
-const userEmail = computed(() => userStore.userInfo.email);
-const userName = computed(() => userStore.userInfo.name);
-const userTitle = computed(() => userStore.userInfo.profile.job_title);
-const userphone = computed(() => userStore.userInfo.profile.phone);
-const user_internal_phone = computed(() => userStore.userInfo.profile.internal_phone);
-const user_department = computed(() => userStore.userInfo.department.name);
+const userEmail = computed(() => userStore.userInfo?.email);
+const userName = computed(() => userStore.userInfo?.name);
+const userTitle = computed(() => userStore.userInfo?.profile?.job_title);
+const userphone = computed(() => userStore.userInfo?.profile?.phone);
+const user_internal_phone = computed(() => userStore.userInfo?.profile?.internal_phone);
+const user_department = computed(() => userStore.userInfo?.department?.name);
 
-console.log(userStore.userInfo);
+//console.log(userStore.userInfo);
 </script>
 
 <script>

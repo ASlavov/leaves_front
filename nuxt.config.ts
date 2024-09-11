@@ -1,7 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
+    },
+  },
 
   css: [
       '~/assets/css/main.css'
@@ -34,7 +39,7 @@ export default defineNuxtConfig({
       apiBase: 'http://127.0.0.1:8000/api',
       auth: {
         auth: '/getToken',
-        tokenRefresh: '/refreshToken'
+        tokenRefresh: '/generateToken'
       },
       user: {
         getSingleUser: '/user',
@@ -42,6 +47,14 @@ export default defineNuxtConfig({
       leaves: {
         getAll: '/user_leaves',
         newLeave: '/new_leave',
+        getLeaveTypes: '/leaves_types',
+        getLeavesStatuses: '/leave_action',
+      },
+      departments: {
+        getAll: '/departments',
+        newDepartment: '/create_department',
+        editDepartment: '/edit_department',
+        deleteDepartment: '/delete_department',
       }
     }
   },

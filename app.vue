@@ -17,22 +17,8 @@ const userStore = centralStore.userStore;
 const leavesStore = centralStore.leavesStore;
 const authStore = centralStore.authStore;
 
-const fetchAuth = async (userName, userPass) => {
-  await authStore.authUser(userName, userPass).then(() => {
-
-  });
-}
-const fetchAllLeaves = async (userId) => {
-  await leavesStore.getAll(userId);
-}
-
-const newLeave = async (userId, leaveTypeId, startDate, endDate, reason) => {
-  await leavesStore.newLeave(userId, leaveTypeId, startDate, endDate, reason);
-}
-
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
-const leavesData = computed(() => leavesStore.leavesData);
 
 onMounted(async () => {
     try {
@@ -42,10 +28,7 @@ onMounted(async () => {
       if(hasSession) {
         await authStore.restoreSession();
 
-        // If session restoration is successful, load leaves
-        if (userId.value) { // Ensure userId is available after restoring session
-          await leavesStore.getAll(userId.value);
-        }
+        await centralStore.init();
       }
     } catch (error) {
       console.error("Error during session restoration or loading leaves:", error);
