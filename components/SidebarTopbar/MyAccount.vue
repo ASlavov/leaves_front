@@ -75,7 +75,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore.js';
-import {computed} from "vue";
+import { computed } from "vue";
 
 const router = useRouter();
 const { authStore, userStore } = useCentralStore();

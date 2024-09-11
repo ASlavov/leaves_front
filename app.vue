@@ -35,17 +35,21 @@ const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
 
 onMounted(async () => {
-  try {
-    // Restore session first
-    await authStore.restoreSession();
+    try {
+      const hasSession = await authStore.hasSession();
 
-    // If session restoration is successful, load leaves
-    if (userId.value) { // Ensure userId is available after restoring session
-      await leavesStore.getAll(userId.value);
+      // Restore session first
+      if(hasSession) {
+        await authStore.restoreSession();
+
+        // If session restoration is successful, load leaves
+        if (userId.value) { // Ensure userId is available after restoring session
+          await leavesStore.getAll(userId.value);
+        }
+      }
+    } catch (error) {
+      console.error("Error during session restoration or loading leaves:", error);
     }
-  } catch (error) {
-    console.error("Error during session restoration or loading leaves:", error);
-  }
 });
 
 
