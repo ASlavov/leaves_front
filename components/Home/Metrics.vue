@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import ApexCharts from 'vue3-apexcharts';
 import { defineProps } from 'vue';
 
@@ -31,6 +31,12 @@ const props = defineProps({
         type: Object,
         required: true
     }
+});
+
+// Calculate percentage of remaining days based on entitled days
+const percentageRemaining = computed(() => {
+    const { entitled_days, remaining_days } = props.leave;
+    return entitled_days > 0 ? (remaining_days / entitled_days) * 100 : 0;
 });
 
 const chartOptions = ref({
@@ -50,7 +56,7 @@ const chartOptions = ref({
                 },
                 value: {
                     show: true,
-                    formatter: (val) => `${val}`, // Update formatter to use dynamic value
+                    formatter: (val) => `${val}%`, // Show percentage in formatter
                 },
             },
         },
@@ -62,7 +68,7 @@ const chartSeries = ref([0]); // Initialize with 0
 
 // Watch for changes in props to update chart data
 watch(() => props.leave.remaining_days, (newValue) => {
-    chartSeries.value = [newValue]; // Update the chart series data based on the remaining days
+    chartSeries.value = [percentageRemaining.value]; // Update the chart series data based on the calculated percentage
 }, { immediate: true }); // Run the watch function immediately on component mount
 </script>
 
