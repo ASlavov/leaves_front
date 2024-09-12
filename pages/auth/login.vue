@@ -5,9 +5,9 @@
       <h2 class="text-2xl font-bold text-center text-gray-700 dark:text-gray-300 pb-10">Σύνδεση</h2>
 
       <!-- Display error message if login fails -->
-      <div v-if="authStore.error" class="mb-4 text-center text-red-500">
+<!--      <div v-if="authStore.error" class="mb-4 text-center text-red-500">
         {{ authStore.error }}
-      </div>
+      </div>-->
 
       <form class="space-y-6" @submit="login">
         <div>
@@ -46,22 +46,19 @@ definePageMeta({
   middleware: 'redirect-if-authenticated',  // Apply the middleware to this page
 });
 
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
+  // Initialize the toast function
 const email = ref('');
 const password = ref('');
 const rememberMe = ref(false);  // "Remember Me" does nothing
-const errorMessage = ref('');
 const router = useRouter();
 const authStore = useAuthStore();
 
-// Login function
 const login = async (event) => {
   event.preventDefault();  // Prevent default form submission
-
-  errorMessage.value = '';  // Reset any previous error messages
 
   try {
     // Call auth store to handle login
@@ -70,8 +67,21 @@ const login = async (event) => {
     // Redirect user after successful login
     await router.push('/home');  // Adjust the route based on your app structure
   } catch (error) {
-
+    // Add error message to the toast
   }
 };
+onMounted(() => {
+  watch(
+      () => authStore.error,  // Watch the error state in the store
+      (newError) => {
+        if (newError) {
+          // Show the toast when the error changes
+          useNuxtApp().$toast.error(newError, {
+            position: "bottom-right",
+            autoClose: 5000, // Close automatically after 5 seconds
+          });
+        }
+      }
+  )
+});
 </script>
-

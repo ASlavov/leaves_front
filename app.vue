@@ -8,9 +8,9 @@
 
 
 <script setup>
-
 import { computed, onMounted } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
+
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -29,11 +29,25 @@ onMounted(async () => {
         await authStore.restoreSession();
 
         await centralStore.init();
+
       }
     } catch (error) {
       console.error("Error during session restoration or loading leaves:", error);
     }
+
+  watch(
+      () => centralStore.error,  // Watch the error state in the store
+      (newError) => {
+        if (newError) {
+          // Show the toast when the error changes
+          useNuxtApp().$toast.error(newError, {
+            position: "bottom-right",
+            autoClose: 5000, // Close automatically after 5 seconds
+          });
+        }
+      }
+  );
 });
 
-
+// Watch for error changes in the central store and trigger a toast
 </script>
