@@ -1,7 +1,11 @@
 <template>
     <div>
-        <div v-if="leavesData.length === 0" class="text-center text-gray-500 font-semibold">
-            No leaves available.
+        <div v-if="leavesData.message" class="text-center text-gray-500 font-semibold">
+            <div class="flex items-center justify-center h-64">
+                <div class="text-center text-gray-500 font-semibold">
+                    Δεν υπάρχουν άδειες
+                </div>
+            </div>
         </div>
         <div v-else>
             <div v-for="(leave, index) in leavesData" :key="index"
@@ -22,14 +26,14 @@
                 <!-- Second Text Column (Centered) -->
                 <div class="flex-1 text-center">
                     <div :class="{
-                        'text-green-500': leave.status === 'pending',
-                        'text-yellow-500': leave.status === 'approved',
+                        'text-yellow-500': leave.status === 'pending',
+                        'text-green-500': leave.status === 'approved',
                         'text-red-500': leave.status === 'cancelled',
                         'text-red-700': leave.status === 'rejected'
                     }">
                         {{ leave.status === 'approved' ? 'Αποδεκτή' : leave.status === 'pending' ? 'Σε εκκρεμότητα' :
                             leave.status === 'cancelled' ? 'Ακυρώθηκε' :
-                        'Απορρίφθηκε' }}
+                                'Απορρίφθηκε' }}
                     </div>
                 </div>
                 <!-- Third Text Column (Right Aligned) -->
