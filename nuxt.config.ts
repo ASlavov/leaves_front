@@ -19,7 +19,9 @@ export default defineNuxtConfig({
       "~/plugins/apexcharts.client.ts",
       "~/plugins/vue3-toastify.client.js"
   ],
-
+  colorMode: {
+    classSuffix: ''
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -29,6 +31,7 @@ export default defineNuxtConfig({
 
   modules: [
       '@pinia/nuxt',
+      '@nuxtjs/color-mode'
   ],
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder
