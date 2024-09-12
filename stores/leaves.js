@@ -1,12 +1,18 @@
 import { defineStore, setActivePinia, createPinia } from 'pinia';
 import { ref } from 'vue';
-import { getUserLeavesComposable, newLeaveComposable, getLeavesStatusesComposable } from '@/composables/leavesApiComposable';
+import {
+    getUserLeavesComposable,
+    newLeaveComposable,
+    getLeavesStatusesComposable,
+    getLeavesAvailableDaysComposable
+} from '@/composables/leavesApiComposable';
 
 export const useLeavesStore = defineStore('leavesStore', () => {
     const leavesData = ref({
         currentUser: {},
         leavesTypes: {},
         leavesStatuses: {},
+        leavesAvailableDays: {},
     });
     const loading = ref(false);
     const error = ref(null);
@@ -96,5 +102,25 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
     }
 
-    return { leavesData, loading, error, getAll, newLeave, getLeavesTypes, getLeavesStatuses };
+    async function getLeavesAvailableDays(userId) {
+
+        try {
+            // Call the composable with the necessary parameters
+            const result = await getLeavesAvailableDaysComposable(userId);
+
+            if (result) {
+                // Process the result and store it in userData
+                leavesData.value.leavesAvailableDays = result;
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            error.value = err;
+            console.error('Error fetching response:', err);
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
+    return { leavesData, loading, error, getAll, newLeave, getLeavesTypes, getLeavesStatuses, getLeavesAvailableDays };
 });

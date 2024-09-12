@@ -51,12 +51,16 @@ export default defineNuxtConfig({
         newLeave: '/new_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
+        getLeavesAvailableDays: '/entitlement_days',
       },
       departments: {
         getAll: '/departments',
         newDepartment: '/create_department',
         editDepartment: '/edit_department',
         deleteDepartment: '/delete_department',
+      },
+      notifications: {
+        getNotifications: '/user-notifications'
       }
     }
   },
