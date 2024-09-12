@@ -37,6 +37,10 @@ export const useCentralStore = defineStore('centralStore', () => {
                 if(!Object.keys(notificationsStore.notificationsData).length) {
                     await notificationsStore.getNotifications();
                 }
+
+                if(!Object.keys(leavesStore.leavesData.leavesAvailableDays).length) {
+                    await leavesStore.getLeavesAvailableDays(userStore.userId);
+                }
             }
         }
         catch (err) {
