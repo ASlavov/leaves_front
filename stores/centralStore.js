@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed } from "vue";
+import { computed,ref } from "vue";
 import { useAuthStore } from '~/stores/auth.js';   // Import the auth store
 import { useUserStore } from '~/stores/user.js';   // Import the user store
 import { useLeavesStore } from '~/stores/leaves.js'; // Import the leaves store
@@ -12,44 +12,41 @@ export const useCentralStore = defineStore('centralStore', () => {
     const leavesStore = useLeavesStore();
     const departmentsStore = useDepartmentsStore();
     const notificationsStore = useNotificationsStore();
-
+    
+    const error = ref(null);
     const loading = ref(false);
+
+    const setError = (errorMessage) => {
+        // Reset error to force reactivity
+        error.value = null;
+        setTimeout(() => {
+            error.value = errorMessage; // Set the actual error message
+        });
+    };
+
+    const { $toast } = useNuxtApp();
     async function init(){
         // we're assuming user is authed
         try {
             loading.value = true;
-            if (userStore.userId) {
-                if(!Object.keys(userStore.userInfo).length) {
-                    await userStore.loadUserProfile();
-                }
-                if(!Object.keys(leavesStore.leavesData.currentUser).length) {
-                    await leavesStore.getAll(userStore.userId);
-                }
-                if(!Object.keys(leavesStore.leavesData.leavesTypes).length) {
-                    await leavesStore.getLeavesTypes();
-                }
-                if(!Object.keys(departmentsStore.departmentsData).length) {
-                    await departmentsStore.getAll();
-                }
-                if(!Object.keys(leavesStore.leavesData.leavesStatuses).length) {
-                    await leavesStore.getLeavesStatuses();
-                }
-                if(!Object.keys(notificationsStore.notificationsData).length) {
-                    await notificationsStore.getNotifications();
-                }
 
-                if(!Object.keys(leavesStore.leavesData.leavesAvailableDays).length) {
-                    await leavesStore.getLeavesAvailableDays(userStore.userId);
-                }
+            if(userStore.userId) {
+                // Run all store initialization in parallel
+                await Promise.all([
+                    userStore.init(),
+                    departmentsStore.init(),
+                    notificationsStore.init(),
+                ]);
+                await leavesStore.init(userStore.userId);
             }
         }
         catch (err) {
             // Handle errors and set the error state
-            console.error('Error initializing response:', err);
+            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα δεδομένα σας');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
-            notificationsStore.beginPolling();
+            //notificationsStore.beginPolling();
         }
     }
 
@@ -79,6 +76,8 @@ export const useCentralStore = defineStore('centralStore', () => {
 
     return {
         init,
+        error,
+        loading,
         authStore: proxiedAuthStore,
         userStore: proxiedUserStore,
         leavesStore: proxiedLeavesStore,

@@ -16,7 +16,8 @@ export default defineNuxtConfig({
   plugins: [
       "~/plugins/preline.client.ts",
       "~/plugins/fetchInterceptor.js",
-      "~/plugins/apexcharts.client.ts"
+      "~/plugins/apexcharts.client.ts",
+      "~/plugins/vue3-toastify.client.js"
   ],
 
   postcss: {
@@ -27,11 +28,18 @@ export default defineNuxtConfig({
   },
 
   modules: [
-      '@pinia/nuxt'
+      '@pinia/nuxt',
   ],
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder
   },
+
+  /*toast: {
+    position: 'bottom-right',
+    duration: 5000, // Duration the toast will be displayed in milliseconds
+    keepOnHover: true, // Keeps the toast open if hovered over
+    theme: 'bubble', // You can also use 'toasted-primary', 'toasted-secondary'
+  },*/
 
   runtimeConfig: {
     // The private keys which are only available within server-side

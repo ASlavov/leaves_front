@@ -1,5 +1,5 @@
 // Check if session exists
-export const checkSessionExists = async () => {
+export const checkSessionExistsComposable = async () => {
     try {
         const result = await $fetch('/api/auth/checkSessionExists', {
             method: 'GET',
@@ -12,7 +12,7 @@ export const checkSessionExists = async () => {
 };
 
 // Authenticate user
-export const authUser = async (params) => {
+export const authUserComposable = async (params) => {
     try {
         const response = await $fetch('/api/auth/login', {
             method: 'POST',
@@ -33,7 +33,7 @@ export const authUser = async (params) => {
 };
 
 // Restore session
-export const refreshSession = async () => {
+export const refreshSessionComposable = async () => {
     try {
         const result = await $fetch('/api/auth/refreshSession', {
             method: 'GET',
@@ -46,7 +46,7 @@ export const refreshSession = async () => {
 };
 
 // Logout user
-export const logoutUser = async () => {
+export const logoutUserComposable = async () => {
     try {
         const result = await $fetch('/api/auth/logout', {
             method: 'GET',

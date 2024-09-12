@@ -17,6 +17,27 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     const loading = ref(false);
     const error = ref(null);
 
+    const setError = (errorMessage) => {
+        // Reset error to force reactivity
+        error.value = null;
+        setTimeout(() => {
+            error.value = errorMessage; // Set the actual error message
+        });
+    };
+
+    async function init(userId) {
+        try {
+            await Promise.all([
+                !Object.keys(leavesData.value.currentUser).length && getAll(userId),
+                !Object.keys(leavesData.value.leavesTypes).length && getLeavesTypes(),
+                !Object.keys(leavesData.value.leavesStatuses).length && getLeavesStatuses(),
+                !Object.keys(leavesData.value.leavesAvailableDays).length && getLeavesAvailableDays(userId),
+            ]);
+        } catch (err) {
+            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα δεδομένα αδειών σας');
+        }
+    }
+
 
     async function getAll(userId) {
 
@@ -30,8 +51,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -51,8 +71,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -72,8 +91,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να φέρουμε τους τύπους αδειών');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -93,8 +111,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να φέρουμε τις διαθέσιμες ενέργειες αδειών');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -114,13 +131,12 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να φέρουμε τις υπολοιπόμενες ήμερες αδειών σας');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
 
-    return { leavesData, loading, error, getAll, newLeave, getLeavesTypes, getLeavesStatuses, getLeavesAvailableDays };
+    return { leavesData, loading, error, init, getAll, newLeave, getLeavesTypes, getLeavesStatuses, getLeavesAvailableDays };
 });

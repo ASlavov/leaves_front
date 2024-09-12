@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useUserStore } from '~/stores/user';
-import { checkSessionExists, authUser, refreshSession, logoutUser } from '~/composables/authApiComposable.js';
+import { checkSessionExistsComposable, authUserComposable, refreshSessionComposable, logoutUserComposable } from '~/composables/authApiComposable.js';
+import {useNuxtApp} from "#app";
 
 export const useAuthStore = defineStore('authStore', () => {
     const loading = ref(false);
@@ -9,14 +10,22 @@ export const useAuthStore = defineStore('authStore', () => {
     const isAuthenticated = computed(() => !!token.value);
     const userStore = useUserStore();
 
+    const setError = (errorMessage) => {
+        // Reset error to force reactivity
+        error.value = null;
+        setTimeout(() => {
+            error.value = errorMessage; // Set the actual error message
+        });
+    };
+
     async function hasSession() {
         loading.value = true;
-        error.value = null;
+
         try {
-            const result = await checkSessionExists();
+            const result = await checkSessionExistsComposable();
             return result;
         } catch (err) {
-            error.value = err.message;
+            setError('No session found for user');
         } finally {
             loading.value = false;
         }
@@ -24,15 +33,14 @@ export const useAuthStore = defineStore('authStore', () => {
 
     async function authUserWrapper(userName, userPass) {
         loading.value = true;
-        error.value = null;
+        
         try {
-            const result = await authUser({ email: userName, password: userPass });
+            const result = await authUserComposable({ email: userName, password: userPass });
             if (result && result.userId) {
                 userStore.setUserId(result.userId);
             }
         } catch (err) {
-            error.value = 'Invalid email or password';
-            console.error('Error during authentication:', err);
+            setError('Μη έγκυρος e-mail ή κωδικός');
         } finally {
             loading.value = false;
         }
@@ -40,22 +48,20 @@ export const useAuthStore = defineStore('authStore', () => {
 
     async function restoreSession() {
         try {
-            const result = await refreshSession();
+            const result = await refreshSessionComposable();
             if (result && result.userId) {
                 userStore.setUserId(result.userId);
             }
         } catch (err) {
-            console.error('Failed to restore session:', err);
-            error.value = err;
+            setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
         }
     }
 
     async function logout() {
         try {
-            await logoutUser();
+            await logoutUserComposable();
         } catch (err) {
-            console.error('Failed to delete session:', err);
-            error.value = err;
+            setError('Δεν μπορέσαμε να σας αποσυνδέσουμε');
         }
     }
 

@@ -9,6 +9,24 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     const error = ref(null);
     const userStore = useUserStore();
 
+    const setError = (errorMessage) => {
+        // Reset error to force reactivity
+        error.value = null;
+        setTimeout(() => {
+            error.value = errorMessage; // Set the actual error message
+        });
+    };
+    async function init() {
+        try {
+            if (!notificationsData.value.length) {
+                await getNotifications();
+            }
+            beginPolling();  // Assuming polling happens after initial data load
+        } catch (err) {
+            setError(err);
+        }
+    }
+
     async function getNotifications() {
         try {
             // Call the composable with the necessary parameters
@@ -20,8 +38,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError(err);
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -39,5 +56,5 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
 
 
-    return { notificationsData, loading, error, getNotifications, beginPolling };
+    return { notificationsData, loading, error, getNotifications, beginPolling, init };
 });

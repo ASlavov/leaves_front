@@ -7,6 +7,22 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
     const loading = ref(false);
     const error = ref(null);
 
+    const setError = (errorMessage) => {
+        // Reset error to force reactivity
+        error.value = null;
+        setTimeout(() => {
+            error.value = errorMessage; // Set the actual error message
+        });
+    };
+    async function init() {
+        try {
+            if (!departmentsData.value.length) {
+                await getAll();
+            }
+        } catch (err) {
+            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα γκρουπς');
+        }
+    }
 
     async function getAll() {
         try {
@@ -19,8 +35,7 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να φέρουμε τα γκρουπς');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -34,12 +49,11 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
 
             if (result) {
                 // Recall getAll to refresh the store data.
-                this.getAll();
+                await this.getAll();
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέο γκρουπ');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -53,12 +67,11 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
 
             if (result) {
                 // Recall getAll to refresh the store data.
-                this.getAll();
+                await this.getAll();
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να επεξεργαστούμε το γκρουπ που ζητήσατε');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -72,17 +85,16 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
 
             if (result) {
                 // Recall getAll to refresh the store data.
-                this.getAll();
+                await this.getAll();
             }
         } catch (err) {
             // Handle errors and set the error state
-            error.value = err;
-            console.error('Error fetching response:', err);
+            setError('Δεν μπορέσαμε να σβήσουμε το γκρουπ που ζητήσατε');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
 
-    return { departmentsData, loading, error, getAll };
+    return { departmentsData, loading, error, getAll, init };
 });
