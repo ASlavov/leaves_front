@@ -1,6 +1,6 @@
 <template>
     <h3 class="py-4 font-semibold text-lg">Πληροφορίες</h3>
-    <div class="bg-white border rounded-lg shadow-md p-4 flex-1 flex flex-col">
+    <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col">
         <div class="flex-1">
             <template v-if="loading">
                 <!-- Avatar Skeleton -->

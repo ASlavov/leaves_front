@@ -10,7 +10,7 @@
         <div v-else>
             <!-- Skeleton Loader: Show when loading is true -->
             <div v-if="loading" class="space-y-4">
-                <div v-for="index in skeletonCount" :key="index" class="flex items-center bg-gray-200 border border-gray-300 shadow-sm rounded-md p-4 space-x-4 mb-4 animate-pulse">
+                <div v-for="index in skeletonCount" :key="index" class="flex items-center bg-gray-200 border border-gray-300 hover:shadow-md transition-shadow duration-300 rounded-md p-4 space-x-4 mb-4 animate-pulse">
                     <!-- Simulating the layout for the skeleton loader -->
                     <div class="flex-shrink-0 bg-gray-300 h-6 w-6 rounded-full"></div>
                     <div class="flex-1">
@@ -28,7 +28,7 @@
 
             <!-- Actual Content: Show when loading is false -->
             <div v-if="!loading">
-                <div v-for="(leave, index) in leavesData" :key="index" class="flex items-center bg-white border shadow-sm rounded-md p-4 space-x-4 mb-4">
+                <div v-for="(leave, index) in leavesData" :key="index" class="flex items-center bg-white border hover:shadow-md transition-shadow duration-300 rounded-md p-4 space-x-4 mb-4">
                     <!-- Icon Column -->
                     <div class="flex-shrink-0">
                         <img src="https://placehold.co/150x150" alt="Icon" class="h-6 w-6">

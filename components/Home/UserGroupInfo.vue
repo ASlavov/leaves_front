@@ -7,7 +7,7 @@
         <div class="h-6 bg-gray-300 rounded w-1/3 animate-pulse"></div>
     </div>
 
-    <div v-else class="bg-white border rounded-lg shadow-md p-4 flex-1 flex items-center justify-center">
+    <div v-else class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex items-center justify-center">
         <!-- Group Info when data is available -->
         <div class="group-info text-center text-red-600">{{ user_department }}</div>
     </div>
