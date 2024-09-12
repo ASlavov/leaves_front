@@ -51,6 +51,7 @@ export default defineNuxtConfig({
         newLeave: '/new_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
+        getLeavesAvailableDays: '/entitlement_days',
       },
       departments: {
         getAll: '/departments',

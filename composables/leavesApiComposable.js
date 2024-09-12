@@ -32,3 +32,13 @@ export const getLeavesStatusesComposable = () => {
         method: 'POST',
     });
 };
+export const getLeavesAvailableDaysComposable = (userId) => {
+    const config = useRuntimeConfig()
+
+    return $fetch('/api/leaves/getLeavesAvailableDays', {
+        method: 'POST',
+        body: {
+            userId: userId,
+        }
+    });
+};
