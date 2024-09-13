@@ -49,6 +49,7 @@ definePageMeta({
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useNotificationsStore } from '@/stores/notifications';
 
   // Initialize the toast function
 const email = ref('');
@@ -56,6 +57,7 @@ const password = ref('');
 const rememberMe = ref(false);  // "Remember Me" does nothing
 const router = useRouter();
 const authStore = useAuthStore();
+const notificationsStore = useNotificationsStore();
 
 const login = async (event) => {
   event.preventDefault();  // Prevent default form submission
@@ -71,6 +73,7 @@ const login = async (event) => {
   }
 };
 onMounted(() => {
+  notificationsStore.stopPollingNotifications();
   watch(
       () => authStore.error,  // Watch the error state in the store
       (newError) => {

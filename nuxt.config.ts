@@ -56,10 +56,12 @@ export default defineNuxtConfig({
       },
       user: {
         getSingleUser: '/user',
+        getAll: '/users',
       },
       leaves: {
         getAll: '/user_leaves',
         newLeave: '/new_leave',
+        cancelLeave: '/processed_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',
