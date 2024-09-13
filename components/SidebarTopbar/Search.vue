@@ -30,7 +30,7 @@
                         <div v-for="item in items" :key="item.id"
                             class="flex items-center cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
                             @click="openModal(item)">
-                            <img :src="item.image" :alt="item.name"
+                            <img :src="item.profile_image || 'default-profile-image.jpg'" :alt="item.name"
                                 class="rounded-full bg-gray-200 size-6 overflow-hidden me-2.5">
                             <div>{{ item.name }}</div>
                         </div>
@@ -46,10 +46,11 @@
             <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
                 <button @click="closeModal"
                     class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-                <h2 class="text-lg font-bold mb-4">User Information</h2>
-                <img :src="selectedUser.image" :alt="selectedUser.name" class="rounded-full bg-gray-200 w-24 h-24 mb-4">
-                <p><strong>Name:</strong> {{ selectedUser.name }}</p>
-                <p><strong>Category:</strong> {{ selectedUser.category }}</p>
+                <h2 class="text-lg font-bold mb-4">Πληροφορίες</h2>
+                <img :src="selectedUser.profile_image || 'default-profile-image.jpg'" :alt="selectedUser.name"
+                    class="rounded-full bg-gray-200 w-24 h-24 mb-4">
+                <p><strong>Ονοματεπώνυμο:</strong> {{ selectedUser.name }}</p>
+                <p><strong>Category:</strong> {{ selectedUser.department.name }}</p>
 
                 <!-- Next / Previous buttons -->
                 <div v-if="hasMultipleUsers" class="mt-4 flex justify-between">
@@ -65,6 +66,9 @@
 </template>
 
 <script>
+import { computed, ref, watch } from 'vue';
+import { useCentralStore } from '@/stores/centralStore';
+
 export default {
     name: 'Search',
     data() {
@@ -74,49 +78,21 @@ export default {
             showDropdownVar: false,
             selectedUser: null,
             currentIndex: 0,
-            items: [
-                {
-                    "name": "Ella Lauda",
-                    "image": "https://images.unsplash.com/photo-1659482634023-2c4fda99ac0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "designer",
-                    "url": "#"
-                },
-                {
-                    "name": "David Harrison",
-                    "image": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "designer",
-                    "url": "#"
-                },
-                {
-                    "name": "James Collins",
-                    "image": "https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "backend",
-                    "url": "#"
-                },
-                {
-                    "name": "Costa Quinn",
-                    "image": "https://images.unsplash.com/photo-1601935111741-ae98b2b230b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "backend",
-                    "url": "#"
-                },
-                {
-                    "name": "Lewis Clarke",
-                    "image": "https://images.unsplash.com/photo-1679412330254-90cb240038c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "backend",
-                    "url": "#"
-                },
-                {
-                    "name": "Mia Maya",
-                    "image": "https://images.unsplash.com/photo-1670272505340-d906d8d77d03?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=320&h=320&q=80",
-                    "category": "backend",
-                    "url": "#"
-                }
-            ]
+            items: []  // This will be populated with allUsers
         };
+    },
+    setup() {
+        const centralStore = useCentralStore();
+        const userStore = centralStore.userStore;
+        
+        // Use computed to get all users
+        const allUsers = computed(() => userStore.allUsers || []);
+        
+        return { allUsers };
     },
     computed: {
         showDropdown() {
-            return this.showDropdownVar
+            return this.showDropdownVar;
         },
         filteredResults() {
             if (this.searchQuery === '') {
@@ -124,15 +100,16 @@ export default {
             }
             return this.items.filter(item =>
                 item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                item.category.toLowerCase().includes(this.searchQuery.toLowerCase())
+                item.department.name.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         },
         groupedResults() {
             return this.filteredResults.reduce((acc, item) => {
-                if (!acc[item.category]) {
-                    acc[item.category] = [];
+                const departmentName = item.department.name || 'Unknown'; // Use 'Unknown' if department name is missing
+                if (!acc[departmentName]) {
+                    acc[departmentName] = [];
                 }
-                acc[item.category].push(item);
+                acc[departmentName].push(item);
                 return acc;
             }, {});
         },
@@ -173,12 +150,17 @@ export default {
             if (modal && !modal.contains(event.target)) {
                 this.closeModal();
             }
-            if(dropdown && !dropdown.contains(event.target)) {
+            if (dropdown && !dropdown.contains(event.target)) {
                 this.closeDropdown();
             }
         },
         closeDropdown() {
             this.showDropdownVar = false;
+        }
+    },
+    watch: {
+        allUsers(newVal) {
+            this.items = newVal; // Sync items with allUsers
         }
     },
     mounted() {
