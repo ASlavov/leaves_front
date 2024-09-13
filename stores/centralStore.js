@@ -37,7 +37,9 @@ export const useCentralStore = defineStore('centralStore', () => {
                     departmentsStore.init(),
                     notificationsStore.init(),
                 ]);
+                // Run these serially
                 await leavesStore.init(userStore.userId);
+                await userStore.getAllUsers();
             }
         }
         catch (err) {

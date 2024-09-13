@@ -7,4 +7,10 @@ const getUserProfileComposable = async (userId) => {
         },
     });
 }
+
+export const getAllUsersComposable = async () => {
+    return $fetch('/api/user/getAllUsers', {
+        method: 'POST',
+    });
+}
 export default getUserProfileComposable;

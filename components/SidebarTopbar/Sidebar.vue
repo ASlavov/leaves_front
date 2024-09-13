@@ -11,6 +11,7 @@
             <div class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3">
                 <Search />
                 <div class="flex flex-row items-center justify-end gap-1">
+                    <ColorModeSwitcher />
                     <UserNotification />
                     <MyAccount />
                 </div>
@@ -79,4 +80,20 @@ import Search from '~/components/SidebarTopbar/Search.vue'
 import MyAccount from '~/components/SidebarTopbar/MyAccount.vue'
 import SidebarMenu from '~/components/SidebarTopbar/SidebarMenu.vue'
 import UserNotification from '~/components/SidebarTopbar/UserNotification.vue'
+import ColorModeSwitcher from "~/components/SidebarTopbar/ColorModeSwitcher.vue";
 </script>
+
+<style>
+body {
+  background-color: #fff;
+  color: rgba(0,0,0,0.8);
+}
+.dark-mode body {
+  background-color: #091a28;
+  color: #ebf4f1;
+}
+.sepia-mode body {
+  background-color: #f1e7d0;
+  color: #433422;
+}
+</style>

@@ -19,7 +19,9 @@ export default defineNuxtConfig({
       "~/plugins/apexcharts.client.ts",
       "~/plugins/vue3-toastify.client.js"
   ],
-
+  colorMode: {
+    classSuffix: ''
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -29,6 +31,7 @@ export default defineNuxtConfig({
 
   modules: [
       '@pinia/nuxt',
+      '@nuxtjs/color-mode'
   ],
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder
@@ -53,10 +56,12 @@ export default defineNuxtConfig({
       },
       user: {
         getSingleUser: '/user',
+        getAll: '/users',
       },
       leaves: {
         getAll: '/user_leaves',
         newLeave: '/new_leave',
+        cancelLeave: '/processed_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',

@@ -7,6 +7,8 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     const notificationsData = ref({});
     const loading = ref(false);
     const error = ref(null);
+    let notificationsActive = false;
+    let intervalId;
     const userStore = useUserStore();
 
     const setError = (errorMessage) => {
@@ -21,6 +23,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             if (!notificationsData.value.length) {
                 await getNotifications();
             }
+            notificationsActive = true;
             beginPolling();  // Assuming polling happens after initial data load
         } catch (err) {
             setError(err);
@@ -46,15 +49,24 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
 
     function beginPolling() {
-        // Set an interval to fetch notifications every 10 seconds
-        const intervalId = setInterval(async () => {
-            await getNotifications();
-        }, 10000);
+        if(notificationsActive) {
+            // Set an interval to fetch notifications every 10 seconds
+            intervalId = setInterval(async () => {
+                await getNotifications();
+            }, 10000);
 
-        // Optional: Return a way to stop the polling (clear the interval)
-        return () => clearInterval(intervalId);
+            // Optional: Return a way to stop the polling (clear the interval)
+            return () => clearInterval(intervalId);
+        }
+    }
+
+    function stopPollingNotifications() {
+        if(notificationsActive) {
+            notificationsActive = false;
+            clearInterval(intervalId);
+        }
     }
 
 
-    return { notificationsData, loading, error, getNotifications, beginPolling, init };
+    return { notificationsData, loading, error, getNotifications, beginPolling, init, stopPollingNotifications };
 });
