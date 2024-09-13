@@ -20,7 +20,7 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
                 await getAll();
             }
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα γκρουπς');
+            setError('Δεν μπορέσαμε να αρηκοποιήσουμε τα γκρουπς');
         }
     }
 
