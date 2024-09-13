@@ -172,10 +172,8 @@ export default {
             const dropdown = this.$el.querySelector('.absolute.z-50');
             if (modal && !modal.contains(event.target)) {
                 this.closeModal();
-                
             }
             if(dropdown && !dropdown.contains(event.target)) {
-                console.log(this.showDropdownVar);
                 this.closeDropdown();
             }
         },
