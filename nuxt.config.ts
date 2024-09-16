@@ -19,6 +19,9 @@ export default defineNuxtConfig({
       "~/plugins/apexcharts.client.ts",
       "~/plugins/vue3-toastify.client.js"
   ],
+  pinia: {
+    autoImports: ['defineStore', 'acceptHMRUpdate'],
+  },
   colorMode: {
     classSuffix: ''
   },
@@ -31,7 +34,8 @@ export default defineNuxtConfig({
 
   modules: [
       '@pinia/nuxt',
-      '@nuxtjs/color-mode'
+      '@nuxtjs/color-mode',
+      'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder

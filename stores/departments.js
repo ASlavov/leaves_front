@@ -97,4 +97,6 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
     }
 
     return { departmentsData, loading, error, getAll, init };
+}, {
+    persist: true,
 });

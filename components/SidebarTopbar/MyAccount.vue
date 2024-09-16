@@ -66,13 +66,13 @@ import { useCentralStore } from '@/stores/centralStore.js';
 import { computed } from "vue";
 
 const router = useRouter();
-const { authStore, userStore } = useCentralStore();
+const { userStore, centralStore } = useCentralStore();
 
 // Logout function
 const logout = async () => {
   try {
     // Clear authentication state in authStore (if any)
-    await authStore.logout();
+    await centralStore.logout();
 
     // Redirect to login page
     await router.push('/auth/login');
