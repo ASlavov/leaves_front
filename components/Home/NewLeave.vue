@@ -162,13 +162,35 @@ export default {
     };
   },
   mounted() {
-    flatpickr(this.$refs.datePickerStart, {
-      dateFormat: "Y-m-d",
-    });
+  const today = new Date();
+  
+  // Initialize the start date picker
+  flatpickr(this.$refs.datePickerStart, {
+    dateFormat: "Y-m-d",
+    minDate: today, // Disable past dates
+    onChange: (selectedDates) => {
+      if (selectedDates.length) {
+        const startDate = selectedDates[0];
+        this.startDate = startDate;
+        
+        // Set the end date to one day after the start date
+        const minEndDate = new Date(startDate);
+        minEndDate.setDate(minEndDate.getDate() + 1);
+        
+        // Update the end date picker
+        flatpickr(this.$refs.datePickerEnd, {
+          dateFormat: "Y-m-d",
+          minDate: minEndDate // Disable dates before one day after the start date
+        });
+      }
+    }
+  });
 
-    flatpickr(this.$refs.datePickerEnd, {
-      dateFormat: "Y-m-d",
-    });
-  },
+  // Initialize the end date picker
+  flatpickr(this.$refs.datePickerEnd, {
+    dateFormat: "Y-m-d",
+    minDate: today // Disable past dates initially
+  });
+},
 };
 </script>
