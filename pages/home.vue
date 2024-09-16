@@ -22,7 +22,7 @@ const authStore = centralStore.authStore;
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
-onMounted(async () => {
+/*onMounted(async () => {
   try {
     // Restore session first
     await authStore.restoreSession();
@@ -35,7 +35,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error during session restoration or loading leaves:", error);
   }
-});
+});*/
 </script>
 <script>
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'

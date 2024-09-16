@@ -22,15 +22,17 @@ const userId = computed(() => userStore.userId);
 
 onMounted(async () => {
     try {
-      const hasSession = await authStore.hasSession();
 
-      // Restore session first
-      if(hasSession) {
-        await authStore.restoreSession();
+        const hasSession = await authStore.hasSession();
 
-        await centralStore.init();
+        // Restore session first
+        if (hasSession) {
+          await authStore.restoreSession();
 
-      }
+          if (!centralStore.initialized) {
+            await centralStore.init();
+          }
+        }
     } catch (error) {
       useNuxtApp().$toast.error(error, {
         position: "bottom-right",

@@ -15,7 +15,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     
     const error = ref(null);
     const loading = ref(false);
-
+    const initialized = ref(false);
     const setError = (errorMessage) => {
         // Reset error to force reactivity
         error.value = null;
@@ -31,24 +31,41 @@ export const useCentralStore = defineStore('centralStore', () => {
             loading.value = true;
 
             if(userStore.userId) {
+                console.log('initializing');
                 // Run all store initialization in parallel
                 await Promise.all([
-                    userStore.init(),
-                    departmentsStore.init(),
-                    notificationsStore.init(),
-                ]);
-                // Run these serially
-                await leavesStore.init(userStore.userId);
-                await userStore.getAllUsers();
+                        userStore.init(),
+                        departmentsStore.init(),
+                        notificationsStore.init(),
+                    ]).then(async() => {
+                    console.log('initializing in progress');
+                    await Promise.all([
+                        userStore.getAllUsers(),
+                        leavesStore.init(userStore.userId),
+                    ]).then(() => {
+                        console.log('initialized is set to true now');
+                        initialized.value = true
+                    });
+                });
             }
         }
         catch (err) {
+            console.log('initialization error');
             // Handle errors and set the error state
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
             //notificationsStore.beginPolling();
+        }
+    }
+
+    async function logout (){
+        try {
+            initialized.value = false;
+            await authStore.logout();
+        } catch (e) {
+        } finally {
         }
     }
 
@@ -78,12 +95,16 @@ export const useCentralStore = defineStore('centralStore', () => {
 
     return {
         init,
+        initialized,
         error,
         loading,
+        logout,
         authStore: proxiedAuthStore,
         userStore: proxiedUserStore,
         leavesStore: proxiedLeavesStore,
         departmentsStore: proxiedDepartmentsStore,
         notificationsStore: proxiedNotificationsStore,
     };
+}, {
+    persist: true,
 });
