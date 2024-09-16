@@ -84,13 +84,8 @@ const getLeaveTypeName = (leaveTypeId) => {
 };
 
 // Loading state and skeleton count
-const loading = ref(true);
+const loading = computed(() => leavesStore.loading);
 const skeletonCount = ref(leavesData.value.length || 3); // Dynamically show skeletons for available leaves or default to 3
-
-// Simulate loading state
-setTimeout(() => {
-    loading.value = false; // Set loading to false after a delay
-}, 2000); // Adjust the delay as needed
 </script>
 
 <style scoped>

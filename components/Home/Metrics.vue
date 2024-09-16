@@ -38,10 +38,14 @@ const props = defineProps({
     leave: {
         type: Object,
         required: true
-    }
+    },
+    loading: {
+        type: Boolean,
+        required: true,
+    },
 });
 
-const loading = ref(true);
+const loading = props.loading;
 
 const percentageRemaining = computed(() => {
     const { entitled_days, remaining_days } = props.leave;
@@ -80,12 +84,12 @@ watch(() => props.leave.remaining_days, (newValue) => {
     chartSeries.value = [percentageRemaining.value]; // Update the chart series data based on the calculated percentage
 }, { immediate: true }); // Run the watch function immediately on component mount
 
-onMounted(() => {
+/*onMounted(() => {
     // Simulate loading time
     setTimeout(() => {
         loading.value = false;
     }, 2000); // Simulate a 2-second loading time
-});
+});*/
 </script>
 
 <style scoped></style>

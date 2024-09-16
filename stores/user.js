@@ -57,6 +57,4 @@ export const useUserStore = defineStore('userStore', () => {
 
 
     return { userId, userInfo, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
-}, {
-    persist: true,
 });

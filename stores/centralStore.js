@@ -34,19 +34,17 @@ export const useCentralStore = defineStore('centralStore', () => {
                 console.log('initializing');
                 // Run all store initialization in parallel
                 await Promise.all([
-                        userStore.init(),
-                        departmentsStore.init(),
-                        notificationsStore.init(),
-                    ]).then(async() => {
-                    console.log('initializing in progress');
-                    await Promise.all([
-                        userStore.getAllUsers(),
-                        leavesStore.init(userStore.userId),
-                    ]).then(() => {
-                        console.log('initialized is set to true now');
-                        initialized.value = true
-                    });
-                });
+                    userStore.init(),
+                    departmentsStore.init(),
+                    notificationsStore.init(),
+                ]);
+
+                await Promise.all([
+                    userStore.getAllUsers(),
+                    leavesStore.init(userStore.userId),
+                ]);
+
+                initialized.value = true
             }
         }
         catch (err) {
@@ -70,7 +68,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     }
 
     // Proxy to safely expose stores without direct access
-    const proxyHandler = {
+    /*const proxyHandler = {
         get(target, prop) {
             if (prop in target) {
                 const value = target[prop];
@@ -84,20 +82,35 @@ export const useCentralStore = defineStore('centralStore', () => {
                 return undefined;
             }
         }
+    };*/
+
+    const dynamicProxyHandler = {
+        get(target, prop) {
+            // First check if the property exists in the state of the store
+            if (prop in target.$state) {
+                return target.$state[prop];
+            }
+            // Otherwise, check if the property is a function (method) and return it
+            if (typeof target[prop] === 'function') {
+                return target[prop].bind(target); // Bind the function to the store
+            }
+            // If neither, return undefined
+            return undefined;
+        }
     };
 
     // Return proxied versions of the stores
-    const proxiedAuthStore = new Proxy(authStore, proxyHandler);
-    const proxiedUserStore = new Proxy(userStore, proxyHandler);
-    const proxiedLeavesStore = new Proxy(leavesStore, proxyHandler);
-    const proxiedDepartmentsStore = new Proxy(departmentsStore, proxyHandler);
-    const proxiedNotificationsStore = new Proxy(notificationsStore, proxyHandler);
+    const proxiedAuthStore = new Proxy(authStore, dynamicProxyHandler);
+    const proxiedUserStore = new Proxy(userStore, dynamicProxyHandler);
+    const proxiedLeavesStore = new Proxy(leavesStore, dynamicProxyHandler);
+    const proxiedDepartmentsStore = new Proxy(departmentsStore, dynamicProxyHandler);
+    const proxiedNotificationsStore = new Proxy(notificationsStore, dynamicProxyHandler);
 
     return {
-        init,
-        initialized,
         error,
         loading,
+        initialized,
+        init,
         logout,
         authStore: proxiedAuthStore,
         userStore: proxiedUserStore,
@@ -105,6 +118,4 @@ export const useCentralStore = defineStore('centralStore', () => {
         departmentsStore: proxiedDepartmentsStore,
         notificationsStore: proxiedNotificationsStore,
     };
-}, {
-    persist: true,
 });

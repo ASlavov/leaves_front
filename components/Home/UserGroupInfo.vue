@@ -23,12 +23,7 @@ const { authStore, userStore } = useCentralStore();
 const user_department = computed(() => userStore.userInfo?.department?.name);
 
 // Loading state
-const loading = ref(true);
-
-// Simulate a data fetch delay
-setTimeout(() => {
-    loading.value = false;
-}, 2000); // Simulated loading time (adjust as needed)
+const loading = computed(() => userStore.loading);
 </script>
 
 <script>

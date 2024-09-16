@@ -66,6 +66,4 @@ export const useAuthStore = defineStore('authStore', () => {
     }
 
     return { loading, error, authUser: authUserWrapper, restoreSession, hasSession, logout };
-}, {
-    persist: true,
 });
