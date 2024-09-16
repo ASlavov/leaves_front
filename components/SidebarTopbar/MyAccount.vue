@@ -66,7 +66,8 @@ import { useCentralStore } from '@/stores/centralStore.js';
 import { computed } from "vue";
 
 const router = useRouter();
-const { userStore, centralStore } = useCentralStore();
+const centralStore = useCentralStore();
+const userStore = centralStore.userStore;
 
 // Logout function
 const logout = async () => {

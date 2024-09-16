@@ -28,9 +28,10 @@ onMounted(async () => {
         // Restore session first
         if (hasSession) {
           await authStore.restoreSession();
-
+          console.log('initializing');
           if (!centralStore.initialized) {
             await centralStore.init();
+            console.log('initialized')
           }
         }
     } catch (error) {

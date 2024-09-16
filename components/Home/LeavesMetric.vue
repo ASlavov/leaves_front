@@ -6,7 +6,7 @@
         </div>
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Render Metrics component for each item in leavesData -->
-            <Metrics v-for="(leave, index) in leavesData" :key="index" :leave="leave" />
+            <Metrics v-for="(leave, index) in leavesData" :key="index" :leave="leave" :loading="leavesStore.loading" />
             <div class="flex flex-row justify-center items-center leave-actions space-x-4">
                 <NewLeave />
                 <CancelLeave />

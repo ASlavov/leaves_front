@@ -56,7 +56,7 @@ const router = useRouter();
 const { authStore, userStore } = useCentralStore();
 
 // Loading state
-const loading = ref(true); // Simulate loading state
+const loading = computed(() => (userStore && userStore.loading)); // Simulate loading state
 
 const userEmail = computed(() => userStore.userInfo?.email);
 const userName = computed(() => userStore.userInfo?.name || '');
@@ -75,9 +75,6 @@ const user_internal_phone = computed(() => userStore.userInfo?.profile?.internal
 const user_department = computed(() => userStore.userInfo?.department?.name);
 
 // Simulate loading duration (replace this with actual data fetch logic)
-setTimeout(() => {
-    loading.value = false;
-}, 2000); // Adjust the delay as needed
 </script>
 
 <script>
