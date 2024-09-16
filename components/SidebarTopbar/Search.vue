@@ -30,8 +30,6 @@
                         <div v-for="item in items" :key="item.id"
                             class="flex items-center cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
                             @click="openModal(item)">
-                            <img :src="item.profile_image || 'default-profile-image.jpg'" :alt="item.name"
-                                class="rounded-full bg-gray-200 size-6 overflow-hidden me-2.5">
                             <div>{{ item.name }}</div>
                         </div>
                     </div>
@@ -46,21 +44,47 @@
             <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
                 <button @click="closeModal"
                     class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-                <h2 class="text-lg font-bold mb-4">Πληροφορίες</h2>
-                <img :src="selectedUser.profile_image || 'default-profile-image.jpg'" :alt="selectedUser.name"
-                    class="rounded-full bg-gray-200 w-24 h-24 mb-4">
-                <p><strong>Ονοματεπώνυμο:</strong> {{ selectedUser.name }}</p>
-                <p><strong>Category:</strong> {{ selectedUser.department.name }}</p>
+                <h2 class="text-lg font-bold mb-4">Πληροφορίες χρήστη</h2>
+
+                <!-- User Profile Image -->
+                <!-- <img :src="selectedUser.profile_image || 'default-profile-image.jpg'" :alt="selectedUser?.name"
+                    class="rounded-full bg-gray-200 w-24 h-24 mb-4"> -->
+
+                <!-- User Info -->
+                <div class="pt-4 space-y-2">
+                    <div><span class="font-bold">Όνομα: </span><span class="text-gray-500">{{ selectedUser.name.split(' ')[0] }}</span></div>
+                    <div><span class="font-bold">Επώνυμο: </span><span class="text-gray-500">{{
+                        selectedUser.name.split(' ').slice(1).join(' ') }}</span></div>
+                    <div><span class="font-bold">Τίτλος: </span><span class="text-gray-500">{{
+                        selectedUser?.profile?.job_title
+                            }}</span></div>
+                    <div><span class="font-bold">Email: </span><span class="text-gray-500">{{ selectedUser?.email
+                            }}</span></div>
+                    <div><span class="font-bold">Κινητό: </span><span class="text-gray-500">{{
+                        selectedUser.profile?.phone
+                            }}</span></div>
+                    <div><span class="font-bold">Εσωτ. Τηλέφωνο: </span><span class="text-gray-500">{{
+                        selectedUser?.profile?.internal_phone }}</span></div>
+                    <div><span class="font-bold">Γκρουπ: </span><span class="text-gray-500">{{
+                        selectedUser.department.name }}</span></div>
+                </div>
+
 
                 <!-- Next / Previous buttons -->
                 <div v-if="hasMultipleUsers" class="mt-4 flex justify-between">
                     <button @click="previousUser" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
-                        :disabled="!hasPrevious">Previous</button>
+                        :disabled="!hasPrevious">
+                        &#8592; <!-- Unicode for Left Arrow -->
+                    </button>
                     <button @click="nextUser" class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
-                        :disabled="!hasNext">Next</button>
+                        :disabled="!hasNext">
+                        &#8594; <!-- Unicode for Right Arrow -->
+                    </button>
                 </div>
+
             </div>
         </div>
+
         <!-- End Modal -->
     </div>
 </template>
@@ -84,10 +108,10 @@ export default {
     setup() {
         const centralStore = useCentralStore();
         const userStore = centralStore.userStore;
-        
+
         // Use computed to get all users
         const allUsers = computed(() => userStore.allUsers || []);
-        
+
         return { allUsers };
     },
     computed: {

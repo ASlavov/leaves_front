@@ -1,7 +1,7 @@
 <template>
     <div class="container mx-auto">
-        <h3 class="py-4 font-semibold text-lg">Υπόλοιπα άδειας</h3>
-        <div v-if="leavesData.length === 0" class="text-center py-4 text-gray-600">
+        <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Υπόλοιπα άδειας</h3>
+        <div v-if="leavesData.length === 0" class="text-center py-4 text-gray-600 dark:text-gray-100">
             Δεν υπάρχουν διαθέσιμες άδειες
         </div>
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

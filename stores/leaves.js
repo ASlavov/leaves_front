@@ -91,7 +91,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                await getAll();
+                await getAll(userId);
             }
         } catch (err) {
             // Handle errors and set the error state
