@@ -73,8 +73,9 @@ const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 
 // Use computed to get leavesData and leaveTypes
-const leavesData = computed(() => leavesStore.leavesData.currentUser);
-const leaveTypes = computed(() => leavesStore.leavesData.leavesTypes);
+const leavesData = computed(() => leavesStore.leavesData?.currentUser || []);
+const leaveTypes = computed(() => leavesStore.leavesData?.leavesTypes || []);
+
 
 // Function to get leave type name based on leave_type_id
 const getLeaveTypeName = (leaveTypeId) => {

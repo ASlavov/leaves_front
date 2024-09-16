@@ -1,11 +1,13 @@
-import { defineStore, setActivePinia, createPinia } from 'pinia';
-import { ref } from 'vue';
+import {defineStore, setActivePinia, createPinia} from 'pinia';
+import {ref} from 'vue';
 import {
     getUserLeavesComposable,
     newLeaveComposable,
     getLeavesStatusesComposable,
-    getLeavesAvailableDaysComposable
+    getLeavesAvailableDaysComposable,
+    cancelLeaveComposable
 } from '@/composables/leavesApiComposable';
+import { useUserStore } from '@/stores/user';
 
 export const useLeavesStore = defineStore('leavesStore', () => {
     const leavesData = ref({
@@ -16,6 +18,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     });
     const loading = ref(false);
     const error = ref(null);
+    const userStore = useUserStore();
 
     const setError = (errorMessage) => {
         // Reset error to force reactivity
@@ -63,11 +66,13 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
         try {
             // Call the composable with the necessary parameters
-            const result = await newLeaveComposable({ userId, leaveTypeId, startDate, endDate, reason });
+            const result = await newLeaveComposable({userId, leaveTypeId, startDate, endDate, reason});
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.value.data = result;
+                //leavesData.value.data = result;
+                await getAll(userId);
+                await getLeavesAvailableDays(userId);
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -77,6 +82,24 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             loading.value = false;
         }
 
+    }
+
+    async function cancelLeave(userId, leaveId, status, reason) {
+        try {
+            // Call the composable with the necessary parameters
+            const result = await cancelLeaveComposable({userId, leaveId, status, reason});
+
+            if (result) {
+                // Process the result and store it in userData
+                await getAll();
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
     }
 
     async function getLeavesTypes() {
@@ -138,5 +161,16 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
-    return { leavesData, loading, error, init, getAll, newLeave, getLeavesTypes, getLeavesStatuses, getLeavesAvailableDays };
+    return {
+        leavesData,
+        loading,
+        error,
+        init,
+        getAll,
+        newLeave,
+        cancelLeave,
+        getLeavesTypes,
+        getLeavesStatuses,
+        getLeavesAvailableDays,
+    };
 });

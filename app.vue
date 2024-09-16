@@ -32,7 +32,10 @@ onMounted(async () => {
 
       }
     } catch (error) {
-      console.error("Error during session restoration or loading leaves:", error);
+      useNuxtApp().$toast.error(error, {
+        position: "bottom-right",
+        autoClose: 5000, // Close automatically after 5 seconds
+      });
     }
 
   watch(

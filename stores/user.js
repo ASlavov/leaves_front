@@ -1,13 +1,13 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import * as console from "node:console";
-import getUserProfileComposable from "~/composables/userApiComposable.js";
+import {defineStore} from 'pinia';
+import {ref} from 'vue';
+import getUserProfileComposable, {getAllUsersComposable} from "~/composables/userApiComposable.js";
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref(null);
     const loading = ref(false);
     //const profile = ref({});  // You can add more user-related data here
     const userInfo = ref({});
+    const allUsers = ref({});
     const error = ref(null);
 
     const setError = (errorMessage) => {
@@ -35,6 +35,16 @@ export const useUserStore = defineStore('userStore', () => {
         }
     }
 
+    async function getAllUsers() {
+        if (userId.value) {
+            try {
+                allUsers.value = await getAllUsersComposable(userId.value);
+            } catch (err) {
+                setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
+            }
+        }
+    }
+
     async function init() {
         try {
             if (!Object.keys(userInfo.value).length) {
@@ -46,5 +56,5 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
 
-    return { userId, userInfo, setUserId, loading, loadUserProfile, init, error };
+    return { userId, userInfo, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
 });

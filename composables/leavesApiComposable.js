@@ -1,6 +1,4 @@
 export const getUserLeavesComposable = (userId) => {
-    const config = useRuntimeConfig()
-
     return $fetch('/api/leaves/getLeavesByUser', {
         method: 'POST',
         body: {userId: userId},
@@ -8,8 +6,6 @@ export const getUserLeavesComposable = (userId) => {
 };
 
 export const newLeaveComposable = (body) => {
-    const config = useRuntimeConfig()
-
     return $fetch('/api/leaves/newLeave', {
         method: 'POST',
         body: {
@@ -18,23 +14,26 @@ export const newLeaveComposable = (body) => {
     });
 };
 
-export const getLeavesTypesComposable = () => {
-    const config = useRuntimeConfig()
+export const cancelLeaveComposable = (body) => {
+    return $fetch('/api/leaves/cancelLeave', {
+        method: 'POST',
+        body: {
+            ...body
+        },
+    });
+};
 
+export const getLeavesTypesComposable = () => {
     return $fetch('/api/leaves/getLeavesTypes', {
         method: 'POST',
     });
 };
 export const getLeavesStatusesComposable = () => {
-    const config = useRuntimeConfig()
-
     return $fetch('/api/leaves/getLeavesStatuses', {
         method: 'POST',
     });
 };
 export const getLeavesAvailableDaysComposable = (userId) => {
-    const config = useRuntimeConfig()
-
     return $fetch('/api/leaves/getLeavesAvailableDays', {
         method: 'POST',
         body: {

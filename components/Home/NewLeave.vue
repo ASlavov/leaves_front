@@ -27,32 +27,26 @@
           </h3>
         </div>
         <div class="p-4 overflow-y-auto">
-          <div class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg">
+          <!-- Conditionally render the leave counter if leaveType is selected -->
+          <div v-if="leaveType"
+            class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg">
             <span class="leave-counter-text">Διαθέσιμες ημέρες </span>
             <div class="leave-counter-count text-red-600 font-bold text-md text-lg">
-              05
+              {{ selectedLeave?.remaining_days ?? '0' }}
             </div>
           </div>
           <div class="new-leave-form py-10">
-
-            <form class="space-y-6">
+            <form @submit.prevent="submitForm" class="space-y-6">
               <!-- First row: Single input -->
               <div>
                 <label for="input1" class="block text-sm font-medium text-gray-700 py-3">Τύπος άδειας</label>
                 <div class="space-y-3">
-                  <select data-hs-select='{
-                  "placeholder": "Επιλέξτε τύπο άδειας...",
-                  "toggleTag": "<button type=\"button\" aria-expanded=\"false\"></button>",
-                  "toggleClasses": "hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 relative py-3 ps-4 pe-9 flex gap-x-2 text-nowrap w-full cursor-pointer bg-white border border-gray-200 rounded-lg text-start text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-neutral-600",
-                  "dropdownClasses": "mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:bg-neutral-900 dark:border-neutral-700",
-                  "optionClasses": "py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 hs-select-disabled:pointer-events-none hs-select-disabled:opacity-50 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800",
-                  "optionTemplate": "<div class=\"flex justify-between items-center w-full\"><span data-title></span><span class=\"hidden hs-selected:block\"><svg class=\"shrink-0 size-3.5 text-blue-600 dark:text-blue-500 \" xmlns=\"http:.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"/></svg></span></div>",
-                  "extraMarkup": "<div class=\"absolute top-1/2 end-3 -translate-y-1/2\"><svg class=\"shrink-0 size-3.5 text-gray-500 dark:text-neutral-500 \" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></div>"
-                }' class="hidden">
-                    <option value="">Choose</option>
-                    <option>Name</option>
-                    <option>Description</option>
-                    <option>User ID</option>
+                  <select v-model="leaveType" class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm">
+                    <option value="">Επιλέξτε άδεια</option>
+                    <!-- Loop through leavesData to populate the options -->
+                    <option v-for="(leave, index) in leavesData" :key="index" :value="leave.leave_type_id">{{
+                      leave.leave_type_name }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -61,13 +55,13 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label for="input2" class="block text-sm font-medium text-gray-700 py-3">Ημ/νια απο</label>
-                  <input type="text" id="date-picker" ref="datePickerStart"
+                  <input type="text" v-model="startDate" ref="datePickerStart"
                     class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm"
                     placeholder="Επιλέξτε ημ/νια">
                 </div>
                 <div>
                   <label for="input3" class="block text-sm font-medium text-gray-700 py-3">Ημ/νια μέχρι</label>
-                  <input type="text" id="date-picker" ref="datePickerEnd"
+                  <input type="text" v-model="endDate" ref="datePickerEnd"
                     class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm"
                     placeholder="Επιλέξτε ημ/νια">
                 </div>
@@ -77,19 +71,18 @@
               <div>
                 <label for="textarea" class="block text-sm font-medium text-gray-700 py-3">Σχόλια (προαιρετικό)</label>
                 <div class="space-y-3">
-                  <textarea class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg" rows="3"
-                    placeholder="This is a textarea placeholder"></textarea>
+                  <textarea v-model="comments" class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg"
+                    rows="3" placeholder="This is a textarea placeholder"></textarea>
                 </div>
               </div>
 
-              <!-- Fourth row: Button -->
+              <!-- Fourth row: Button and success message -->
               <div>
                 <button type="submit"
-                  class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                  class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-purple-600 bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
                   Αποστολή αιτήματος
                 </button>
               </div>
-              
             </form>
 
           </div>
@@ -98,22 +91,83 @@
     </div>
   </div>
 </template>
+
 <script>
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import { ref, computed } from 'vue';
+import { useCentralStore } from '@/stores/centralStore.js';
+
 export default {
   name: 'NewLeave',
+  setup() {
+    const centralStore = useCentralStore();
+    const leavesStore = centralStore.leavesStore;
 
-  mounted() {
-    // Initialize Flatpickr for the first date input
-    flatpickr(this.$refs.datePickerStart, {
-      dateFormat: "Y-m-d", // Customize the date format if needed
+    // Ensure leavesData is always an array
+    const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
+    const userStore = centralStore.userStore;
+    const user_id = computed(() => userStore.userId);
+
+    const leaveType = ref('');
+    const startDate = ref('');
+    const endDate = ref('');
+    const comments = ref('');
+    const successMessage = ref(''); // Reactive variable for success message
+
+    const selectedLeave = computed(() => {
+      if (leavesData.value && leaveType.value) {
+        return leavesData.value.find(leave => leave.leave_type_id === leaveType.value) || null;
+      }
+      return null;
     });
 
-    // Initialize Flatpickr for the second date input
+    const submitForm = async () => {
+      const leaveRequest = {
+        id: user_id.value,  // Adjusted based on your Postman example
+        leave_type_id: leaveType.value,
+        start_date: startDate.value,
+        end_date: endDate.value,
+        reason: comments.value,
+      };
+
+      console.log(leaveRequest);  // Log the data for debugging
+
+      try {
+        await leavesStore.newLeave(user_id.value, leaveRequest.leave_type_id, leaveRequest.start_date, leaveRequest.end_date, leaveRequest.reason);
+        
+        useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+            position: "bottom-right",
+            autoClose: 5000, // Close automatically after 5 seconds
+          });
+
+      } catch (error) {
+        console.error('Error submitting leave request:', error);
+        successMessage.value = ''; // Clear the success message on error
+        // Handle the error as needed
+      }
+    };
+
+    return {
+      user_id,
+      leavesData,
+      leaveType,
+      startDate,
+      endDate,
+      comments,
+      selectedLeave,
+      successMessage,  // Make successMessage available to the template
+      submitForm,
+    };
+  },
+  mounted() {
+    flatpickr(this.$refs.datePickerStart, {
+      dateFormat: "Y-m-d",
+    });
+
     flatpickr(this.$refs.datePickerEnd, {
-      dateFormat: "Y-m-d", // Customize the date format if needed
+      dateFormat: "Y-m-d",
     });
   },
 };

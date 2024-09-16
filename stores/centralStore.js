@@ -37,12 +37,14 @@ export const useCentralStore = defineStore('centralStore', () => {
                     departmentsStore.init(),
                     notificationsStore.init(),
                 ]);
+                // Run these serially
                 await leavesStore.init(userStore.userId);
+                await userStore.getAllUsers();
             }
         }
         catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα δεδομένα σας');
+            setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
