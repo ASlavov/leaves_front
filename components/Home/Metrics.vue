@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'bg-gray-200': loading, 'bg-white': !loading }" class="border rounded-lg hover:shadow-md transition-shadow duration-300 p-4">
+    <div :class="{ 'bg-gray-200': loading, 'bg-white': !loading }" class="border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 dark:bg-neutral-800 dark:text-gray-100">
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <template v-if="loading">

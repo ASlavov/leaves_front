@@ -1,15 +1,15 @@
 <template>
-    <h3 class="py-4 font-semibold text-lg">Γκρουπ</h3>
+    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Γκρουπ</h3>
 
     <!-- Use a single container and conditional rendering for loading and data -->
-    <div v-if="loading" class="bg-gray-200 border rounded-lg shadow-md p-4 flex-1 flex items-center justify-center">
+    <div v-if="loading" class="bg-gray-200 border rounded-lg shadow-md p-4 flex-1 flex items-center justify-center dark:bg-neutral-800 dark:text-gray-100">
         <!-- Skeleton Loader -->
         <div class="h-6 bg-gray-300 rounded w-1/3 animate-pulse"></div>
     </div>
 
-    <div v-else class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex items-center justify-center">
+    <div v-else class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex items-center justify-center dark:bg-neutral-800 dark:text-gray-100">
         <!-- Group Info when data is available -->
-        <div class="group-info text-center text-red-600">{{ user_department }}</div>
+        <div class="group-info text-center text-red-600  dark:text-gray-100">{{ user_department }}</div>
     </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <a href="#" class="py-3 px-5 inline-flex items-center gap-x-2 text-md" aria-haspopup="dialog" aria-expanded="false"
+    <a href="#" class="py-3 px-5 inline-flex items-center gap-x-2 text-md dark:text-gray-100" aria-haspopup="dialog" aria-expanded="false"
         aria-controls="hs-scale-animation-modal" data-hs-overlay="#cancel_leaves">
         Ακύρωση Άδειας
     </a>
@@ -116,7 +116,21 @@
 </template>
 
 <script>
+import { ref, computed } from 'vue';
+import { useCentralStore } from '@/stores/centralStore.js';
+
 export default {
-    name: ' CancelLeave'
+    name: ' CancelLeave',
+    setup() {
+        const centralStore = useCentralStore();
+        const leavesStore = centralStore.leavesStore;
+
+        // Ensure leavesData is always an array
+        const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
+        const userStore = centralStore.userStore;
+        const user_id = computed(() => userStore.userId);
+
+    },
 }
+
 </script>
