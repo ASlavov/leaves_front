@@ -9,7 +9,7 @@
     role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
     <div
       class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
-      <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto">
+      <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:text-gray-100">
         <button type="button"
           class="size-8 ml-auto inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
           aria-label="Close" data-hs-overlay="#new-leave-modal">
@@ -39,12 +39,12 @@
             <form @submit.prevent="submitForm" class="space-y-6">
               <!-- First row: Single input -->
               <div>
-                <label for="input1" class="block text-sm font-medium text-gray-700 py-3">Τύπος άδειας</label>
+                <label for="input1" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Τύπος άδειας</label>
                 <div class="space-y-3">
-                  <select v-model="leaveType" class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm">
-                    <option value="">Επιλέξτε άδεια</option>
+                  <select v-model="leaveType" class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100">
+                    <option class="dark:bg-neutral-800 dark:text-gray-100" value="">Επιλέξτε άδεια</option>
                     <!-- Loop through leavesData to populate the options -->
-                    <option v-for="(leave, index) in leavesData" :key="index" :value="leave.leave_type_id">{{
+                    <option class="dark:bg-neutral-800 dark:text-gray-100" v-for="(leave, index) in leavesData" :key="index" :value="leave.leave_type_id">{{
                       leave.leave_type_name }}
                     </option>
                   </select>
@@ -54,24 +54,24 @@
               <!-- Second row: Two inputs in two columns -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label for="input2" class="block text-sm font-medium text-gray-700 py-3">Ημ/νια απο</label>
+                  <label for="input2" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Ημ/νια απο</label>
                   <input type="text" v-model="startDate" ref="datePickerStart"
-                    class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm"
+                    class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
                     placeholder="Επιλέξτε ημ/νια">
                 </div>
                 <div>
-                  <label for="input3" class="block text-sm font-medium text-gray-700 py-3">Ημ/νια μέχρι</label>
+                  <label for="input3" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Ημ/νια μέχρι</label>
                   <input type="text" v-model="endDate" ref="datePickerEnd"
-                    class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm"
+                    class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
                     placeholder="Επιλέξτε ημ/νια">
                 </div>
               </div>
 
               <!-- Third row: Textarea -->
               <div>
-                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3">Σχόλια (προαιρετικό)</label>
+                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Σχόλια (προαιρετικό)</label>
                 <div class="space-y-3">
-                  <textarea v-model="comments" class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg"
+                  <textarea v-model="comments" class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
                     rows="3" placeholder="This is a textarea placeholder"></textarea>
                 </div>
               </div>
@@ -79,7 +79,7 @@
               <!-- Fourth row: Button and success message -->
               <div>
                 <button type="submit"
-                  class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-purple-600 bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                  class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-red-600 bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
                   Αποστολή αιτήματος
                 </button>
               </div>
@@ -162,13 +162,35 @@ export default {
     };
   },
   mounted() {
-    flatpickr(this.$refs.datePickerStart, {
-      dateFormat: "Y-m-d",
-    });
+  const today = new Date();
+  
+  // Initialize the start date picker
+  flatpickr(this.$refs.datePickerStart, {
+    dateFormat: "Y-m-d",
+    minDate: today, // Disable past dates
+    onChange: (selectedDates) => {
+      if (selectedDates.length) {
+        const startDate = selectedDates[0];
+        this.startDate = startDate;
+        
+        // Set the end date to one day after the start date
+        const minEndDate = new Date(startDate);
+        minEndDate.setDate(minEndDate.getDate() + 1);
+        
+        // Update the end date picker
+        flatpickr(this.$refs.datePickerEnd, {
+          dateFormat: "Y-m-d",
+          minDate: minEndDate // Disable dates before one day after the start date
+        });
+      }
+    }
+  });
 
-    flatpickr(this.$refs.datePickerEnd, {
-      dateFormat: "Y-m-d",
-    });
-  },
+  // Initialize the end date picker
+  flatpickr(this.$refs.datePickerEnd, {
+    dateFormat: "Y-m-d",
+    minDate: today // Disable past dates initially
+  });
+},
 };
 </script>

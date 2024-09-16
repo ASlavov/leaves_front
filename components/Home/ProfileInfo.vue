@@ -1,6 +1,6 @@
 <template>
-    <h3 class="py-4 font-semibold text-lg">Πληροφορίες</h3>
-    <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col">
+    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Πληροφορίες</h3>
+    <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
         <div class="flex-1">
             <template v-if="loading">
                 <!-- Avatar Skeleton -->
@@ -25,13 +25,13 @@
                 </div>
                 <!-- Info Details -->
                 <div class="pt-4 space-y-2">
-                    <p><span class="font-bold">Όνομα: </span><span class="text-gray-500">{{ firstName }}</span></p>
-                    <p><span class="font-bold">Επώνυμο: </span><span class="text-gray-500"> {{ lastName }}</span></p>
-                    <p><span class="font-bold">Τίτλος: </span><span class="text-gray-500"> {{ userTitle }}</span></p>
-                    <p><span class="font-bold">Email: </span><span class="text-gray-500"> {{ userEmail }}</span></p>
-                    <p><span class="font-bold">Κινητό: </span><span class="text-gray-500"> {{ userphone }}</span></p>
-                    <p><span class="font-bold">Εσωτ. Τηλέφωνο: </span><span class="text-gray-500"> {{ user_internal_phone }}</span></p>
-                    <p><span class="font-bold">Γκρουπ: </span><span class="text-gray-500"> {{ user_department }}</span></p>
+                    <p><span class="font-bold">Όνομα: </span><span class="text-gray-500 dark:text-gray-100">{{ firstName }}</span></p>
+                    <p><span class="font-bold">Επώνυμο: </span><span class="text-gray-500 dark:text-gray-100"> {{ lastName }}</span></p>
+                    <p><span class="font-bold">Τίτλος: </span><span class="text-gray-500 dark:text-gray-100"> {{ userTitle }}</span></p>
+                    <p><span class="font-bold">Email: </span><span class="text-gray-500 dark:text-gray-100"> {{ userEmail }}</span></p>
+                    <p><span class="font-bold">Κινητό: </span><span class="text-gray-500 dark:text-gray-100"> {{ userphone }}</span></p>
+                    <p><span class="font-bold">Εσωτ. Τηλέφωνο: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_internal_phone }}</span></p>
+                    <p><span class="font-bold">Γκρουπ: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_department }}</span></p>
                 </div>
             </template>
         </div>

@@ -12,7 +12,7 @@ import { useUserStore } from '@/stores/user';
 export const useLeavesStore = defineStore('leavesStore', () => {
     const leavesData = ref({
         currentUser: {},
-        leavesTypes: {},
+        leavesTypes: [],
         leavesStatuses: {},
         leavesAvailableDays: {},
     });
@@ -32,7 +32,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         try {
             await Promise.all([
                 !Object.keys(leavesData.value.currentUser).length && getAll(userId),
-                !Object.keys(leavesData.value.leavesTypes).length && getLeavesTypes(),
+                !leavesData.value.leavesTypes.length && getLeavesTypes(),
                 !Object.keys(leavesData.value.leavesStatuses).length && getLeavesStatuses(),
                 !Object.keys(leavesData.value.leavesAvailableDays).length && getLeavesAvailableDays(userId),
             ]);
@@ -91,7 +91,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                await getAll();
+                await getAll(userId);
             }
         } catch (err) {
             // Handle errors and set the error state
