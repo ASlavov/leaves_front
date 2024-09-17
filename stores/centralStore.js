@@ -60,6 +60,10 @@ export const useCentralStore = defineStore('centralStore', () => {
 
     async function logout (){
         try {
+            userStore.reset();
+            leavesStore.reset();
+            departmentsStore.reset();
+            notificationsStore.reset();
             initialized.value = false;
             await authStore.logout();
         } catch (e) {

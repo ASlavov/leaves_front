@@ -7,6 +7,9 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
     const loading = ref(false);
     const error = ref(null);
 
+    function reset() {
+        departmentsData.value = [];
+    }
     const setError = (errorMessage) => {
         // Reset error to force reactivity
         error.value = null;
@@ -96,5 +99,5 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
         }
     }
 
-    return { departmentsData, loading, error, getAll, init };
+    return { departmentsData, loading, error, getAll, init, reset };
 });

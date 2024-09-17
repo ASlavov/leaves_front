@@ -8,39 +8,49 @@
 
 
 <script setup>
+import { useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 
+const router = useRouter();
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const leavesStore = centralStore.leavesStore;
 const authStore = centralStore.authStore;
 
+const runInitCode = async () => {
+  try {
+
+    const hasSession = await authStore.hasSession();
+
+    // Restore session first
+    if (hasSession) {
+      await authStore.restoreSession();
+      console.log('initializing');
+      if (!centralStore.initialized) {
+        await centralStore.init();
+        console.log('initialized')
+      }
+    }
+  } catch (error) {
+    useNuxtApp().$toast.error(error, {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+  }
+};
+
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
 
+router.afterEach(async (to, from) => {
+  // Runs after every navigation, including router.push and NuxtLink clicks
+  await runInitCode();
+});
+
 onMounted(async () => {
-    try {
-
-        const hasSession = await authStore.hasSession();
-
-        // Restore session first
-        if (hasSession) {
-          await authStore.restoreSession();
-          console.log('initializing');
-          if (!centralStore.initialized) {
-            await centralStore.init();
-            console.log('initialized')
-          }
-        }
-    } catch (error) {
-      useNuxtApp().$toast.error(error, {
-        position: "bottom-right",
-        autoClose: 5000, // Close automatically after 5 seconds
-      });
-    }
-
+  await runInitCode();
   watch(
       () => centralStore.error,  // Watch the error state in the store
       (newError) => {
