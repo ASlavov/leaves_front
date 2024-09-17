@@ -20,6 +20,15 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     const error = ref(null);
     const userStore = useUserStore();
 
+    function reset() {
+        leavesData.value = {
+            currentUser: {},
+            leavesTypes: [],
+            leavesStatuses: {},
+            leavesAvailableDays: {},
+        };
+    }
+
     const setError = (errorMessage) => {
         // Reset error to force reactivity
         error.value = null;
@@ -166,6 +175,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         loading,
         error,
         init,
+        reset,
         getAll,
         newLeave,
         cancelLeave,

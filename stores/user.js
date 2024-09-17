@@ -10,6 +10,11 @@ export const useUserStore = defineStore('userStore', () => {
     const allUsers = ref({});
     const error = ref(null);
 
+    function reset() {
+        userInfo.value = {};
+        userInfo.allUsers = {};
+    }
+
     const setError = (errorMessage) => {
         // Reset error to force reactivity
         error.value = null;
@@ -56,5 +61,5 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
 
-    return { userId, userInfo, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
+    return { userId, reset, userInfo, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
 });

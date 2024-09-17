@@ -11,6 +11,10 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     let intervalId;
     const userStore = useUserStore();
 
+    function reset() {
+        notificationsData.value = {};
+    }
+
     const setError = (errorMessage) => {
         // Reset error to force reactivity
         error.value = null;
@@ -68,5 +72,5 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
 
 
-    return { notificationsData, loading, error, getNotifications, beginPolling, init, stopPollingNotifications };
+    return { notificationsData, loading, error, getNotifications, beginPolling, init, reset, stopPollingNotifications };
 });
