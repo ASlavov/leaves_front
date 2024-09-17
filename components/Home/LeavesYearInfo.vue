@@ -57,7 +57,7 @@
                     </div>
                     <!-- Third Text Column (Right Aligned) -->
                     <div class="flex-1 text-right">
-                        <button class="font-semibold underline text-black dark:text-gray-100">Ακύρωση άδειας</button>
+                        <button v-if="leave.status === 'approved' || leave.status === 'pending' " class="font-semibold underline text-black dark:text-gray-100">Ακύρωση άδειας</button>
                     </div>
                 </div>
             </div>
