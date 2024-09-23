@@ -13,4 +13,14 @@ export const getAllUsersComposable = async () => {
         method: 'POST',
     });
 }
+
+export const editUserComposable = async (body) => {
+    return $fetch('/api/user/editUser', {
+        method: 'POST',
+        body: {
+            ...body
+        },
+    });
+}
+
 export default getUserProfileComposable;

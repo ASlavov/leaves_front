@@ -12,7 +12,8 @@
                     </svg>
                 </div>
                 <input
-                    class="py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200"
+                    class="py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200
+dark:bg-neutral-800 dark:color-gray-100"
                     type="text" role="combobox" aria-expanded="true" placeholder="Αναζήτηση χρήστη..."
                     v-model="searchQuery" @focus="showDropdownVar = true" @input="filterResults">
             </div>

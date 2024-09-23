@@ -1,6 +1,7 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
-import getUserProfileComposable, {getAllUsersComposable} from "~/composables/userApiComposable.js";
+import getUserProfileComposable, {getAllUsersComposable, editUserComposable} from "~/composables/userApiComposable.js";
+import {newLeaveComposable} from "~/composables/leavesApiComposable.js";
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref(null);
@@ -32,20 +33,67 @@ export const useUserStore = defineStore('userStore', () => {
     async function loadUserProfile() {
         if (userId.value) {
             try {
+                loading.value = true;
                 const fullProfile = await getUserProfileComposable(userId.value);
                 userInfo.value = fullProfile;
             } catch (err) {
                 setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
+            } finally {
+                loading.value = false;
             }
         }
+    }
+
+    //editUserComposable
+    async function editUser(
+        userId,
+        userName,
+        userEmail,
+        userDepartment,
+        userRole,
+        userPhone,
+        userInternalPhone,
+        userTitle,
+        userTitleDescription
+    ) {
+
+        try {
+            loading.value = true;
+            // Call the composable with the necessary parameters
+            const result = await editUserComposable({
+                userId,
+                userName,
+                userEmail,
+                userDepartment,
+                userRole,
+                userPhone,
+                userInternalPhone,
+                userTitle,
+                userTitleDescription
+            });
+
+            if (result) {
+                await loadUserProfile();
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να επεξεργαστούμε τον χρήστη');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+
     }
 
     async function getAllUsers() {
         if (userId.value) {
             try {
+                loading.value = true;
                 allUsers.value = await getAllUsersComposable(userId.value);
             } catch (err) {
                 setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
+            } finally {
+                loading.value = false;
             }
         }
     }
@@ -53,13 +101,16 @@ export const useUserStore = defineStore('userStore', () => {
     async function init() {
         try {
             if (!Object.keys(userInfo.value).length) {
+                loading.value = true;
                 await loadUserProfile();
             }
         } catch (err) {
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε το προφίλ σας');
+        } finally {
+            loading.value = false;
         }
     }
 
 
-    return { userId, reset, userInfo, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
+    return { userId, reset, userInfo, editUser, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
 });
