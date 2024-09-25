@@ -23,4 +23,13 @@ export const editUserComposable = async (body) => {
     });
 }
 
+export const updatePasswordComposable = async (body) => {
+    return $fetch('/api/user/updatePassword', {
+        method: 'POST',
+        body: {
+            ...body
+        },
+    });
+}
+
 export default getUserProfileComposable;

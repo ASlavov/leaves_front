@@ -61,7 +61,8 @@ export default defineNuxtConfig({
       user: {
         getSingleUser: '/user',
         getAll: '/users',
-        edit: '/user-update'
+        edit: '/user-update',
+        updatePassword: '/user-update-password'
       },
       leaves: {
         getAll: '/user_leaves',

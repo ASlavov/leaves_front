@@ -1,6 +1,10 @@
 import {defineStore} from 'pinia';
 import {ref} from 'vue';
-import getUserProfileComposable, {getAllUsersComposable, editUserComposable} from "~/composables/userApiComposable.js";
+import getUserProfileComposable, {
+    getAllUsersComposable,
+    editUserComposable,
+    updatePasswordComposable
+} from "~/composables/userApiComposable.js";
 import {newLeaveComposable} from "~/composables/leavesApiComposable.js";
 
 export const useUserStore = defineStore('userStore', () => {
@@ -8,12 +12,12 @@ export const useUserStore = defineStore('userStore', () => {
     const loading = ref(false);
     //const profile = ref({});  // You can add more user-related data here
     const userInfo = ref({});
-    const allUsers = ref({});
+    const allUsers = ref([]);
     const error = ref(null);
 
     function reset() {
         userInfo.value = {};
-        userInfo.allUsers = {};
+        userInfo.allUsers = [];
     }
 
     const setError = (errorMessage) => {
@@ -42,6 +46,10 @@ export const useUserStore = defineStore('userStore', () => {
                 loading.value = false;
             }
         }
+    }
+    // Optionally, load user profile data based on userId
+    async function loadUserProfileById(userId) {
+        return allUsers.value.find(element => element.id === userId) || [];
     }
 
     //editUserComposable
@@ -73,7 +81,14 @@ export const useUserStore = defineStore('userStore', () => {
             });
 
             if (result) {
-                await loadUserProfile();
+                if (result.errors) {
+                    throw new Error();
+                }
+                if(userId === this.userId) {
+                    await loadUserProfile();
+                } else {
+                    await getAllUsers();
+                }
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -85,11 +100,35 @@ export const useUserStore = defineStore('userStore', () => {
 
     }
 
+    async function updatePassword(data) {
+        const {
+            userId,
+            oldPass,
+            newPass,
+        } = data;
+
+        try {
+            loading.value = true;
+            const result = await updatePasswordComposable({
+                userId,
+                oldPass,
+                newPass,
+            });
+            if (result) {
+                // Nothing else to do here
+            }
+        } catch (err) {
+            setError('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας');
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function getAllUsers() {
         if (userId.value) {
             try {
                 loading.value = true;
-                allUsers.value = await getAllUsersComposable(userId.value);
+                allUsers.value = Object.values(await getAllUsersComposable(userId.value));
             } catch (err) {
                 setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
             } finally {
@@ -104,6 +143,9 @@ export const useUserStore = defineStore('userStore', () => {
                 loading.value = true;
                 await loadUserProfile();
             }
+            if(!allUsers.value.length) {
+                await getAllUsers();
+            }
         } catch (err) {
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε το προφίλ σας');
         } finally {
@@ -112,5 +154,5 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
 
-    return { userId, reset, userInfo, editUser, setUserId, loading, loadUserProfile, init, error, allUsers, getAllUsers };
+    return { userId, reset, userInfo, editUser, setUserId, loading, loadUserProfile, loadUserProfileById, init, error, allUsers, getAllUsers, updatePassword };
 });

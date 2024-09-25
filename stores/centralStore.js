@@ -51,6 +51,7 @@ export const useCentralStore = defineStore('centralStore', () => {
             console.log('initialization error');
             // Handle errors and set the error state
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
+            initialized.value = false;
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;

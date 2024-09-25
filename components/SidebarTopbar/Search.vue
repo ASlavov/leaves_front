@@ -129,7 +129,7 @@ export default {
             );
         },
         groupedResults() {
-            return this.filteredResults.reduce((acc, item) => {
+            return this.filteredResults?.reduce((acc, item) => {
                 const departmentName = item.department.name || 'Unknown'; // Use 'Unknown' if department name is missing
                 if (!acc[departmentName]) {
                     acc[departmentName] = [];
