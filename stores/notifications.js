@@ -72,5 +72,5 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     }
 
 
-    return { notificationsData, loading, error, getNotifications, beginPolling, init, reset, stopPollingNotifications };
+    return { notificationsData, loading, error, getNotifications, beginPolling, init, reset, stopPollingNotifications, notificationsActive };
 });

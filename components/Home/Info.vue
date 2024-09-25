@@ -8,7 +8,7 @@
                <UserGroupInfo />
             </div>
             <div class="lg:col-span-6 flex flex-col">
-                <h3 class="py-4 font-semibold text-lg">Άδειες έτους</h3>
+                <h3 class="py-4 font-semibold text-lg dark:text-white">Άδειες έτους</h3>
                 <div class="flex-1 space-y-3 max-h-[500px] overflow-y-auto">
                     <LeavesYearInfo />
                 </div>

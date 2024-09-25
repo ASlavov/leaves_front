@@ -1,23 +1,36 @@
 <template>
-    <header
-        class="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 lg:ps-[260px] dark:bg-neutral-800 dark:border-neutral-700">
-        <nav class="px-4 sm:px-6 flex basis-full items-center w-full mx-auto">
-            <div class="me-5 lg:me-0 lg:hidden">
-                <a class="flex-none rounded-md text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
-                    href="/home" aria-label="Leaves">
-                    <img src="https://whyagency.gr/wp-content/uploads/2023/10/logo_dark.png" width="150">
-                </a>
-            </div>
-            <div class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3">
-                <Search />
-                <div class="flex flex-row items-center justify-end gap-1">
-                    <ColorModeSwitcher />
-                    <UserNotification />
-                    <MyAccount />
-                </div>
-            </div>
-        </nav>
-    </header>
+  <header
+      class="duration-300 sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 lg:ps-[260px] dark:bg-neutral-800 dark:border-neutral-700">
+    <nav class="px-4 sm:px-6 flex basis-full items-center w-full mx-auto">
+      <!-- ... other code ... -->
+      <div
+          class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3"
+      >
+        <!-- Notification Toggle -->
+        <div @click="toggleNotifications" class="relative inline-block w-12 h-6 cursor-pointer">
+          <!-- Background -->
+          <span
+              :class="notificationsStore.notificationsActive ? 'bg-gray-600' : 'bg-gray-100'"
+              class="absolute inset-0 rounded-full transition duration-300 ease-in-out"
+          ></span>
+          <!-- Toggle Circle -->
+          <span
+              :class="[
+              'absolute left-0 top-0 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out shadow',
+              notificationsStore.notificationsActive ? 'translate-x-6 bg-gray-100' : 'translate-x-0 bg-gray-600',
+            ]"
+          ></span>
+        </div>
+        <!-- Other Components -->
+        <Search />
+        <div class="flex flex-row items-center justify-end gap-1">
+          <ColorModeSwitcher />
+          <UserNotification />
+          <MyAccount />
+        </div>
+      </div>
+    </nav>
+  </header>
     <div class="-mt-px">
         <div
             class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 lg:px-8 lg:hidden dark:bg-neutral-800 dark:border-neutral-700">
@@ -76,12 +89,27 @@
 </template>
 
 <script setup>
-import Search from '~/components/SidebarTopbar/Search.vue'
-import MyAccount from '~/components/SidebarTopbar/MyAccount.vue'
-import SidebarMenu from '~/components/SidebarTopbar/SidebarMenu.vue'
-import UserNotification from '~/components/SidebarTopbar/UserNotification.vue'
+import Search from '~/components/SidebarTopbar/Search.vue';
+import MyAccount from '~/components/SidebarTopbar/MyAccount.vue';
+import SidebarMenu from '~/components/SidebarTopbar/SidebarMenu.vue';
+import UserNotification from '~/components/SidebarTopbar/UserNotification.vue';
 import ColorModeSwitcher from "~/components/SidebarTopbar/ColorModeSwitcher.vue";
+import { useCentralStore } from "~/stores/centralStore.js";
+
+const { notificationsStore } = useCentralStore();
+
+// Toggle function
+const toggleNotifications = () => {
+  if (notificationsStore.notificationsActive) {
+    notificationsStore.stopPollingNotifications();
+  } else {
+    notificationsStore.beginPolling();
+  }
+};
 </script>
+
+
+
 
 <style>
 body {

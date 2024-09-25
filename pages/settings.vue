@@ -1,12 +1,12 @@
 <template>
   <Sidebar />
   <!-- Content -->
-  <div class="w-full lg:ps-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64">
+  <div class="w-full lg:ps-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
     <h3 class="px-4 pt-[35px] sm:px-6  font-semibold text-lg dark:text-gray-100">Ρυθμίσεις</h3>
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div class="w-full bg-white rounded-lg shadow-md dark:bg-neutral-800">
-        <div class="border-b border-gray-200 px-4 dark:border-neutral-700">
-          <nav class="flex gap-x-1 overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+      <div class="w-full bg-white rounded-lg shadow-md dark:bg-neutral-800 duration-300">
+        <div class="border-b border-gray-200 px-4 dark:border-neutral-700 duration-300">
+          <nav class="flex gap-x-[70px] overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
             <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500 active" id="basic-tabs-item-1" aria-selected="true" data-hs-tab="#basic-tabs-1" aria-controls="basic-tabs-1" role="tab">
               Επεξεργασία Προφίλ
             </button>
@@ -31,7 +31,7 @@
         <div class="mt-3 p-4">
           <div id="basic-tabs-1" role="tabpanel" aria-labelledby="basic-tabs-item-1">
             <p class="text-gray-500 dark:text-neutral-400">
-              <EditUser />
+              <EditUser :userId="userId" />
             </p>
           </div>
           <div id="basic-tabs-2" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-2">
@@ -46,7 +46,7 @@
           </div>
           <div id="basic-tabs-4" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
             <p class="text-gray-500 dark:text-neutral-400">
-              This is the <em class="font-semibold text-gray-800 dark:text-neutral-200">fourth</em> item's tab body.
+              <UsersList />
             </p>
           </div>
           <div id="basic-tabs-5" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
@@ -66,7 +66,7 @@
   <!-- End Content -->
 </template>
 <script setup>
-import { computed, onMounted } from 'vue';
+import {computed, onMounted, watch} from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
@@ -77,6 +77,8 @@ const authStore = centralStore.authStore;
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
+
+
 /*onMounted(async () => {
   try {
     // Restore session first
@@ -96,11 +98,13 @@ const leavesData = computed(() => leavesStore.leavesData);
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
 import EditUser from '~/components/Settings/EditUser.vue'
 import Security from "~/components/Settings/Security.vue";
+import UsersList from "~/components/Settings/UsersList.vue";
 export default {
   components: {
     Sidebar,
     EditUser,
-    Security
+    Security,
+    UsersList
   }
 }
 </script>

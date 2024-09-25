@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxtjs/color-mode": "^3.4.4",
     "@pinia/nuxt": "^0.5.4",
+    "@vueuse/core": "^11.1.0",
     "apexcharts": "^3.53.0",
     "chart.js": "^4.4.4",
     "flatpickr": "^4.6.13",

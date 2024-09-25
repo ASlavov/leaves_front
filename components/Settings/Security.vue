@@ -18,15 +18,17 @@
       <template v-else>
 <!-- TODO: border-rounded to ::before instead -->
         <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px]">Αλλαγή κωδικού</h3>
-        <div class="grid grid-cols-12 pt-[30px]">
+        <div class="grid grid-cols-12 pt-[30px] max-w-[847px]">
           <!-- Info Details -->
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px] max-w-[625px]">
             <!-- Form Group -->
             <div class="max-w-[300px] col-span-2">
               <label class="block font-bold text-black text-sm mb-2 dark:text-white">Υπάρχον κωδικός</label>
               <div class="relative">
-                <input name="current-password" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value="">
+                <input
+                    v-model="currentPassword"
+                    name="current-password" type="password"
+                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value>
                 <button @click="togglePassword('current-password')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
                   <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -42,8 +44,10 @@
             <div class="max-w-[300px]">
               <label class="block font-bold text-black text-sm mb-2 dark:text-white">Νέος κωδικός</label>
               <div class="relative">
-                <input name="new-password" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value="">
+                <input
+                    v-model="newPassword"
+                    name="new-password" type="password"
+                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value>
                 <button @click="togglePassword('new-password')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
                   <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -59,8 +63,10 @@
             <div class="max-w-[300px]">
               <label class="block font-bold text-black text-sm mb-2 dark:text-white">Επιβεβαίωση νέου κωδικού</label>
               <div class="relative">
-                <input name="new-password-confirm" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value="">
+                <input
+                    v-model="confirmPassword"
+                    name="new-password-confirm" type="password"
+                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******">
                 <button @click="togglePassword('new-password-confirm')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
                   <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
@@ -94,28 +100,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRouter } from 'vue-router';
+import { ref, computed } from "vue";
 import { useCentralStore } from '@/stores/centralStore.js';
 
-const router = useRouter();
-const { authStore, userStore, departmentsStore } = useCentralStore();
-
-// Loading state
-const loading = computed(() => userStore && userStore.loading);
-
-
-// Initialize form fields when userStore.userInfo is available
-watch(() => userStore.userInfo, (newUserInfo) => {
-  if (newUserInfo) {
-
-  }
-}, { immediate: true });
-watch(() => departmentsStore.departmentsData, (departmentData) => {
-  if (departmentData) {
-
-  }
-}, { immediate: true });
+const { authStore, userStore } = useCentralStore();
 
 const togglePassword = (name) => {
   const e = document.querySelector(`input[name="${name}"]`);
@@ -129,24 +117,52 @@ const togglePassword = (name) => {
   }
 };
 
+
+const currentPassword = ref('');
+const newPassword = ref('');
+const confirmPassword = ref('');
+
 // Submit form method
 const submitForm = async () => {
   const userId = userStore.userId;
-  const userName = `${formFirstName.value} ${formLastName.value}`.trim();
-  const userEmail = formEmail.value;
+
+  // Validate that new password and confirm password match
+  if (newPassword.value !== confirmPassword.value) {
+    // Handle the error, e.g., show an error message
+    useNuxtApp().$toast.error('Ο νέος κωδικός και ο κωδικός επιβεβαίωσης δεν ταιριάζουν!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+    return;
+  }
+
+  // Construct the data object
+  const data = {
+    userId: userId,
+    oldPass: currentPassword.value,
+    newPass: newPassword.value,
+  };
 
   try {
-    await userStore.editUser(
-        userId,
-        userName,
-        userEmail,
-    );
-    // Optionally, show a success message or redirect the user
+    // Call the API to update the password
+    await userStore.updatePassword(data);
+
+    useNuxtApp().$toast.success('Ο κωδικός σας άλλαξε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } catch (error) {
     // Handle errors, e.g., show an error message
-    console.error('Error updating user:', error);
+    console.error('Error updating password:', error);
+    useNuxtApp().$toast.error('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   }
 };
+
+// Loading state
+const loading = computed(() => userStore && userStore.loading);
 </script>
 
 <style scoped>
