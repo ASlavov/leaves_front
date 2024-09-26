@@ -22,17 +22,95 @@
         <div class="col-span-1">
           Filter By:
         </div>
+
+        <!-- First Name Filter -->
         <div class="col-span-2 text-black dark:text-white">
-          <input v-model="filters.firstName" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Όνομα" />
+          <div class="relative">
+            <input
+                v-model="filters.firstName"
+                class="py-3 px-4 pr-6 -ml-4 block border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                type="text"
+                placeholder="Όνομα"
+            />
+            <button
+                v-if="filters.firstName"
+                @click="filters.firstName = ''"
+                class="absolute z-10 right-10 top-1/2 transform -translate-y-1/2 text-red-500"
+            >
+              &times;
+            </button>
+          </div>
         </div>
+
+        <!-- Last Name Filter -->
         <div class="col-span-2 text-black dark:text-white">
-          <input v-model="filters.lastName" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Επώνυμο" />
+          <div class="relative">
+            <input
+                v-model="filters.lastName"
+                class="py-3 px-4 pr-6 -ml-4 block border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                type="text"
+                placeholder="Επώνυμο"
+            />
+            <button
+                v-if="filters.lastName"
+                @click="filters.lastName = ''"
+                class="absolute z-10 right-10 top-1/2 transform -translate-y-1/2 text-red-500"
+            >
+              &times;
+            </button>
+          </div>
         </div>
+
+        <!-- Title Filter -->
         <div class="col-span-2 text-black dark:text-white">
-          <input v-model="filters.job_title" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Τίτλος" />
+          <div class="relative">
+            <input
+                v-model="filters.job_title"
+                class="py-3 px-4 pr-6 -ml-4 block border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                type="text"
+                placeholder="Τίτλος"
+            />
+            <button
+                v-if="filters.job_title"
+                @click="filters.job_title = ''"
+                class="absolute z-10 right-10 top-1/2 transform -translate-y-1/2 text-red-500"
+            >
+              &times;
+            </button>
+          </div>
         </div>
+
+        <!-- Department Filter -->
         <div class="col-span-2 text-black dark:text-white">
-          <input v-model="filters.department" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Γκρούπ" />
+          <div class="relative">
+            <input
+                v-model="filters.department"
+                class="py-3 px-4 pr-6 -ml-4 block border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                type="text"
+                placeholder="Γκρούπ"
+            />
+            <button
+                v-if="filters.department"
+                @click="filters.department = ''"
+                class="absolute z-10 right-10 top-1/2 transform -translate-y-1/2 text-red-500"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+        <div class="col-span-3 justify-self-end items-center">
+          <button
+              v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
+              @click="
+                filters.firstName = '';
+                filters.lastName  = '';
+                filters.job_title  = '';
+                filters.department = '';
+              "
+              class="text-red-500"
+          >
+            &times; Clear all
+          </button>
         </div>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[30px] py-[10px] font-bold">
