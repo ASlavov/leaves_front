@@ -20,7 +20,7 @@
     <div class="flex flex-col gap-[10px]">
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[30px] py-[10px] font-bold">
         <div class="col-span-1">
-
+          Filter By:
         </div>
         <div class="col-span-2 text-black dark:text-white">
           Όνομα
@@ -35,18 +35,107 @@
           Γκρούπ
         </div>
       </div>
-      <div v-for="user in allUsers" :key="user.id" class="grid grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
+      <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[30px] py-[10px] font-bold">
+        <div class="col-span-1">
+          Sort By:
+        </div>
+        <!-- First Name Sort Button -->
+        <div
+            @click="sortBy('firstName')"
+            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
+        >
+          Όνομα
+          <span v-if="currentSortKey === 'firstName'" class="ml-1">
+            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Up Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 15l7-7 7 7"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Down Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+        </div>
+        <!-- Last Name Sort Button -->
+        <div
+            @click="sortBy('lastName')"
+            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
+        >
+          Επώνυμο
+          <span v-if="currentSortKey === 'lastName'" class="ml-1">
+            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Up Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 15l7-7 7 7"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Down Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+        </div>
+        <!-- First Name Sort Button -->
+        <div
+            @click="sortBy('job_title')"
+            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
+        >
+          Τίτλος
+          <span v-if="currentSortKey === 'job_title'" class="ml-1">
+            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Up Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 15l7-7 7 7"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Down Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+        </div>
+        <!-- First Name Sort Button -->
+        <div
+            @click="sortBy('department')"
+            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
+        >
+          Γκρούπ
+          <span v-if="currentSortKey === 'department'" class="ml-1">
+            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Up Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M5 15l7-7 7 7"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Down Arrow -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 9l-7 7-7-7"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div v-for="user in filteredUsers" :key="user.id" class="grid grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
         <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
           <img v-if="user.profile.profile_image" :src="user.profile.profile_image" />
           <span v-else class="text-white font-bold">
-              {{ (user.name.split(' ')[0])?.charAt(0) || '' }}{{ (user.name.split(' ')[1])?.charAt(0) || '' }}
+              {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
           </span>
         </div>
         <div class="col-span-2">
-          {{ user.name.split(' ')[0] || '' }}
+          {{ user.firstName || '' }}
         </div>
         <div class="col-span-2">
-          {{ user.name.split(' ')[1] || '' }}
+          {{ user.lastName || '' }}
         </div>
         <div class="col-span-2">
           {{ user?.profile?.job_title || '' }}
@@ -69,7 +158,7 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       @click.self="closeModal"
   >
-    <div class="bg-white p-6 rounded-lg w-full max-w-[900px] relative">
+    <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] relative">
       <button
           @click="closeModal"
           class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -84,39 +173,106 @@
 </template>
 
 <script setup>
-import {useCentralStore} from "~/stores/centralStore.js";
-import {computed, ref, watch} from "vue";
-
+import { ref, computed, watch } from 'vue';
+import { useCentralStore } from '~/stores/centralStore.js';
 import EditUser from '@/components/Settings/EditUser.vue';
-//import DeleteUser from '@/components/Settings/DeleteUser.vue';
+// import DeleteUser from '@/components/Settings/DeleteUser.vue'; // Uncomment when available
 
-const {
-  userStore,
-  departmentsStore,
-} = useCentralStore();
+// Access the necessary stores
+const { userStore } = useCentralStore();
 
-
+// Reactive variables for modal management
 const showModal = ref(false);
 const modalType = ref(''); // 'edit' or 'delete'
 const selectedUserId = ref(null);
 
-//const theme = computed(() => useNuxtApp().vueApp.config.globalProperties.$colorMode?.value || 'light');
+// Compute the current theme
 const theme = computed(() => {
   const { $colorMode } = useNuxtApp();
   return $colorMode?.value || 'light';
 });
+
+// Loading state from userStore
 const loading = computed(() => userStore.loading);
+
+// Reactive variable to store all users
 const allUsers = ref([]);
+
+// Process users to extract firstName and lastName
 watch(
     () => userStore.allUsers,
     (users) => {
-      console.log('users:', users)
-      allUsers.value = users;
-    },{
-      immediate: true,
-    }
+      allUsers.value = users.map(user => {
+        // Extract firstName and lastName from user.name
+        const nameSplit = user.name.trim().split(' ');
+        const firstName = nameSplit.slice(0, -1).join(' ') || nameSplit[0];
+        const lastName = nameSplit.slice(-1).join(' ') || '';
+
+        // Return a new user object with firstName and lastName added
+        return {
+          ...user,
+          firstName,
+          lastName,
+        };
+      });
+    },
+    { immediate: true }
 );
 
+// Reactive variables for sorting
+const sortDirection = ref(true); // true for ascending, false for descending
+const currentSortKey = ref(''); // The key currently being sorted by
+
+// Function to handle sorting when a sort button is clicked
+const sortBy = (sortingKey) => {
+  if (currentSortKey.value === sortingKey) {
+    // Toggle sort direction if the same key is clicked
+    sortDirection.value = !sortDirection.value;
+  } else {
+    // Set new sort key and reset to ascending order
+    currentSortKey.value = sortingKey;
+    sortDirection.value = true;
+  }
+};
+
+// Define sorting functions
+const sortByFunctions = {
+  'firstName': (a, b) => a.firstName.localeCompare(b.firstName),
+  'lastName': (a, b) => a.lastName.localeCompare(b.lastName),
+  'job_title': (a, b) => (a.profile?.job_title || '').localeCompare(b.profile?.job_title || ''),
+  'department': (a, b) => (a.department?.name || '').localeCompare(b.department?.name || ''),
+};
+
+// Define filters
+const filters = ref({
+  firstName: '',
+  lastName: '',
+  department: '',
+  job_title: '',
+});
+
+// Computed property for filtered and sorted users
+const filteredUsers = computed(() => {
+  // Filter users based on filters (currently empty)
+  let users = allUsers.value.filter((user) =>
+      (filters.value.firstName !== '' ? user.name.split(' ')[0].includes(filters.value.firstName) : true)
+      && (filters.value.lastName !== '' ? user.name.split(' ')[1].includes(filters.value.lastName) : true)
+      && (filters.value.department !== '' ? user?.department?.name.includes(filters.value.department) : true)
+      && (filters.value.job_title !== '' ? user?.profile?.job_title.includes(filters.value.job_title) : true)
+  );
+
+  // Apply sorting if a valid sort key is selected
+  if (currentSortKey.value && sortByFunctions[currentSortKey.value]) {
+    users = users.slice().sort((a, b) => {
+      const result = sortByFunctions[currentSortKey.value](a, b);
+      return sortDirection.value ? result : -result;
+    });
+  }
+
+  return users;
+});
+
+// Functions to handle edit and delete actions
 const editUser = (userId) => {
   selectedUserId.value = userId;
   modalType.value = 'edit';
@@ -135,10 +291,14 @@ const closeModal = () => {
   modalType.value = '';
 };
 
+// Compute the component to render in the modal
 const modalComponent = computed(() => {
   return modalType.value === 'edit' ? EditUser : DeleteUser;
 });
-
 </script>
+
+
+
+
 <script>
 </script>

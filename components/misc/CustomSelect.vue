@@ -3,10 +3,27 @@
     <label :for="selectId" class="block text-sm font-bold mb-2 text-black dark:text-white">{{ label }}</label>
     <div @click="toggleDropdown" class="cursor-pointer">
       <div
-          class="py-3 px-4 block w-full border border-gray-200 rounded-lg bg-white text-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+          class="py-3 px-4 flex items-center justify-between w-full border border-gray-200 rounded-lg bg-white text-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
       >
-        <span v-if="selectedOption">{{ selectedOption.name }}</span>
-        <span v-else class="text-gray-400 dark:text-neutral-500">{{ placeholder }}</span>
+        <div>
+          <span v-if="selectedOption">{{ selectedOption.name }}</span>
+          <span v-else class="text-gray-400 dark:text-neutral-500">{{ placeholder }}</span>
+        </div>
+        <div>
+          <!-- SVG Chevron Icon -->
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              :class="[
+              'w-5 h-5 text-gray-400 dark:text-neutral-500 transition-transform duration-200',
+              isOpen ? 'transform rotate-180' : '',
+            ]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
     </div>
     <!-- Dropdown -->
@@ -29,8 +46,8 @@
 </template>
 
 <script setup>
-import {ref, computed} from 'vue';
-import {onClickOutside} from '@vueuse/core';
+import { ref, computed } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 const props = defineProps({
   options: {
