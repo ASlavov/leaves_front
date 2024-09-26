@@ -23,16 +23,16 @@
           Filter By:
         </div>
         <div class="col-span-2 text-black dark:text-white">
-          Όνομα
+          <input v-model="filters.firstName" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Όνομα" />
         </div>
         <div class="col-span-2 text-black dark:text-white">
-          Επώνυμο
+          <input v-model="filters.lastName" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Επώνυμο" />
         </div>
         <div class="col-span-2 text-black dark:text-white">
-          Τίτλος
+          <input v-model="filters.job_title" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Τίτλος" />
         </div>
         <div class="col-span-2 text-black dark:text-white">
-          Γκρούπ
+          <input v-model="filters.department" class="py-3 px-4 -ml-4 block  border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" type="text" placeholder="Γκρούπ" />
         </div>
       </div>
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[30px] py-[10px] font-bold">
@@ -255,10 +255,10 @@ const filters = ref({
 const filteredUsers = computed(() => {
   // Filter users based on filters (currently empty)
   let users = allUsers.value.filter((user) =>
-      (filters.value.firstName !== '' ? user.name.split(' ')[0].includes(filters.value.firstName) : true)
-      && (filters.value.lastName !== '' ? user.name.split(' ')[1].includes(filters.value.lastName) : true)
-      && (filters.value.department !== '' ? user?.department?.name.includes(filters.value.department) : true)
-      && (filters.value.job_title !== '' ? user?.profile?.job_title.includes(filters.value.job_title) : true)
+      (filters.value.firstName !== '' ? user.firstName.toLowerCase().includes(filters.value.firstName.toLowerCase()) : true)
+      && (filters.value.lastName !== '' ? user.lastName.toLowerCase().includes(filters.value.lastName.toLowerCase()) : true)
+      && (filters.value.department !== '' ? user?.department?.name.toLowerCase().includes(filters.value.department.toLowerCase()) : true)
+      && (filters.value.job_title !== '' ? user?.profile?.job_title.toLowerCase().includes(filters.value.job_title.toLowerCase()) : true)
   );
 
   // Apply sorting if a valid sort key is selected
