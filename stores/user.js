@@ -11,6 +11,7 @@ export const useUserStore = defineStore('userStore', () => {
     const userId = ref(null);
     const loading = ref(false);
     //const profile = ref({});  // You can add more user-related data here
+    const permissions  = ref({}); // ['admin', 'hr', 'department_head', 'user']
     const userInfo = ref({});
     const allUsers = ref([]);
     const error = ref(null);
@@ -33,12 +34,23 @@ export const useUserStore = defineStore('userStore', () => {
         userId.value = id;
     }
 
+    function hasPermission(permission) {
+        return permissions.value[permission] === true;
+    }
+
     // Optionally, load user profile data based on userId
     async function loadUserProfile() {
         if (userId.value) {
             try {
                 loading.value = true;
                 const fullProfile = await getUserProfileComposable(userId.value);
+                permissions.value = {
+                    "edit_user": true,
+                    "delete_user": true,
+                    "view_leaves": false,
+                    "view_all_users": false,
+                    "edit_department": true,
+                };//Uncomment when API is ready: fullProfile.permissions;
                 userInfo.value = fullProfile;
             } catch (err) {
                 setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
@@ -47,6 +59,7 @@ export const useUserStore = defineStore('userStore', () => {
             }
         }
     }
+
     // Optionally, load user profile data based on userId
     async function loadUserProfileById(userId) {
         return allUsers.value.find(element => element.id === userId) || [];
@@ -154,5 +167,21 @@ export const useUserStore = defineStore('userStore', () => {
     }
 
 
-    return { userId, reset, userInfo, editUser, setUserId, loading, loadUserProfile, loadUserProfileById, init, error, allUsers, getAllUsers, updatePassword };
+    return {
+        userId,
+        reset,
+        userInfo,
+        permissions,
+        hasPermission,
+        editUser,
+        setUserId,
+        loading,
+        loadUserProfile,
+        loadUserProfileById,
+        init,
+        error,
+        allUsers,
+        getAllUsers,
+        updatePassword
+    };
 });
