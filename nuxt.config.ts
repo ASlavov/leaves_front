@@ -2,13 +2,18 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: {
-    enabled: true,
+    enabled: false,
 
     timeline: {
       enabled: true,
     },
   },
-
+  script: [
+      {
+        src: '/_nuxt/node_modules/preline/dist/preline.js',
+        defer: true
+      }
+  ],
   css: [
       '~/assets/css/main.css'
   ],

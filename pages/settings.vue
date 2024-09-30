@@ -51,7 +51,7 @@
           </div>
           <div id="basic-tabs-5" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
             <p class="text-gray-500 dark:text-neutral-400">
-              This is the <em class="font-semibold text-gray-800 dark:text-neutral-200">fifth</em> item's tab body.
+              <GroupsList />
             </p>
           </div>
           <div id="basic-tabs-6" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
@@ -99,12 +99,14 @@ import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
 import EditUser from '~/components/Settings/EditUser.vue'
 import Security from "~/components/Settings/Security.vue";
 import UsersList from "~/components/Settings/UsersList.vue";
+import GroupsList from "~/components/Settings/GroupsList.vue";
 export default {
   components: {
     Sidebar,
     EditUser,
     Security,
-    UsersList
+    UsersList,
+    GroupsList
   }
 }
 </script>

@@ -19,17 +19,19 @@ export default defineEventHandler(async (event) => {
     try {
 
         const {
-            name,
-            department_id,
-            related_departments
+            groupId,
+            groupName,
+            head,
+            members
         } = body;
 
         const response = await $fetch(`${config.public.apiBase}${config.public.departments.editDepartment}`, {
             method: 'PUT',
             body: {
-                "name": name,
-                "department_id": department_id,
-                "related_departments": related_departments,
+                "name": groupName,
+                "department_id": groupId,
+                "head_id": head,
+                "members": members,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
