@@ -86,7 +86,7 @@ const loading = computed(() => userStore && userStore.loading);
 const props = defineProps({
   groupId: {
     type: [Number, String],
-    required: true,
+    required: false,
   },
 });
 
@@ -167,15 +167,14 @@ watch(
     { immediate: true }
 );
 async function fetchUserData() {
-
   try {
     // Fetch the user data for the given userId
-
-    const dptData = await departmentsStore.loadGroupById(props.groupId);
-    if (dptData) {
-      // Initialize form fields
-      initializeFormFields(dptData);
-
+    if(props.groupId) {
+      const dptData = await departmentsStore.loadGroupById(props.groupId);
+      if (dptData) {
+        // Initialize form fields
+        initializeFormFields(dptData);
+      }
     }
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -203,11 +202,11 @@ const formAllUsers = ref([]);
 
 function initializeFormFields(dptData) {
   formGroupName.value = dptData.name;
-  formSelectedDepartmentHead.value = dptData?.head || '';
   formUsers.value = allUsers.value
       .filter(user => user?.department_id === dptData.id)
       .map(user => user.id); // Set to array of IDs
   formAllUsers.value = allUsers.value;
+  formSelectedDepartmentHead.value = formUsers.value[0];// TODO: dptData?.head || '';
 }
 
 const availableFormUsers = computed(() => {

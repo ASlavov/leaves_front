@@ -20,7 +20,7 @@
     <div class="flex flex-col gap-[10px]">
       <div class="info-actions pb-5 flex gap-4 col-span-2">
         <button
-            @click="newUser"
+            @click="newLeaveType"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
           Προσθήκη νέου χρήστη
         </button>
@@ -30,18 +30,18 @@
           Φίλτρα:
         </div>
 
-        <!-- First Name Filter -->
+        <!-- Leave Type Name Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
             <input
-                v-model="filters.firstName"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
+                v-model="filters.leaveTypeName"
+                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leaveTypeName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Όνομα"
+                placeholder="Τύπος άδειας"
             />
             <button
-                v-if="filters.firstName"
-                @click="filters.firstName = ''"
+                v-if="filters.leaveTypeName"
+                @click="filters.leaveTypeName = ''"
                 class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
             >
               &times;
@@ -49,37 +49,37 @@
           </div>
         </div>
 
-        <!-- Last Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
+        <!-- Leaves Type Days Filter -->
+<!--        <div class="lg:col-span-2 text-black dark:text-white">
           <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
             <input
-                v-model="filters.lastName"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
+                v-model="filters.leavesTypeDays"
+                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leavesTypeDays ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Επώνυμο"
+                placeholder="Ημέρες"
             />
             <button
-                v-if="filters.lastName"
-                @click="filters.lastName = ''"
+                v-if="filters.leavesTypeDays"
+                @click="filters.leavesTypeDays = ''"
                 class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
             >
               &times;
             </button>
           </div>
-        </div>
+        </div>-->
 
         <!-- Title Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
             <input
-                v-model="filters.job_title"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
+                v-model="filters.users"
+                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.users ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Τίτλος"
+                placeholder="Χρήστες"
             />
             <button
-                v-if="filters.job_title"
-                @click="filters.job_title = ''"
+                v-if="filters.users"
+                @click="filters.users = ''"
                 class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
             >
               &times;
@@ -108,11 +108,11 @@
 
         <div class="lg:col-span-3 lg:justify-self-end items-center">
           <button
-              v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
+              v-if="filters.leaveTypeName || filters.leavesTypeDays || filters.users || filters.department"
               @click="
-                filters.firstName = '';
-                filters.lastName  = '';
-                filters.job_title  = '';
+                filters.leaveTypeName = '';
+                filters.leavesTypeDays  = '';
+                filters.users  = '';
                 filters.department = '';
               "
               class="text-red-500"
@@ -121,140 +121,18 @@
           </button>
         </div>
       </div>
-      <!-- Filter Toggle Section -->
-<!--      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-1 flex items-center cursor-pointer" @click="toggleFilters">
-          <span>Filter By:</span>
-          &lt;!&ndash; Filled Triangle SVG &ndash;&gt;
-          <svg
-              :class="`ml-2 transform transition-transform duration-300 ${showFilters ? '' : 'rotate-180'}`"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-          >
-            <polygon points="5,0 15,10 5,20" />
-          </svg>
-        </div>
-
-        &lt;!&ndash; Filters Section &ndash;&gt;
-        <transition class="grid-cols-8" name="slide-left">
-          <div
-              v-if="showFilters"
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-          >
-            &lt;!&ndash; First Name Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.firstName"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Όνομα"
-                />
-                <button
-                    v-if="filters.firstName"
-                    @click="filters.firstName = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Last Name Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.lastName"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Επώνυμο"
-                />
-                <button
-                    v-if="filters.lastName"
-                    @click="filters.lastName = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Title Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.job_title"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Τίτλος"
-                />
-                <button
-                    v-if="filters.job_title"
-                    @click="filters.job_title = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Department Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.department"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Γκρούπ"
-                />
-                <button
-                    v-if="filters.department"
-                    @click="filters.department = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-          </div>
-        </transition>
-
-        &lt;!&ndash; "Clear all" Button &ndash;&gt;
-        <div class="lg:col-span-3 lg:justify-self-end items-center">
-          <button
-              v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
-              @click="
-              filters.firstName = '';
-              filters.lastName  = '';
-              filters.job_title  = '';
-              filters.department = '';
-            "
-              class="text-red-500"
-          >
-            &times; Clear all
-          </button>
-        </div>
-      </div>-->
-
 
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
-        <div class="col-span-1">
+        <div class="col-span-12 ">
           Ταξινόμηση κατά:
         </div>
         <!-- First Name Sort Button -->
         <div
-            @click="sortBy('firstName')"
+            @click="sortBy('leaveTypeName')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Όνομα
-          <span v-if="currentSortKey === 'firstName'" class="ml-1">
+          Τύπος άδειας
+          <span v-if="currentSortKey === 'leaveTypeName'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
               <!-- Up Arrow -->
@@ -271,11 +149,11 @@
         </div>
         <!-- Last Name Sort Button -->
         <div
-            @click="sortBy('lastName')"
+            @click="sortBy('leaveTypeDays')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Επώνυμο
-          <span v-if="currentSortKey === 'lastName'" class="ml-1">
+          Ημέρες
+          <span v-if="currentSortKey === 'leaveTypeDays'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
               <!-- Up Arrow -->
@@ -292,11 +170,11 @@
         </div>
         <!-- First Name Sort Button -->
         <div
-            @click="sortBy('job_title')"
+            @click="sortBy('users')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Τίτλος
-          <span v-if="currentSortKey === 'job_title'" class="ml-1">
+          Χρήστες
+          <span v-if="currentSortKey === 'users'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
               <!-- Up Arrow -->
@@ -316,7 +194,7 @@
             @click="sortBy('department')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Γκρούπ
+          Γκρούπς
           <span v-if="currentSortKey === 'department'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -342,24 +220,22 @@
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-          <div v-for="user in filteredUsers" :key="user.id" class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
-            <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
+          <div v-for="leaveType in filteredLeavesTypes" :key="leaveType.id" class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
+<!--            <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
               <img v-if="user.profile.profile_image" :src="user.profile.profile_image" />
               <span v-else class="text-white font-bold">
                   {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
               </span>
+            </div>-->
+            <div class="col-span-2">
+              {{ leaveType.name || '' }}
             </div>
             <div class="col-span-2">
-              {{ user.firstName || '' }}
+              {{ leaveType.days || '' }}
             </div>
-            <div class="col-span-2">
-              {{ user.lastName || '' }}
+            <div class="col-span-2 flex " v-html="getUserIcons(leaveType.users)">
             </div>
-            <div class="col-span-2">
-              {{ user?.profile?.job_title || '' }}
-            </div>
-            <div class="col-span-2">
-              {{ user?.department?.name || '' }}
+            <div class="col-span-2" v-html="getDepartmentsText(leaveType.departments)">
             </div>
             <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
               <a v-if="canEditUser()" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Προφίλ</a>
@@ -369,18 +245,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Fade effect at the top -->
-<!--        <div
-            v-if="showTopFade"
-            class="pointer-events-none absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-gray-100 to-transparent dark:from-neutral-900 dark:to-transparent"
-        ></div>
-
-        &lt;!&ndash; Fade effect at the bottom &ndash;&gt;
-        <div
-            v-if="showBottomFade"
-            class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-100 to-transparent dark:from-neutral-900 dark:to-transparent"
-        ></div>-->
       </div>
     </div>
   </template>
@@ -407,17 +271,18 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
-import EditUser from '@/components/Settings/EditUser.vue';
-// import DeleteUser from '@/components/Settings/DeleteUser.vue'; // Uncomment when available
+
 
 // Access the necessary stores
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
+const leavesStore = centralStore.leavesStore;
+const departmentsStore = centralStore.departmentsStore;
 
 // Reactive variables for modal management
 const showModal = ref(false);
 const modalType = ref(''); // 'edit' or 'delete'
-const selectedUserId = ref(null);
+const selectedLeaveTypeId = ref(null);
 
 // Compute the current theme
 const theme = computed(() => {
@@ -433,9 +298,17 @@ const toggleFilters = () => {
 const loading = computed(() => centralStore.loading);
 
 // Reactive variable to store all users
+const allLeaves = ref([]);
 const allUsers = ref([]);
 
 // Process users to extract firstName and lastName
+watch(
+    () => leavesStore.leavesData.leavesTypes,
+    (leaves) => {
+      allLeaves.value = leaves;
+    },
+    { immediate: true }
+);
 watch(
     () => userStore.allUsers,
     (users) => {
@@ -474,39 +347,40 @@ const sortBy = (sortingKey) => {
 
 // Define sorting functions
 const sortByFunctions = {
-  'firstName': (a, b) => a.firstName.localeCompare(b.firstName),
-  'lastName': (a, b) => a.lastName.localeCompare(b.lastName),
-  'job_title': (a, b) => (a.profile?.job_title || '').localeCompare(b.profile?.job_title || ''),
-  'department': (a, b) => (a.department?.name || '').localeCompare(b.department?.name || ''),
+  'leaveTypeName': (a, b) => a.name.localeCompare(b.name),
+  'leaveTypeDays': (a, b) => parseInt(a.days) - parseInt(b.days),
+  'users': (a, b) => a.users.length - b.users.length,
+  'department': (a, b) => a.departments.length - b.departments.length,
 };
 
 // Define filters
 const filters = ref({
-  firstName: '',
-  lastName: '',
+  leaveTypeName: '',
+  //leaveTypeDays: '',
+  users: '',
   department: '',
-  job_title: '',
 });
 
 // Computed property for filtered and sorted users
-const filteredUsers = computed(() => {
+const filteredLeavesTypes = computed(() => {
   // Filter users based on filters (currently empty)
-  let users = allUsers.value.filter((user) =>
-      (filters.value.firstName !== '' ? user.firstName.toLowerCase().includes(filters.value.firstName.toLowerCase()) : true)
-      && (filters.value.lastName !== '' ? user.lastName.toLowerCase().includes(filters.value.lastName.toLowerCase()) : true)
-      && (filters.value.department !== '' ? user?.department?.name.toLowerCase().includes(filters.value.department.toLowerCase()) : true)
-      && (filters.value.job_title !== '' ? user?.profile?.job_title.toLowerCase().includes(filters.value.job_title.toLowerCase()) : true)
+  let leaves = allLeaves.value.filter((leave) =>
+      (filters.value.leaveTypeName !== '' ? leave.name.toLowerCase().includes(filters.value.leaveTypeName.toLowerCase()) : true)
+      //&& (filters.value.leaveTypeDays !== '' ? leave.daysfilters.value.leaveTypeDays.toLowerCase()) : true)
+      && (filters.value.users !== '' ? leave.users.some(user => user.name.toLowerCase().includes(filters.value.users.toLowerCase())) : true)
+      && (filters.value.department !== '' ? leave.departments.some(dpt => dpt.name.toLowerCase().includes(filters.value.department.toLowerCase())) : true)
   );
 
   // Apply sorting if a valid sort key is selected
   if (currentSortKey.value && sortByFunctions[currentSortKey.value]) {
-    users = users.slice().sort((a, b) => {
+
+    leaves = leaves.slice().sort((a, b) => {
       const result = sortByFunctions[currentSortKey.value](a, b);
       return sortDirection.value ? result : -result;
     });
   }
 
-  return users;
+  return leaves;
 });
 
 // Functions to handle edit and delete actions
@@ -520,33 +394,90 @@ function canDeleteUser() {
   return userStore.hasPermission('delete_user');
 }
 
+const getDepartmentsText = (departments) => {
+  let loops = departments.length > 5 ? 5 : departments.length;
+  let output = ``;
 
-const newUser = () => { // TODO: Check wtf we need to do for new user
-  selectedUserId.value = null;
+  for(let i = 0; i < loops; i++) {
+    output += `<span class="dark:text-white font-bold">${departmentsStore?.departmentsData?.filter(dpt => dpt.id === departments[i])[0]?.name || ''}</span>`;
+    if(i !== (loops - 1)) {
+      output += `,`;
+    }
+  }
+
+  if(loops < departments.length) {
+    output += `
+        <span class="dark:text-white font-bold">
+         +${departments.length - loops}
+        </span>`;
+  }
+}
+const getUserIcons = (users) => {
+  let loops = users.length > 5 ? 5 : users.length;
+   /*loops = users.length == 6 ? 6 : loops;*/
+
+
+  /*
+    <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
+      <img v-if="user.profile.profile_image" :src="user.profile.profile_image" />
+      <span v-else class="text-white font-bold">
+          {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
+      </span>
+    </div>
+  */
+
+  let output = ``;
+  for(let i = 0; i < loops; i++) {
+    output += `<div class="w-[30px] h-[30px] bg-gray-300 rounded-full -mr-2 flex items-center justify-center col-span-1 ">`;
+
+    const user = allUsers.value.filter(user => user.id === users[i])[0] || null;
+    if(user?.profile?.profile_image) {
+      output += `<img src="${user.profile.profile_image}" />`
+    } else {
+      output += `
+        <span class="text-white font-bold">
+          ${ user.firstName.charAt(0) || '' }${ user.lastName?.charAt(0) || '' }
+        </span>
+        `;
+    }
+    output += `</div>`;
+  }
+  if(loops < users.length) {
+    output += `<div class="w-[30px] h-[30px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
+          <span class="text-white font-bold">
+           +${users.length - loops}
+          </span>
+        </div>`;
+  }
+  return output;
+}
+
+const newLeaveType = () => {
+  selectedLeaveTypeId.value = null;
   modalType.value = 'edit';
   showModal.value = true;
 };
-const editUser = (userId) => {
-  selectedUserId.value = userId;
+const editLeaveType = (leaveTypeId) => {
+  selectedLeaveTypeId.value = leaveTypeId;
   modalType.value = 'edit';
   showModal.value = true;
 };
 
-const deleteUser = (userId) => {
-  selectedUserId.value = userId;
+const deleteLeaveType = (leaveTypeId) => {
+  selectedLeaveTypeId.value = leaveTypeId;
   modalType.value = 'delete';
   showModal.value = true;
 };
 
 const closeModal = () => {
   showModal.value = false;
-  selectedUserId.value = null;
+  selectedLeaveTypeId.value = null;
   modalType.value = '';
 };
 
 // Compute the component to render in the modal
 const modalComponent = computed(() => {
-  return modalType.value === 'edit' ? EditUser : DeleteUser;
+  return modalType.value === 'edit' ? EditLeaveType : DeleteLeaveType;
 });
 </script>
 

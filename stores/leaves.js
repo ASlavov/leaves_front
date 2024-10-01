@@ -119,7 +119,26 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.value.leavesTypes = result;
+                leavesData.value.leavesTypes = result.map(leaveType => new Object({
+                    ...leaveType,
+                    // TODO: REMOVE THIS DUMMY DATA
+                    days: 1 + Math.round(Math.random() * 20),
+                    users: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+
+                    ],
+                    departments: [
+                        1,
+                        2,
+                        3,
+                        4,
+                    ],
+                }));
             }
         } catch (err) {
             // Handle errors and set the error state

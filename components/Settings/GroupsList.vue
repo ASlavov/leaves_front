@@ -18,9 +18,16 @@
   </template>
   <template v-else>
     <div class="flex flex-col gap-[10px]">
+      <div class="info-actions pb-5 flex gap-4 col-span-2">
+        <button
+            @click="newGroup"
+            class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+          Προσθήκη νέου γκρουπ
+        </button>
+      </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
         <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          Filter By:
+          Φίλτρα:
         </div>
 
         <!-- First Name Filter -->
@@ -110,7 +117,7 @@
               "
               class="text-red-500"
           >
-            &times; Clear all
+            &times; Καθαρισμός φίλτρων
           </button>
         </div>
       </div>
@@ -239,7 +246,7 @@
 
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
         <div class="col-span-1">
-          Sort By:
+          Ταξινόμηση κατά:
         </div>
         <!-- First Name Sort Button -->
         <div
@@ -366,7 +373,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -541,7 +547,11 @@ function canDeleteGroup() {
   return userStore.hasPermission('delete_user');
 }
 
-
+const newGroup = () => {
+  selectedGroupId.value = null;
+  modalType.value = 'edit';
+  showModal.value = true;
+}
 const editGroup = (groupId) => {
   selectedGroupId.value = groupId;
   modalType.value = 'edit';
