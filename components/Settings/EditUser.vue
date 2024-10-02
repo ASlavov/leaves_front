@@ -128,7 +128,7 @@ const loading = computed(() => userStore && userStore.loading);
 const props = defineProps({
   userId: {
     type: [Number, String],
-    required: true,
+    required: false,
   },
 });
 
@@ -177,11 +177,15 @@ async function fetchUserData() {
 
   try {
     // Fetch the user data for the given userId
+    if(props.userId) {
+      const newUserInfo = await userStore.loadUserProfileById(props.userId);
+      if (newUserInfo) {
+        // Initialize form fields
+        initializeFormFields(newUserInfo);
+      }
+    }
+    else {
 
-    const newUserInfo = await userStore.loadUserProfileById(props.userId);
-    if (newUserInfo) {
-      // Initialize form fields
-      initializeFormFields(newUserInfo);
     }
   } catch (error) {
     console.error('Error fetching user data:', error);

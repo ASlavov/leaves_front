@@ -14,7 +14,13 @@ export const useCentralStore = defineStore('centralStore', () => {
     const notificationsStore = useNotificationsStore();
     
     const error = ref(null);
-    const loading = ref(false);
+    const loading = computed(() =>
+        authStore.loading
+        && userStore.loading
+        && leavesStore.loading
+        && departmentsStore.loading
+        && notificationsStore.loading
+    );
     const initialized = ref(false);
     const setError = (errorMessage) => {
         // Reset error to force reactivity
@@ -28,8 +34,6 @@ export const useCentralStore = defineStore('centralStore', () => {
     async function init(){
         // we're assuming user is authed
         try {
-            loading.value = true;
-
             if(userStore.userId) {
                 console.log('initializing');
                 // Run all store initialization in parallel
@@ -54,7 +58,6 @@ export const useCentralStore = defineStore('centralStore', () => {
             initialized.value = false;
         } finally {
             // Ensure loading is set to false and any post-processing is done
-            loading.value = false;
             //notificationsStore.beginPolling();
         }
     }

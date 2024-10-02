@@ -17,15 +17,13 @@ export const newDepartmentComposable = (name, related_departments) => {
         }
     });
 };
-export const editDepartmentComposable = (name, department_id, related_departments) => {
+export const editDepartmentComposable = (body) => {
     const config = useRuntimeConfig()
 
     return $fetch('/api/departments/editDepartment', {
         method: 'POST',
         body: {
-            name: name,
-            department_id: department_id,
-            related_departments: related_departments,
+            ...body,
         }
     });
 };

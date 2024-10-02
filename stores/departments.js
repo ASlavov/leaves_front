@@ -45,6 +45,10 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
         }
     }
 
+    function loadGroupById(groupId) {
+        return departmentsData.value.find(group => group.id === groupId) || {};
+    }
+
     async function newDepartment(name, related_departments) {
         try {
             // Call the composable with the necessary parameters
@@ -63,10 +67,20 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
         }
     }
 
-    async function editDepartment(name, department_id, related_departments) {
+    async function editDepartment(
+        groupId,
+        groupName,
+        head,
+        members
+    ) {
         try {
             // Call the composable with the necessary parameters
-            const result = await editDepartmentComposable(name, department_id, related_departments);
+            const result = await editDepartmentComposable({
+                groupId,
+                groupName,
+                head,
+                members
+            });
 
             if (result) {
                 // Recall getAll to refresh the store data.
@@ -99,5 +113,16 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
         }
     }
 
-    return { departmentsData, loading, error, getAll, init, reset };
+    return {
+        init,
+        reset,
+        getAll,
+        loadGroupById,
+        newDepartment,
+        editDepartment,
+        deleteDepartment,
+        departmentsData,
+        loading,
+        error
+    };
 });

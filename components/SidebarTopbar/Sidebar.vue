@@ -77,7 +77,7 @@
                 <!-- Logo -->
                 <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80 mb-10"
                     href="/home" aria-label="Preline">
-                    <img src="https://whyagency.gr/wp-content/uploads/2023/10/logo_dark.png" width="130">
+                    <img :src="`https://whyagency.gr/wp-content/uploads/2023/10/${theme === 'light' ? 'logo_dark' : 'logo'}.png`" width="130">
                 </a>
                 <!-- End Logo -->
             </div>
@@ -106,6 +106,12 @@ const toggleNotifications = () => {
     notificationsStore.beginPolling();
   }
 };
+
+// Compute the current theme
+const theme = computed(() => {
+  const { $colorMode } = useNuxtApp();
+  return $colorMode?.value || 'light';
+});
 </script>
 
 

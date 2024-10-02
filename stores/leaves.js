@@ -50,6 +50,18 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
+    async function getAllByUserId(userId) {
+
+        try {
+            // Call the composable with the necessary parameters
+            return await getUserLeavesComposable(userId);
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
+        } finally {
+        }
+
+    }
 
     async function getAll(userId) {
 
@@ -119,7 +131,26 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 // Process the result and store it in userData
-                leavesData.value.leavesTypes = result;
+                leavesData.value.leavesTypes = result.map(leaveType => new Object({
+                    ...leaveType,
+                    // TODO: REMOVE THIS DUMMY DATA
+                    days: 1 + Math.round(Math.random() * 20),
+                    users: [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+
+                    ],
+                    departments: [
+                        1,
+                        2,
+                        3,
+                        4,
+                    ],
+                }));
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -179,6 +210,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         getAll,
         newLeave,
         cancelLeave,
+        getAllByUserId,
         getLeavesTypes,
         getLeavesStatuses,
         getLeavesAvailableDays,
