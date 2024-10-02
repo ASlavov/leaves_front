@@ -16,13 +16,16 @@
             <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-3" aria-selected="false" data-hs-tab="#basic-tabs-3" aria-controls="basic-tabs-3" role="tab">
               Ασφάλεια
             </button>
-            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-3" aria-selected="false" data-hs-tab="#basic-tabs-4" aria-controls="basic-tabs-4" role="tab">
+            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-4" aria-selected="false" data-hs-tab="#basic-tabs-4" aria-controls="basic-tabs-4" role="tab">
               Χρήστες
             </button>
-            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-3" aria-selected="false" data-hs-tab="#basic-tabs-5" aria-controls="basic-tabs-5" role="tab">
+            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-5" aria-selected="false" data-hs-tab="#basic-tabs-5" aria-controls="basic-tabs-5" role="tab">
               Γκρουπς
             </button>
-            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-3" aria-selected="false" data-hs-tab="#basic-tabs-6" aria-controls="basic-tabs-6" role="tab">
+            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-7" aria-selected="false" data-hs-tab="#basic-tabs-6" aria-controls="basic-tabs-6" role="tab">
+              Άδειες
+            </button>
+            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-6" aria-selected="false" data-hs-tab="#basic-tabs-7" aria-controls="basic-tabs-7" role="tab">
               Τύποι αδειών
             </button>
           </nav>
@@ -44,19 +47,24 @@
               <Security />
             </p>
           </div>
-          <div id="basic-tabs-4" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
+          <div id="basic-tabs-4" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-4">
             <p class="text-gray-500 dark:text-neutral-400">
               <UsersList />
             </p>
           </div>
-          <div id="basic-tabs-5" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
+          <div id="basic-tabs-5" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-5">
             <p class="text-gray-500 dark:text-neutral-400">
               <GroupsList />
             </p>
           </div>
-          <div id="basic-tabs-6" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-3">
+          <div id="basic-tabs-6" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-6">
             <p class="text-gray-500 dark:text-neutral-400">
               <LeavesList />
+            </p>
+          </div>
+          <div id="basic-tabs-7" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-7">
+            <p class="text-gray-500 dark:text-neutral-400">
+              <LeavesTypesList />
             </p>
           </div>
         </div>
@@ -78,7 +86,9 @@ const authStore = centralStore.authStore;
 const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
 
-
+const loadLeavesList = () => {
+  console.log('loading shit');
+}
 /*onMounted(async () => {
   try {
     // Restore session first
@@ -100,6 +110,7 @@ import EditUser from '~/components/Settings/EditUser.vue'
 import Security from "~/components/Settings/Security.vue";
 import UsersList from "~/components/Settings/UsersList.vue";
 import GroupsList from "~/components/Settings/GroupsList.vue";
+import LeavesTypesList from "~/components/Settings/LeavesTypesList.vue";
 import LeavesList from "~/components/Settings/LeavesList.vue";
 export default {
   components: {
@@ -108,7 +119,8 @@ export default {
     Security,
     UsersList,
     GroupsList,
-    LeavesList
+    LeavesList,
+    LeavesTypesList,
   }
 }
 </script>

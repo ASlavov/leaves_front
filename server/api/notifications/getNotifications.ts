@@ -26,11 +26,14 @@ export default defineEventHandler(async (event) => {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },
         });
-
-        return response; // Return the response from the external API
+        if(response) {
+            return response; // Return the response from the external API
+        } else {
+            throw new Error();
+        }
     } catch (error) {
         // Handle errors from the external API
-        console.error('Error fetching notifications:', error);
+        //console.error('Error fetching notifications:', error);
         throw createError({
             statusCode: 500,
             statusMessage: 'Error fetching notifications',

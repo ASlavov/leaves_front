@@ -50,6 +50,18 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
+    async function getAllByUserId(userId) {
+
+        try {
+            // Call the composable with the necessary parameters
+            return await getUserLeavesComposable(userId);
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
+        } finally {
+        }
+
+    }
 
     async function getAll(userId) {
 
@@ -198,6 +210,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         getAll,
         newLeave,
         cancelLeave,
+        getAllByUserId,
         getLeavesTypes,
         getLeavesStatuses,
         getLeavesAvailableDays,
