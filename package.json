@@ -15,6 +15,7 @@
     "@vueuse/core": "^11.1.0",
     "apexcharts": "^3.53.0",
     "chart.js": "^4.4.4",
+    "date-fns": "^4.1.0",
     "flatpickr": "^4.6.13",
     "nuxt": "^3.13.0",
     "pinia": "^2.1.7",

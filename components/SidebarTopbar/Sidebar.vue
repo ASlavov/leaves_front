@@ -7,20 +7,20 @@
           class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3"
       >
         <!-- Notification Toggle -->
-        <div @click="toggleNotifications" class="relative inline-block w-12 h-6 cursor-pointer">
-          <!-- Background -->
+<!--        <div @click="toggleNotifications" class="relative inline-block w-12 h-6 cursor-pointer">
+          &lt;!&ndash; Background &ndash;&gt;
           <span
               :class="notificationsStore.notificationsActive ? 'bg-gray-600' : 'bg-gray-100'"
               class="absolute inset-0 rounded-full transition duration-300 ease-in-out"
           ></span>
-          <!-- Toggle Circle -->
+          &lt;!&ndash; Toggle Circle &ndash;&gt;
           <span
               :class="[
               'absolute left-0 top-0 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out shadow',
               notificationsStore.notificationsActive ? 'translate-x-6 bg-gray-100' : 'translate-x-0 bg-gray-600',
             ]"
           ></span>
-        </div>
+        </div>-->
         <!-- Other Components -->
         <Search />
         <div class="flex flex-row items-center justify-end gap-1">
