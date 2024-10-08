@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
             endDate,
             reason
         } = body;
-
+        console.log(body);
         const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeave}`, {
             method: 'POST',
             body: {
@@ -39,9 +39,10 @@ export default defineEventHandler(async (event) => {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },
         });
-        if(response.error) {
+        console.log(response);
+        /*if(response.error) {
             throw new Error(response.error);
-        }
+        }*/
         return response; // Return the response from the external API
     } catch (error) {
         // Handle errors from the external API

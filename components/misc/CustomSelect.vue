@@ -31,20 +31,31 @@
         v-if="isOpen"
         class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-700"
     >
-      <ul class="max-h-60 overflow-auto
- [&::-webkit-scrollbar]:w-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
-  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
-">
+      <!-- Search input -->
+      <div class="p-2">
+        <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="Search..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white"
+        />
+      </div>
+      <ul
+          class="max-h-60 overflow-auto
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-gray-100
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-gray-300
+          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
+        "
+      >
         <li
-            v-for="option in options"
+            v-for="option in filteredOptions"
             :key="option.id"
             @click="selectOption(option)"
-            class="cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-800"
+            class="cursor-pointer px-4 dark:text-white py-2 hover:bg-gray-100 dark:hover:bg-neutral-800"
         >
           {{ option.name }}
         </li>
@@ -54,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
 const props = defineProps({
@@ -84,9 +95,19 @@ const emits = defineEmits(['update:modelValue']);
 
 const isOpen = ref(false);
 const dropdownRef = ref(null);
+const searchQuery = ref('');
 
 const selectedOption = computed(() => {
   return props.options.find((option) => String(option.id) === String(props.modelValue));
+});
+
+const filteredOptions = computed(() => {
+  if (!searchQuery.value) {
+    return props.options;
+  }
+  return props.options.filter((option) =>
+      option.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 });
 
 const toggleDropdown = () => {
@@ -97,6 +118,12 @@ const selectOption = (option) => {
   emits('update:modelValue', String(option.id));
   isOpen.value = false;
 };
+
+watch(isOpen, (newVal) => {
+  if (!newVal) {
+    searchQuery.value = '';
+  }
+});
 
 // Close dropdown when clicking outside
 onClickOutside(dropdownRef, () => {

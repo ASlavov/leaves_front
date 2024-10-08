@@ -1,19 +1,22 @@
 <template>
   <button class="bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-600 focus:outline-none"
-    aria-haspopup="dialog" aria-expanded="false" aria-controls="new-leave-modal" data-hs-overlay="#new-leave-modal">
+    aria-haspopup="dialog" aria-expanded="false" aria-controls="new-leave-modal" data-hs-overlay="#new-leave-modal"
+          @click="openModal">
     Νέο αίτημα άδειας
   </button>
 
   <div id="new-leave-modal"
     class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
-    role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label">
+    role="dialog" tabindex="-1" aria-labelledby="hs-scale-animation-modal-label"
+       v-if="isModalOpen"
+  >
     <div
       class="hs-overlay-animation-target hs-overlay-open:scale-100 hs-overlay-open:opacity-100 scale-95 opacity-0 ease-in-out transition-all duration-200 sm:max-w-lg sm:w-full m-3 sm:mx-auto min-h-[calc(100%-3.5rem)] flex items-center">
       <div class="w-full flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-neutral-800 dark:text-gray-100">
         <button type="button"
           class="size-8 ml-auto inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
           aria-label="Close" data-hs-overlay="#new-leave-modal">
-          <span class="sr-only">Close</span>
+          <span class="sr-only" @click="closeModal">Close</span>
           <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 6 6 18"></path>
@@ -44,8 +47,8 @@
                   <select v-model="leaveType" class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100">
                     <option class="dark:bg-neutral-800 dark:text-gray-100" value="">Επιλέξτε άδεια</option>
                     <!-- Loop through leavesData to populate the options -->
-                    <option class="dark:bg-neutral-800 dark:text-gray-100" v-for="(leave, index) in leavesData" :key="index" :value="leave.leave_type_id">{{
-                      leave.leave_type_name }}
+                    <option class="dark:bg-neutral-800 dark:text-gray-100" v-for="(leave, index) in filteredLeavesTypes" :key="index" :value="leave.id">
+                      {{ leave.name }}
                     </option>
                   </select>
                 </div>
@@ -107,6 +110,7 @@ export default {
 
     // Ensure leavesData is always an array
     const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
+    const leavesTypes = computed(() => leavesStore.leavesData?.leavesTypes);
     const userStore = centralStore.userStore;
     const user_id = computed(() => userStore.userId);
 
@@ -116,13 +120,31 @@ export default {
     const comments = ref('');
     const successMessage = ref(''); // Reactive variable for success message
 
+    const isModalOpen = ref(false);
+
+    // Functions to open and close the modal
+    const openModal = () => {
+      isModalOpen.value = true;
+    };
+
+    const closeModal = () => {
+      isModalOpen.value = false;
+    };
+
+    const filteredLeavesTypes = computed(
+        () => leavesData.value.filter(
+        leave => leavesTypes.value.some(
+            leaveType => leave.id === leaveType.id
+          )
+       )
+    || []);
+
     const selectedLeave = computed(() => {
       if (leavesData.value && leaveType.value) {
-        return leavesData.value.find(leave => leave.leave_type_id === leaveType.value) || null;
+        return leavesData.value.find(leave => leave.id === leaveType.value) || null;
       }
       return null;
     });
-
     const submitForm = async () => {
       const leaveRequest = {
         id: user_id.value,  // Adjusted based on your Postman example
@@ -157,6 +179,10 @@ export default {
       endDate,
       comments,
       selectedLeave,
+      filteredLeavesTypes,
+      isModalOpen,
+      openModal,
+      closeModal,
       successMessage,  // Make successMessage available to the template
       submitForm,
     };

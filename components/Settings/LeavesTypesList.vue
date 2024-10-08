@@ -227,15 +227,8 @@
                   {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
               </span>
             </div>-->
-            <div class="col-span-2">
+            <div class="col-span-8">
               {{ leaveType.name || '' }}
-            </div>
-            <div class="col-span-2">
-
-            </div>
-            <div class="col-span-2 flex ">
-            </div>
-            <div class="col-span-2">
             </div>
             <div class="col-span-4 justify-self-end flex gap-[25px] items-center">
               <a v-if="canEditUser()" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Προφίλ</a>

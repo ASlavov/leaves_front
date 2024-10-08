@@ -14,7 +14,8 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         currentUser: {},
         leavesTypes: [],
         leavesStatuses: {},
-        leavesAvailableDays: {},
+        leavesAvailableDays: [],
+        allUsers: [],
     });
     const loading = ref(false);
     const error = ref(null);
@@ -25,7 +26,8 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             currentUser: {},
             leavesTypes: [],
             leavesStatuses: {},
-            leavesAvailableDays: {},
+            leavesAvailableDays: [],
+            allUsers: [],
         };
     }
 
@@ -53,6 +55,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function getAllByUserId(userId) {
 
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             return await getUserLeavesComposable(userId);
         } catch (err) {
@@ -66,6 +69,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function getAll(userId) {
 
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             const result = await getUserLeavesComposable(userId);
 
@@ -86,6 +90,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function newLeave(userId, leaveTypeId, startDate, endDate, reason) {
 
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             const result = await newLeaveComposable({userId, leaveTypeId, startDate, endDate, reason});
 
@@ -105,8 +110,31 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
     }
 
+    async function getAllUsers() {
+        //TODO: Make this use the API call for all users instead when its implemented
+
+        try {
+            loading.value = true;
+            let result;
+            for (const user of userStore?.allUsers) {
+                const result = await getUserLeavesComposable(user.id);
+                if (result) {
+                    console.log(result);
+                    leavesData.value.allUsers.push(result);
+                }
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
     async function cancelLeave(userId, leaveId, status, reason) {
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             const result = await cancelLeaveComposable({userId, leaveId, status, reason});
 
@@ -126,6 +154,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function getLeavesTypes() {
 
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             const result = await getLeavesTypesComposable();
 
@@ -165,6 +194,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function getLeavesStatuses() {
 
         try {
+            loading.value = true;
             // Call the composable with the necessary parameters
             const result = await getLeavesStatusesComposable();
 
@@ -212,6 +242,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         cancelLeave,
         getAllByUserId,
         getLeavesTypes,
+        getAllUsers,
         getLeavesStatuses,
         getLeavesAvailableDays,
     };
