@@ -1,8 +1,8 @@
 <template>
   <!-- Filters Section -->
-  <div class="grid grid-cols-12 gap-4 mb-4">
+  <div class="grid grid-cols-12 gap-4 mb-4 dark:text-white">
     <!-- Name Filter -->
-    <div class="col-span-12 sm:col-span-4">
+    <div class="col-span-12 sm:col-span-4 dark:text-white">
       <CustomSelect
           v-model="selectedName"
           :options="nameOptions"
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Leave Type Filter -->
-    <div class="col-span-12 sm:col-span-4">
+    <div class="col-span-12 sm:col-span-4 dark:text-white">
       <CustomSelect
           v-model="selectedLeaveType"
           :options="leaveTypeOptions"
@@ -37,7 +37,7 @@
 
   <!-- Clear All Filters Button -->
   <div class="mb-4">
-    <button @click="clearFilters" class="btn btn-secondary">
+    <button @click="clearFilters" class="btn btn-secondary dark:text-white">
       Καθαρισμός Φίλτρων
     </button>
   </div>
@@ -47,7 +47,7 @@
     <div
         v-for="type in displayedLeaveTypes"
         :key="type.id"
-        class="flex items-center mr-4 mb-2"
+        class="flex items-center mr-4 mb-2 dark:text-white"
     >
       <span
           :class="[
@@ -71,11 +71,11 @@
   </div>
 
   <!-- Calendar Days -->
-  <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700 relative">
+  <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700 relative hidden">
     <div
         v-for="(date, index) in calendarDates"
         :key="index"
-        class="relative bg-white dark:bg-gray-800 p-2 h-32 border"
+        class="relative bg-white dark:bg-gray-800 p-2 h-40 border"
     >
       <!-- Date Number -->
       <div class="absolute top-1 left-1 text-sm text-gray-500">
@@ -124,6 +124,37 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+    <!-- Calendar Days -->
+    <div
+        v-for="(date, index) in calendarDates"
+        :key="index"
+        class="relative bg-white dark:bg-gray-800 p-2 h-40 border"
+    >
+      <!-- Date Number -->
+      <div class="absolute top-1 left-1 text-sm text-gray-500">
+        {{ date.getDate() }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaves -->
+  <div class="leaves-container absolute inset-0">
+    <div
+        v-for="(leave, idx) in leavesInView"
+        :key="idx"
+        :class="[
+        'p-1 text-xs rounded text-white',
+        getLeaveTypeColor(leave.leave_type_id),
+      ]"
+        :style="getLeaveStyle(leave)"
+        @click="onLeaveClick(leave)"
+    >
+      {{ leave.userName }}
     </div>
   </div>
 </template>
@@ -187,7 +218,7 @@ const clearFilters = () => {
 };
 
 // Calendar Dates Computation
-const calendarDates = computed(() => {
+/*const calendarDates = computed(() => {
   const startOfMonth = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth(), 1);
   const endOfMonth = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 0);
 
@@ -201,7 +232,49 @@ const calendarDates = computed(() => {
     dates.push(new Date(date));
   }
   return dates;
+});*/
+
+const calendarMode = ref('monthly');
+
+const calendarDates = computed(() => {
+  if (calendarMode.value === 'weekly') {
+    // Compute dates for the current week
+    const startOfWeek = new Date(currentDate.value);
+    startOfWeek.setDate(currentDate.value.getDate() - currentDate.value.getDay());
+
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + i);
+      dates.push(new Date(date));
+    }
+    return dates;
+  } else {
+    // Compute dates for the current month
+    const startOfMonth = new Date(
+        currentDate.value.getFullYear(),
+        currentDate.value.getMonth(),
+        1
+    );
+    const endOfMonth = new Date(
+        currentDate.value.getFullYear(),
+        currentDate.value.getMonth() + 1,
+        0
+    );
+
+    const dates = [];
+    const startDate = new Date(startOfMonth);
+    startDate.setDate(startOfMonth.getDate() - startOfMonth.getDay());
+    const endDate = new Date(endOfMonth);
+    endDate.setDate(endOfMonth.getDate() + (6 - endOfMonth.getDay()));
+
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+      dates.push(new Date(date));
+    }
+    return dates;
+  }
 });
+
 
 // Function to get leaves for a specific date
 const getLeavesForDate = date => {
@@ -307,58 +380,6 @@ const getCollapsedCount = date => {
   return Math.max(0, leaves.length - 4);
 };
 
-// Get collapsed leaves for tooltip
-const getCollapsedLeaves = date => {
-  let leaves = [];
-
-  leavesStore.leavesData.allUsers.forEach(userLeaves => {
-    if (!Array.isArray(userLeaves)) {
-      return;
-    }
-
-    userLeaves.forEach(leave => {
-      const user = userStore.allUsers.find(u => u.id === leave.user_id);
-      if (!user) {
-        return;
-      }
-
-      // Apply filters
-      if (selectedName.value && user.id !== selectedName.value) {
-        return;
-      }
-
-      if (selectedDepartment.value && user.department_id !== selectedDepartment.value) {
-        return;
-      }
-
-      if (selectedLeaveType.value && leave.leave_type_id !== selectedLeaveType.value) {
-        return;
-      }
-
-      // Check date
-      const startDate = new Date(leave.start_date);
-      const endDate = new Date(leave.end_date);
-
-      if (date >= startDate && date <= endDate) {
-        // Calculate leave duration
-        const duration = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
-
-        leaves.push({
-          ...leave,
-          userName: user.name,
-          department_id: user.department_id,
-          leaveDuration: duration,
-        });
-      }
-    });
-  });
-
-  // Prioritize longer leaves
-  leaves.sort((a, b) => b.leaveDuration - a.leaveDuration);
-
-  return leaves.slice(4); // Leaves beyond the first 4
-};
-
 // Helper Functions
 const getUserName = userId => {
   const user = userStore.allUsers.find(user => user.id === userId);
@@ -398,7 +419,7 @@ const getLeaveTypeColor = id => {
 };
 
 // Get Leave Style (for spanning multiple days)
-const getLeaveStyle = (leave, date) => {
+/*const getLeaveStyle = (leave, date) => {
   const startDate = new Date(leave.start_date);
   const endDate = new Date(leave.end_date);
 
@@ -428,7 +449,43 @@ const getLeaveStyle = (leave, date) => {
     top: '2.5rem', // Adjust as needed
     left: '0',
   };
+};*/
+
+const getLeaveStyle = (leave) => {
+  const calendarStartDate = new Date(calendarDates.value[0]);
+  const calendarEndDate = new Date(
+      calendarDates.value[calendarDates.value.length - 1]
+  );
+
+  const leaveStart = new Date(leave.leaveStart);
+  const leaveEnd = new Date(leave.leaveEnd);
+
+  // Compute day offset from the start of the calendar
+  const dayOffset = (leaveStart - calendarStartDate) / (1000 * 60 * 60 * 24);
+
+  // Number of days the leave spans
+  const daysToSpan =
+      (leaveEnd - leaveStart) / (1000 * 60 * 60 * 24) + 1;
+
+  const totalDays = calendarDates.value.length;
+
+  const leftPercentage = (dayOffset / totalDays) * 100;
+  const widthPercentage = (daysToSpan / totalDays) * 100;
+
+  // Position leaves vertically based on their assigned row
+  const top = `${(leave.row - 1)} * 2rem`; // Adjust as needed
+
+  return {
+    width: `${widthPercentage}%`,
+    left: `${leftPercentage}%`,
+    position: 'absolute',
+    top: top,
+  };
 };
+
+function leavesOverlap(a, b) {
+  return a.leaveStart <= b.leaveEnd && b.leaveStart <= a.leaveEnd;
+}
 
 // Computed Leave Types Being Displayed
 const displayedLeaveTypes = computed(() => {
@@ -439,7 +496,7 @@ const displayedLeaveTypes = computed(() => {
 });
 
 
-const filteredLeaves = computed(() => {
+/*const filteredLeaves = computed(() => {
   let leaves = [];
 
   leavesStore.leavesData.allUsers.forEach(userLeaves => {
@@ -487,7 +544,7 @@ const filteredLeaves = computed(() => {
   });
 
   return leaves;
-});
+});*/
 // Helper function to format date keys
 const formatDateKey = date => date.toISOString().split('T')[0];
 
@@ -526,6 +583,152 @@ const leavesByDate = computed(() => {
 
   return result;
 });
+
+const leavesInView = computed(() => {
+  const adjustedLeaves = [];
+
+  const calendarStartDate = new Date(calendarDates.value[0]);
+  const calendarEndDate = new Date(
+      calendarDates.value[calendarDates.value.length - 1]
+  );
+
+  filteredLeaves.value.forEach((leave) => {
+    const startDate = new Date(leave.startDate);
+    const endDate = new Date(leave.endDate);
+
+    // Adjust leave dates to fit within the calendar view
+    const leaveStart =
+        startDate < calendarStartDate ? calendarStartDate : startDate;
+    const leaveEnd = endDate > calendarEndDate ? calendarEndDate : endDate;
+
+    // Include leaves that intersect with the calendar view
+    if (leaveEnd >= calendarStartDate && leaveStart <= calendarEndDate) {
+      adjustedLeaves.push({
+        ...leave,
+        leaveStart,
+        leaveEnd,
+      });
+    }
+  });
+
+  // Assign rows to leaves to prevent overlapping
+  const leaves = adjustedLeaves.sort((a, b) => a.leaveStart - b.leaveStart);
+  const rows = [];
+
+  leaves.forEach((leave) => {
+    let assigned = false;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row.some((l) => leavesOverlap(l, leave))) {
+        row.push(leave);
+        leave.row = i + 1;
+        assigned = true;
+        break;
+      }
+    }
+    if (!assigned) {
+      rows.push([leave]);
+      leave.row = rows.length;
+    }
+  });
+
+  return leaves;
+});
+
+const formatDate = (date) => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+const compareLeavesDates = (dateToCompare) => {
+  return calendarDates.value.some(date => formatDateKey(dateToCompare) === formatDateKey(date));
+}
+
+const isValidDate = (date) => {
+  return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
+}
+const twoDatesEqual = (date1, date2) => {
+  let date_1 = date1;
+  let date_2 = date2;
+  //Check if they are Date objects, if not instantiate one
+  if (!isValidDate(date1)) {
+    date_1 = new Date(date1);
+  }
+  if (!isValidDate(date2)) {
+    date_2 = new Date(date2);
+  }
+
+  return formatDate(date_1) === formatDate(date_2);
+}
+// First stage date, name, dpt, type filters
+const filteredLeaves = computed(() => {
+  const returnArray = [];
+
+  //Iterate over array
+  leavesStore.leavesData.allUsers.forEach(leave => {
+    //For each leave we need to:
+    //1.Figure out if it's in the date range currently enabled
+    const startDateInCurrentCalendar = compareLeavesDates(new Date(leave.start_date));
+    const endDateInCurrentCalendar = compareLeavesDates(new Date(leave.end_date));
+
+    if(!(startDateInCurrentCalendar || endDateInCurrentCalendar)) {
+      return;
+    }
+
+    // find the user first so we can go over his props
+    const userForLeave = userStore.allUsers.filter(user => user.id === leave.user_id)[0];
+    //2.Apply name filter over it
+    if(selectedName.value && !userForLeave.name.contains(selectedName.value)) {
+      return;
+    }
+    //3.Apply department filter over it
+    if(selectedDepartment.value && !(userForLeave.department_id === selectedDepartment.value)) {
+      return;
+    }
+    //4.Apply leave type filter over it
+    if(selectedLeaveType.value && !leave.leave_type_id === selectedLeaveType.value) {
+      return;
+    }
+    //5.add to returned leaves it if it's passed all these
+    returnArray.push(leave);
+  });
+
+  return returnArray;
+});
+
+
+//Second stage - check which leaves belong to which day
+const assignedLeaves = computed(() => {
+  const returnArray = [];
+
+  //Iterate over days
+  calendarDates.value.forEach(day => {
+    const leavesThatStartToday = filteredLeaves.value.filter(leave => twoDatesEqual(leave.start_date, day));
+    leavesThatStartToday.forEach(leave => returnArray[day.getDate()].push(leave));
+  })
+  /*filteredLeaves.value.forEach(leave => {
+
+  });*/
+
+  //Sort by duration
+  returnArray.forEach(day => {
+
+  })
+  const startDate = new Date(leave.start_date);
+  const endDate = new Date(leave.end_date);
+
+  // Calculate leave duration
+  const duration = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
+
+  return returnArray;
+})
+
+const sortFunction = (date1, date2) => {
+
+
+}
 
 </script>
 
