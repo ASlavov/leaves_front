@@ -9,7 +9,20 @@ export default {
     './node_modules/preline/preline.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'custom-red': '#F44336',
+        'custom-purple': '#9C27B0',
+        'custom-blue': '#3F51B5',
+        'custom-light-blue': '#2196F3',
+        'custom-teal': '#009688',
+        'custom-amber': '#FFC107',
+        'custom-orange': '#FF5722',
+        'custom-brown': '#795548',
+        'custom-grey': '#607D8B',
+        'custom-green': '#4CAF50',
+      },
+    },
   },
   plugins: [
     require('preline/plugin'),

@@ -119,8 +119,9 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             for (const user of userStore?.allUsers) {
                 const result = await getUserLeavesComposable(user.id);
                 if (result) {
-                    console.log(result);
-                    leavesData.value.allUsers.push(result);
+                    if(!(result?.message)) {
+                        leavesData.value.allUsers.push(result);
+                    }
                 }
             }
         } catch (err) {
