@@ -133,7 +133,7 @@
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
           <div v-for="user in filteredUsers" :key="user.id" class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080] cursor-pointer" @click="toggleLeaves(user.id)">
             <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
-              <img v-if="user.profile.profile_image" :src="user.profile.profile_image" />
+              <img v-if="user?.profile?.profile_image" :src="user?.profile?.profile_image" />
               <span v-else class="text-white font-bold">
                   {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
               </span>
