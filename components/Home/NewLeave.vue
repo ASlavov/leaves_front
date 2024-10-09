@@ -53,8 +53,8 @@
                   <!-- Loop through leavesData to populate the options -->
                   <option class="dark:bg-neutral-800 dark:text-gray-100"
                           v-for="(leave, index) in filteredLeavesTypes" :key="index"
-                          :value="leave.id">
-                    {{ leave.name }}
+                          :value="leave.leave_type_id">
+                    {{ leave.leave_type_name }}
                   </option>
                 </select>
               </div>
@@ -186,15 +186,15 @@ export default {
 
     const filteredLeavesTypes = computed(
         () => leavesData.value.filter(
-        leave => leavesTypes.value.some(
-            leaveType => leave.id === leaveType.id
+          leave => leavesTypes.value.some(
+          leaveType => leave.leave_type_id === leaveType.id
           )
        )
-    || []);
+    );
 
     const selectedLeave = computed(() => {
       if (leavesData.value && leaveType.value) {
-        return leavesData.value.find(leave => leave.id === leaveType.value) || null;
+        return leavesData.value.find(leave => leave.leave_type_id === leaveType.value) || null;
       }
       return null;
     });
