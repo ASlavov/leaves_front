@@ -5,7 +5,7 @@ import {
     newLeaveComposable,
     getLeavesStatusesComposable,
     getLeavesAvailableDaysComposable,
-    cancelLeaveComposable
+    cancelLeaveComposable, getAllUserLeavesComposable
 } from '@/composables/leavesApiComposable';
 import { useUserStore } from '@/stores/user';
 
@@ -114,7 +114,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         //TODO: Make this use the API call for all users instead when its implemented
 
         try {
-            loading.value = true;
+            /*loading.value = true;
             let result;
             for (const user of userStore?.allUsers) {
                 const result = await getUserLeavesComposable(user.id);
@@ -123,6 +123,11 @@ export const useLeavesStore = defineStore('leavesStore', () => {
                         leavesData.value.allUsers.push(result);
                     }
                 }
+            }*/
+            loading.value = true;
+            const result = await getAllUserLeavesComposable();
+            if(result) {
+               leavesData.value.allUsers = result;
             }
         } catch (err) {
             // Handle errors and set the error state

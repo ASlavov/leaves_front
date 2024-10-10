@@ -41,3 +41,9 @@ export const getLeavesAvailableDaysComposable = (userId) => {
         }
     });
 };
+
+export const getAllUserLeavesComposable = () => {
+    return $fetch('/api/leaves/getAllForAllUsers', {
+        method: 'POST',
+    });
+};
