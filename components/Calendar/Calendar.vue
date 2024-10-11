@@ -54,7 +54,7 @@
           'w-4 h-4 rounded-full mr-2',
         ]"
       ></span>
-        <span class="rounded-full w-5 h-5 mr-2" :style="'background-color:' + getTypeColor(leaveTypeId)"></span>
+        <span class="rounded-full w-5 h-5 mr-2" :style="'background-color:' + getTypeColor(type.id)"></span>
         <span class="text-sm">{{ type.name }}</span>
       </div>
     </div>
@@ -73,8 +73,16 @@
 <script setup>
 import {computed, onMounted, ref, watch} from 'vue';
 import {ScheduleXCalendar} from '@schedule-x/vue';
-import {createCalendar, createViewMonthGrid} from '@schedule-x/calendar';
+import {
+  createCalendar,
+  createViewMonthGrid,
+  createViewWeek,
+  createViewDay,
+  createViewMonthAgenda,
+  viewMonthGrid
+} from '@schedule-x/calendar';
 import {createEventsServicePlugin} from '@schedule-x/events-service';
+import { createEventModalPlugin } from '@schedule-x/event-modal';
 import '@schedule-x/theme-default/dist/index.css';
 import {useCentralStore} from '@/stores/centralStore';
 import {format} from 'date-fns';
@@ -110,37 +118,6 @@ const nameOptions = computed(() =>
 
 const calendarApp = shallowRef(null);
 const eventsServicePlugin = createEventsServicePlugin();
-
-/*const colorList = [
-  'custom-red',
-  'custom-purple',
-  'custom-blue',
-  'custom-light-blue',
-  'custom-teal',
-  'custom-amber',
-  'custom-orange',
-  'custom-brown',
-  'custom-grey',
-  'custom-green',
-];*/
-/*const colorList = [
-  '#F44336',
-  '#9C27B0',
-  '#3F51B5',
-  '#2196F3',
-  '#009688',
-  '#FFC107',
-  '#FF5722',
-  '#795548',
-  '#607D8B',
-  '#4CAF50',
-];
-const getTypeColor = (vacationId) => {
-  if (!vacationId) return '#F00';
-
-  const index = parseInt(vacationId) % colorList.length;
-  return colorList[index];
-}*/
 
 const colorList = [
   '#F44336',
@@ -352,11 +329,17 @@ function initializeCalendar() {
   calendarApp.value = createCalendar({
     selectedDate: format(new Date(), 'yyyy-MM-dd'),
     views: [
-      createViewMonthGrid({
-        moreLinkText: (num) => `+${num} άτομα`,
-      }),
+      createViewDay(),
+      createViewWeek(),
+      createViewMonthAgenda(),
+      createViewMonthGrid()
     ],
-    plugins: [eventsServicePlugin], // Use the events service plugin
+    plugins: [eventsServicePlugin, createEventModalPlugin()],
+    locale: 'el-GR',
+    defaultView: viewMonthGrid.name,
+    monthGridOptions: {
+      nEventsPerDay: 4,
+    }
   });
 
   // Set initial events
@@ -380,8 +363,8 @@ function initializeCalendar() {
 
 onMounted(async () => {
   // Wait for data to load
-  console.log('loading users');
   await leavesStore.getAllUsers(); // Replace with actual data fetching method
+  await leavesStore.getLeavesTypes();
   await userStore.getAllUsers();
 
   initializeCalendar();
@@ -397,5 +380,8 @@ onMounted(async () => {
 }
 div:has(> .leave-entry) {
   margin-left:4px;
+}
+.sx__event-modal__description {
+  white-space: pre-line;
 }
 </style>
