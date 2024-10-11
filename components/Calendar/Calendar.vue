@@ -1,5 +1,6 @@
 <template>
   <div v-if="calendarApp">
+<!--  <div v-if="false">-->
     <!-- Filters Section -->
     <div class="grid grid-cols-12 gap-4 mb-4 dark:text-white">
       <!-- Name Filter -->
@@ -47,13 +48,9 @@
       <div
           v-for="type in displayedLeaveTypes"
           :key="type.id"
-          class="flex items-center mr-4 mb-2 dark:text-white"
+          class="flex items-center mr-4 mb-2 dark:text-white cursor-pointer opacity-90 hover:opacity-100"
+          @click="selectedLeaveType = type.id"
       >
-      <span
-          :class="[
-          'w-4 h-4 rounded-full mr-2',
-        ]"
-      ></span>
         <span class="rounded-full w-5 h-5 mr-2" :style="'background-color:' + getTypeColor(type.id)"></span>
         <span class="text-sm">{{ type.name }}</span>
       </div>
@@ -68,6 +65,21 @@
       </template>
     </ScheduleXCalendar>
   </div>
+
+  <div v-else role="status" class="max-w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700 flex flex-col gap-4">
+    <div class="grid grid-cols-7 gap-4 divide-x divide-gray-200 dark:divide-gray-700" v-for="y in Array(5).fill()" :key="y">
+      <div class="items-center justify-between pt-4 pl-4 mt-4" v-for="x in Array(7).fill()" :key="x">
+        <div>
+          <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+          <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+      </div>
+    </div>
+    <span class="sr-only">Loading...</span>
+  </div>
+
+
 </template>
 
 <script setup>
@@ -272,6 +284,7 @@ const leavesData = computed(() => {
         if (selectedName.value && !userLeaves.name.includes(selectedName.value)) return;
         if (selectedDepartment.value && parseInt(userLeaves.department_id) !== parseInt(selectedDepartment.value)) return;
         if (selectedLeaveType.value && parseInt(leave.leave_type_id) !== parseInt(selectedLeaveType.value)) return;
+        if (leave.status && leave.status !== 'approved' && leave.status !== 'pending') return;
 
         if (!leaveTypeMap.has(leave.leave_type_id)) {
           leaveTypeMap.set(leave.leave_type_id, true);
@@ -309,6 +322,7 @@ const events = computed(() => {
       title: leave.name || 'Unnamed Leave',
       start: format(startDate, 'yyyy-MM-dd'),
       end: format(endDate, 'yyyy-MM-dd'),
+      description: leave.status,
       extendedProps: {
         leaveTypeId: leave.leave_type_id || 0,
         status: leave.status || 'unknown',
