@@ -4,7 +4,8 @@ import { useAuthStore } from '~/stores/auth.js';   // Import the auth store
 import { useUserStore } from '~/stores/user.js';   // Import the user store
 import { useLeavesStore } from '~/stores/leaves.js'; // Import the leaves store
 import { useDepartmentsStore } from "~/stores/departments.js"; // Import the departments store
-import { useNotificationsStore } from "~/stores/notifications.js";   // Import the notifications store
+import { useNotificationsStore } from "~/stores/notifications.js";
+import { usePermissionsStore } from "~/stores/permissions.js";   // Import the notifications store
 
 export const useCentralStore = defineStore('centralStore', () => {
     const authStore = useAuthStore();
@@ -12,7 +13,8 @@ export const useCentralStore = defineStore('centralStore', () => {
     const leavesStore = useLeavesStore();
     const departmentsStore = useDepartmentsStore();
     const notificationsStore = useNotificationsStore();
-    
+    const permissionsStore = usePermissionsStore();
+
     const error = ref(null);
     const loading = computed(() =>
         authStore.loading
@@ -113,6 +115,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const proxiedLeavesStore = new Proxy(leavesStore, dynamicProxyHandler);
     const proxiedDepartmentsStore = new Proxy(departmentsStore, dynamicProxyHandler);
     const proxiedNotificationsStore = new Proxy(notificationsStore, dynamicProxyHandler);
+    const proxiedPermissionsStore = new Proxy(permissionsStore, dynamicProxyHandler);
 
     return {
         error,
@@ -125,5 +128,6 @@ export const useCentralStore = defineStore('centralStore', () => {
         leavesStore: proxiedLeavesStore,
         departmentsStore: proxiedDepartmentsStore,
         notificationsStore: proxiedNotificationsStore,
+        permissionsStore: proxiedPermissionsStore,
     };
 });
