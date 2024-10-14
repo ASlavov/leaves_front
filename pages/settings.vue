@@ -25,7 +25,7 @@
             <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-7" aria-selected="false" data-hs-tab="#basic-tabs-6" aria-controls="basic-tabs-6" role="tab">
               Άδειες
             </button>
-            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-6" aria-selected="false" data-hs-tab="#basic-tabs-7" aria-controls="basic-tabs-7" role="tab">
+            <button v-if="permissionsStore.can('leave_types','view')" type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-6" aria-selected="false" data-hs-tab="#basic-tabs-7" aria-controls="basic-tabs-7" role="tab">
               Τύποι αδειών
             </button>
           </nav>
@@ -62,7 +62,7 @@
               <LeavesList />
             </p>
           </div>
-          <div id="basic-tabs-7" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-7">
+          <div id="basic-tabs-7" v-if="permissionsStore.can('leave_types','view')" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-7">
             <p class="text-gray-500 dark:text-neutral-400">
               <LeavesTypesList />
             </p>
@@ -74,13 +74,14 @@
   <!-- End Content -->
 </template>
 <script setup>
-import {computed, onMounted, watch} from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const leavesStore = centralStore.leavesStore;
 const authStore = centralStore.authStore;
+const permissionsStore = centralStore.permissionsStore;
 
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
@@ -89,6 +90,13 @@ const leavesData = computed(() => leavesStore.leavesData);
 const loadLeavesList = () => {
   console.log('loading shit');
 }
+watch(
+    () => userStore.userInfo,
+    () => console.log(permissionsStore.can('leave_types','view')),
+    {
+      immediate: true,
+    }
+)
 /*onMounted(async () => {
   try {
     // Restore session first

@@ -1,12 +1,12 @@
 export const getUserLeavesComposable = (userId) => {
-    return $fetch('/api/leaves/getLeavesByUser', {
+    return retryFetch('/api/leaves/getLeavesByUser', {
         method: 'POST',
         body: {userId: userId},
     });
 };
 
 export const newLeaveComposable = (body) => {
-    return $fetch('/api/leaves/newLeave', {
+    return retryFetch('/api/leaves/newLeave', {
         method: 'POST',
         body: {
             ...body
@@ -15,7 +15,7 @@ export const newLeaveComposable = (body) => {
 };
 
 export const cancelLeaveComposable = (body) => {
-    return $fetch('/api/leaves/cancelLeave', {
+    return retryFetch('/api/leaves/cancelLeave', {
         method: 'POST',
         body: {
             ...body
@@ -24,17 +24,17 @@ export const cancelLeaveComposable = (body) => {
 };
 
 export const getLeavesTypesComposable = () => {
-    return $fetch('/api/leaves/getLeavesTypes', {
+    return retryFetch('/api/leaves/getLeavesTypes', {
         method: 'POST',
     });
 };
 export const getLeavesStatusesComposable = () => {
-    return $fetch('/api/leaves/getLeavesStatuses', {
+    return retryFetch('/api/leaves/getLeavesStatuses', {
         method: 'POST',
     });
 };
 export const getLeavesAvailableDaysComposable = (userId) => {
-    return $fetch('/api/leaves/getLeavesAvailableDays', {
+    return retryFetch('/api/leaves/getLeavesAvailableDays', {
         method: 'POST',
         body: {
             userId: userId,
@@ -43,7 +43,7 @@ export const getLeavesAvailableDaysComposable = (userId) => {
 };
 
 export const getAllUserLeavesComposable = () => {
-    return $fetch('/api/leaves/getAllForAllUsers', {
+    return retryFetch('/api/leaves/getAllForAllUsers', {
         method: 'POST',
     });
 };

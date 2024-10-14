@@ -94,7 +94,8 @@ export const useCentralStore = defineStore('centralStore', () => {
         }
     };*/
 
-    const dynamicProxyHandler = {
+    // OLD Proxy Handler
+    /*const dynamicProxyHandler = {
         get(target, prop) {
             // First check if the property exists in the state of the store
             if (prop in target.$state) {
@@ -107,7 +108,25 @@ export const useCentralStore = defineStore('centralStore', () => {
             // If neither, return undefined
             return undefined;
         }
+    };*/
+
+    const dynamicProxyHandler = {
+        get(target, prop) {
+            // Check if the property exists directly on the store
+            if (prop in target) {
+                const value = target[prop];
+                // If it's a function, bind it to the store instance
+                if (typeof value === 'function') {
+                    return value.bind(target);
+                } else {
+                    return value; // Return the value as is
+                }
+            }
+            // If property doesn't exist, return undefined
+            return undefined;
+        }
     };
+
 
     // Return proxied versions of the stores
     const proxiedAuthStore = new Proxy(authStore, dynamicProxyHandler);

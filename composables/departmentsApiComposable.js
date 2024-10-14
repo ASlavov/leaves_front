@@ -1,7 +1,7 @@
 export const getAllDepartmentsComposable = () => {
     const config = useRuntimeConfig()
 
-    return $fetch('/api/departments/getAll', {
+    return retryFetch('/api/departments/getAll', {
         method: 'POST',
     });
 };
@@ -9,7 +9,7 @@ export const getAllDepartmentsComposable = () => {
 export const newDepartmentComposable = (name, related_departments) => {
     const config = useRuntimeConfig()
 
-    return $fetch('/api/departments/newDepartment', {
+    return retryFetch('/api/departments/newDepartment', {
         method: 'POST',
         body: {
             name: name,
@@ -20,7 +20,7 @@ export const newDepartmentComposable = (name, related_departments) => {
 export const editDepartmentComposable = (body) => {
     const config = useRuntimeConfig()
 
-    return $fetch('/api/departments/editDepartment', {
+    return retryFetch('/api/departments/editDepartment', {
         method: 'POST',
         body: {
             ...body,
@@ -31,7 +31,7 @@ export const editDepartmentComposable = (body) => {
 export const deleteDepartmentComposable = (department_id) => {
     const config = useRuntimeConfig()
 
-    return $fetch('/api/departments/deleteDepartment', {
+    return retryFetch('/api/departments/deleteDepartment', {
         method: 'POST',
         body: {
             department_id: department_id,

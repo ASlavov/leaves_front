@@ -2,9 +2,9 @@
   <div v-if="calendarApp">
 <!--  <div v-if="false">-->
     <!-- Filters Section -->
-    <div class="grid grid-cols-12 gap-4 mb-4 dark:text-white">
+    <div class="grid grid-cols-12 gap-4 mb-4 dark:text-white items-end">
       <!-- Name Filter -->
-      <div class="col-span-12 sm:col-span-4 dark:text-white">
+      <div class="col-span-12 sm:col-span-3 dark:text-white">
         <CustomSelect
             v-model="selectedName"
             :options="nameOptions"
@@ -15,7 +15,7 @@
       </div>
 
       <!-- Department Filter -->
-      <div class="col-span-12 sm:col-span-4 dark:text-white">
+      <div class="col-span-12 sm:col-span-3 dark:text-white">
         <CustomSelect
             v-model="selectedDepartment"
             :options="departments"
@@ -26,7 +26,7 @@
       </div>
 
       <!-- Leave Type Filter -->
-      <div class="col-span-12 sm:col-span-4 dark:text-white">
+      <div class="col-span-12 sm:col-span-3 dark:text-white">
         <CustomSelect
             v-model="selectedLeaveType"
             :options="leaveTypeOptions"
@@ -35,13 +35,15 @@
             selectId="leave-type-select"
         />
       </div>
+
+      <div class="col-span-12 sm:col-span-3 leading-[46px] justify-self-end" v-if="selectedDepartment || selectedLeaveType || selectedName">
+        <button @click="clearFilters" class="btn btn-secondary text-red-500">
+          &times; Καθαρισμός φίλτρων
+        </button>
+      </div>
     </div>
     <!-- Clear All Filters Button -->
-    <div class="mb-4">
-      <button @click="clearFilters" class="btn btn-secondary dark:text-white">
-        Καθαρισμός Φίλτρων
-      </button>
-    </div>
+
 
     <!-- Color Legend for Leave Types -->
     <div class="flex flex-wrap mb-4">
