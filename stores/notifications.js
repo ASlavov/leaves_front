@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getNotificationsComposable} from '@/composables/notificationsApiComposable';
 import {useUserStore} from "~/stores/user.js";
+import { useRouter } from 'vue-router';
+
 
 export const useNotificationsStore = defineStore('notificationsStore', () => {
     const notificationsData = ref({});

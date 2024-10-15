@@ -42,22 +42,24 @@
 </template>
 
 <script setup>
-definePageMeta({
+/*definePageMeta({
   middleware: 'redirect-if-authenticated',  // Apply the middleware to this page
-});
+});*/
 
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useNotificationsStore } from '@/stores/notifications';
+import { useCentralStore } from "@/stores/centralStore.js";
 
-  // Initialize the toast function
+// Initialize the toast function
 const email = ref('');
 const password = ref('');
 const rememberMe = ref(false);  // "Remember Me" does nothing
 const router = useRouter();
 const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
+const centralStore = useCentralStore();
 
 const login = async (event) => {
   event.preventDefault();  // Prevent default form submission
@@ -67,13 +69,14 @@ const login = async (event) => {
     await authStore.authUser(email.value, password.value);
 
     // Redirect user after successful login
-    await router.push('/home');  // Adjust the route based on your app structure
+    await router.push({ path: '/home'});  // Adjust the route based on your app structure
   } catch (error) {
     // Add error message to the toast
   }
 };
 onMounted(() => {
   notificationsStore.stopPollingNotifications();
+  centralStore.initialized = false;
   watch(
       () => authStore.error,  // Watch the error state in the store
       (newError) => {

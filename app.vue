@@ -63,6 +63,18 @@ onMounted(async () => {
         }
       }
   );
+
+  watch(
+      () => centralStore.notificationsStore.notificationsData,
+      (notificationError) => {
+        if (notificationError?.statusCode && notificationError?.statusCode === 403) {
+          router.push('/auth/login');
+        }
+      },
+      {
+        immediate: true,
+      }
+  );
 });
 
 // Watch for error changes in the central store and trigger a toast
