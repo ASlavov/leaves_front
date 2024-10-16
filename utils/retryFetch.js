@@ -1,3 +1,5 @@
+// utils/retryFetch.js
+/*
 export default async function (url, options, retries = 3, delay = 1000) {
     for (let i = 0; i < retries; i++) {
         try {
@@ -27,10 +29,41 @@ export default async function (url, options, retries = 3, delay = 1000) {
             delay *= 2; // Exponential backoff
         }
     }
-}
+}*/
 
-// Helper function to delete a cookie
-function deleteCookie(name) {
-    // Set the cookie with an expiry date in the past
-    document.cookie = `${name}=; Max-Age=0; path=/;`
+export default async function retryFetch(url, options = {}, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            // Use $fetch to get the response data
+            const response = await $fetch(url, options);
+
+            // Check if response contains statusCode 403 in the data
+            if (response && response.statusCode === 403) {
+                console.log('Received statusCode 403 in response data - handling error');
+
+                // Perform necessary actions, e.g., logout or redirect
+                useFetch('/api/auth/logout');
+
+                // Since we've handled the error, exit the function or throw an error
+                //throw new Error('403 Forbidden');
+                return;
+            }
+
+            // Return the response data if no error
+            return response;
+        } catch (error) {
+            // If the error is not related to statusCode 403, handle retries
+            if (error.message === '403 Forbidden') {
+                return error;
+            }
+            // If it's the last attempt, rethrow the error
+            if (i === retries - 1) {
+                throw error;
+            }
+
+            // Wait before retrying (exponential backoff)
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
+        }
+    }
 }

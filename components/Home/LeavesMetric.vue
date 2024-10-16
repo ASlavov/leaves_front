@@ -1,5 +1,8 @@
 <template>
-    <div class="container mx-auto">
+    <div
+        v-if="permissionsStore.can('profile_leave_balance','request_leave')
+        || permissionsStore.can('profile_leave_balance','cancel_leave')"
+        class="container mx-auto">
         <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Υπόλοιπα άδειας</h3>
         <div v-if="leavesData.length === 0" class="text-center py-4 text-gray-600 dark:text-gray-100">
             Δεν υπάρχουν διαθέσιμες άδειες
@@ -24,7 +27,7 @@ import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
-
+const permissionsStore = centralStore.permissionsStore;
 // Use computed to get leavesData
 const leavesData = computed(() => leavesStore.leavesData.leavesAvailableDays);
 </script>

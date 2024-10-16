@@ -22,10 +22,7 @@
             <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-5" aria-selected="false" data-hs-tab="#basic-tabs-5" aria-controls="basic-tabs-5" role="tab">
               Γκρουπς
             </button>
-            <button type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-7" aria-selected="false" data-hs-tab="#basic-tabs-6" aria-controls="basic-tabs-6" role="tab">
-              Άδειες
-            </button>
-            <button v-if="permissionsStore.can('leave_types','view')" type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-6" aria-selected="false" data-hs-tab="#basic-tabs-7" aria-controls="basic-tabs-7" role="tab">
+            <button v-if="permissionsStore.can('leave_types','view')" type="button" class="hs-tab-active:font-bold hs-tab-active:border-red-600 py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap text-gray-500 hover:text-red-600 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-400 dark:hover:text-red-500" id="basic-tabs-item-6" aria-selected="false" data-hs-tab="#basic-tabs-6" aria-controls="basic-tabs-6" role="tab">
               Τύποι αδειών
             </button>
           </nav>
@@ -57,12 +54,7 @@
               <GroupsList />
             </p>
           </div>
-          <div id="basic-tabs-6" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-6">
-            <p class="text-gray-500 dark:text-neutral-400">
-              <LeavesList />
-            </p>
-          </div>
-          <div id="basic-tabs-7" v-if="permissionsStore.can('leave_types','view')" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-7">
+          <div id="basic-tabs-6" v-if="permissionsStore.can('leave_types','view')" class="hidden" role="tabpanel" aria-labelledby="basic-tabs-item-6">
             <p class="text-gray-500 dark:text-neutral-400">
               <LeavesTypesList />
             </p>
@@ -74,7 +66,7 @@
   <!-- End Content -->
 </template>
 <script setup>
-import { computed, onMounted, watch } from 'vue';
+import { computed } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
@@ -86,31 +78,6 @@ const permissionsStore = centralStore.permissionsStore;
 // Use computed to make reactive
 const userId = computed(() => userStore.userId);
 const leavesData = computed(() => leavesStore.leavesData);
-
-const loadLeavesList = () => {
-  console.log('loading shit');
-}
-watch(
-    () => userStore.userInfo,
-    () => console.log(permissionsStore.can('leave_types','view')),
-    {
-      immediate: true,
-    }
-)
-/*onMounted(async () => {
-  try {
-    // Restore session first
-    await authStore.restoreSession();
-
-    // If session restoration is successful, load leaves
-    if (userId.value) { // Ensure userId is available after restoring session
-      await leavesStore.getAll(userId.value);
-      await userStore.loadUserProfile();
-    }
-  } catch (error) {
-    console.error("Error during session restoration or loading leaves:", error);
-  }
-});*/
 </script>
 <script>
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
@@ -119,7 +86,7 @@ import Security from "~/components/Settings/Security.vue";
 import UsersList from "~/components/Settings/UsersList.vue";
 import GroupsList from "~/components/Settings/GroupsList.vue";
 import LeavesTypesList from "~/components/Settings/LeavesTypesList.vue";
-import LeavesList from "~/components/Settings/LeavesList.vue";
+
 export default {
   components: {
     Sidebar,
@@ -127,7 +94,6 @@ export default {
     Security,
     UsersList,
     GroupsList,
-    LeavesList,
     LeavesTypesList,
   }
 }

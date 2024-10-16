@@ -20,7 +20,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         },
         all_users: {
             view: ['admin', 'hr', 'head', 'user'],
-            modify: ['admin', 'hr', 'head'],
+            modify: ['admin', 'hr'],
         },
         group: {
             view: ['admin', 'hr', 'head', 'user'],
@@ -33,8 +33,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
     };
 
     const userRoles = computed(() => {
-        const roles = userStore.userInfo.value?.roles || [];
-        console.log('roles:', roles);
+        const roles = userStore.userInfo.roles || [];
         return roles.map((role) => role.name);
     });
 
@@ -45,15 +44,12 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
     const can = (category, action) => {
         const categoryPermissions = permissions[category];
         if (!categoryPermissions) {
-            console.log('#1 wtf is ', categoryPermissions);
             return false;
         }
         const allowedRoles = categoryPermissions[action];
         if (!allowedRoles) {
-            console.log('#2 wtf is ', action);
             return false;
         }
-        console.log('#3 wtf is ', userRoles.value);
         return userRoles.value.some((role) => allowedRoles.includes(role));
     };
 
