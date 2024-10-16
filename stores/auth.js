@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { checkSessionExistsComposable, authUserComposable, refreshSessionComposable, logoutUserComposable } from '~/composables/authApiComposable.js';
 import {useNuxtApp} from "#app";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore('authStore', () => {
     const loading = ref(false);
@@ -51,6 +52,9 @@ export const useAuthStore = defineStore('authStore', () => {
             const result = await refreshSessionComposable();
             if (result && result.userId) {
                 userStore.setUserId(result.userId);
+            } else {
+                const router = useRouter();
+                await router.push('/auth/login');
             }
         } catch (err) {
             setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');

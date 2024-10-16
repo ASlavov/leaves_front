@@ -37,10 +37,13 @@
         </div>
         <div class="info-actions pt-10 pb-5 flex gap-4">
             <button
+                v-if="permissionsStore.can('profile_info','modify')"
                 class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
                 Επεξεργασία
             </button>
-            <button class="font-bold text-gray-800 dark:text-white mx-auto text-md">
+            <button
+                v-if="permissionsStore.can('profile_info','change_password')"
+                class="font-bold text-gray-800 dark:text-white mx-auto text-md">
                 Αλλαγή κωδικού
             </button>
         </div>
@@ -53,7 +56,7 @@ import { useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore.js';
 
 const router = useRouter();
-const { authStore, userStore } = useCentralStore();
+const { authStore, userStore, permissionsStore } = useCentralStore();
 
 // Loading state
 const loading = computed(() => (userStore && userStore.loading)); // Simulate loading state
