@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         } = body;
 
         const response = await $fetch(`${config.public.apiBase}${config.public.departments.deleteDepartment}/${department_id}`, {
-            method: 'DEL',
+            method: 'DELETE',
             body: {
                 "requesting_user_id": requestingUserId,
             },

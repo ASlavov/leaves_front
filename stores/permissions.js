@@ -1,6 +1,6 @@
 // permissions.js
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useUserStore } from '~/stores/user.js';
 
 export const usePermissionsStore = defineStore('permissionsStore', () => {
@@ -29,11 +29,15 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         leave_types: {
             view: ['admin', 'hr', 'head'],
             modify: ['admin', 'hr'],
+        },
+        permissions: {
+            view: ['admin'],
+            modify: ['admin'],
         }
     };
 
     const userRoles = computed(() => {
-        const roles = userStore.userInfo.roles || [];
+        const roles = userStore.userInfo?.roles || [];
         return roles.map((role) => role.name);
     });
 
@@ -56,6 +60,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
     return {
         hasRole,
         can,
+        userRoles,
         permissions,
     };
 });

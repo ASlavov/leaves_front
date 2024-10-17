@@ -114,21 +114,10 @@ const loading = computed(() => userStore && userStore.loading);
 
 const props = defineProps({
   userId: {
-    type: [Number, String],
+    type: [Number, String, null],
     required: false,
   },
 });
-
-
-/*onMounted(async () => {
-  await fetchUserData();
-});
-
-watch(() => props.userId, async () => {
-    await fetchUserData();
-  },
-  { immediate: true }
-);*/
 
 // Fetch user data when component is mounted or when userId changes
 onMounted(() => {
@@ -230,28 +219,6 @@ const roles = computed(() => {
     return accumulator;
   }, {}));
 });
-// Initialize form fields when userStore.userInfo is available
-/*watch(
-    () => userStore.userInfo,
-    (newUserInfo) => {
-      if (newUserInfo) {
-        // Initialize other form fields
-        const userName = newUserInfo.name || '';
-        const nameParts = userName.split(' ');
-        formFirstName.value = nameParts[0] || '';
-        formLastName.value = nameParts.slice(1).join(' ') || '';
-        formEmail.value = newUserInfo.email || '';
-        formTitle.value = newUserInfo.profile?.job_title || '';
-        formPhone.value = newUserInfo.profile?.phone || '';
-        formInternalPhone.value = newUserInfo.profile?.internal_phone || '';
-        formTitleDescription.value = newUserInfo.profile?.title_description || '';
-
-        // Initialize selected department IDs from user's departments
-        formSelectedDepartmentId.value = Number(newUserInfo.department?.id) || null;
-      }
-    },
-    { immediate: true }
-);*/
 
 
 // Computed properties for avatar initials
@@ -270,19 +237,6 @@ const submitForm = async () => {
   const userInternalPhone = formInternalPhone.value;
   const userTitle = formTitle.value;
   const userTitleDescription = formTitleDescription.value || formTitle.value;
-
-  /*const forAlert = `
-  'userId:', ${userId},
-  'userName:', ${userName},
-  'userEmail:', ${userEmail},
-  'userDepartment:', ${userDepartment},
-  'userRole:', ${userRole},
-  'userPhone:', ${userPhone},
-  'userInternalPhone:', ${userInternalPhone},
-  'userTitle:', ${userTitle},
-  'userTitleDescription:', ${userTitleDescription},
-  `;
-  alert(forAlert);*/
 
   // Uncomment and adjust when ready to submit
   try {

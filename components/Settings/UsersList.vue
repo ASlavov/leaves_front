@@ -512,17 +512,6 @@ const filteredUsers = computed(() => {
   return users;
 });
 
-// Functions to handle edit and delete actions
-function canEditUser() {
-  // Check if the current user has 'edit_user' permission
-  // You can add additional logic if needed, such as checking departments
-  return userStore.hasPermission('edit_user');
-}
-
-function canDeleteUser() {
-  return userStore.hasPermission('delete_user');
-}
-
 
 const newUser = () => { // TODO: Check wtf we need to do for new user
   selectedUserId.value = null;

@@ -19,9 +19,25 @@
 
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Κωδικός</label>
-          <input v-model="password" id="password" name="password" type="password" required
+<!--          <input v-model="password" id="password" name="password" type="password" required
                  class="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                 placeholder="Enter your password">
+                 placeholder="Enter your password">-->
+              <div class="relative">
+                <input
+                    v-model="password"
+                    name="password" type="password" id="password"
+                    class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Enter your password" value>
+                <button @click="togglePassword('password')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
+                  <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                    <path class="group-[.open]:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                    <path class="group-[.open]:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                    <line class="group-[.open]:hidden" x1="2" x2="22" y1="2" y2="22"></line>
+                    <path class="hidden group-[.open]:block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <circle class="hidden group-[.open]:block" cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
         </div>
 
         <div class="flex items-center justify-between">
@@ -60,6 +76,18 @@ const router = useRouter();
 const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 const centralStore = useCentralStore();
+
+const togglePassword = (name) => {
+  const e = document.querySelector(`input[name="${name}"]`);
+  e.type = (e.type === 'password') ? 'text' : 'password';
+
+  const btn = e.nextElementSibling;
+  if (btn.classList.contains('open')) {
+    btn.classList.remove('open');
+  } else {
+    btn.classList.add('open');
+  }
+};
 
 const login = async (event) => {
   event.preventDefault();  // Prevent default form submission

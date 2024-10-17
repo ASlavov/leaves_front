@@ -42,7 +42,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             const result = await getNotificationsComposable(userStore.userId);
 
             if (result) {
-                // Process the result and store it in userData
+                // Process the result and store it in notificationsData
                 notificationsData.value = result;
             }
         } catch (err) {

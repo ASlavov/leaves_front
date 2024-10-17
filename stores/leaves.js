@@ -95,8 +95,6 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             const result = await newLeaveComposable({userId, leaveTypeId, startDate, endDate, reason});
 
             if (result) {
-                // Process the result and store it in userData
-                //leavesData.value.data = result;
                 await getAll(userId);
                 await getLeavesAvailableDays(userId);
             }
@@ -111,19 +109,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     }
 
     async function getAllUsers() {
-        //TODO: Make this use the API call for all users instead when its implemented
-
         try {
-            /*loading.value = true;
-            let result;
-            for (const user of userStore?.allUsers) {
-                const result = await getUserLeavesComposable(user.id);
-                if (result) {
-                    if(!(result?.message)) {
-                        leavesData.value.allUsers.push(result);
-                    }
-                }
-            }*/
             loading.value = true;
             const result = await getAllUserLeavesComposable();
             if(result) {
@@ -145,7 +131,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             const result = await cancelLeaveComposable({userId, leaveId, status, reason});
 
             if (result) {
-                // Process the result and store it in userData
+                // Process the result and store it in leavesData
                 await getAll(userId);
             }
         } catch (err) {
@@ -165,27 +151,8 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             const result = await getLeavesTypesComposable();
 
             if (result) {
-                // Process the result and store it in userData
-                leavesData.value.leavesTypes = result.map(leaveType => new Object({
-                    ...leaveType,
-                    // TODO: REMOVE THIS DUMMY DATA
-                    days: 1 + Math.round(Math.random() * 20),
-                    users: [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-
-                    ],
-                    departments: [
-                        1,
-                        2,
-                        3,
-                        4,
-                    ],
-                }));
+                // Process the result and store it in leavesData
+                leavesData.value.leavesTypes = result;
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -205,7 +172,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             const result = await getLeavesStatusesComposable();
 
             if (result) {
-                // Process the result and store it in userData
+                // Process the result and store it in leavesData
                 leavesData.value.leavesStatuses = result;
             }
         } catch (err) {
@@ -225,7 +192,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             const result = await getLeavesAvailableDaysComposable(userId);
 
             if (result) {
-                // Process the result and store it in userData
+                // Process the result and store it in leavesData
                 leavesData.value.leavesAvailableDays = result;
             }
         } catch (err) {

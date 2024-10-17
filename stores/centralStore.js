@@ -58,9 +58,6 @@ export const useCentralStore = defineStore('centralStore', () => {
             // Handle errors and set the error state
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
             initialized.value = false;
-        } finally {
-            // Ensure loading is set to false and any post-processing is done
-            //notificationsStore.beginPolling();
         }
     }
 
@@ -76,39 +73,6 @@ export const useCentralStore = defineStore('centralStore', () => {
         } finally {
         }
     }
-
-    // Proxy to safely expose stores without direct access
-    /*const proxyHandler = {
-        get(target, prop) {
-            if (prop in target) {
-                const value = target[prop];
-                // Prevent exposing entire reactive objects, return serializable properties only
-                if (typeof value === 'function') {
-                    return value.bind(target);
-                } else {
-                    return value;
-                }
-            } else {
-                return undefined;
-            }
-        }
-    };*/
-
-    // OLD Proxy Handler
-    /*const dynamicProxyHandler = {
-        get(target, prop) {
-            // First check if the property exists in the state of the store
-            if (prop in target.$state) {
-                return target.$state[prop];
-            }
-            // Otherwise, check if the property is a function (method) and return it
-            if (typeof target[prop] === 'function') {
-                return target[prop].bind(target); // Bind the function to the store
-            }
-            // If neither, return undefined
-            return undefined;
-        }
-    };*/
 
     const dynamicProxyHandler = {
         get(target, prop) {

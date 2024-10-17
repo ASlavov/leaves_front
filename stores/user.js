@@ -10,7 +10,6 @@ import {newLeaveComposable} from "~/composables/leavesApiComposable.js";
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref(null);
     const loading = ref(false);
-    //const profile = ref({});  // You can add more user-related data here
     const permissions  = ref({}); // ['admin', 'hr', 'department_head', 'user']
     const userInfo = ref({});
     const allUsers = ref([]);

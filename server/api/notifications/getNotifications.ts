@@ -1,6 +1,7 @@
 import { defineEventHandler, getCookie, deleteCookie, readBody, createError } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { deleteSession } from '~/server/sessionStore';
+import error from "nuxt/dist/core/runtime/nitro/error";
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();

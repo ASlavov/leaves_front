@@ -348,7 +348,7 @@
             <div v-if="group.users.length" class="grid grid-cols-2 gap-[10px]">
               <div class="h-7 translate-x-[-20px] justify-start items-center gap-5  flex">
                 <div class="w-1 h-7 bg-[#ea021a] rounded-lg"></div>
-                <div class="text-black dark:text-white text-xl font-bold font-['Roboto']">{{ group.name }}</div>
+                <div class="text-black dark:text-white text-xl font-bold">{{ group.name }}</div>
               </div>
 
               <div class="justify-self-end flex gap-[25px] items-center">
@@ -538,17 +538,6 @@ const filteredGroups = computed(() => {
 
   return groups;
 });
-
-// Functions to handle edit and delete actions
-function canEditGroup() {
-  // Check if the current user has 'edit_user' permission
-  // You can add additional logic if needed, such as checking departments
-  return userStore.hasPermission('edit_user');
-}
-
-function canDeleteGroup() {
-  return userStore.hasPermission('delete_user');
-}
 
 const newGroup = () => {
   selectedGroupId.value = null;

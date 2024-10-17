@@ -374,17 +374,6 @@ const filteredLeavesTypes = computed(() => {
   return leaves;
 });
 
-// Functions to handle edit and delete actions
-function canEditUser() {
-  // Check if the current user has 'edit_user' permission
-  // You can add additional logic if needed, such as checking departments
-  return userStore.hasPermission('edit_user');
-}
-
-function canDeleteUser() {
-  return userStore.hasPermission('delete_user');
-}
-
 const getDepartmentsText = (departments) => {
   let loops = departments.length > 5 ? 5 : departments.length;
   let output = ``;

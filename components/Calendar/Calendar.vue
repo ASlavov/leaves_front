@@ -249,15 +249,9 @@ function getEventClass(calendarEvent) {
   const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
   const status = calendarEvent.extendedProps.status;
 
-  /*const leaveTypeClasses = {
-    1: 'bg-red-500',
-    2: 'bg-green-500',
-    3: 'bg-blue-500',
-  };*/
-
   const statusClasses = {
-    pending: '',
-    approved: '',
+    pending: 'opacity-80',
+    approved: 'opacity-100',
   };
 
   return [
@@ -292,7 +286,7 @@ const leavesData = computed(() => {
           leaveTypeMap.set(leave.leave_type_id, true);
           displayedLeaveTypes.value.push({
             id: leave.leave_type_id,
-            name: leavesStore.leavesData.leavesTypes.filter(leaveType => leaveType.id === leave.leave_type_id)[0].name,
+            name: leavesStore.leavesData.leavesTypes.filter(leaveType => leaveType.id === leave.leave_type_id)[0]?.name,
           });
         }
 
@@ -355,7 +349,7 @@ function initializeCalendar() {
     defaultView: viewMonthGrid.name,
     monthGridOptions: {
       nEventsPerDay: 4,
-    }
+    },
   });
 
   // Set initial events
@@ -399,5 +393,38 @@ div:has(> .leave-entry) {
 }
 .sx__event-modal__description {
   white-space: pre-line;
+}
+
+.sx__view-container {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+}
+
+.sx__view-container::-webkit-scrollbar {
+  height: 8px;
+  background-color: var(--scrollbar-track-color);
+}
+
+.sx__view-container::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+  border-radius: 9999px;
+}
+.sx__month-grid-day__header-day-name {
+ font-size: 16px;
+  background: black;
+  color: white;
+  width: 100%;
+  font-weight: bold;
+  line-height: 47px;
+  padding-left: 10px;
+}
+.dark .sx__month-grid-day__header-day-name {
+
+}
+.sx__month-grid-week:first-child {
+
+}
+.sx__month-grid-week:first-child > div {
+  padding-top: 0;
 }
 </style>
