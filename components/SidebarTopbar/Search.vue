@@ -20,14 +20,14 @@
             <path d="m21 21-4.3-4.3"></path>
           </svg>
         </div>
-        <input
-            class="py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200 dark:bg-neutral-800 dark:text-gray-100"
+        <textarea
+            class="resize-none py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200 dark:bg-neutral-800 dark:text-gray-100"
             type="text"
-            role="combobox"
-            aria-expanded="true"
+            rows="1"
             placeholder="Αναζήτηση χρήστη..."
             v-model="searchQuery"
             autocomplete="off"
+            @keydown.enter.prevent
             @focus="showDropdownVar = true"
         />
       </div>
