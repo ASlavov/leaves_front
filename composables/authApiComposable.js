@@ -1,7 +1,7 @@
 // Check if session exists
 export const checkSessionExistsComposable = async () => {
     try {
-        const result = await $fetch('/api/auth/checkSessionExists', {
+        const result = await retryFetch('/api/auth/checkSessionExists', {
             method: 'GET',
         });
 
@@ -14,7 +14,7 @@ export const checkSessionExistsComposable = async () => {
 // Authenticate user
 export const authUserComposable = async (params) => {
     try {
-        const response = await $fetch('/api/auth/login', {
+        const response = await retryFetch('/api/auth/login', {
             method: 'POST',
             body: {
                 email: params.email,
@@ -35,7 +35,7 @@ export const authUserComposable = async (params) => {
 // Restore session
 export const refreshSessionComposable = async () => {
     try {
-        const result = await $fetch('/api/auth/refreshSession', {
+        const result = await retryFetch('/api/auth/refreshSession', {
             method: 'GET',
         });
 
@@ -48,7 +48,7 @@ export const refreshSessionComposable = async () => {
 // Logout user
 export const logoutUserComposable = async () => {
     try {
-        const result = await $fetch('/api/auth/logout', {
+        const result = await retryFetch('/api/auth/logout', {
             method: 'GET',
         });
 

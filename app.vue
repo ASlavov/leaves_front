@@ -11,7 +11,11 @@
 import { useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
-
+useHead({
+  htmlAttrs: {
+    lang: 'el',
+  },
+})
 const router = useRouter();
 
 const centralStore = useCentralStore();
@@ -63,7 +67,24 @@ onMounted(async () => {
         }
       }
   );
+
+  watch(
+      () => centralStore.notificationsStore.notificationsData,
+      (notificationError) => {
+        if (notificationError?.statusCode && notificationError?.statusCode === 403) {
+          router.push('/auth/login');
+        }
+      },
+      {
+        immediate: true,
+      }
+  );
 });
 
 // Watch for error changes in the central store and trigger a toast
 </script>
+<style>
+body {
+  font-family: 'Roboto', sans-serif;
+}
+</style>

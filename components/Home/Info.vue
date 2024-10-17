@@ -7,7 +7,10 @@
             <div class="lg:col-span-3 flex flex-col">
                <UserGroupInfo />
             </div>
-            <div class="lg:col-span-6 flex flex-col">
+            <div
+                v-if="permissionsStore.can('profile_leave_balance','request_leave')
+                    || permissionsStore.can('profile_leave_balance','cancel_leave')"
+                class="lg:col-span-6 flex flex-col">
                 <h3 class="py-4 font-semibold text-lg dark:text-white">Άδειες έτους</h3>
                 <div class="flex-1 space-y-3 max-h-[500px] overflow-y-auto">
                     <LeavesYearInfo />
@@ -22,4 +25,8 @@
 import ProfileInfo from '~/components/Home/ProfileInfo.vue'
 import UserGroupInfo from '~/components/Home/UserGroupInfo.vue'
 import LeavesYearInfo from '~/components/Home/LeavesYearInfo.vue'
+import { useCentralStore } from "@/stores/centralStore.js";
+
+const centralStore = useCentralStore();
+const permissionsStore = centralStore.permissionsStore;
 </script>

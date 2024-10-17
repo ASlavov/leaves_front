@@ -76,7 +76,7 @@
             <div class="px-6 pt-4">
                 <!-- Logo -->
                 <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80 mb-10"
-                    href="/home" aria-label="Preline">
+                    href="/home" aria-label="WHY">
                     <img :src="`https://whyagency.gr/wp-content/uploads/2023/10/${theme === 'light' ? 'logo_dark' : 'logo'}.png`" width="130">
                 </a>
                 <!-- End Logo -->

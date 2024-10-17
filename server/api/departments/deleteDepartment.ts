@@ -1,20 +1,21 @@
 import { defineEventHandler, readBody} from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
-import { getSession } from '~/server/sessionStore';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     const body = await readBody(event);
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
 
-    if (!token) {
+    const { requestingUserId, token } = event.context;
+    // const sessionId = getCookie(event, 'session_id') || '';
+    // const { token } = getSession(sessionId);
+
+    /*if (!token) {
         throw createError({
             statusCode: 403,
             statusMessage: 'Not authenticated',
         });
-    }
+    }*/
 
     try {
 
@@ -23,7 +24,10 @@ export default defineEventHandler(async (event) => {
         } = body;
 
         const response = await $fetch(`${config.public.apiBase}${config.public.departments.deleteDepartment}/${department_id}`, {
-            method: 'DEL',
+            method: 'DELETE',
+            body: {
+                "requesting_user_id": requestingUserId,
+            },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },

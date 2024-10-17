@@ -4,17 +4,8 @@ import { getSession } from '~/server/sessionStore';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
-
     const body = await readBody(event);
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
-
-    if (!token) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Not authenticated',
-        });
-    }
+    const {requestingUserId, token } = event.context;
 
     try {
 
@@ -30,9 +21,13 @@ export default defineEventHandler(async (event) => {
             userTitleDescription
         } = body;
 
+        console.log(requestingUserId);
+        console.log(token);
+
         const response = await $fetch(`${config.public.apiBase}${config.public.user.edit}`, {
             method: 'PUT',
             body: {
+                "requesting_user_id": requestingUserId,
                 "user_id": userId,
                 "name": userName,
                 "email": userEmail,

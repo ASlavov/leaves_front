@@ -4,7 +4,8 @@ import { useAuthStore } from '~/stores/auth.js';   // Import the auth store
 import { useUserStore } from '~/stores/user.js';   // Import the user store
 import { useLeavesStore } from '~/stores/leaves.js'; // Import the leaves store
 import { useDepartmentsStore } from "~/stores/departments.js"; // Import the departments store
-import { useNotificationsStore } from "~/stores/notifications.js";   // Import the notifications store
+import { useNotificationsStore } from "~/stores/notifications.js";
+import { usePermissionsStore } from "~/stores/permissions.js";   // Import the notifications store
 
 export const useCentralStore = defineStore('centralStore', () => {
     const authStore = useAuthStore();
@@ -12,7 +13,8 @@ export const useCentralStore = defineStore('centralStore', () => {
     const leavesStore = useLeavesStore();
     const departmentsStore = useDepartmentsStore();
     const notificationsStore = useNotificationsStore();
-    
+    const permissionsStore = usePermissionsStore();
+
     const error = ref(null);
     const loading = computed(() =>
         authStore.loading
@@ -56,9 +58,6 @@ export const useCentralStore = defineStore('centralStore', () => {
             // Handle errors and set the error state
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
             initialized.value = false;
-        } finally {
-            // Ensure loading is set to false and any post-processing is done
-            //notificationsStore.beginPolling();
         }
     }
 
@@ -75,37 +74,23 @@ export const useCentralStore = defineStore('centralStore', () => {
         }
     }
 
-    // Proxy to safely expose stores without direct access
-    /*const proxyHandler = {
+    const dynamicProxyHandler = {
         get(target, prop) {
+            // Check if the property exists directly on the store
             if (prop in target) {
                 const value = target[prop];
-                // Prevent exposing entire reactive objects, return serializable properties only
+                // If it's a function, bind it to the store instance
                 if (typeof value === 'function') {
                     return value.bind(target);
                 } else {
-                    return value;
+                    return value; // Return the value as is
                 }
-            } else {
-                return undefined;
             }
-        }
-    };*/
-
-    const dynamicProxyHandler = {
-        get(target, prop) {
-            // First check if the property exists in the state of the store
-            if (prop in target.$state) {
-                return target.$state[prop];
-            }
-            // Otherwise, check if the property is a function (method) and return it
-            if (typeof target[prop] === 'function') {
-                return target[prop].bind(target); // Bind the function to the store
-            }
-            // If neither, return undefined
+            // If property doesn't exist, return undefined
             return undefined;
         }
     };
+
 
     // Return proxied versions of the stores
     const proxiedAuthStore = new Proxy(authStore, dynamicProxyHandler);
@@ -113,6 +98,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const proxiedLeavesStore = new Proxy(leavesStore, dynamicProxyHandler);
     const proxiedDepartmentsStore = new Proxy(departmentsStore, dynamicProxyHandler);
     const proxiedNotificationsStore = new Proxy(notificationsStore, dynamicProxyHandler);
+    const proxiedPermissionsStore = new Proxy(permissionsStore, dynamicProxyHandler);
 
     return {
         error,
@@ -125,5 +111,6 @@ export const useCentralStore = defineStore('centralStore', () => {
         leavesStore: proxiedLeavesStore,
         departmentsStore: proxiedDepartmentsStore,
         notificationsStore: proxiedNotificationsStore,
+        permissionsStore: proxiedPermissionsStore,
     };
 });

@@ -90,7 +90,7 @@
         <!-- Save Changes Button -->
         <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
           <button @click="submitForm"
-                  class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                  class="inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
             Αποθήκευση Αλλαγών
           </button>
         </div>

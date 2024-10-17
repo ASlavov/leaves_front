@@ -21,7 +21,7 @@ export default defineNuxtConfig({
 
   plugins: [
       "~/plugins/preline.client.ts",
-      "~/plugins/fetchInterceptor.js",
+      /*"~/plugins/fetchInterceptor.js",*/
       "~/plugins/apexcharts.client.ts",
       "~/plugins/vue3-toastify.client.js"
   ],
@@ -47,13 +47,6 @@ export default defineNuxtConfig({
     dirs: ['stores'],  // If your stores are in the "stores" folder
   },
 
-  /*toast: {
-    position: 'bottom-right',
-    duration: 5000, // Duration the toast will be displayed in milliseconds
-    keepOnHover: true, // Keeps the toast open if hovered over
-    theme: 'bubble', // You can also use 'toasted-primary', 'toasted-secondary'
-  },*/
-
   runtimeConfig: {
     // The private keys which are only available within server-side
     apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
@@ -72,6 +65,7 @@ export default defineNuxtConfig({
       },
       leaves: {
         getAll: '/user_leaves',
+        getAllForAllUsers: '/all_user_leaves',
         newLeave: '/new_leave',
         cancelLeave: '/processed_leave',
         massAddEntitledDays: '/import-workfromhome',

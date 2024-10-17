@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { getNotificationsComposable} from '@/composables/notificationsApiComposable';
 import {useUserStore} from "~/stores/user.js";
+import { useRouter } from 'vue-router';
+
 
 export const useNotificationsStore = defineStore('notificationsStore', () => {
     const notificationsData = ref({});
@@ -40,7 +42,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             const result = await getNotificationsComposable(userStore.userId);
 
             if (result) {
-                // Process the result and store it in userData
+                // Process the result and store it in notificationsData
                 notificationsData.value = result;
             }
         } catch (err) {
