@@ -231,7 +231,7 @@
               {{ leaveType.name || '' }}
             </div>
             <div class="col-span-4 justify-self-end flex gap-[25px] items-center">
-              <a v-if="permissionsStore.can('leave_types','modify')" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Προφίλ</a>
+              <a v-if="permissionsStore.can('leave_types','modify')" @click="editLeaveType(leaveType.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Προφίλ</a>
             </div>
           </div>
         </div>
@@ -252,7 +252,7 @@
         &times;
       </button>
       <!-- Conditionally render EditUser or DeleteUser component -->
-      <component :is="modalComponent" :userId="selectedUserId" />
+      <component :is="modalComponent" :leaveTypeId="selectedLeaveTypeId" />
     </div>
   </div>
 
@@ -261,6 +261,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
+import EditLeaveType from "~/components/Settings/EditLeaveType.vue";
 
 
 // Access the necessary stores
@@ -457,7 +458,7 @@ const closeModal = () => {
 
 // Compute the component to render in the modal
 const modalComponent = computed(() => {
-  return modalType.value === 'edit' ? EditLeaveType : DeleteLeaveType;
+  return modalType.value === 'edit' ? EditLeaveType : EditLeaveType;
 });
 </script>
 
