@@ -1,18 +1,40 @@
 <template>
   <div v-if="loading">
     <!-- Loading Skeleton -->
-    <div class="grid grid-cols-4 gap-4 p-4">
-      <div class="h-8 bg-gray-200 rounded col-span-1 animate-pulse"></div>
-      <div class="h-8 bg-gray-200 rounded col-span-1 animate-pulse"></div>
-      <div class="h-8 bg-gray-200 rounded col-span-1 animate-pulse"></div>
-      <div class="h-8 bg-gray-200 rounded col-span-1 animate-pulse"></div>
+    <div class="grid gap-4 grid-cols-4 items-center border p-4 rounded-lg">
+        <div class="flex flex-col gap-4">
+          <div class="text-sm text-gray-500">
+            <div class="h-8 bg-gray-400 rounded col-span-1 animate-pulse"></div>
+          </div>
+          <div class="font-bold">
+            <div class="h-8 bg-gray-400 rounded col-span-1 animate-pulse"></div>
+          </div>
+        </div>
+        <div><div class="h-8 bg-gray-400 rounded col-span-1 animate-pulse"></div></div>
+        <div><div class="h-8 bg-gray-400 rounded col-span-1 animate-pulse"></div></div>
+        <div class="flex space-x-2">
+          <div>
+            <div class="h-8 bg-gray-400 rounded col-span-1 animate-pulse"></div>
+          </div>
+        </div>
     </div>
+
     <!-- Repeat as needed -->
   </div>
   <div v-else>
-    <div class="flex flex-col gap-4 text-black dark:text-white">
+    <div class="grid grid-cols-2 text-black dark:text-white"
+    :class="{'mt-[45px]': props.isSmallComponent}"
+    >
+      <div
+          v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
+          class="text-black dark:text-white font-bold">
+        Αιτήματα άδειας
+      </div>
+      <div v-else>
+        Άδειες έτους
+      </div>
       <!-- Filters Section -->
-      <div class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl items-end self-end">
+      <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl items-end justify-self-end self-end">
         <!-- Requester Name Filter -->
         <FilterInput
             v-model="filters.requesterName"
@@ -37,21 +59,27 @@
             class="-ml-4"
         />
       </div>
+      <div class="justify-self-end self-end" v-else>
+        <NuxtLink to="/yearly-leaves" class="text-[#EA021A] dark:text-[#FF021A] underline block">
+          Όλα τα αιτήματα άδειας
+        </NuxtLink>
+      </div>
 
       <!-- Leaves List -->
-      <div class="grid grid-cols-1 gap-4 mt-4">
+      <div class="col-span-2 grid grid-cols-1 gap-4">
         <!-- Table Headers -->
-        <div class="grid grid-cols-4 gap-4 font-bold border-b pb-2">
-          <div>Ημερομηνίες / Τύπος Άδειας</div>
+        <div class="grid gap-4 font-bold border-b pb-2 grid-cols-4">
+<!--          <div>Ημερομηνίες / Τύπος Άδειας</div>
           <div>Όνομα</div>
           <div>Κατάσταση Άδειας</div>
-          <div>Ενέργειες</div>
+          <div>Ενέργειες</div>-->
+
         </div>
         <!-- Leaves Data -->
         <div
             v-for="leave in filteredLeaves"
             :key="leave.id"
-            class="grid grid-cols-4 items-center border p-4 rounded-lg"
+            class="grid items-center grid-cols-4 border p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >
           <!-- Column 1: Date from - Date to on top, leave type on bottom -->
           <div>
@@ -70,34 +98,44 @@
           <div>{{ getLeaveStatusLabel(leave.status) }}</div>
 
           <!-- Column 4: Actions -->
-          <div class="flex space-x-2">
+
             <!-- Approve and Decline Buttons for users with modify permission and pending leaves -->
-            <div v-if="permissionsStore.can('profile_leave_balance', 'modify')">
+            <div
+                class="flex justify-self-end gap-4"
+                v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
               <button
                   v-if="leave.status === 'pending'"
                   @click="approveLeave(leave.id)"
-                  class="py-2 px-4 bg-green-200 text-green-700 rounded-full hover:bg-green-300"
+                  class="py-2 px-4 bg-[#16DBAA26] transition-all dark:bg-green-300 text-green-700 dark:text-green-800 dark:hover:text-green-500 rounded-md hover:bg-green-300 dark:hover:bg-green-100"
               >
                 <CheckIcon class="h-5 w-5" />
               </button>
               <button
                   v-if="leave.status === 'pending'"
                   @click="declineLeave(leave.id)"
-                  class="py-2 px-4 bg-red-200 text-red-700 rounded-full hover:bg-red-300"
+                  class="
+                  py-2 px-4 rounded-md transition-all
+                  bg-[#FF455F26] hover:bg-red-300
+                  text-[#FF455F] hover:text-red-700
+                  dark:bg-[#FF455F8F] dark:hover:bg-red-200
+                  dark:text-[#FF455F] dark:hover:text-red-700
+                  "
               >
                 <XMarkIcon class="h-5 w-5" />
               </button>
             </div>
-            <div v-else>
+            <div v-else class="justify-self-end">
               <!-- Cancel Button for users without modify permission -->
               <button
                   @click="cancelLeave(leave.id)"
-                  class="py-2 px-4 bg-yellow-200 text-yellow-700 rounded-full hover:bg-yellow-300"
+                  class="py-2 px-4 border-0
+                  text-black hover:text-neutral-500 underline
+                  dark:text-white dark:hover:text-neutral-700
+                  "
               >
                 Ακύρωση
               </button>
             </div>
-          </div>
         </div>
       </div>
     </div>
@@ -119,6 +157,19 @@ const permissionsStore = centralStore.permissionsStore;
 const loading = ref(true); // Set loading to true initially
 
 const currentYear = new Date().getFullYear();
+const props = defineProps({
+  isSmallComponent: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  leavesNumber: {
+    type: Number,
+    required: false,
+    default: 9999999,
+  },
+});
+
 
 // Fetch data
 const allLeaves = ref([]);
@@ -186,7 +237,7 @@ const filters = ref({
 
 // Computed property for filtered leaves
 const filteredLeaves = computed(() => {
-  return allLeaves.value
+  const returnArray = allLeaves.value
       .filter(leave => {
         // Filter by requester's name
         const requesterNameMatch = filters.value.requesterName
@@ -206,6 +257,11 @@ const filteredLeaves = computed(() => {
         return requesterNameMatch && groupMatch && yearMatch;
       })
       .sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Newest first
+
+  if(props.isSmallComponent) {
+    return returnArray.slice(0, props.leavesNumber);
+  }
+  return returnArray;
 });
 
 // Methods for actions

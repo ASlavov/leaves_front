@@ -6,6 +6,12 @@
             <!-- your content goes here ... -->
             <LeavesMetric />
             <Info />
+            <template v-if="centralStore.permissionsStore.can('profile_leave_balance','accept_leave')">
+              <YearlyLeaves
+                  :isSmallComponent=true
+                  :leavesNumber=3
+              />
+            </template>
         </div>
     </div>
     <!-- End Content -->
@@ -13,6 +19,7 @@
 <script setup>
 import { computed, onMounted } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
+import YearlyLeaves from "~/components/Leaves/YearlyLeaves.vue";
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
