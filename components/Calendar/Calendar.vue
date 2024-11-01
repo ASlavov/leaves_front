@@ -9,7 +9,7 @@
             v-model="selectedName"
             :options="nameOptions"
             label="Όνομα"
-            placeholder="Επιλέξτε Όνομα"
+            placeholder="Όλα τα ονόματα"
             selectId="name-select"
         />
       </div>
@@ -20,7 +20,7 @@
             v-model="selectedDepartment"
             :options="departments"
             label="Γκρουπ"
-            placeholder="Επιλέξτε Γκρουπ"
+            placeholder="Όλα τα Γκρουπ"
             selectId="department-select"
         />
       </div>
@@ -31,7 +31,7 @@
             v-model="selectedLeaveType"
             :options="leaveTypeOptions"
             label="Τύπος Άδειας"
-            placeholder="Επιλέξτε Τύπο Άδειας"
+            placeholder="Όλοι οι τύποι"
             selectId="leave-type-select"
         />
       </div>
@@ -53,8 +53,8 @@
           class="flex items-center mr-4 mb-2 dark:text-white cursor-pointer opacity-90 hover:opacity-100"
           @click="selectedLeaveType = type.id"
       >
-        <span class="rounded-full w-5 h-5 mr-2" :style="'background-color:' + getTypeColor(type.id)"></span>
-        <span class="text-sm">{{ type.name }}</span>
+        <span class="w-[15px] h-[15px] mr-2" :style="'background-color:' + getTypeColor(type.id)"></span>
+        <span class="text-[14px]">{{ type.name }}</span>
       </div>
     </div>
 

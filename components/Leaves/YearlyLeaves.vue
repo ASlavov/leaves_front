@@ -25,21 +25,23 @@
     <div class="grid grid-cols-2 text-black dark:text-white"
     :class="{'mt-[45px]': props.isSmallComponent}"
     >
+      <div class="flex flex-col col-span-2 gap-2 lg:gap-0 lg:grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
       <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-          class="text-black dark:text-white font-bold">
-        Αιτήματα άδειας
+          class="text-black dark:text-white font-bold flex items-center gap-2">
+        Αιτήματα άδειας <span class="text-[#EA021A]">({{allLeaves.length}})</span>
       </div>
       <div v-else>
         Άδειες έτους
       </div>
       <!-- Filters Section -->
-      <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl items-end justify-self-end self-end">
+      <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-4 w-full lg:max-w-3xl items-end lg:justify-self-end lg:self-end">
         <!-- Requester Name Filter -->
         <FilterInput
             v-model="filters.requesterName"
             type="text"
             placeholder="Όνομα"
+            class="w-full"
         />
 
         <!-- Group Filter -->
@@ -56,7 +58,7 @@
             :options="years"
             placeholder="Έτος"
 
-            class="-ml-4"
+            class="-ml-4 mr-4"
         />
       </div>
       <div class="justify-self-end self-end" v-else>
@@ -64,11 +66,11 @@
           Όλα τα αιτήματα άδειας
         </NuxtLink>
       </div>
-
+      </div>
       <!-- Leaves List -->
       <div class="col-span-2 grid grid-cols-1 gap-4">
         <!-- Table Headers -->
-        <div class="grid gap-4 font-bold border-b pb-2 grid-cols-4">
+        <div class="grid gap-4 font-bold pb-[25px] grid-cols-4">
 <!--          <div>Ημερομηνίες / Τύπος Άδειας</div>
           <div>Όνομα</div>
           <div>Κατάσταση Άδειας</div>
@@ -79,29 +81,43 @@
         <div
             v-for="leave in filteredLeaves"
             :key="leave.id"
-            class="grid items-center grid-cols-4 border p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
+            :class="permissionsStore.can('profile_leave_balance','accept_leave') ? 'lg:grid-cols-10' : 'lg:grid-cols-8'"
+            class="grid grid-cols-1 gap-y-2 lg:gap-y-0 items-center justify-items-center w-full lg:justify-items-normal border p-4 rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >
           <!-- Column 1: Date from - Date to on top, leave type on bottom -->
-          <div>
-            <div class="text-sm text-gray-500">
+          <div class="lg:col-span-2 grid grid-cols-4 grid-rows-2 justify-start items-center">
+            <div class="col-span-1 row-span-2">
+              <img src="https://placehold.co/50x50" alt="Icon" class="">
+            </div>
+            <div class="text-sm text-gray-500 col-span-3 row-span-1">
               {{ formatDate(leave.start_date) }} - {{ formatDate(leave.end_date) }}
             </div>
-            <div class="font-bold">
+            <div class="font-bold col-span-3 row-span-1">
               {{ getLeaveTypeName(leave.leave_type_id) }}
             </div>
           </div>
 
           <!-- Column 2: User's name -->
-          <div>{{ leave.user.name }}</div>
+          <div class="lg:col-span-2">{{ leave.user.name }}</div>
 
           <!-- Column 3: Leave status -->
-          <div>{{ getLeaveStatusLabel(leave.status) }}</div>
+          <div class="lg:col-span-2"
+              :class="leave.class">{{ getLeaveStatusLabel(leave.status) }}</div>
 
-          <!-- Column 4: Actions -->
+          <!-- Column 4: Reason -->
+          <div class="lg:col-span-3 lg:mr-4" v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
+            <input type="text"
+                   class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
+                   placeholder="Συμπληρώστε εαν έχετε κάποιο σχόλιο"
+
+            />
+          </div>
+
+          <!-- Column 5: Actions -->
 
             <!-- Approve and Decline Buttons for users with modify permission and pending leaves -->
             <div
-                class="flex justify-self-end gap-4"
+                class="flex lg:justify-self-end gap-4 lg:col-span-1 "
                 v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
               <button
                   v-if="leave.status === 'pending'"
@@ -205,6 +221,13 @@ const years = computed(() => {
   return returnYears;
 });
 
+const leaveClass = {
+  pending:'text-[#E59926]',
+  canceled:'text-[#FF455F]',
+  approved:'text-[#16DBAA]',
+  denied:'text-[#FF455F]',
+};
+
 onMounted(async () => {
   try {
     await leavesStore.getAllUsers(); // Fetch leavesStore.leavesData.allUsers
@@ -218,6 +241,7 @@ onMounted(async () => {
         allLeaves.value.push({
           ...leave,
           user, // include user data
+          class: leaveClass[leave.status] ?? '',
         });
       });
     });
@@ -269,9 +293,16 @@ const approveLeave = async (leaveId) => {
   try {
     await leavesStore.approveLeave(leaveId);
     // Refresh data
-    refreshLeaves();
+    await refreshLeaves();
+    useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } catch (error) {
-    console.error('Error approving leave:', error);
+    useNuxtApp().$toast.error('Η άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   }
 };
 
@@ -279,9 +310,16 @@ const declineLeave = async (leaveId) => {
   try {
     await leavesStore.declineLeave(leaveId);
     // Refresh data
-    refreshLeaves();
+    await refreshLeaves();
+    useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } catch (error) {
-    console.error('Error declining leave:', error);
+    useNuxtApp().$toast.error('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   }
 };
 
@@ -289,9 +327,16 @@ const cancelLeave = async (leaveId) => {
   try {
     await leavesStore.cancelLeave(leaveId);
     // Refresh data
-    refreshLeaves();
+    await refreshLeaves();
+    useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } catch (error) {
-    console.error('Error canceling leave:', error);
+    useNuxtApp().$toast.error('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   }
 };
 
@@ -334,6 +379,7 @@ const getLeaveStatusLabel = (status) => {
     'pending': 'Σε Εκκρεμότητα',
     'approved': 'Εγκεκριμένη',
     'declined': 'Απορρίφθηκε',
+    'cancelled': 'Ακυρώθηκε',
     // Add other statuses if needed
   };
   return statusLabels[status] || status;
