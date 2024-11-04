@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
             userPhone,
             userInternalPhone,
             userTitle,
-            userTitleDescription
+            userTitleDescription,
+            userImage
         } = body;
 
         console.log(requestingUserId);
@@ -36,7 +37,8 @@ export default defineEventHandler(async (event) => {
                 "phone" : userPhone,
                 "internal_phone": userInternalPhone,
                 "job_title" : userTitle,
-                "job_description" : userTitleDescription
+                "job_description" : userTitleDescription,
+                "profile_image": userImage,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

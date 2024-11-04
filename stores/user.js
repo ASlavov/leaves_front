@@ -74,7 +74,8 @@ export const useUserStore = defineStore('userStore', () => {
         userPhone,
         userInternalPhone,
         userTitle,
-        userTitleDescription
+        userTitleDescription,
+        userImage
     ) {
 
         try {
@@ -89,7 +90,8 @@ export const useUserStore = defineStore('userStore', () => {
                 userPhone,
                 userInternalPhone,
                 userTitle,
-                userTitleDescription
+                userTitleDescription,
+                userImage
             });
 
             if (result) {

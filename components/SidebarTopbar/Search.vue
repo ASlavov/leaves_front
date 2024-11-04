@@ -63,9 +63,12 @@
         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
         @click.self="closeModal"
     >
-      <div class="bg-white p-6 rounded-lg w-full max-w-md relative">
-        <button @click="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-          &times;
+      <div class="bg-white dark:bg-neutral-800 dark:text-white p-6 rounded-lg w-full max-w-md relative">
+        <button @click="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+          <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
+            <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </button>
         <h2 class="text-lg font-bold mb-4">Πληροφορίες χρήστη</h2>
 
@@ -109,14 +112,14 @@
         <div v-if="hasMultipleUsers" class="mt-4 flex justify-between">
           <button
               @click="previousUser"
-              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:bg-neutral-600 dark:hover:bg-neutral-500"
               :disabled="!hasPrevious"
           >
             &#8592;
           </button>
           <button
               @click="nextUser"
-              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300"
+              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:bg-neutral-600 dark:hover:bg-neutral-500"
               :disabled="!hasNext"
           >
             &#8594;

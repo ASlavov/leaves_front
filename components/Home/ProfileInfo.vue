@@ -37,15 +37,36 @@
         </div>
         <div class="info-actions pt-10 pb-5 flex gap-4">
             <button
+                @click="openModal"
                 v-if="permissionsStore.can('profile_info','modify')"
                 class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
                 Επεξεργασία
             </button>
             <button
+                @click="redirectPassChange"
                 v-if="permissionsStore.can('profile_info','change_password')"
                 class="font-bold text-gray-800 dark:text-white mx-auto text-md">
                 Αλλαγή κωδικού
             </button>
+        </div>
+        <div
+            v-if="showModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+            @click.self="closeModal"
+        >
+          <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] relative">
+            <button
+                @click="closeModal"
+                class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
+                <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Conditionally render EditUser or DeleteUser component -->
+            <EditUser :userId="userId" />
+          </div>
         </div>
     </div>
 </template>
@@ -54,6 +75,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore.js';
+import EditUser from '@/components/Settings/EditUser.vue';
 
 const router = useRouter();
 const { authStore, userStore, permissionsStore } = useCentralStore();
@@ -77,7 +99,21 @@ const userphone = computed(() => userStore.userInfo?.profile?.phone);
 const user_internal_phone = computed(() => userStore.userInfo?.profile?.internal_phone);
 const user_department = computed(() => userStore.userInfo?.department?.name);
 
+const userId = computed(() => userStore.userInfo?.id);
+
 // Simulate loading duration (replace this with actual data fetch logic)
+
+const showModal = ref(false);
+
+const openModal = () => {
+  showModal.value = true;
+}
+const closeModal = () => {
+  showModal.value = false;
+}
+const redirectPassChange = () => {
+  router.push('/settings#security');
+}
 </script>
 
 <script>

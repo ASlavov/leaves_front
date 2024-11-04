@@ -2,7 +2,9 @@
   <div>
     <!-- Input based on the type -->
     <template v-if="isTextInput" class="contents">
-      <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
+      <div
+          :class="props.extraParentClasses"
+          class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg bg-white dark:bg-neutral-600 transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
         <input
             v-model="modelValueInternal"
             :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${modelValueInternal ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
@@ -87,6 +89,10 @@ const props = defineProps({
     type: String,
     default: 'custom-select',
   },
+  extraParentClasses: {
+    type: String,
+    default: '',
+  }
 });
 
 const emits = defineEmits(['update:modelValue']);
