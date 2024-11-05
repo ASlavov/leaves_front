@@ -89,7 +89,7 @@
               />
             </div>
             <div
-                v-if="permissionsStore.can('all_users','modify')"
+                v-if="canEdit"
                 class="max-w-sm">
               <CustomSelect
                   v-model="formRole"
@@ -134,6 +134,10 @@ const props = defineProps({
     type: [Number, String, null],
     required: false,
   },
+});
+
+const canEdit = computed(() => {
+    return permissionsStore.can('all_users', 'modify');
 });
 
 // File input reference
@@ -240,11 +244,11 @@ function initializeFormFields(userInfo) {
   formImage.value = '';
   formTitle.value = userInfo.profile?.job_title || '';
   formPhone.value = userInfo.profile?.phone || '';
-  formRole.value = userInfo?.roles[0].id || '2';
+  formRole.value = userInfo?.roles[0].id || '4';
   formInternalPhone.value = userInfo.profile?.internal_phone || '';
   formTitleDescription.value = userInfo.profile?.title_description || '';
   formSelectedDepartmentId.value = String(userInfo.department?.id || '');
-  formPhoto.value = userInfo.profile?.profile_image || null;
+  formPhoto.value = userInfo.profile?.profile_image_base64 || null;
 }
 
 // Reactive variable for selected department ID
@@ -255,11 +259,30 @@ const departments = computed(() => departmentsStore.departmentsData);
 
 // List of roles
 const roles = computed(() => {
-  const flatMapper = userStore.allUsers.flatMap(user => user?.roles);
+  /*const flatMapper = userStore.allUsers.flatMap(user => user?.roles);
   return Object.values(flatMapper.reduce((accumulator, currentItem) => {
     accumulator[currentItem.id] = currentItem;
     return accumulator;
-  }, {}));
+  }, {}));*/
+
+  return [
+    {
+      name: 'admin',
+      id: 1,
+    },
+    {
+      name: 'hr-manager',
+      id: 2,
+    },
+    {
+      name: 'head',
+      id: 3,
+    },
+    {
+      name: 'user',
+      id: 4,
+    },
+  ];
 });
 
 // Submit form method

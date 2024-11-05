@@ -6,9 +6,9 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     const body = await readBody(event);
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
-
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);*/
+    const {requestingUserId, token } = event.context;
     if (!token) {
         throw createError({
             statusCode: 403,
@@ -33,7 +33,8 @@ export default defineEventHandler(async (event) => {
                 "leave_type_id": leaveTypeId,
                 "start_date": startDate,
                 "end_date": endDate,
-                "reason": reason
+                "reason": reason,
+                'requesting_user_id': requestingUserId,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

@@ -6,8 +6,9 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     const body = await readBody(event);
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);*/
+    const {requestingUserId, token } = event.context;
 
     if (!token) {
         throw createError({
@@ -28,6 +29,7 @@ export default defineEventHandler(async (event) => {
         const response = await $fetch(`${config.public.apiBase}${config.public.leaves.cancelLeave}`, {
             method: 'PUT',
             body: {
+                "requesting_user_id": requestingUserId,
                 "leave_id": leaveId,
                 "user_editor": userId,
                 "status": status,

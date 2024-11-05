@@ -7,28 +7,28 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
     const userStore = useUserStore();
     const permissions = {
         profile_leave_balance: {
-            view: ['admin', 'hr', 'head', 'user'],
-            request_leave: ['hr', 'head', 'user'],
-            cancel_leave: ['hr', 'head', 'user'],
-            accept_leave: ['admin', 'hr', 'head'],
-            decline_leave: ['admin', 'hr', 'head'],
+            view: ['admin', 'hr-manager', 'head', 'user'],
+            request_leave: ['hr-manager', 'head', 'user'],
+            cancel_leave: ['hr-manager', 'head', 'user'],
+            accept_leave: ['admin', 'hr-manager', 'head'],
+            decline_leave: ['admin', 'hr-manager', 'head'],
         },
         profile_info: {
-            view: ['admin', 'hr', 'head', 'user'],
-            modify: ['admin', 'hr', 'head', 'user'],
-            change_password: ['admin', 'hr', 'head', 'user'],
+            view: ['admin', 'hr-manager', 'head', 'user'],
+            modify: ['admin', 'hr-manager', 'head', 'user'],
+            change_password: ['admin', 'hr-manager', 'head', 'user'],
         },
         all_users: {
-            view: ['admin', 'hr', 'head', 'user'],
-            modify: ['admin', 'hr'],
+            view: ['admin', 'hr-manager', 'head', 'user'],
+            modify: ['admin', 'hr-manager'],
         },
         group: {
-            view: ['admin', 'hr', 'head', 'user'],
-            modify: ['admin', 'hr'],
+            view: ['admin', 'hr-manager', 'head', 'user'],
+            modify: ['admin', 'hr-manager'],
         },
         leave_types: {
-            view: ['admin', 'hr', 'head'],
-            modify: ['admin', 'hr'],
+            view: ['admin', 'hr-manager', 'head'],
+            modify: ['admin', 'hr-manager'],
         },
         permissions: {
             view: ['admin'],

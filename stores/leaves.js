@@ -20,6 +20,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     const loading = ref(false);
     const error = ref(null);
     const userStore = useUserStore();
+    const isDataLoaded = ref(false);
 
     function reset() {
         leavesData.value = {
@@ -40,13 +41,16 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     };
 
     async function init(userId) {
+        isDataLoaded.value = false;
         try {
             await Promise.all([
                 !Object.keys(leavesData.value.currentUser).length && getAll(userId),
                 !leavesData.value.leavesTypes.length && getLeavesTypes(),
                 !Object.keys(leavesData.value.leavesStatuses).length && getLeavesStatuses(),
                 !Object.keys(leavesData.value.leavesAvailableDays).length && getLeavesAvailableDays(userId),
-            ]);
+            ]).then(() => {
+                isDataLoaded.value = true;
+            });
         } catch (err) {
             setError('Δεν μπορέσαμε να αρικοποιήσουμε τα δεδομένα αδειών σας');
         }
@@ -208,6 +212,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         leavesData,
         loading,
         error,
+        isDataLoaded,
         init,
         reset,
         getAll,

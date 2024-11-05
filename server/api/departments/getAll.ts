@@ -6,8 +6,9 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     // Retrieve the token from the 'auth_token' cookie set during login
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);*/
+    const {requestingUserId, token } = event.context;
 
     if (!token) {
         throw createError({

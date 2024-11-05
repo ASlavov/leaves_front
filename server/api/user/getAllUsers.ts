@@ -5,8 +5,10 @@ import { getSession } from '~/server/sessionStore';
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';*/
+    /*const { token } = getSession(sessionId);*/
+
+    const {requestingUserId, token } = event.context;
 
     if (!token) {
         throw createError({

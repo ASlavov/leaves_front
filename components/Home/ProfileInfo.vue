@@ -18,10 +18,14 @@
             </template>
             <template v-else>
                 <!-- Avatar -->
-                <div class="w-12 h-12 bg-gray-300 rounded-full mr-4 flex items-center justify-center">
-                    <span class="text-white font-bold">
-                        {{ firstNameInitial }}{{ lastNameInitial }}
-                    </span>
+                <div class="w-[90px] h-[90px] bg-gray-300 rounded-full mr-4 flex items-center justify-center">
+                  <img
+                       v-if="userPhoto" class="cursor-pointer inline-block w-[90px] h-[90px] rounded-full object-cover"
+                       :src="userPhoto"
+                       alt="Avatar" />
+                  <span v-else class="text-white font-bold">
+                    {{ firstNameInitial }}{{ lastNameInitial }}
+                  </span>
                 </div>
                 <!-- Info Details -->
                 <div class="pt-4 space-y-2">
@@ -98,7 +102,7 @@ const userTitle = computed(() => userStore.userInfo?.profile?.job_title);
 const userphone = computed(() => userStore.userInfo?.profile?.phone);
 const user_internal_phone = computed(() => userStore.userInfo?.profile?.internal_phone);
 const user_department = computed(() => userStore.userInfo?.department?.name);
-
+const userPhoto = computed(() => userStore.userInfo?.profile?.profile_image_base64);
 const userId = computed(() => userStore.userInfo?.id);
 
 // Simulate loading duration (replace this with actual data fetch logic)

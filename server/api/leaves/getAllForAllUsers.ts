@@ -6,9 +6,10 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     // Retrieve the token from the 'auth_token' cookie set during login
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token, userId } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token, userId } = getSession(sessionId);*/
     //console.log('userId:', userId);
+    const {requestingUserId, token } = event.context;
     if (!token) {
         throw createError({
             statusCode: 403,
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         // Use the token to make a GET request to the external API
-        const response = await $fetch(`${config.public.apiBase}${config.public.leaves.getAllForAllUsers}/${userId}`, {
+        const response = await $fetch(`${config.public.apiBase}${config.public.leaves.getAllForAllUsers}/${requestingUserId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

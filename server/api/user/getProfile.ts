@@ -6,8 +6,10 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     const body = await readBody(event);
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);*/
+
+    const {requestingUserId, token } = event.context;
 
     if (!token) {
         throw createError({

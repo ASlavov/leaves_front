@@ -18,10 +18,10 @@ export const useCentralStore = defineStore('centralStore', () => {
     const error = ref(null);
     const loading = computed(() =>
         authStore.loading
-        && userStore.loading
-        && leavesStore.loading
-        && departmentsStore.loading
-        && notificationsStore.loading
+        || userStore.loading
+        || leavesStore.loading
+        || departmentsStore.loading
+        || notificationsStore.loading
     );
     const initialized = ref(false);
     const setError = (errorMessage) => {

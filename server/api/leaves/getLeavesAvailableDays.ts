@@ -8,8 +8,10 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event); // Get login details (email, password) from the request body
     const { userId } = body;
     // Retrieve the token from the 'auth_token' cookie set during login
-    const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);
+    /*const sessionId = getCookie(event, 'session_id') || '';
+    const { token } = getSession(sessionId);*/
+    const {requestingUserId, token } = event.context;
+
     //console.log('userId:', userId);
     if (!token) {
         throw createError({

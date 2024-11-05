@@ -2,9 +2,11 @@
   <!-- Dropdown -->
   <div class="hs-dropdown [--placement:bottom-right] relative ">
     <button id="hs-dropdown-account" type="button"
-            class="size-[38px] justify-center bg-gray-300 items-center gap-x-2 text-sm font-semibold rounded-full border border-transparent text-gray-800 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-white"
+            class="border-0 size-[38px] justify-center bg-gray-300 items-center gap-x-2 text-sm font-semibold rounded-full border-transparent text-gray-800 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-white"
             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-            <img v-if="user?.profile?.profile_image" :src="user?.profile?.profile_image" />
+            <img
+                class="rounded-full size-[38px] object-cover"
+                v-if="user?.profile?.profile_image_base64" :src="user?.profile?.profile_image_base64" />
             <span v-else class="text-white font-bold">
                 {{ user?.firstNameInitial || '' }}{{ user?.lastNameInitial || '' }}
             </span>
