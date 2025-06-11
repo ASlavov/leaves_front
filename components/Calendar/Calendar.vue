@@ -106,6 +106,7 @@ const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 const departmentsStore = centralStore.departmentsStore;
 const userStore = centralStore.userStore;
+const permissionsStore = centralStore.permissionsStore;
 
 const selectedName = ref(null);
 const selectedDepartment = ref(null);
@@ -122,6 +123,8 @@ const clearFilters = () => {
 // CustomSelect Options
 const departments = computed(() => departmentsStore.departmentsData);
 const leaveTypeOptions = computed(() => leavesStore.leavesData.leavesTypes);
+const isAdmin = computed(() => permissionsStore.can('profile_leave_balance', 'accept_leave'));
+const userLeaves = computed(() => leavesStore.leavesData.allUsers);
 const nameOptions = computed(() =>
     userStore.allUsers.map(user => ({
       id: user.name, // Workaround to use the name as value. CustomSelect doesnt actually use "id" as id.
@@ -145,6 +148,162 @@ const colorList = [
   '#607D8B',
   '#4CAF50',
 ];
+
+// Updated getTypeColor function
+const getTypeColor = (vacationId, userId) => {
+  if (!vacationId) return '#F00';
+
+  const index = parseInt(vacationId) % colorList.length;
+  const baseColor = colorList[index];
+
+  const hsl = hexToHSL(baseColor);
+
+  // Adjust the hue slightly based on userId
+  const userHash = parseInt(userId) || 0; // Ensure userId is a number
+  const hueAdjustment = (userHash * 7) % 10 - 5; // Adjust by -5 to +5 degrees
+
+  const newHue = (hsl.h + hueAdjustment + 360) % 360;
+
+  return HSLToHex(newHue, hsl.s, hsl.l);
+};
+
+
+function getEventClass(calendarEvent) {
+  const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
+  const status = calendarEvent.extendedProps.status;
+
+  const statusClasses = {
+    pending: 'opacity-80',
+    approved: 'opacity-100',
+  };
+
+  return [
+    'text-xs rounded text-white w-full p-1 leave-entry',
+    statusClasses[status] || '',
+  ].join(' ');
+}
+function getEventStyle(calendarEvent) {
+  const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
+
+
+  return `background-color: ${getTypeColor(leaveTypeId)}`;
+}
+
+const leavesData = computed(() => {
+  const returnArray = [];
+  displayedLeaveTypes.value = [];
+
+  const leaveTypeMap = new Map();
+
+  userLeaves.value?.forEach(userLeaves => {
+    if (Array.isArray(userLeaves.leaves)) {
+      userLeaves?.leaves.forEach(leave => {
+
+        // Apply filters
+        if (selectedName.value && !userLeaves.name.includes(selectedName.value)) return;
+        if (selectedDepartment.value && parseInt(userLeaves.department_id) !== parseInt(selectedDepartment.value)) return;
+        if (selectedLeaveType.value && parseInt(leave.leave_type_id) !== parseInt(selectedLeaveType.value)) return;
+        if (leave.status && leave.status !== 'approved' && leave.status !== 'pending') return;
+
+        if (!leaveTypeMap.has(leave.leave_type_id)) {
+          leaveTypeMap.set(leave.leave_type_id, true);
+          displayedLeaveTypes.value.push({
+            id: leave.leave_type_id,
+            name: leavesStore.leavesData.leavesTypes.filter(leaveType => leaveType.id === leave.leave_type_id)[0]?.name,
+          });
+        }
+
+        returnArray.push({
+          ...leave,
+          name: userLeaves?.name || '',
+        });
+      });
+    }
+  });
+
+  return returnArray;
+});
+
+const events = computed(() => {
+  let eventsArray = leavesData.value?.map((leave) => {
+    if (!leave) return null;
+
+    const startDate = new Date(leave.start_date);
+    const endDate = new Date(leave.end_date);
+
+    if (isNaN(startDate) || isNaN(endDate)) {
+      console.error('Invalid date in leave:', leave);
+      return null;
+    }
+
+    return {
+      id: leave.id,
+      title: leave.name || 'Unnamed Leave',
+      start: format(startDate, 'yyyy-MM-dd'),
+      end: format(endDate, 'yyyy-MM-dd'),
+      description: leave.status,
+      extendedProps: {
+        leaveTypeId: leave.leave_type_id || 0,
+        status: leave.status || 'unknown',
+      },
+    };
+  }).filter(Boolean) || [];
+
+  console.log('Events:', eventsArray);
+  return eventsArray;
+});
+
+const theme = computed(() => {
+  const {$colorMode} = useNuxtApp();
+  return $colorMode?.value || 'light';
+});
+
+function initializeCalendar() {
+  calendarApp.value = createCalendar({
+    selectedDate: format(new Date(), 'yyyy-MM-dd'),
+    views: [
+      createViewDay(),
+      createViewWeek(),
+      createViewMonthAgenda(),
+      createViewMonthGrid()
+    ],
+    plugins: [eventsServicePlugin, createEventModalPlugin()],
+    locale: 'el-GR',
+    defaultView: viewMonthGrid.name,
+    monthGridOptions: {
+      nEventsPerDay: 4,
+    },
+  });
+
+  // Set initial events
+  eventsServicePlugin.set(events.value);
+
+  // Update events when they change
+  watch(events, (newEvents) => {
+    console.log('Updating events:', newEvents);
+    if (calendarApp.value) {
+      eventsServicePlugin.set(newEvents || []);
+    }
+  }, {immediate: true});
+
+  // Handle theme changes
+  watch(theme, (newVal) => {
+    if (calendarApp.value) {
+      calendarApp.value.setTheme(newVal === 'dark' ? 'dark' : 'light');
+    }
+  }, {immediate: true});
+}
+
+onMounted(async () => {
+  // Wait for data to load
+  await leavesStore.getAllUsers(); // Replace with actual data fetching method
+  await leavesStore.getLeavesTypes();
+  await userStore.getAllUsers();
+
+  initializeCalendar();
+});
+
+/*HELPERS*/
 
 // Function to convert HEX to HSL
 function hexToHSL(H) {
@@ -226,159 +385,6 @@ function HSLToHex(h, s, l) {
   return "#" + r + g + b;
 }
 
-// Updated getTypeColor function
-const getTypeColor = (vacationId, userId) => {
-  if (!vacationId) return '#F00';
-
-  const index = parseInt(vacationId) % colorList.length;
-  const baseColor = colorList[index];
-
-  const hsl = hexToHSL(baseColor);
-
-  // Adjust the hue slightly based on userId
-  const userHash = parseInt(userId) || 0; // Ensure userId is a number
-  const hueAdjustment = (userHash * 7) % 10 - 5; // Adjust by -5 to +5 degrees
-
-  const newHue = (hsl.h + hueAdjustment + 360) % 360;
-
-  return HSLToHex(newHue, hsl.s, hsl.l);
-};
-
-
-function getEventClass(calendarEvent) {
-  const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
-  const status = calendarEvent.extendedProps.status;
-
-  const statusClasses = {
-    pending: 'opacity-80',
-    approved: 'opacity-100',
-  };
-
-  return [
-    'text-xs rounded text-white w-full p-1 leave-entry',
-    statusClasses[status] || '',
-  ].join(' ');
-}
-function getEventStyle(calendarEvent) {
-  const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
-
-
-  return `background-color: ${getTypeColor(leaveTypeId)}`;
-}
-
-const leavesData = computed(() => {
-  const returnArray = [];
-  displayedLeaveTypes.value = [];
-
-  const leaveTypeMap = new Map();
-
-  leavesStore.leavesData?.allUsers?.forEach(userLeaves => {
-    if (Array.isArray(userLeaves.leaves)) {
-      userLeaves?.leaves.forEach(leave => {
-
-        // Apply filters
-        if (selectedName.value && !userLeaves.name.includes(selectedName.value)) return;
-        if (selectedDepartment.value && parseInt(userLeaves.department_id) !== parseInt(selectedDepartment.value)) return;
-        if (selectedLeaveType.value && parseInt(leave.leave_type_id) !== parseInt(selectedLeaveType.value)) return;
-        if (leave.status && leave.status !== 'approved' && leave.status !== 'pending') return;
-
-        if (!leaveTypeMap.has(leave.leave_type_id)) {
-          leaveTypeMap.set(leave.leave_type_id, true);
-          displayedLeaveTypes.value.push({
-            id: leave.leave_type_id,
-            name: leavesStore.leavesData.leavesTypes.filter(leaveType => leaveType.id === leave.leave_type_id)[0]?.name,
-          });
-        }
-
-        returnArray.push({
-          ...leave,
-          name: userLeaves?.name || '',
-        });
-      });
-    }
-  });
-
-  return returnArray;
-});
-
-const events = computed(() => {
-  const eventsArray = leavesData.value?.map((leave) => {
-    if (!leave) return null;
-
-    const startDate = new Date(leave.start_date);
-    const endDate = new Date(leave.end_date);
-
-    if (isNaN(startDate) || isNaN(endDate)) {
-      console.error('Invalid date in leave:', leave);
-      return null;
-    }
-
-    return {
-      id: leave.id,
-      title: leave.name || 'Unnamed Leave',
-      start: format(startDate, 'yyyy-MM-dd'),
-      end: format(endDate, 'yyyy-MM-dd'),
-      description: leave.status,
-      extendedProps: {
-        leaveTypeId: leave.leave_type_id || 0,
-        status: leave.status || 'unknown',
-      },
-    };
-  }).filter(Boolean) || [];
-
-  console.log('Events:', eventsArray);
-  return eventsArray;
-});
-
-const theme = computed(() => {
-  const {$colorMode} = useNuxtApp();
-  return $colorMode?.value || 'light';
-});
-
-function initializeCalendar() {
-  calendarApp.value = createCalendar({
-    selectedDate: format(new Date(), 'yyyy-MM-dd'),
-    views: [
-      createViewDay(),
-      createViewWeek(),
-      createViewMonthAgenda(),
-      createViewMonthGrid()
-    ],
-    plugins: [eventsServicePlugin, createEventModalPlugin()],
-    locale: 'el-GR',
-    defaultView: viewMonthGrid.name,
-    monthGridOptions: {
-      nEventsPerDay: 4,
-    },
-  });
-
-  // Set initial events
-  eventsServicePlugin.set(events.value);
-
-  // Update events when they change
-  watch(events, (newEvents) => {
-    console.log('Updating events:', newEvents);
-    if (calendarApp.value) {
-      eventsServicePlugin.set(newEvents || []);
-    }
-  }, {immediate: true});
-
-  // Handle theme changes
-  watch(theme, (newVal) => {
-    if (calendarApp.value) {
-      calendarApp.value.setTheme(newVal === 'dark' ? 'dark' : 'light');
-    }
-  }, {immediate: true});
-}
-
-onMounted(async () => {
-  // Wait for data to load
-  await leavesStore.getAllUsers(); // Replace with actual data fetching method
-  await leavesStore.getLeavesTypes();
-  await userStore.getAllUsers();
-
-  initializeCalendar();
-});
 
 </script>
 

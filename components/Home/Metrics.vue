@@ -41,7 +41,11 @@
                 </template>
                 <template v-else>
                     <ClientOnly>
-                        <ApexCharts :options="chartOptions" :series="chartSeries" type="radialBar" />
+                        <ApexCharts
+                            ref="mychart"
+                            :options="chartOptions"
+                            :series="chartSeries"
+                            type="radialBar" />
                     </ClientOnly>
                 </template>
             </div>
@@ -50,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed, watch} from 'vue';
 import ApexCharts from 'vue3-apexcharts';
 
 const props = defineProps({
@@ -93,6 +97,8 @@ const theme = computed(() => {
   const {$colorMode} = useNuxtApp();
   return $colorMode?.value || 'light';
 });
+const mychart = ref(null);
+const modeColor = computed(() => (theme.value === 'dark') ? 'white' : 'black');
 // Computed property for chart options
 const chartOptions = computed(() => ({
   chart: {
@@ -120,7 +126,7 @@ const chartOptions = computed(() => ({
           offsetY: -2,
           fontSize: "12px",
           fontWeight: '500',
-          color: (theme.value === 'dark') ? 'white' : 'black',
+          color: modeColor.value,
           formatter: () => 'Υπόλοιπο',
         },
         value: {
@@ -128,7 +134,7 @@ const chartOptions = computed(() => ({
           offsetY: 3,
           fontSize: "20px",
           fontWeight: 'bold',
-          color: (theme.value === 'dark') ? 'white' : 'black',
+          color: modeColor.value,
           formatter: () => props.leave.remaining_days || 0,
         },
       },
@@ -136,6 +142,12 @@ const chartOptions = computed(() => ({
   },
   colors: [leaveColor.value],
 }));
+watch(theme, async() => {
+  if (mychart.value) {
+    mychart.value.refresh()
+  }
+}, {immediate: true});
+
 
 // Computed property for chart series
 const chartSeries = computed(() => [percentageUsed.value]);

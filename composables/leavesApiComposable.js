@@ -15,7 +15,16 @@ export const newLeaveComposable = (body) => {
 };
 
 export const cancelLeaveComposable = (body) => {
-    return retryFetch('/api/leaves/cancelLeave', {
+    return retryFetch('/api/leaves/processLeave', {
+        method: 'POST',
+        body: {
+            ...body
+        },
+    });
+};
+
+export const adminLeaveActionComposable = (body) => {
+    return retryFetch('/api/leaves/processLeave', {
         method: 'POST',
         body: {
             ...body

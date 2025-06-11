@@ -5,7 +5,8 @@ import {
     newLeaveComposable,
     getLeavesStatusesComposable,
     getLeavesAvailableDaysComposable,
-    cancelLeaveComposable, getAllUserLeavesComposable
+    cancelLeaveComposable, getAllUserLeavesComposable,
+    adminLeaveActionComposable
 } from '@/composables/leavesApiComposable';
 import { useUserStore } from '@/stores/user';
 
@@ -127,7 +128,24 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             loading.value = false;
         }
     }
+    /*async function editLeave(userId, leaveId, status, reason) {
+        try {
+            loading.value = true;
+            // Call the composable with the necessary parameters
+            const result = await editLeaveComposable({userId, leaveId, status, reason});
 
+            if (result) {
+                // Process the result and store it in leavesData
+                await getAll(userId);
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }*/
     async function cancelLeave(userId, leaveId, status, reason) {
         try {
             loading.value = true;
@@ -208,6 +226,47 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
+    async function approveLeave(userId, leaveId, status, reason) {
+        try {
+            loading.value = true;
+            // Call the composable with the necessary parameters
+            const result = await adminLeaveActionComposable({userId, leaveId, status, reason});
+
+            if (result) {
+                // Process the result and store it in leavesData
+                await getAll(userId);
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να εγκρύνουμε την άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
+    async function declineLeave(userId, leaveId, status, reason) {
+        try {
+            loading.value = true;
+            // Call the composable with the necessary parameters
+            const result = await adminLeaveActionComposable({userId, leaveId, status, reason});
+
+            if (result) {
+                // Process the result and store it in leavesData
+                await getAll(userId);
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να απορρίψουμε την άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
+
+
+
     return {
         leavesData,
         loading,
@@ -223,5 +282,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         getAllUsers,
         getLeavesStatuses,
         getLeavesAvailableDays,
+        approveLeave,
+        declineLeave,
     };
 });

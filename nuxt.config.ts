@@ -67,7 +67,7 @@ export default defineNuxtConfig({
         getAll: '/user_leaves',
         getAllForAllUsers: '/all_user_leaves',
         newLeave: '/new_leave',
-        cancelLeave: '/processed_leave',
+        processLeave: '/processed_leave',
         massAddEntitledDays: '/import-workfromhome',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',

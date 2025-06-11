@@ -109,7 +109,8 @@
             <input type="text"
                    class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
                    placeholder="Συμπληρώστε εαν έχετε κάποιο σχόλιο"
-
+                   v-if="leave.status === 'pending'"
+                   v-model="leaveComments[leave.leaveId]"
             />
           </div>
 
@@ -121,14 +122,14 @@
                 v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
               <button
                   v-if="leave.status === 'pending'"
-                  @click="approveLeave(leave.id)"
+                  @click="approveLeave(leave.id, leave.user.id)"
                   class="py-2 px-4 bg-[#16DBAA26] transition-all dark:bg-green-300 text-green-700 dark:text-green-800 dark:hover:text-green-500 rounded-md hover:bg-green-300 dark:hover:bg-green-100"
               >
                 <CheckIcon class="h-5 w-5" />
               </button>
               <button
                   v-if="leave.status === 'pending'"
-                  @click="declineLeave(leave.id)"
+                  @click="declineLeave(leave.id, leave.user.id)"
                   class="
                   py-2 px-4 rounded-md transition-all
                   bg-[#FF455F26] hover:bg-red-300
@@ -186,7 +187,7 @@ const props = defineProps({
   },
 });
 
-
+const leaveComments = ref([]);
 // Fetch data
 const allLeaves = ref([]);
 const years = computed(() => {
@@ -289,9 +290,9 @@ const filteredLeaves = computed(() => {
 });
 
 // Methods for actions
-const approveLeave = async (leaveId) => {
+const approveLeave = async (leaveId, userId) => {
   try {
-    await leavesStore.approveLeave(leaveId);
+    await leavesStore.approveLeave(userId, leaveId, 'approved', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
     useNuxtApp().$toast.success('Η αίτηση άδειας εγκρήθηκε επιτυχώς!', {
@@ -306,9 +307,9 @@ const approveLeave = async (leaveId) => {
   }
 };
 
-const declineLeave = async (leaveId) => {
+const declineLeave = async (leaveId, userId) => {
   try {
-    await leavesStore.declineLeave(leaveId);
+    await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
     useNuxtApp().$toast.success('Η αίτηση άδειας απορρίφθηκε επιτυχώς!', {
