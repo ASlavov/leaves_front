@@ -80,7 +80,9 @@ export default defineNuxtConfig({
         deleteDepartment: '/delete_department',
       },
       notifications: {
-        getNotifications: '/user-notifications'
+        getNotifications: '/user-notifications',
+        markedRead: '/notification-marked-read',
+        markedUnread: '/notification-marked-unread',
       }
     }
   },

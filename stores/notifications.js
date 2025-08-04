@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { getNotificationsComposable} from '@/composables/notificationsApiComposable';
+import {
+    getNotificationsComposable,
+    markNotificationReadComposable,
+    markNotificationUnreadComposable
+} from '@/composables/notificationsApiComposable';
 import {useUserStore} from "~/stores/user.js";
 import { useRouter } from 'vue-router';
 
@@ -40,6 +44,31 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
         try {
             // Call the composable with the necessary parameters
             const result = await getNotificationsComposable(userStore.userId);
+
+            if (result) {
+                // Process the result and store it in notificationsData
+                notificationsData.value = result;
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError(err);
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
+    async function changeNotificationStatus(notificationId) {
+        try {
+            // Call the composable with the necessary parameters
+            const notificationStatus = notificationsData.value.find(notif => notif.id === notificationId).is_read;
+
+            let result;
+            if(notificationStatus) {
+                result = await markNotificationUnreadComposable(notificationId);
+            } else {
+                result = await markNotificationReadComposable(notificationId);
+            }
 
             if (result) {
                 // Process the result and store it in notificationsData
