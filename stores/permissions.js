@@ -26,6 +26,10 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
             view: ['admin', 'hr-manager', 'head', 'user'],
             modify: ['admin', 'hr-manager'],
         },
+        entitlement: {
+            view: ['admin', 'hr-manager', 'head'],
+            modify: ['admin', 'hr-manager'],
+        },
         leave_types: {
             view: ['admin', 'hr-manager', 'head'],
             modify: ['admin', 'hr-manager'],

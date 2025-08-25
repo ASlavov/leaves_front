@@ -53,7 +53,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
                 isDataLoaded.value = true;
             });
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρικοποιήσουμε τα δεδομένα αδειών σας');
+            setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
         }
     }
 
