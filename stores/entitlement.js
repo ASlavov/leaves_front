@@ -1,7 +1,11 @@
 import {defineStore, setActivePinia, createPinia} from 'pinia';
 import {ref} from 'vue';
 import {
+    addEntitledDaysForUserComposable,
     getEntitledDaysForUserComposable,
+    deleteEntitledDaysForUserComposable,
+    updateEntitledDaysForUserComposable,
+    addEntitledDaysForMultipleUsersComposable,
 } from '@/composables/entitlementApiComposable';
 import { useUserStore } from '@/stores/user';
 
@@ -42,9 +46,9 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
         }
     }
-    async function getEntitledDaysForUser(userId) {
+    async function getEntitledDaysForUser(userId, forceRefresh = false) {
         // Check if data for this user is already cached
-        if (entitledDaysData.value.savedUsers[userId]) {
+        if (!forceRefresh && entitledDaysData.value.savedUsers[userId]) {
             return entitledDaysData.value.savedUsers[userId];
         }
 
@@ -80,17 +84,25 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             loading.value = false;
         }
     }
-
-    async function newLeave(userId, leaveTypeId, startDate, endDate, reason) {
-
+/*
+    async function addEntitledDaysForUser(
+        userId,
+        leaveTypeId,
+        entitledDays,
+        startDate,
+        endDate
+    ) {
         try {
             loading.value = true;
             // Call the composable with the necessary parameters
-            const result = await newLeaveComposable({userId, leaveTypeId, startDate, endDate, reason});
+            const year = new Date(startDate).getFullYear();
+            const result = await addEntitledDaysForUserComposable({
+                ...arguments,
+                year,
+            });
 
-            if (result) {
-                await getAll(userId);
-                await getLeavesAvailableDays(userId);
+            if (result && result.entitlement) {
+                await getEntitledDaysForUser(userId, true);
             }
         } catch (err) {
             // Handle errors and set the error state
@@ -99,44 +111,105 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
+    }*/
 
-    }
-
-    async function getAllUsers() {
+    async function addEntitledDays(
+        userIds, // <-- Accepts an array of user IDs
+        leaveTypeId,
+        entitledDays,
+        startDate,
+        endDate
+    ) {
         try {
             loading.value = true;
-            const result = await getAllUserLeavesComposable();
-            if(result) {
-               leavesData.value.allUsers = result;
+
+            const year = new Date(startDate).getFullYear();
+
+            if (userIds.length > 1) {
+                // Call the bulk endpoint for multiple users
+                await addEntitledDaysForMultipleUsersComposable({
+                    userIds,
+                    leaveTypeId,
+                    entitledDays,
+                    year,
+                    startDate,
+                    endDate
+                });
+            } else {
+                // Call the single-user endpoint
+                const userId = userIds[0];
+                await addEntitledDaysForUserComposable({
+                    userId,
+                    leaveTypeId,
+                    entitledDays,
+                    year,
+                    startDate,
+                    endDate
+                });
             }
+
+            // After successful creation, clear the cache for all affected users
+            // and refetch their data to ensure UI consistency.
+            for (const id of userIds) {
+                await getEntitledDaysForUser(id, true);
+            }
+
         } catch (err) {
-            // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες');
+            throw err; // Re-throw the error to be handled by the component
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
-    
-    async function cancelLeave(userId, leaveId, status, reason) {
+
+
+    async function updateEntitledDaysForUser(
+        entitlementId,
+        userId,
+        leaveTypeId,
+        entitledDays,
+        startDate,
+        endDate
+    ) {
         try {
             loading.value = true;
             // Call the composable with the necessary parameters
-            const result = await cancelLeaveComposable({userId, leaveId, status, reason});
+            const year = new Date(startDate).getFullYear();
+            const result = await updateEntitledDaysForUserComposable({
+                ...arguments,
+                year,
+            });
 
-            if (result) {
-                // Process the result and store it in leavesData
-                await getAll(userId);
+            if (result && result.entitlement) {
+                await getEntitledDaysForUser(userId, true);
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
 
+    async function deleteEntitledDaysForUser(userId, entitlementId) {
+        try {
+            loading.value = true;
+            // Call the composable with the necessary parameters
+
+            const result = await deleteEntitledDaysForUserComposable(entitlementId);
+
+            if (result) {
+                await getEntitledDaysForUser(userId, true);
+            }
+        } catch (err) {
+            // Handle errors and set the error state
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
+        } finally {
+            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
 
     return {
         entitledDaysData,
@@ -145,5 +218,9 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
         
         init,
         reset,
+        addEntitledDays,
+        deleteEntitledDaysForUser,
+        getEntitledDaysForUser,
+        updateEntitledDaysForUser,
     };
 });

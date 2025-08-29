@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
         const res = await fetch(
             `${config.public.apiBase}${config.public.notifications.markedRead}/${notificationId}`,
             {
-                method: 'GET',
+                method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

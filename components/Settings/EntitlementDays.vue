@@ -16,7 +16,7 @@
   <template v-else>
     <div class="flex flex-col gap-[10px]">
       <div
-          v-if="permissionsStore.can('entitlements', 'modify')"
+          v-if="permissionsStore.can('entitlement', 'modify')"
           class="info-actions pb-5 flex gap-4 col-span-2">
         <button
             @click="newEntitlement"
@@ -171,22 +171,24 @@
                 {{ user.lastName || '' }}
               </div>
               <div class="col-span-2">
-                {{ user?.year || '' }}
+
               </div>
               <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
                 <a v-if="permissionsStore.can('entitlements','modify')" @click.stop="editEntitlement(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία</a>
               </div>
             </div>
             <div v-if="selectedUserId === user.id && showEntitlements" class="mt-4 pt-4 border-t border-gray-200 dark:border-neutral-700">
-              <div class="grid grid-cols-4 font-bold text-sm text-black dark:text-white pb-2">
+              <div class="grid grid-cols-5 font-bold text-sm text-black dark:text-white pb-2">
                 <div>Είδος</div>
-                <div>Έτος</div>
+                <div>Από</div>
+                <div>Έως</div>
                 <div>Δικαιούμενες Ημέρες</div>
                 <div>Υπόλοιπο</div>
               </div>
-              <div v-for="entitlement in userEntitlements" :key="entitlement.id" class="grid grid-cols-4 items-center py-2 text-sm">
-                <div>{{ getLeaveTypeName(entitlement.leave_type_id) }}</div>
-                <div>{{ entitlement.year }}</div>
+              <div v-for="entitlement in userEntitlements" :key="entitlement.id" class="grid grid-cols-5 items-center py-2 text-sm">
+                <div>{{ entitlement.leave_type_name }}</div>
+                <div>{{ entitlement.start_from }}</div>
+                <div>{{ entitlement.end_to }}</div>
                 <div>{{ entitlement.entitled_days }}</div>
                 <div>{{ entitlement.remaining_days }}</div>
               </div>
@@ -240,6 +242,7 @@ const selectedUserId = ref(null);
 
 // Reactive variable to store all users
 const allUsers = ref([]);
+const userEntitlements = ref([]);
 
 // Process users to extract firstName and lastName
 watch(
@@ -264,7 +267,7 @@ watch(
 
 // Map leave type IDs to their names
 const leaveTypesMap = computed(() => {
-  return leavesStore.leaveTypes.reduce((map, type) => {
+  return leavesStore.leavesData.leavesTypes.reduce((map, type) => {
     map[type.id] = type.name;
     return map;
   }, {});
@@ -324,11 +327,19 @@ const filteredUsers = computed(() => {
 
 const newEntitlement = () => {
   selectedEntitlementId.value = null;
+  modalType.value = 'edit';
   showModal.value = true;
 };
 
 const editEntitlement = (entitlementId) => {
   selectedEntitlementId.value = entitlementId;
+  modalType.value = 'edit';
+  showModal.value = true;
+};
+
+const deleteEntitlement = (entitlementId) => {
+  selectedEntitlementId.value = entitlementId;
+  modalType.value = '';
   showModal.value = true;
 };
 
@@ -341,7 +352,7 @@ const toggleUserEntitlements = async (userId) => {
     selectedUserId.value = userId;
     showEntitlements.value = true;
     // Fetch entitlements for the selected user
-    userEntitlements.value = await entitlementStore.fetchEntitlementsForUser(userId);
+    userEntitlements.value = (await entitlementStore.getEntitledDaysForUser(userId))[(filters.year ?? new Date().getFullYear())];
   }
 };
 

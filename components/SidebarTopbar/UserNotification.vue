@@ -25,7 +25,7 @@
 
             <!-- Notification List -->
             <ul class="divide-y divide-gray-200 dark:divide-neutral-600">
-                <li v-for="notification in filteredNotifications" :key="notification.id" class="p-4 text-sm text-gray-700 dark:text-gray-300">
+                <li @click="changeNotificationStatus(notification.id)" v-for="notification in filteredNotifications" :key="notification.id" class="p-4 text-sm text-gray-700 dark:text-gray-300 opacity-90 hover:opacity-100 cursor-pointer hover:shadow">
                     <div class="notification-title font-semibold">{{ notification.title }}</div>
                     <div class="notification-message mt-1">{{ notification.message }}</div>
                 </li>
@@ -88,6 +88,10 @@ const filteredNotifications = computed(() => {
 const setTab = (tab) => {
     activeTab.value = tab;
 };
+
+const changeNotificationStatus = async (notificationId) => {
+  await notificationsStore.changeNotificationStatus(notificationId);
+}
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);
