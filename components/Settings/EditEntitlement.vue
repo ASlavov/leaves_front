@@ -107,6 +107,7 @@ onMounted(async () => {
       formStartDate.value = entitlementToEdit.start_from;
       formEndDate.value = entitlementToEdit.end_to;
     }
+    console.log(entitlementToEdit);
   }
   loading.value = false;
 });

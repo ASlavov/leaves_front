@@ -176,7 +176,12 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             // Call the composable with the necessary parameters
             const year = new Date(startDate).getFullYear();
             const result = await updateEntitledDaysForUserComposable({
-                ...arguments,
+                entitlementId,
+                userId,
+                leaveTypeId,
+                entitledDays,
+                startDate,
+                endDate,
                 year,
             });
 

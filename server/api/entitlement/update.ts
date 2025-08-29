@@ -23,19 +23,20 @@ export default defineEventHandler(async (event) => {
             leaveTypeId,
             entitledDays,
             year,
-            startFrom,
-            endTo
+            startDate,
+            endDate
         } = body;
-        console.log(body);
+
         const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.update}/${entitlementId}`, {
             method: 'PUT',
             body: {
+                id: entitlementId,
                 user_id: userId,
                 leave_type_id: leaveTypeId,
                 entitled_days: entitledDays,
                 year: year,
-                start_from: startFrom,
-                end_to: endTo
+                start_from: startDate,
+                end_to: endDate,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
