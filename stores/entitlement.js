@@ -150,8 +150,11 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
 
             // After successful creation, clear the cache for all affected users
             // and refetch their data to ensure UI consistency.
+
             for (const id of userIds) {
-                await getEntitledDaysForUser(id, true);
+                if(entitledDaysData.value.savedUsers[id]) {
+                    await getEntitledDaysForUser(id, true);
+                }
             }
 
         } catch (err) {

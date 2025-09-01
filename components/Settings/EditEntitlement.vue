@@ -2,7 +2,7 @@
   <div class="bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
     <div class="flex-1">
       <template v-if="loading">
-        <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
+        <div class="grid grid-cols-12 pt-[10px] max-w-[947px]">
           <div class="w-12 h-12 bg-gray-200 rounded-full col-span-2 mr-4 animate-pulse"></div>
           <div class="pt-4 space-y-2 col-span-10 animate-pulse">
             <p class="h-4 bg-gray-200 rounded w-1/3 animate-pulse dark:bg-neutral-700"></p>
@@ -12,9 +12,9 @@
         </div>
       </template>
       <template v-else>
-        <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
+        <div class="grid grid-cols-12 pt-[10px] max-w-[947px]">
           <div class="grid grid-cols-2 col-span-12 gap-y-[15px] gap-x-[25px]">
-            <div v-if="!entitlementId" class="max-w-sm">
+            <div v-if="!entitlementId" class="max-w-[97%] col-span-2">
               <label class="block text-sm font-bold mb-2 text-black dark:text-white">Εργαζόμενοι</label>
               <CustomMultiSelect
                   v-model="formUserIds"
@@ -37,11 +37,21 @@
             </div>
             <div class="max-w-sm">
               <label class="block text-sm font-bold mb-2 text-black dark:text-white">Ημερομηνία έναρξης</label>
-              <input v-model="formStartDate" type="date" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <input
+                  type="text"
+                  ref="datePickerStart"
+                  v-model="formStartDate"
+                  placeholder="Επιλέξτε ημ/νια"
+                  class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="max-w-sm">
               <label class="block text-sm font-bold mb-2 text-black dark:text-white">Ημερομηνία λήξης</label>
-              <input v-model="formEndDate" type="date" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
+              <input
+                  type="text"
+                  ref="datePickerEnd"
+                  v-model="formEndDate"
+                  placeholder="Επιλέξτε ημ/νια"
+                  class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
               <button @click="submitForm"
@@ -60,7 +70,9 @@
 import { ref, computed, onMounted } from "vue";
 import { useCentralStore } from '@/stores/centralStore.js';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
-import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue'; // <-- New import
+import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -93,8 +105,46 @@ const users = computed(() => userStore.allUsers.map(user => ({
 })));
 const leaveTypes = computed(() => leavesStore.leavesData.leavesTypes.map(type => ({ id: type.id, name: type.name })));
 
+const datePickerStart = ref(null);
+const datePickerEnd = ref(null);
+
 onMounted(async () => {
   loading.value = true;
+
+  if (typeof window !== 'undefined') {
+    const today = new Date();
+    //silly trick. getFullYear returns integer. new Date(integer) means timestamp
+    const thisYear = new Date('' + today.getFullYear());
+
+    // Initialize the start date picker
+    flatpickr(datePickerStart.value, {
+      dateFormat: "Y-m-d",
+      minDate: thisYear, // Disable past dates
+      default: today,
+      onChange: (selectedDates) => {
+        if (selectedDates.length) {
+          const insideStartDate = new Date(selectedDates[0]);
+          formStartDate.value = insideStartDate;
+
+          // Set the end date to one day after the start date
+          const minEndDate = new Date(insideStartDate);
+          minEndDate.setDate(minEndDate.getDate());
+
+          // Update the end date picker
+          flatpickr(datePickerEnd.value, {
+            dateFormat: "Y-m-d",
+            defaultDate: minEndDate,
+            minDate: minEndDate // Disable dates before one day after the start date
+          });
+        }
+      }
+    });
+
+    flatpickr(datePickerEnd.value, {
+      dateFormat: "Y-m-d",
+      minDate: thisYear // Disable past dates initially
+    });
+  }
 
   if (props.entitlementId) {
     const allEntitlements = Object.values(entitlementStore.entitledDaysData.savedUsers).flatMap(Object.values).flat();

@@ -1,11 +1,9 @@
 <template>
-  <div class="relative z-0" v-click-outside="handleClickOutside">
-    <!-- Input Field -->
+  <div class="relative" v-click-outside="handleClickOutside">
     <div
-        class="relative ps-0.5 pe-9 min-h-[46px] flex items-center flex-wrap w-full border border-gray-200 rounded-lg text-start text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 cursor-text"
+        class="custom-scrollbar relative overflow-y-auto max-h-40 ps-0.5 pe-9 min-h-[46px] flex items-center flex-wrap w-full border border-gray-200 rounded-lg text-start text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 cursor-text"
         @click="focusInput"
     >
-      <!-- Selected Tags -->
       <template v-for="option in selectedOptions" :key="option.id">
         <div
             class="flex flex-nowrap items-center relative z-10 bg-white border border-gray-200 rounded-full p-1 m-1 dark:bg-neutral-900 dark:border-neutral-700"
@@ -29,7 +27,6 @@
           </div>
         </div>
       </template>
-      <!-- Input for Typing -->
       <input
           ref="toBeFocused"
           v-model="inputValue"
@@ -38,7 +35,6 @@
           class="py-3 px-2 rounded-lg order-1 text-sm outline-none dark:bg-neutral-900 dark:placeholder-neutral-500 dark:text-neutral-400 flex-grow"
           :placeholder="selectedOptions.length ? '' : placeholder"
       />
-      <!-- Dropdown Icon -->
       <div class="absolute top-1/2 end-3 -translate-y-1/2">
         <svg
             class="shrink-0 size-3.5 dark:fill-gray-500 fill-gray-700 text-gray-500 dark:text-neutral-500"
@@ -50,10 +46,10 @@
         </svg>
       </div>
     </div>
-    <!-- Options Dropdown -->
     <div
         v-if="isOpen"
         class="absolute mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto dark:bg-neutral-900 dark:border-neutral-700
+        z-99
  [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
@@ -63,6 +59,23 @@
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500
 "
     >
+      <div v-if="hasOptions" class="flex px-4 py-2 border-b border-gray-200 dark:border-neutral-700">
+        <button
+            v-if="!isAllSelected"
+            @click="selectAllOptions"
+            class="w-full text-left font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-600"
+        >
+          Επιλογή Όλων
+        </button>
+        <button
+            v-if="selectedOptions.length > 0"
+            @click="deselectAllOptions"
+            class="w-full text-right font-semibold text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
+        >
+          Διαγραφή Όλων
+        </button>
+      </div>
+
       <div
           v-for="option in filteredOptions"
           :key="option.id"
@@ -135,11 +148,19 @@ export default {
         this.$emit('update:modelValue', ids);
       },
     },
+    isAllSelected() {
+      return this.selectedOptions.length === this.options.length;
+    },
+    hasOptions() {
+      // Check if there are any options to display
+      return this.options.length > 0;
+    },
     filteredOptions() {
       const lowerInput = this.inputValue.toLowerCase();
+      const selectedIds = this.selectedOptions.map(option => option.id);
       return this.options.filter(
           (option) =>
-              !this.selectedOptions.some((selected) => selected.id === option.id) &&
+              !selectedIds.includes(option.id) &&
               option.name.toLowerCase().includes(lowerInput)
       );
     },
@@ -155,9 +176,10 @@ export default {
       this.isOpen = false;
     },
     selectOption(option) {
-      this.selectedOptions = [...this.selectedOptions, option];
+      if (!this.isSelected(option)) {
+        this.selectedOptions = [...this.selectedOptions, option];
+      }
       this.inputValue = '';
-      // Keep the dropdown open to allow multiple selections
     },
     removeOption(option) {
       this.selectedOptions = this.selectedOptions.filter(
@@ -167,10 +189,14 @@ export default {
     isSelected(option) {
       return this.selectedOptions.some((selected) => selected.id === option.id);
     },
+    selectAllOptions() {
+      this.selectedOptions = this.options;
+      this.inputValue = '';
+    },
+    deselectAllOptions() {
+      this.selectedOptions = [];
+      this.inputValue = '';
+    },
   },
 };
 </script>
-
-<style scoped>
-/* Your styles remain the same */
-</style>

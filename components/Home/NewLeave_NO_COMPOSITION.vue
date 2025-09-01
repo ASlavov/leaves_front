@@ -162,8 +162,6 @@ const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays ||
 const user_id = computed(() => userStore.userId);
 
 const leaveType = ref(null);
-const startDate = ref('');
-const endDate = ref('');
 const comments = ref('');
 const successMessage = ref('');
 
@@ -235,6 +233,9 @@ const submitForm = async () => {
 
 const datePickerStart = ref(null);
 const datePickerEnd = ref(null);
+
+const startDate = ref(datePickerStart ?? new Date());
+const endDate = ref(datePickerEnd ?? new Date());
 
 onMounted(() => {
   // Ensure flatpickr only runs on the client

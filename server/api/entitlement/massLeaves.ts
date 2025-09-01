@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
             leaveTypeId,
             entitledDays,
             year,
-            startFrom,
-            endTo
+            startDate,
+            endDate
         } = body;
         console.log(body);
         const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.massLeaves}`, {
@@ -32,9 +32,9 @@ export default defineEventHandler(async (event) => {
                 userIds: userIds,
                 leave_type_id: leaveTypeId,
                 entitled_days: entitledDays,
-                year: year,
-                start_from: startFrom,
-                end_to: endTo
+                year,
+                startDate,
+                endDate
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

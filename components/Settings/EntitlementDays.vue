@@ -186,7 +186,7 @@
                 <div>Υπόλοιπο</div>
                 <div></div>
               </div>
-              <div v-for="entitlement in userEntitlements" :key="entitlement.id" class="grid grid-cols-6 items-center py-2 text-sm">
+              <div v-for="entitlement in filteredEntitlements" :key="entitlement.id" class="grid grid-cols-6 items-center py-2 text-sm">
                 <div>{{ entitlement.leave_type_name }}</div>
                 <div>{{ entitlement.start_from }}</div>
                 <div>{{ entitlement.end_to }}</div>
@@ -330,6 +330,12 @@ const filteredUsers = computed(() => {
   }
 
   return users;
+});
+
+const filteredEntitlements = computed(() => {
+  return userEntitlements.value.filter(user => {
+    return user[filters.value.year].length
+  });
 });
 
 const newEntitlement = () => {
