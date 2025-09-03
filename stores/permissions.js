@@ -49,6 +49,10 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         return userRoles.value.includes(roleName);
     };
 
+    const isAdmin = () => {
+        return userStore.userInfo.roles.some(role => role.name === 'admin');
+    }
+
     const can = (category, action) => {
         const categoryPermissions = permissions[category];
         if (!categoryPermissions) {
@@ -65,6 +69,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         hasRole,
         can,
         userRoles,
+        isAdmin,
         permissions,
     };
 });

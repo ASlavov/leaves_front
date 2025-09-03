@@ -30,6 +30,16 @@ export const addEntitledDaysForMultipleUsersComposable = (body) => {
         }
     });
 }
+export const addEntitledRemoteDaysForMultipleUsersComposable = (body) => {
+    const config = useRuntimeConfig()
+
+    return retryFetch('/api/entitlement/massRemote', {
+        method: 'POST',
+        body: {
+            ...body,
+        }
+    });
+}
 export const updateEntitledDaysForUserComposable = (body) => {
     const config = useRuntimeConfig()
 

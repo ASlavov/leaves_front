@@ -29,7 +29,7 @@
       <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
           class="text-black dark:text-white font-bold flex items-center gap-2">
-        Αιτήματα άδειας <span class="text-[#EA021A]">({{allLeaves.length}})</span>
+        Αιτήματα άδειας <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
       </div>
       <div v-else>
         Άδειες έτους
@@ -169,6 +169,7 @@ import FilterInput from "~/components/misc/FilterInput.vue";
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 const permissionsStore = centralStore.permissionsStore;
+const userStore = centralStore.userStore;
 
 // Loading
 const loading = ref(true); // Set loading to true initially
@@ -279,7 +280,9 @@ const filteredLeaves = computed(() => {
             ? new Date(leave.start_date).getFullYear() === parseInt(filters.value.year)
             : true;
 
-        return requesterNameMatch && groupMatch && yearMatch;
+        const requesterMatchesUserNotAdmin = (permissionsStore.isAdmin() || userStore.userId !== leave.user_id);
+
+        return requesterNameMatch && groupMatch && yearMatch && requesterMatchesUserNotAdmin;
       })
       .sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Newest first
 

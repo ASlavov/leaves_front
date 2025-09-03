@@ -124,7 +124,7 @@ onMounted(async () => {
       onChange: (selectedDates) => {
         if (selectedDates.length) {
           const insideStartDate = new Date(selectedDates[0]);
-          formStartDate.value = insideStartDate;
+          formStartDate.value = insideStartDate.value;
 
           // Set the end date to one day after the start date
           const minEndDate = new Date(insideStartDate);

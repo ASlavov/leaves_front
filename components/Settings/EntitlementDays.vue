@@ -90,7 +90,7 @@
                 filters.firstName = '';
                 filters.lastName  = '';
                 filters.leave_type = 1;
-                filters.year = new Date().getFullYear();
+                filters.year = null;
               "
               class="text-red-500"
           >
@@ -139,11 +139,6 @@
             </svg>
           </span>
         </div>
-        <div
-            class="col-span-2 text-black dark:text-white flex items-center"
-        >
-          Έτος
-        </div>
       </div>
       <div class="relative -m-4 p-4 mt-0">
         <div ref="scrollContainer"
@@ -154,8 +149,8 @@
   [&::-webkit-scrollbar-thumb]:bg-gray-300
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-          <div v-for="user in filteredUsers" :key="user.id" class="flex flex-col border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080] cursor-pointer" @click="toggleUserEntitlements(user.id)">
-            <div class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center">
+          <div v-for="user in filteredUsers" :key="user.id" :class="`flex flex-col border border-[#DFEAF2] rounded-lg ${ !toggledUsers[user.id] ? 'hover:bg-neutral-100 dark:hover:bg-neutral-600 pl-[20px] pr-[30px] py-[10px]' : ''} text-[#808080]`">
+            <div :class="`grid gap-[10px] grid-cols-2  lg:grid-cols-12 items-center cursor-pointer ${ toggledUsers[user.id] ? 'rounded-t-lg hover:bg-neutral-100 dark:hover:bg-neutral-600 pb-4 pl-[20px] pr-[30px] pt-[10px]' : ''}`" @click="toggleUserEntitlements(user.id)">
               <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
                 <img
                     class="rounded-full object-cover size-[50px]"
@@ -171,13 +166,9 @@
                 {{ user.lastName || '' }}
               </div>
               <div class="col-span-2">
-
-              </div>
-              <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
-                <a v-if="permissionsStore.can('entitlements','modify')" @click.stop="editEntitlement(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία</a>
               </div>
             </div>
-            <div v-if="selectedUserId === user.id && showEntitlements" class="mt-4 pt-4 border-t border-gray-200 dark:border-neutral-700">
+            <div v-if="toggledUsers[user.id]" class="toggledOpen pt-4 border-t border-gray-200 dark:border-neutral-700 pl-[20px] pr-[30px] pb-[10px]">
               <div class="grid grid-cols-6 font-bold text-sm text-black dark:text-white pb-2">
                 <div>Είδος</div>
                 <div>Από</div>
@@ -186,15 +177,15 @@
                 <div>Υπόλοιπο</div>
                 <div></div>
               </div>
-              <div v-for="entitlement in filteredEntitlements" :key="entitlement.id" class="grid grid-cols-6 items-center py-2 text-sm">
+              <div v-for="entitlement in getFilteredEntitlements(user.id)" :key="entitlement.id" class="grid grid-cols-6 items-center py-2 text-sm">
                 <div>{{ entitlement.leave_type_name }}</div>
                 <div>{{ entitlement.start_from }}</div>
                 <div>{{ entitlement.end_to }}</div>
                 <div>{{ entitlement.entitled_days }}</div>
                 <div>{{ entitlement.remaining_days }}</div>
                 <div class="justify-self-end flex gap-[25px] items-center">
-                  <a v-if="permissionsStore.can('entitlement','modify')" @click="editEntitlement(entitlement.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Ημερών</a>
-                  <svg v-if="permissionsStore.can('entitlement','modify')" @click="deleteEntitlement(entitlement.id)" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="19" viewBox="0 0 16 19" fill="none">
+                  <a v-if="permissionsStore.can('entitlement','modify')" @click.stop="editEntitlement(entitlement.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Ημερών</a>
+                  <svg v-if="permissionsStore.can('entitlement','modify')" @click.stop="deleteEntitlement(entitlement.id)" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="19" viewBox="0 0 16 19" fill="none">
                     <path d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.66667C6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z" :fill="theme === 'light' ? 'black' : 'white'"/>
                   </svg>
                 </div>
@@ -231,6 +222,7 @@
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
 import EditEntitlement from "~/components/Settings/EditEntitlement.vue";
+import DeleteEntitlement from "~/components/Settings/DeleteEntitlement.vue";
 
 // Access the necessary stores
 const centralStore = useCentralStore();
@@ -243,25 +235,22 @@ const leavesStore = centralStore.leavesStore;
 const showModal = ref(false);
 const modalType = ref(''); // 'edit' or 'delete'
 const selectedEntitlementId = ref(null);
-const showEntitlements = ref(false);
-
-const selectedUserId = ref(null);
 
 // Reactive variable to store all users
 const allUsers = ref([]);
-const userEntitlements = ref([]);
+const userEntitlements = ref({}); // Now an object to hold entitlements for each user
+
+const toggledUsers = ref({});
 
 // Process users to extract firstName and lastName
 watch(
     () => userStore.allUsers,
     (users) => {
       allUsers.value = users.map(user => {
-        // Extract firstName and lastName from user.name
         const nameSplit = user.name.trim().split(' ');
         const firstName = nameSplit.slice(0, -1).join(' ') || nameSplit[0];
         const lastName = nameSplit.slice(-1).join(' ') || '';
 
-        // Return a new user object with firstName and lastName added
         return {
           ...user,
           firstName,
@@ -309,8 +298,7 @@ const sortByFunctions = {
 const filters = ref({
   firstName: '',
   lastName: '',
-  //leave_type: 1, // Pre-selected filter for leave type
-  year: new Date().getFullYear(), // Pre-selected filter for current year
+  year: new Date().getFullYear(),
 });
 
 // Computed property for filtered and sorted users
@@ -318,8 +306,6 @@ const filteredUsers = computed(() => {
   let users = allUsers.value.filter((user) =>
       (filters.value.firstName !== '' ? user.firstName.toLowerCase().includes(filters.value.firstName.toLowerCase()) : true)
       && (filters.value.lastName !== '' ? user.lastName.toLowerCase().includes(filters.value.lastName.toLowerCase()) : true)
-      //&& (filters.value.leave_type !== null ? user.leave_type_id === filters.value.leave_type : true)
-      //&& (filters.value.year !== null ? user.year === filters.value.year : true)
   );
 
   if (currentSortKey.value && sortByFunctions[currentSortKey.value]) {
@@ -332,10 +318,16 @@ const filteredUsers = computed(() => {
   return users;
 });
 
-const filteredEntitlements = computed(() => {
-  return userEntitlements.value.filter(user => {
-    return user[filters.value.year].length
-  });
+// New computed property to get filtered entitlements for a specific user
+const getFilteredEntitlements = computed(() => (userId) => {
+  const allEntitlements = entitlementStore.entitledDaysData.savedUsers[userId] || {};
+
+  // If no specific year is filtered, flatten all entitlements into a single array
+  if (!filters.value.year) {
+    return Object.values(allEntitlements).flatMap(yearEntitlements => yearEntitlements);
+  }
+  // Otherwise, return the entitlements for the specific filtered year
+  return allEntitlements[filters.value.year] || [];
 });
 
 const newEntitlement = () => {
@@ -356,18 +348,33 @@ const deleteEntitlement = (entitlementId) => {
   showModal.value = true;
 };
 
+// Simplified toggle function to manage UI state only
 const toggleUserEntitlements = async (userId) => {
-  if (selectedUserId.value === userId && showEntitlements.value) {
-    selectedUserId.value = null;
-    showEntitlements.value = false;
-    userEntitlements.value = [];
+  // Toggle the user's state
+  if (toggledUsers.value[userId]) {
+    delete toggledUsers.value[userId];
   } else {
-    selectedUserId.value = userId;
-    showEntitlements.value = true;
-    // Fetch entitlements for the selected user
-    userEntitlements.value = (await entitlementStore.getEntitledDaysForUser(userId))[(filters.year ?? new Date().getFullYear())];
+    toggledUsers.value[userId] = true;
   }
+  console.log(toggledUsers);
 };
+
+// Watch for changes in toggled users to trigger data fetch
+watch(toggledUsers.value, async (newToggledUsers) => {
+  const usersToFetch = Object.keys(newToggledUsers);
+  for (const userId of usersToFetch) {
+    await entitlementStore.getEntitledDaysForUser(userId);
+  }
+});
+
+// Watch for changes in the year filter and re-fetch data for currently toggled users
+watch(() => filters.value.year, (newYear, oldYear) => {
+  const usersToReFetch = Object.keys(toggledUsers.value);
+  for (const userId of usersToReFetch) {
+    entitlementStore.getEntitledDaysForUser(userId);
+  }
+});
+
 
 const closeModal = () => {
   showModal.value = false;

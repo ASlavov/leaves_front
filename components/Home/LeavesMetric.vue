@@ -56,11 +56,38 @@ const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 const permissionsStore = centralStore.permissionsStore;
 
-// Adjust loading to include leavesStore.loading
 const loading = computed(() => centralStore.loading && !centralStore.initialized);
 
-// Ensure leavesData is always an array
 const leavesDataLoaded = computed(() => leavesStore.isDataLoaded);
-const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays);
-</script>
 
+// Group leaves by leave type and sum up the days
+const groupedLeavesData = computed(() => {
+  if (!leavesStore.leavesData?.leavesAvailableDays) {
+    return [];
+  }
+
+  const groupedData = leavesStore.leavesData.leavesAvailableDays.reduce((acc, leave) => {
+    const typeId = leave.leave_type_id;
+
+    if (!acc[typeId]) {
+      acc[typeId] = {
+        leave_type_id: typeId,
+        leave_type_name: leave.leave_type_name,
+        entitled_days: 0,
+        remaining_days: 0,
+      };
+    }
+
+    acc[typeId].entitled_days += leave.entitled_days;
+    acc[typeId].remaining_days += leave.remaining_days;
+
+    return acc;
+  }, {});
+
+  // Convert the object back to an array
+  return Object.values(groupedData).sort((a, b) => a.leave_type_id - b.leave_type_id);
+});
+
+// Pass the grouped data to the template
+const leavesData = groupedLeavesData;
+</script>

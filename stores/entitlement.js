@@ -6,6 +6,7 @@ import {
     deleteEntitledDaysForUserComposable,
     updateEntitledDaysForUserComposable,
     addEntitledDaysForMultipleUsersComposable,
+    addEntitledRemoteDaysForMultipleUsersComposable,
 } from '@/composables/entitlementApiComposable';
 import { useUserStore } from '@/stores/user';
 
@@ -124,10 +125,8 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             loading.value = true;
 
             const year = new Date(startDate).getFullYear();
-
-            if (userIds.length > 1) {
-                // Call the bulk endpoint for multiple users
-                await addEntitledDaysForMultipleUsersComposable({
+            if(leaveTypeId === 5) {
+                await addEntitledRemoteDaysForMultipleUsersComposable({
                     userIds,
                     leaveTypeId,
                     entitledDays,
@@ -136,16 +135,72 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                     endDate
                 });
             } else {
-                // Call the single-user endpoint
-                const userId = userIds[0];
-                await addEntitledDaysForUserComposable({
-                    userId,
+                if (userIds.length > 1) {
+                    // Call the bulk endpoint for multiple users
+                    await addEntitledDaysForMultipleUsersComposable({
+                        userIds,
+                        leaveTypeId,
+                        entitledDays,
+                        year,
+                        startDate,
+                        endDate
+                    });
+
+                } else {
+                    // Call the single-user endpoint
+                    const userId = userIds[0];
+                    await addEntitledDaysForUserComposable({
+                        userId,
+                        leaveTypeId,
+                        entitledDays,
+                        year,
+                        startDate,
+                        endDate
+                    });
+                }
+            }
+            // After successful creation, clear the cache for all affected users
+            // and refetch their data to ensure UI consistency.
+
+            for (const id of userIds) {
+                if(entitledDaysData.value.savedUsers[id]) {
+                    await getEntitledDaysForUser(id, true);
+                }
+            }
+
+        } catch (err) {
+            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες');
+            throw err; // Re-throw the error to be handled by the component
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    async function massAddRemoteDaysForUsers(
+        userIds, // <-- Accepts an array of user IDs
+        leaveTypeId,
+        entitledDays,
+        startDate,
+        endDate
+    ) {
+        try {
+            loading.value = true;
+
+            const year = new Date(startDate).getFullYear();
+
+            // Call the bulk endpoint for multiple users
+            if(leaveTypeId === 5) {
+                await addEntitledRemoteDaysForMultipleUsersComposable({
+                    userIds,
                     leaveTypeId,
                     entitledDays,
                     year,
                     startDate,
                     endDate
                 });
+            } else {
+                // Should never be the case?!
+                throw new Error('Κάτι πήγε στραβά!');
             }
 
             // After successful creation, clear the cache for all affected users
@@ -164,7 +219,6 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             loading.value = false;
         }
     }
-
 
     async function updateEntitledDaysForUser(
         entitlementId,

@@ -111,7 +111,6 @@
 <script>
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
 import { ref, computed, nextTick, watch } from 'vue';
 import { useCentralStore } from '@/stores/centralStore.js';
 
@@ -123,8 +122,6 @@ export default {
 
     const centralStore = useCentralStore();
     const leavesStore = centralStore.leavesStore;
-
-    // Ensure leavesData is always an array
     const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
     const leavesTypes = computed(() => leavesStore.leavesData?.leavesTypes);
     const userStore = centralStore.userStore;
@@ -134,62 +131,98 @@ export default {
     const startDate = ref('');
     const endDate = ref('');
     const comments = ref('');
-    const successMessage = ref(''); // Reactive variable for success message
+    const successMessage = ref('');
 
     const isModalOpen = ref(false);
 
+    const datePickrSettings = {
+      dateFormat: "Y-m-d",
+      disable: [function (date) {
+        return (date.getDay() === 0 || date.getDay() === 6);
+      },],
+    }
+
+    // --- NEW: A helper function to manage the date pickers ---
     const initializeDatePickers = () => {
       const today = new Date();
 
-      // Initialize the start date picker
-      flatpickr(datePickerStart.value, {
-        dateFormat: "Y-m-d",
-        minDate: today, // Disable past dates
+      // Get the remaining days from the selected leave type
+      const maxDays = selectedLeave.value?.remaining_days - 1 ?? 0;
+
+      // Logic for the start date picker
+      const startDateInstance = flatpickr(datePickerStart.value, {
+        ...datePickrSettings,
+        minDate: today,
         onChange: (selectedDates) => {
           if (selectedDates.length) {
             const startDateInside = selectedDates[0];
             startDate.value = startDateInside;
-
-            // Set the end date to one day after the start date
-            const minEndDate = new Date(startDateInside);
-            minEndDate.setDate(minEndDate.getDate());
-
-            // Update the end date picker
-            flatpickr(datePickerEnd.value, {
-              dateFormat: "Y-m-d",
-              defaultDate: minEndDate,
-              minDate: minEndDate // Disable dates before one day after the start date
-            });
+            // Update the end date picker based on new start date and maxDays
+            updateEndDateDatePicker(startDateInside, maxDays);
           }
         }
       });
 
-      // Initialize the end date picker
-      flatpickr(datePickerEnd.value, {
-        dateFormat: "Y-m-d",
-        minDate: today // Disable past dates initially
+      // Logic for the end date picker
+      const endDateInstance = flatpickr(datePickerEnd.value, {
+        ...datePickrSettings,
+        minDate: today,
+        maxDate: maxDays > 0 ? new Date(today.getTime() + maxDays * 24 * 60 * 60 * 1000) : null
       });
-    }
 
-    // Functions to open and close the modal
+      // Function to update end date picker options
+      const updateEndDateDatePicker = (minDate, daysToAdd) => {
+        const newMinDate = new Date(minDate);
+        newMinDate.setDate(newMinDate.getDate());
+
+        const newMaxDate = new Date(minDate);
+        newMaxDate.setDate(newMaxDate.getDate() + daysToAdd);
+
+        // Destroy and re-initialize to apply new min/max dates
+        if (endDateInstance) {
+          endDateInstance.destroy();
+        }
+        flatpickr(datePickerEnd.value, {
+          ...datePickrSettings,
+          defaultDate: newMinDate,
+          minDate: newMinDate,
+          maxDate: newMaxDate
+        });
+      };
+    };
+
+    // --- NEW: Watchers for reactivity ---
+    // Watch for changes in leaveType to update the date pickers
+    watch(leaveType, (newLeaveType, oldLeaveType) => {
+      // Re-initialize date pickers only if the type has changed
+      if (newLeaveType !== oldLeaveType) {
+        initializeDatePickers();
+      }
+    });
+
     const openModal = () => {
       isModalOpen.value = true;
-
       nextTick(() => {
+        // Initialize the date pickers only when the modal is first opened
         initializeDatePickers();
       });
     };
 
     const closeModal = () => {
       isModalOpen.value = false;
+      // Optional: Reset form fields here if needed
+      leaveType.value = '';
+      startDate.value = '';
+      endDate.value = '';
+      comments.value = '';
     };
 
     const filteredLeavesTypes = computed(
         () => leavesData.value.filter(
-          leave => leavesTypes.value.some(
-          leaveType => leave.leave_type_id === leaveType.id
-          )
-       )
+            leave => leavesTypes.value.some(
+                leaveType => leave.leave_type_id === leaveType.id
+            )
+        )
     );
 
     const selectedLeave = computed(() => {
@@ -198,29 +231,32 @@ export default {
       }
       return null;
     });
+
     const submitForm = async () => {
       const leaveRequest = {
-        id: user_id.value,  // Adjusted based on your Postman example
+        id: user_id.value,
         leave_type_id: leaveType.value,
         start_date: startDate.value,
         end_date: endDate.value,
         reason: comments.value,
       };
 
-      console.log(leaveRequest);  // Log the data for debugging
-
       try {
         await leavesStore.newLeave(user_id.value, leaveRequest.leave_type_id, leaveRequest.start_date, leaveRequest.end_date, leaveRequest.reason);
-        
+
         useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
-            position: "bottom-right",
-            autoClose: 5000, // Close automatically after 5 seconds
-          });
+          position: "bottom-right",
+          autoClose: 5000,
+        });
+
+        closeModal(); // Close modal on success
 
       } catch (error) {
         console.error('Error submitting leave request:', error);
-        successMessage.value = ''; // Clear the success message on error
-        // Handle the error as needed
+        useNuxtApp().$toast.error('Σφάλμα κατά την υποβολή της αίτησης άδειας.', {
+          position: "bottom-right",
+          autoClose: 5000,
+        });
       }
     };
 
@@ -236,14 +272,16 @@ export default {
       isModalOpen,
       openModal,
       closeModal,
-      successMessage,  // Make successMessage available to the template
+      successMessage,
       submitForm,
       datePickerStart,
       datePickerEnd
     };
   },
+  // Ensure the date pickers are initialized if the component is mounted directly, although the `openModal` method already handles this.
   mounted() {
-
+    // This part is not strictly necessary anymore due to the `openModal` logic, but it's good practice for standalone components.
+    // initializeDatePickers();
   },
 };
 </script>
