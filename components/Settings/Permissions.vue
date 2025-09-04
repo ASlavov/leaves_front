@@ -42,12 +42,12 @@ import { CheckIcon } from '@heroicons/vue/24/outline';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 
 // Define all roles
-const allRoles = ['admin', 'hr', 'head', 'user'];
+const allRoles = ['admin', 'hr-manager', 'head', 'user'];
 
 // Map roles to labels
 const roleLabels = {
   admin: 'Admin',
-  hr: 'HR',
+  'hr-manager': 'HR',
   head: 'Department Head',
   user: 'User',
 };
@@ -78,6 +78,13 @@ const permissionLabels = {
       view: 'Προβολή',
       modify: 'Τροποποίηση',
     },
+  },
+  entitlement: {
+    label: 'Δικαιούμενες Ημέρες Άδειας',
+    actions: {
+      view: 'Προβολή',
+      modify: 'Τροποποίηση',
+    }
   },
   group: {
     label: 'Τμήματα',

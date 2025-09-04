@@ -50,6 +50,13 @@ export default defineEventHandler(async (event) => {
             },
         });
 
+        if(response === 'You cannot reject/accept your leaves') {
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'You cannot reject/accept your leaves',
+            });
+        }
+
         return response; // Return the response from the external API
     } catch (error) {
         // Handle errors from the external API

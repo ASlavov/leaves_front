@@ -57,7 +57,7 @@
                     </div>
                     <!-- Third Text Column (Right Aligned) -->
                     <div class="flex-1 text-right">
-                        <button v-if="leave.status === 'approved' || leave.status === 'pending' " class="font-semibold underline text-black dark:text-gray-100">Ακύρωση άδειας</button>
+                        <button @click="cancelLeave(leave.id)" v-if="leave.status === 'approved' || leave.status === 'pending' " class="font-semibold underline text-black dark:text-gray-100">Ακύρωση άδειας</button>
                     </div>
                 </div>
             </div>
@@ -71,6 +71,7 @@ import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
+const userStore = centralStore.userStore;
 
 // Use computed to get leavesData and leaveTypes
 const leavesData = computed(() => leavesStore.leavesData?.currentUser || []);
@@ -82,6 +83,24 @@ const getLeaveTypeName = (leaveTypeId) => {
     const leaveType = leaveTypes.value.find(type => type.id === leaveTypeId);
     return leaveType ? leaveType.name : 'Unknown'; // Default to 'Unknown' if not found
 };
+
+const cancelLeave = async (leaveId) => {
+  loading.value = true;
+  try {
+    await leavesStore.cancelLeave(userStore.userId, leaveId, 'cancelled', 'cancelled by requester');
+    useNuxtApp().$toast.success('Η ακύρωση έγινε επιτυχώς!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+  } catch (error) {
+    useNuxtApp().$toast.error('Δεν μπορέσαμε να ακυρώσουμε την άδεια!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+  } finally {
+    loading.value = false;
+  }
+}
 
 // Loading state and skeleton count
 const loading = computed(() => leavesStore.loading);

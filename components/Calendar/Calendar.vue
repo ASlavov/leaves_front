@@ -61,7 +61,7 @@
     <ScheduleXCalendar :calendar-app="calendarApp">
       <!-- Customize Event Appearance -->
       <template #monthGridEvent="{ calendarEvent }">
-        <div :class="getEventClass(calendarEvent)" :style="getEventStyle(calendarEvent)">
+        <div @click="setEventColor(calendarEvent)" :class="getEventClass(calendarEvent)" :style="getEventStyle(calendarEvent)">
           {{ calendarEvent.title }}
         </div>
       </template>
@@ -189,6 +189,15 @@ function getEventStyle(calendarEvent) {
   return `background-color: ${getTypeColor(leaveTypeId)}`;
 }
 
+function setEventColor(calendarEvent) {
+  const leaveTypeId = calendarEvent.extendedProps.leaveTypeId;
+  const userId = calendarEvent.extendedProps.userId;
+  const color = getTypeColor(leaveTypeId, userId);
+  const root = document.documentElement;
+
+  root.style.setProperty('--custom-event-modal-color', color);
+}
+
 const leavesData = computed(() => {
   const returnArray = [];
   displayedLeaveTypes.value = [];
@@ -216,6 +225,7 @@ const leavesData = computed(() => {
         returnArray.push({
           ...leave,
           name: userLeaves?.name || '',
+          userId: userLeaves?.id,
         });
       });
     }
@@ -432,5 +442,12 @@ div:has(> .leave-entry) {
 }
 .sx__month-grid-week:first-child > div {
   padding-top: 0;
+}
+:root, :root.dark {
+  --custom-event-modal-color: #f00;
+}
+.sx__has-icon .sx__event-modal__color-icon {
+  /*Override their default background color*/
+  background-color: var(--custom-event-modal-color) !important;
 }
 </style>

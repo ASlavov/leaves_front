@@ -63,12 +63,19 @@ export default defineNuxtConfig({
         edit: '/user-update',
         updatePassword: '/user-update-password'
       },
+      entitlement: {
+        add: '/entitlement',
+        update: '/entitlement',
+        delete: '/entitlement',
+        get: '/entitlement_days',
+        massRemote: '/import-workfromhome',
+        massLeaves: '/import-mass-leaves',
+      },
       leaves: {
         getAll: '/user_leaves',
         getAllForAllUsers: '/all_user_leaves',
         newLeave: '/new_leave',
         processLeave: '/processed_leave',
-        massAddEntitledDays: '/import-workfromhome',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',
@@ -80,7 +87,9 @@ export default defineNuxtConfig({
         deleteDepartment: '/delete_department',
       },
       notifications: {
-        getNotifications: '/user-notifications'
+        getNotifications: '/user-notifications',
+        markedRead: '/notification-marked-read',
+        markedUnread: '/notification-marked-unread',
       }
     }
   },

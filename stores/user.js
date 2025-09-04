@@ -17,7 +17,7 @@ export const useUserStore = defineStore('userStore', () => {
 
     function reset() {
         userInfo.value = {};
-        userInfo.allUsers = [];
+        allUsers.value = [];
     }
 
     const setError = (errorMessage) => {

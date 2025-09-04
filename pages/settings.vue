@@ -64,6 +64,7 @@ import UsersList from '~/components/Settings/UsersList.vue';
 import GroupsList from '~/components/Settings/GroupsList.vue';
 import LeavesTypesList from '~/components/Settings/LeavesTypesList.vue';
 import Permissions from '~/components/Settings/Permissions.vue';
+import EntitlementDays from '~/components/Settings/EntitlementDays.vue';
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -116,6 +117,12 @@ const tabs = [
     label: 'Τύποι Αδειών',
     component: LeavesTypesList,
     permission: { category: 'leave_types', action: 'view' },
+  },
+  {
+    name: 'entitlement-days',
+    label: 'Ημέρες Αδειών',
+    component: EntitlementDays,
+    permission: { category: 'entitlement', action: 'view' },
   },
 ];
 

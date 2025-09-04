@@ -142,11 +142,12 @@ const chartOptions = computed(() => ({
   },
   colors: [leaveColor.value],
 }));
-watch(theme, async() => {
-  if (mychart.value) {
-    mychart.value.refresh()
+/*watch(theme, async() => {
+  console.log('something');
+  if (mychart) {
+    mychart.refresh()
   }
-}, {immediate: true});
+}, {immediate: true});*/
 
 
 // Computed property for chart series

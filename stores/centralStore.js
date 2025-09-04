@@ -3,6 +3,7 @@ import { computed,ref } from "vue";
 import { useAuthStore } from '~/stores/auth.js';   // Import the auth store
 import { useUserStore } from '~/stores/user.js';   // Import the user store
 import { useLeavesStore } from '~/stores/leaves.js'; // Import the leaves store
+import { useEntitlementStore } from '~/stores/entitlement.js'; // Import the leaves store
 import { useDepartmentsStore } from "~/stores/departments.js"; // Import the departments store
 import { useNotificationsStore } from "~/stores/notifications.js";
 import { usePermissionsStore } from "~/stores/permissions.js";   // Import the notifications store
@@ -11,6 +12,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const authStore = useAuthStore();
     const userStore = useUserStore();
     const leavesStore = useLeavesStore();
+    const entitlementStore = useEntitlementStore();
     const departmentsStore = useDepartmentsStore();
     const notificationsStore = useNotificationsStore();
     const permissionsStore = usePermissionsStore();
@@ -48,6 +50,7 @@ export const useCentralStore = defineStore('centralStore', () => {
                 await Promise.all([
                     userStore.getAllUsers(),
                     leavesStore.init(userStore.userId),
+                    entitlementStore.init(),
                 ]);
 
                 initialized.value = true
@@ -67,6 +70,7 @@ export const useCentralStore = defineStore('centralStore', () => {
             leavesStore.reset();
             departmentsStore.reset();
             notificationsStore.reset();
+            entitlementStore.reset();
             initialized.value = false;
             await authStore.logout();
         } catch (e) {
@@ -99,6 +103,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const proxiedDepartmentsStore = new Proxy(departmentsStore, dynamicProxyHandler);
     const proxiedNotificationsStore = new Proxy(notificationsStore, dynamicProxyHandler);
     const proxiedPermissionsStore = new Proxy(permissionsStore, dynamicProxyHandler);
+    const proxiedEntitlementStore = new Proxy(entitlementStore, dynamicProxyHandler);
 
     return {
         error,
@@ -112,5 +117,6 @@ export const useCentralStore = defineStore('centralStore', () => {
         departmentsStore: proxiedDepartmentsStore,
         notificationsStore: proxiedNotificationsStore,
         permissionsStore: proxiedPermissionsStore,
+        entitlementStore: proxiedEntitlementStore,
     };
 });

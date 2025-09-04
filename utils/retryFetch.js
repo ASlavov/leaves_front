@@ -44,6 +44,17 @@ export default async function retryFetch(url, options = {}, retries = 3, delay =
                 // Perform necessary actions, e.g., logout or redirect
                 useFetch('/api/auth/logout');
 
+                retries = 0;
+                // Since we've handled the error, exit the function or throw an error
+                //throw new Error('403 Forbidden');
+                return;
+            }
+
+            if (response && response.statusCode === 422) {
+                console.log('Received statusCode 422 in response data - handling error');
+
+                retries = 0;
+
                 // Since we've handled the error, exit the function or throw an error
                 //throw new Error('403 Forbidden');
                 return;

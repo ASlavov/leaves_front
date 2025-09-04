@@ -14,7 +14,7 @@
 
         <div v-if="showNotifications" class="fixed top-[60px] right-0 h-full w-80 bg-white border border-gray-200 shadow-lg dark:bg-neutral-800 dark:border-neutral-600 overflow-y-auto">
             <!-- Tabs for Unread and Read -->
-            <div class="flex justify-around py-2 border-b dark:border-neutral-600">
+            <div :class="`flex justify-around py-2 border-b dark:border-neutral-600 ${(theme === 'light') ? 'text-black' : 'text-white'}`">
                 <button :class="{'font-semibold': activeTab === 'unread'}" @click="setTab('unread')">
                     Unread
                 </button>
@@ -25,7 +25,7 @@
 
             <!-- Notification List -->
             <ul class="divide-y divide-gray-200 dark:divide-neutral-600">
-                <li v-for="notification in filteredNotifications" :key="notification.id" class="p-4 text-sm text-gray-700 dark:text-gray-300">
+                <li @click="changeNotificationStatus(notification.id)" v-for="notification in filteredNotifications" :key="notification.id" class="p-4 text-sm text-gray-700 dark:text-gray-300 opacity-90 hover:opacity-100 cursor-pointer hover:shadow">
                     <div class="notification-title font-semibold">{{ notification.title }}</div>
                     <div class="notification-message mt-1">{{ notification.message }}</div>
                 </li>
@@ -39,6 +39,10 @@ import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore.js';
 
+const theme = computed(() => {
+  const {$colorMode} = useNuxtApp();
+  return $colorMode?.value || 'light';
+});
 const router = useRouter();
 const { notificationsStore } = useCentralStore();
 
@@ -62,6 +66,17 @@ const handleClickOutside = (event) => {
 
 // Filter notifications based on active tab (Unread/Read)
 const filteredNotifications = computed(() => {
+    // Check user has notifications
+    if (notifications.value.message) {
+      return [
+        {
+          id: 0,
+          message: notifications.value.message,
+          title: '',
+        }
+      ]
+    }
+
     if (activeTab.value === 'unread') {
         return notifications.value.filter(notification => notification.is_read === 0);
     } else {
@@ -73,6 +88,10 @@ const filteredNotifications = computed(() => {
 const setTab = (tab) => {
     activeTab.value = tab;
 };
+
+const changeNotificationStatus = async (notificationId) => {
+  await notificationsStore.changeNotificationStatus(notificationId);
+}
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);
