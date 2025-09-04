@@ -117,8 +117,6 @@ export default {
         // Handle form submission
         const handleSubmit = async () => {
             if (selectedLeave.value) {
-                console.log('Selected Leave:', selectedLeave.value);
-                console.log('Comment:', comment.value);
                 try {
                     await leavesStore.cancelLeave(
                         centralStore.userStore.userId, // Pass userId
@@ -127,14 +125,13 @@ export default {
                         comment.value
                     );
 
-                    useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+                    useNuxtApp().$toast.success('Η αίτηση άδειας ακυρώθηκε επιτυχώς!', {
                         position: "bottom-right",
                         autoClose: 5000, // Close automatically after 5 seconds
                     });
 
                 } catch (error) {
                     console.error('Error submitting leave request:', error);
-                    successMessage.value = ''; // Clear the success message on error
                     // Handle the error as needed
                 }
             } else {

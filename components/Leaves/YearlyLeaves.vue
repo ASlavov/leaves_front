@@ -284,7 +284,15 @@ const filteredLeaves = computed(() => {
 
         return requesterNameMatch && groupMatch && yearMatch && requesterMatchesUserNotAdmin;
       })
-      .sort((a, b) => new Date(b.start_date) - new Date(a.start_date)); // Newest first
+      .sort((a, b) => {
+        if(a.status === 'pending' && b.status !== 'pending') {
+          return -1;
+        }
+        if(a.status !== 'pending' && b.status === 'pending') {
+          return 1;
+        }
+        return new Date(b.start_date) - new Date(a.start_date);
+      }); // Newest first
 
   if(props.isSmallComponent) {
     return returnArray.slice(0, props.leavesNumber);

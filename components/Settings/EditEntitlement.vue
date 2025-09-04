@@ -32,7 +32,18 @@
               />
             </div>
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Δικαιούμενες Ημέρες</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white ">
+                Δικαιούμενες Ημέρες
+                <span class="inline-block ml-1 align-middle cursor-pointer relative group">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-gray-600 dark:text-neutral-500 dark:group-hover:text-neutral-400 transition-colors" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                  </svg>
+
+                  <div class="absolute z-10 top-0 left-1/2 -translate-y-full -translate-x-1/2 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-lg opacity-0 border-[1px] border-gray-700 dark:border-gray-500 group-hover:opacity-100 transition-opacity pointer-events-none dark:bg-neutral-800">
+                    Αν ο χρήστης έχει ήδη καταχωρημένες δικαιούμενες ημέρες για αυτό το έτος, οι ημέρες αυτές θα αντικατασταθούν.
+                  </div>
+                </span>
+              </label>
               <input v-model.number="formEntitledDays" type="number" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Αριθμός ημερών">
             </div>
             <div class="max-w-sm">
