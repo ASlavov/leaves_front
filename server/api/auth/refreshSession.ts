@@ -25,18 +25,28 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    const {
+        userId,
+        token
+    } = session;
+
     // Call the token refresh API using the existing token
     try {
         /*const refreshResult = await $fetch(`${config.public.apiBase}${config.public.auth.tokenRefresh}`, {
             method: 'POST',
+            body: {
+                userId: userId,
+            },
             headers: {
-                'Content-Type': 'application/json',
+                /!*'Content-Type': 'application/json',
                 'Authorization': `Bearer ${session.token}`,  // Send the current token
-                "X-CSRF-TOKEN": config.apiSecret,
+                "X-CSRF-TOKEN": config.apiSecret,*!/
+                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },
         });
 
         if (!refreshResult || !refreshResult.token) {
+            console.log(refreshResult);
             throw new Error('Token refresh failed');
         }*/
 
@@ -47,6 +57,7 @@ export default defineEventHandler(async (event) => {
         // Optionally, refresh the session ID cookie if needed
         setCookie(event, 'session_id', newSession, {
             httpOnly: true,
+            secure: true,
             sameSite: 'strict',
         });
 
@@ -56,6 +67,7 @@ export default defineEventHandler(async (event) => {
         };
     } catch (error) {
         console.error('Error refreshing token:', error);
+        console.log(error);
         throw createError({
             statusCode: 401,
             message: 'Token refresh failed',

@@ -6,15 +6,12 @@ export const getAllDepartmentsComposable = () => {
     });
 };
 
-export const newDepartmentComposable = (name, related_departments) => {
+export const newDepartmentComposable = (body) => {
     const config = useRuntimeConfig()
 
     return retryFetch('/api/departments/newDepartment', {
         method: 'POST',
-        body: {
-            name: name,
-            related_departments: related_departments,
-        }
+        body
     });
 };
 export const editDepartmentComposable = (body) => {
@@ -22,9 +19,7 @@ export const editDepartmentComposable = (body) => {
 
     return retryFetch('/api/departments/editDepartment', {
         method: 'POST',
-        body: {
-            ...body,
-        }
+        body,
     });
 };
 

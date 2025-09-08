@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
             // Set a session cookie with the sessionId (this is not the token)
             setCookie(event, 'session_id', sessionId, {
                 httpOnly: true,
+                secure: true,
                 sameSite: 'strict',
             });
             return {  userId: user_id, message: 'Authenticated successfully' };

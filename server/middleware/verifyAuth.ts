@@ -1,6 +1,6 @@
 // server/middleware/verifySession.ts
 import { defineEventHandler, getCookie, createError } from 'h3';
-import { getSession, verifySession } from '../sessionStore';
+import { getSession } from '../sessionStore';
 
 export default defineEventHandler(async (event) => {
 

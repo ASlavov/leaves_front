@@ -111,6 +111,7 @@
 
 <script>
 import vClickOutside from '@/directives/vClickOutside';
+
 export default {
   name: 'CustomMultiSelect',
   props: {
@@ -149,15 +150,21 @@ export default {
       },
     },
     isAllSelected() {
-      return this.selectedOptions.length === this.options.length;
+      // Corrected logic to handle no options
+      return this.options.length > 0 && this.selectedOptions.length === this.options.length;
     },
     hasOptions() {
-      // Check if there are any options to display
       return this.options.length > 0;
     },
     filteredOptions() {
       const lowerInput = this.inputValue.toLowerCase();
       const selectedIds = this.selectedOptions.map(option => option.id);
+
+      // We need a small delay here for the user data to populate
+      if (!this.options || this.options.length === 0) {
+        return [];
+      }
+
       return this.options.filter(
           (option) =>
               !selectedIds.includes(option.id) &&

@@ -49,10 +49,18 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
         return departmentsData.value.find(group => group.id === groupId) || {};
     }
 
-    async function newDepartment(name, related_departments) {
+    async function newDepartment(
+        groupName,
+        head,
+        members
+    ) {
         try {
             // Call the composable with the necessary parameters
-            const result = await newDepartmentComposable(name, related_departments);
+            const result = await newDepartmentComposable({
+                groupName,
+                head,
+                members
+            });
 
             if (result) {
                 // Recall getAll to refresh the store data.

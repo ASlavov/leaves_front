@@ -2,7 +2,7 @@
 import {randomBytes} from 'crypto';
 
 
-const sessionStore = new Map();  // Simple in-memory store (for demonstration)
+const sessionStore = new Map();
 
 // Function to create a session
 export function createSession(userId: string, token: string) {

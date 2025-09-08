@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useUserStore } from '~/stores/user';
-import { checkSessionExistsComposable, authUserComposable, refreshSessionComposable, logoutUserComposable } from '~/composables/authApiComposable.js';
+import {
+    checkSessionExistsComposable,
+    authUserComposable,
+    refreshSessionComposable,
+    logoutUserComposable,
+    updateUserPasswordComposable
+} from '~/composables/authApiComposable.js';
 import {useNuxtApp} from "#app";
 import { useRouter } from "vue-router";
 
@@ -61,6 +67,25 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
+    async function updatePassword(
+        userId,
+        oldPass,
+        newPass,
+    ) {
+        try {
+            const result = await updateUserPasswordComposable({
+                userId,
+                oldPass,
+                newPass,
+            });
+            if (result) {
+                return result;
+            }
+        } catch (err) {
+            setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
+        }
+    }
+
     async function logout() {
         try {
             await logoutUserComposable();
@@ -69,5 +94,5 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
-    return { loading, error, authUser: authUserWrapper, restoreSession, hasSession, logout };
+    return { loading, error, authUser: authUserWrapper, updatePassword, restoreSession, hasSession, logout };
 });

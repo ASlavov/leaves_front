@@ -55,7 +55,8 @@ export default defineNuxtConfig({
       apiBase: 'http://127.0.0.1:8000/api',
       auth: {
         auth: '/getToken',
-        tokenRefresh: '/generateToken'
+        tokenRefresh: '/generateToken',
+        updatePassword: '/user-update-password'
       },
       user: {
         getSingleUser: '/user',

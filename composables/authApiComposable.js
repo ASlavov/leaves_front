@@ -57,3 +57,14 @@ export const logoutUserComposable = async () => {
         throw new Error('Failed to delete session');
     }
 };
+
+export const updateUserPasswordComposable = async ( body ) => {
+    try {
+        return await retryFetch('/api/auth/updatePassword', {
+            method: 'POST',
+            body
+        });
+    } catch (error) {
+        throw new Error('Failed to update password');
+    }
+}

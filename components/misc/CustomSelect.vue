@@ -29,7 +29,7 @@
     <!-- Dropdown -->
     <div
         v-if="isOpen"
-        class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-700"
+        class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-neutral-900 dark:border-neutral-700"
     >
       <!-- Search input -->
       <div class="p-2">
