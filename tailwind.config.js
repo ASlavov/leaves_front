@@ -22,6 +22,15 @@ export default {
         'custom-grey': '#607D8B',
         'custom-green': '#4CAF50',
       },
+      animation: {
+        'loading-bar': 'loading-bar 1s ease-in-out infinite',
+      },
+      keyframes: {
+        'loading-bar': {
+          '0%': { transform: 'scaleX(0)', 'transform-origin': 'left' },
+          '100%': { transform: 'scaleX(1)', 'transform-origin': 'left' },
+        }
+      }
     },
   },
   plugins: [

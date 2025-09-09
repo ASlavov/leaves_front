@@ -88,7 +88,7 @@
               <div class="space-y-3">
                 <textarea v-model="comments"
                           class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
-                          rows="3" placeholder="This is a textarea placeholder"></textarea>
+                          rows="3" placeholder="Σχόλιο"></textarea>
               </div>
             </div>
 
@@ -173,10 +173,7 @@ export default {
       // Function to update end date picker options
       const updateEndDateDatePicker = (minDate, daysToAdd) => {
         const newMinDate = new Date(minDate);
-        newMinDate.setDate(newMinDate.getDate());
-
-        const newMaxDate = new Date(minDate);
-        newMaxDate.setDate(newMaxDate.getDate() + daysToAdd);
+        const newMaxDate = addWorkingDays(minDate, daysToAdd);
 
         // Destroy and re-initialize to apply new min/max dates
         if (endDateInstance) {
@@ -188,6 +185,19 @@ export default {
           minDate: newMinDate,
           maxDate: newMaxDate
         });
+      };
+
+      const addWorkingDays = (startDate, days) => {
+        const date = new Date(startDate);
+        let daysAdded = 0;
+        while (daysAdded < days) {
+          date.setDate(date.getDate() + 1);
+          const dayOfWeek = date.getDay();
+          if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+            daysAdded++;
+          }
+        }
+        return date;
       };
     };
 

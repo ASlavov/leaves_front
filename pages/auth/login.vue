@@ -48,6 +48,14 @@
           <NuxtLink to="../auth/forgot-password" class="text-sm text-blue-700">Ξέχασα τον κωδικό μου</NuxtLink>
         </div>
 
+        <div v-if='loading' class="
+        bg-red-600
+        w-full
+        rounded-full
+        h-2
+        animate-loading-bar">
+        </div>
+
         <button type="submit"
                 class="w-full px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-500 focus:outline-none">
           ΣΥΝΔΕΣΗ
@@ -73,6 +81,7 @@ const email = ref('');
 const password = ref('');
 const rememberMe = ref(false);  // "Remember Me" does nothing
 const router = useRouter();
+const loading = ref(false);
 const authStore = useAuthStore();
 const notificationsStore = useNotificationsStore();
 const centralStore = useCentralStore();
@@ -93,6 +102,7 @@ const login = async (event) => {
   event.preventDefault();  // Prevent default form submission
 
   try {
+    loading.value = true;
     // Call auth store to handle login
     await authStore.authUser(email.value, password.value);
 
@@ -100,6 +110,8 @@ const login = async (event) => {
     await router.push({ path: '/home'});  // Adjust the route based on your app structure
   } catch (error) {
     // Add error message to the toast
+  } finally {
+    loading.value = false;
   }
 };
 onMounted(() => {
@@ -119,3 +131,6 @@ onMounted(() => {
   )
 });
 </script>
+<style scoped>
+
+</style>
