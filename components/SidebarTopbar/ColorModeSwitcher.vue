@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex">
     <div @click="$colorMode.preference = $colorMode.preference === 'dark' ? 'light' : 'dark'"
          class="relative inline-block w-12 h-6 cursor-pointer">
       <!-- Background -->
