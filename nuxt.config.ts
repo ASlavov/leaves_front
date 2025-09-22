@@ -55,7 +55,7 @@ export default defineNuxtConfig({
     apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
     // Keys within public, will be also exposed to the client-side
     public: {
-      apiBase: 'http://127.0.0.1:8000/api',
+      apiBase: 'https://leavesbackend.whyagency.gr/api',
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',
