@@ -259,7 +259,6 @@ const events = computed(() => {
     };
   }).filter(Boolean) || [];
 
-  console.log('Events:', eventsArray);
   return eventsArray;
 });
 
@@ -290,7 +289,7 @@ function initializeCalendar() {
 
   // Update events when they change
   watch(events, (newEvents) => {
-    console.log('Updating events:', newEvents);
+    //console.log('Updating events:', newEvents);
     if (calendarApp.value) {
       eventsServicePlugin.set(newEvents || []);
     }

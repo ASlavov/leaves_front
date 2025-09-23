@@ -1,6 +1,14 @@
 import { defineEventHandler, readBody } from 'h3'; // Use h3 to handle cookies and request bodies
 import { useRuntimeConfig, setCookie } from '#imports'; // Runtime config and setCookie from Nuxt
-import { createSession } from '~/server/sessionStore';
+import { createJWT } from '~/server/utils/auth';
+
+interface authResponse {
+    user_id: string;
+    token: string;
+}
+
+// Define a union type that includes the expected object and a string for errors
+type FetchResult = authResponse | string;
 
 export default defineEventHandler(async (event) => {
     setHeader(event, 'Access-Control-Allow-Origin', '*');
@@ -19,24 +27,33 @@ export default defineEventHandler(async (event) => {
                 'Content-Type': 'application/json',
                 "X-CSRF-TOKEN": config.apiSecret,
             },
-        });
+        }) as FetchResult;
 
-        if (result && result !== "user not auth") {
+        if (typeof result === 'string') {
+            throw new Error(result);
+        } else {
             const {
                 user_id,
                 token
             } = result;  // Get userId and token from API response
 
-            // Store the token in the session store
-            const sessionId = createSession(user_id, token);
+            // Use the new utility to create a JWT
+            const authToken = createJWT(user_id, token);
 
-            // Set a session cookie with the sessionId (this is not the token)
-            setCookie(event, 'session_id', sessionId, {
+            // Set a secure, HTTP-only cookie with the JWT
+            setCookie(event, 'auth_token', authToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'strict',
+                maxAge: 60 * 15,
             });
-            return {  userId: user_id, message: 'Authenticated successfully' };
+            setCookie(event, 'user_authed', 'true', {
+                httpOnly: false,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 15,
+            });
+            return { userId: user_id, message: 'Authenticated successfully' };
         }
 
         throw new Error(`Authentication failed`);

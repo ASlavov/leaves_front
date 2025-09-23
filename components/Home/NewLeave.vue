@@ -262,7 +262,7 @@ export default {
         closeModal(); // Close modal on success
 
       } catch (error) {
-        console.error('Error submitting leave request:', error);
+        //console.error('Error submitting leave request:', error);
         useNuxtApp().$toast.error('Σφάλμα κατά την υποβολή της αίτησης άδειας.', {
           position: "bottom-right",
           autoClose: 5000,

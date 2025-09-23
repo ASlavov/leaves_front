@@ -75,6 +75,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useNotificationsStore } from '@/stores/notifications';
 import { useCentralStore } from "@/stores/centralStore.js";
+import { useNuxtApp } from '#imports';
 
 // Initialize the toast function
 const email = ref('');
@@ -103,13 +104,24 @@ const login = async (event) => {
 
   try {
     loading.value = true;
-    // Call auth store to handle login
-    await authStore.authUser(email.value, password.value);
+    // Call auth store to handle login and await the result
+    const isAuthenticated = await authStore.authUser(email.value, password.value);
 
-    // Redirect user after successful login
-    await router.push({ path: '/home'});  // Adjust the route based on your app structure
+    // After a successful login, perform the redirection.
+    if (isAuthenticated) {
+      await router.push({ path: '/home'});
+    } else {
+      useNuxtApp().$toast.error('Login failed. Please check your credentials.', {
+        position: "bottom-right",
+        autoClose: 5000,
+      });
+    }
   } catch (error) {
     // Add error message to the toast
+    useNuxtApp().$toast.error(error.message || 'Login failed', {
+      position: "bottom-right",
+      autoClose: 5000,
+    });
   } finally {
     loading.value = false;
   }

@@ -102,17 +102,17 @@ const allUsers = computed(() => userStore.allUsers.map(user => {
 watch(
     () => props.groupId,
     async (newGroupId) => {
-      console.log(newGroupId);
+      //console.log(newGroupId);
       if (newGroupId) {
         loadingGroup.value = true;
         try {
           const dptData = await departmentsStore.loadGroupById(newGroupId);
-          console.log(dptData);
+          //console.log(dptData);
           if (dptData) {
             initializeFormFields(dptData);
           }
         } catch (error) {
-          console.error('Error fetching department data:', error);
+          //console.error('Error fetching department data:', error);
           useNuxtApp().$toast.error('Error fetching department data.', {
             position: "bottom-right",
             autoClose: 5000,
@@ -131,7 +131,7 @@ function initializeFormFields(dptData) {
       .filter(user => dptData.users.some(memberId => memberId === user.id))
       .map(user => user.id);*/
   formUsers.value = dptData.users.map(user => user.id);
-console.log(formUsers.value);
+//console.log(formUsers.value);
   // Set the correct head using the head ID from dptData
   formSelectedDepartmentHead.value = dptData.head || null;
 }
@@ -175,7 +175,7 @@ const submitForm = async () => {
       autoClose: 5000,
     });
   } catch (error) {
-    console.error('Submission error:', error);
+    //console.error('Submission error:', error);
     useNuxtApp().$toast.error('Δεν μπορέσαμε να αποθηκεύσουμε το γκρουπ!', {
       position: "bottom-right",
       autoClose: 5000,

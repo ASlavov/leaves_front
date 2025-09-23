@@ -39,7 +39,7 @@ export const useCentralStore = defineStore('centralStore', () => {
         // we're assuming user is authed
         try {
             if(userStore.userId) {
-                console.log('initializing');
+                //console.log('initializing');
                 // Run all store initialization in parallel
                 await Promise.all([
                     userStore.init(),
@@ -57,7 +57,7 @@ export const useCentralStore = defineStore('centralStore', () => {
             }
         }
         catch (err) {
-            console.log('initialization error');
+            //console.log('initialization error');
             // Handle errors and set the error state
             setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
             initialized.value = false;

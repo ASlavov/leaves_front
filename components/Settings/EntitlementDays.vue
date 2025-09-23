@@ -356,7 +356,7 @@ const toggleUserEntitlements = async (userId) => {
   } else {
     toggledUsers.value[userId] = true;
   }
-  console.log(toggledUsers);
+  //console.log(toggledUsers);
 };
 
 // Watch for changes in toggled users to trigger data fetch

@@ -131,11 +131,15 @@ export default {
                     });
 
                 } catch (error) {
-                    console.error('Error submitting leave request:', error);
+                    //console.error('Error submitting leave request:', error);
                     // Handle the error as needed
+                  useNuxtApp().$toast.error('Δεν μπορέσαμε να ακυρώσουμε την άδεια!', {
+                    position: "bottom-right",
+                    autoClose: 5000, // Close automatically after 5 seconds
+                  });
                 }
             } else {
-                console.log('No leave selected');
+                //console.log('No leave selected');
             }
         };
 

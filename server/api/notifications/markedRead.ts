@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
         );
 
         // Check the response status
-        if (res.status === 403) {
+        /*if (res.status === 403) {
             const sessionId = getCookie(event, 'session_id') || '';
             deleteSession(sessionId);
             deleteCookie(event, 'session_id');
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
                 statusCode: 403,
                 statusMessage: 'Session invalid or expired',
             };
-        }
+        }*/
 
         // Get the Content-Type header
         const contentType = res.headers.get('content-type') || '';

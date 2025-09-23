@@ -1,16 +1,18 @@
+// middleware/auth.js
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const publicPaths = ['/auth/login', '/auth/forgot-password'];
     const isPublicPath = publicPaths.includes(to.path);
+    const fromPublicPath = publicPaths.includes(from.path);
 
-    const { data } = await useFetch('/api/auth/checkSessionExists');
+    // Use a reactive cookie reference
+    const userAuthed = useCookie('user_authed');
+    const isAuthenticated = !!userAuthed.value; // Check for the existence of the cookie
 
-    const isAuthenticated = data.value?.authenticated;
-
-    if (isAuthenticated && isPublicPath) {
+    if (isAuthenticated && isPublicPath && !fromPublicPath) {
         return navigateTo('/home');
     }
 
-    if (!isAuthenticated && !isPublicPath) {
+    if (!isAuthenticated && !isPublicPath && !fromPublicPath) {
         return navigateTo('/auth/login');
     }
 });

@@ -364,7 +364,7 @@ const toggleLeaves = async (userId) => {
   // Make API Call
   try {
     const result = await leavesStore.getAllByUserId(userId);
-    console.log(result);
+    //console.log(result);
     loadedUsersLeaves.value[userId] = result;
   } catch(e) {
     useNuxtApp().$toast.error('Δεν μπορέσαμε να φέρουμε τις άδειες του χρήστη!', {

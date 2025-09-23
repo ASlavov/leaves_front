@@ -227,7 +227,7 @@ async function fetchUserData() {
       // Handle case when userId is not provided
     }
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    //console.error('Error fetching user data:', error);
     $toast.error('Error fetching user data.', {
       position: "bottom-right",
       autoClose: 5000,

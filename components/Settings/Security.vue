@@ -153,7 +153,7 @@ const submitForm = async () => {
     });
   } catch (error) {
     // Handle errors, e.g., show an error message
-    console.error('Error updating password:', error);
+    //console.error('Error updating password:', error);
     useNuxtApp().$toast.error('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds

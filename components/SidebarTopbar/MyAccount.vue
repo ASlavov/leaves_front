@@ -96,7 +96,7 @@ const logout = async () => {
     // Redirect to login page
     await router.push('/auth/login');
   } catch (error) {
-    console.error('Logout error:', error);
+    //console.error('Logout error:', error);
   }
 };
 

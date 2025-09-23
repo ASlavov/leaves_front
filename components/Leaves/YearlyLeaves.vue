@@ -248,7 +248,11 @@ onMounted(async () => {
       });
     });
   } catch (error) {
-    console.error('Error fetching leaves:', error);
+    //console.error('Error fetching leaves:', error);
+    useNuxtApp().$toast.error('Δεν μπορέσαμε να απορρίψουμε την άδεια!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } finally {
     loading.value = false; // Set loading to false when done
   }
@@ -369,7 +373,11 @@ const refreshLeaves = async () => {
       });
     });
   } catch (error) {
-    console.error('Error refreshing leaves:', error);
+    useNuxtApp().$toast.error('Δεν μπορέσαμε να φέρουμε τις άδειες!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+    //console.error('Error refreshing leaves:', error);
   } finally {
     loading.value = false;
   }

@@ -1,16 +1,3 @@
-// Check if session exists
-export const checkSessionExistsComposable = async () => {
-    try {
-        const result = await retryFetch('/api/auth/checkSessionExists', {
-            method: 'GET',
-        });
-
-        return result && result.authenticated;
-    } catch (error) {
-        throw new Error('User has no session');
-    }
-};
-
 // Authenticate user
 export const authUserComposable = async (params) => {
     try {

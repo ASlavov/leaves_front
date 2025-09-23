@@ -9,8 +9,10 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
+import { useCookie, useNuxtApp } from '#imports';
+
 useHead({
   htmlAttrs: {
     lang: 'el',
@@ -23,18 +25,13 @@ const userStore = centralStore.userStore;
 const leavesStore = centralStore.leavesStore;
 const authStore = centralStore.authStore;
 
+const userAuthed = useCookie('user_authed');
+
 const runInitCode = async () => {
   try {
-
-    const hasSession = await authStore.hasSession();
-
-    // Restore session first
-    if (hasSession) {
-      await authStore.restoreSession();
-      console.log('initializing');
+    if (userAuthed.value) {
       if (!centralStore.initialized) {
         await centralStore.init();
-        console.log('initialized')
       }
     }
   } catch (error) {
@@ -54,7 +51,9 @@ router.afterEach(async (to, from) => {
 });
 
 onMounted(async () => {
-  await runInitCode();
+  // Watch for changes to the authToken cookie.
+  // This handles the case where the cookie is set client-side after login.
+
   watch(
       () => centralStore.error,  // Watch the error state in the store
       (newError) => {
@@ -80,8 +79,6 @@ onMounted(async () => {
       }
   );
 });
-
-// Watch for error changes in the central store and trigger a toast
 </script>
 <style>
 body {

@@ -1,15 +1,13 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
-import { useUserStore } from '~/stores/user';
+import {defineStore} from 'pinia';
+import {computed, ref} from 'vue';
+import {useUserStore} from '~/stores/user';
 import {
-    checkSessionExistsComposable,
     authUserComposable,
-    refreshSessionComposable,
     logoutUserComposable,
+    refreshSessionComposable,
     updateUserPasswordComposable
 } from '~/composables/authApiComposable.js';
-import {useNuxtApp} from "#app";
-import { useRouter } from "vue-router";
+import {useRouter} from "vue-router";
 
 export const useAuthStore = defineStore('authStore', () => {
     const loading = ref(false);
@@ -29,8 +27,9 @@ export const useAuthStore = defineStore('authStore', () => {
         loading.value = true;
 
         try {
-            const result = await checkSessionExistsComposable();
-            return result;
+            const authToken = useCookie('auth_token');
+            // Check for the existence of the cookie
+            return !!authToken.value;
         } catch (err) {
             setError('No session found for user');
         } finally {
@@ -40,14 +39,17 @@ export const useAuthStore = defineStore('authStore', () => {
 
     async function authUserWrapper(userName, userPass) {
         loading.value = true;
-        
+
         try {
             const result = await authUserComposable({ email: userName, password: userPass });
             if (result && result.userId) {
                 userStore.setUserId(result.userId);
+                return true; // Return true on success
             }
+            return false; // Return false on failure
         } catch (err) {
             setError('Μη έγκυρος e-mail ή κωδικός');
+            throw new Error('Authentication failed');
         } finally {
             loading.value = false;
         }

@@ -188,7 +188,7 @@ const submitForm = () => {
         alert('An error occurred: ' + error.message);
       });*/
 
-  console.log(payload);
+  //console.log(payload);
 };
 
 // Add these methods inside your <script setup>
