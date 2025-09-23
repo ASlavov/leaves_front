@@ -18,6 +18,7 @@ useHead({
     lang: 'el',
   },
 })
+
 const router = useRouter();
 
 const centralStore = useCentralStore();
@@ -29,15 +30,18 @@ const userAuthed = useCookie('user_authed');
 
 const runInitCode = async () => {
   try {
-    if (userAuthed.value) {
+    console.log('runInitCode: userAuthed =', userAuthed.value); // Debug: Confirm cookie read
+    if (userAuthed.value === 'true') {  // Explicit string check for safety
       if (!centralStore.initialized) {
         await centralStore.init();
+        console.log('initialized');
       }
     }
   } catch (error) {
+    console.error('runInitCode error:', error); // Debug
     useNuxtApp().$toast.error(error, {
       position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
+      autoClose: 5000,
     });
   }
 };
@@ -51,8 +55,23 @@ router.afterEach(async (to, from) => {
 });
 
 onMounted(async () => {
-  // Watch for changes to the authToken cookie.
-  // This handles the case where the cookie is set client-side after login.
+  // Initial run on mount/refresh (key fix!)
+  await runInitCode();
+
+  // Watch for changes to userAuthed (e.g., middleware updates it during API calls)
+  watch(
+      () => userAuthed.value,
+      async (newValue, oldValue) => {
+        console.log('userAuthed changed:', oldValue, '->', newValue); // Debug
+        if (newValue === 'true' && oldValue !== 'true') {
+          await runInitCode();
+        } else if (newValue !== 'true' && oldValue === 'true') {
+          // Optional: Handle logout/unauth (e.g., redirect)
+          router.push('/auth/login');
+        }
+      },
+      { immediate: true } // Check initial value immediately
+  );
 
   watch(
       () => centralStore.error,  // Watch the error state in the store
@@ -61,7 +80,7 @@ onMounted(async () => {
           // Show the toast when the error changes
           useNuxtApp().$toast.error(newError, {
             position: "bottom-right",
-            autoClose: 5000, // Close automatically after 5 seconds
+            autoClose: 5000,
           });
         }
       }
