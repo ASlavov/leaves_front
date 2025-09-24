@@ -38,9 +38,11 @@ export const useCentralStore = defineStore('centralStore', () => {
     async function init(){
         // we're assuming user is authed
         try {
+            console.log('im here');
             if(userStore.userId) {
                 //console.log('initializing');
                 // Run all store initialization in parallel
+                console.log("userId:", userStore.userId);
                 await Promise.all([
                     userStore.init(),
                     departmentsStore.init(),
@@ -54,6 +56,8 @@ export const useCentralStore = defineStore('centralStore', () => {
                 ]);
 
                 initialized.value = true
+            } else {
+                throw new Error('No user id');
             }
         }
         catch (err) {

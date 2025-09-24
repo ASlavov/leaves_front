@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
             userId: payload.userId,
             message: 'Session is valid.',
         };
-    } catch (error) {
+    } catch (error:any) {
         // If the token is invalid or expired, a verification error will be thrown.
         console.error('Error refreshing session:', error);
         throw createError({

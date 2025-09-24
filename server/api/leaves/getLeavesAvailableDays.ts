@@ -1,15 +1,11 @@
 import {defineEventHandler, parseCookies, readBody} from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
-import { getSession } from '~/server/sessionStore';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
 
     const body = await readBody(event); // Get login details (email, password) from the request body
     const { userId } = body;
-    // Retrieve the token from the 'auth_token' cookie set during login
-    /*const sessionId = getCookie(event, 'session_id') || '';
-    const { token } = getSession(sessionId);*/
     const {requestingUserId, token } = event.context;
 
     //console.log('userId:', userId);
@@ -30,7 +26,7 @@ export default defineEventHandler(async (event) => {
         });
 
         return response; // Return the response from the external API
-    } catch (error) {
+    } catch (error:any) {
         // Handle errors from the external API
         console.error('Error fetching leaves:', error);
         throw createError({

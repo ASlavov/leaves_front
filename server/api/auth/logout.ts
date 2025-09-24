@@ -1,5 +1,4 @@
 import { defineEventHandler, getCookie, deleteCookie } from 'h3';
-import {deleteSession, getSession} from "~/server/sessionStore";
 
 export default defineEventHandler(async (event) => {
     const userAuthed = getCookie(event, 'auth_token');  // Assuming the token is stored in cookies

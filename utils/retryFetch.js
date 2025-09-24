@@ -60,6 +60,16 @@ export default async function retryFetch(url, options = {}, retries = 3, delay =
                 return;
             }
 
+            if (response && response.statusCode === 500) {
+                console.log('Received statusCode 500 in response data - handling error');
+
+                retries = 0;
+
+                // Since we've handled the error, exit the function or throw an error
+                //throw new Error('403 Forbidden');
+                return;
+            }
+
             // Return the response data if no error
             return response;
         } catch (error) {
@@ -67,6 +77,17 @@ export default async function retryFetch(url, options = {}, retries = 3, delay =
             if (error.message === '403 Forbidden') {
                 return error;
             }
+
+            if (error.statusCode === 422) {
+                console.log('Received statusCode 422 in response data - handling error');
+
+                retries = 0;
+
+                // Since we've handled the error, exit the function or throw an error
+                //throw new Error('403 Forbidden');
+                return error;
+            }
+
             // If it's the last attempt, rethrow the error
             if (i === retries - 1) {
                 throw error;

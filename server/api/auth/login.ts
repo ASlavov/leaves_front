@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
         }
 
         throw new Error(`Authentication failed`);
-    } catch (error) {
+    } catch (error:any) {
         // Handle authentication failure
         console.error('Authentication error:', error);
         throw createError({

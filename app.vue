@@ -30,8 +30,9 @@ const userAuthed = useCookie('user_authed');
 
 const runInitCode = async () => {
   try {
-    console.log('runInitCode: userAuthed =', userAuthed.value); // Debug: Confirm cookie read
-    if (userAuthed.value === 'true') {  // Explicit string check for safety
+    console.log('runInitCode: userAuthed =', userAuthed.value ); // Debug: Confirm cookie read
+    if (userAuthed.value === true) {  // Explicit string check for safety
+      await authStore.me();
       if (!centralStore.initialized) {
         await centralStore.init();
         console.log('initialized');

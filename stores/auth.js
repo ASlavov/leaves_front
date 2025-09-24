@@ -4,6 +4,7 @@ import {useUserStore} from '~/stores/user';
 import {
     authUserComposable,
     logoutUserComposable,
+    meComposable,
     refreshSessionComposable,
     updateUserPasswordComposable
 } from '~/composables/authApiComposable.js';
@@ -96,5 +97,16 @@ export const useAuthStore = defineStore('authStore', () => {
         }
     }
 
-    return { loading, error, authUser: authUserWrapper, updatePassword, restoreSession, hasSession, logout };
+    async function me() {
+        try {
+            const response = await meComposable();
+            if(response && response.userId) {
+                userStore.setUserId(response.userId);
+            }
+        } catch (err) {
+            setError('Δεν μπορέσαμε να φέρουμε τα δεδομένα σας');
+        }
+    }
+
+    return { loading, error, authUser: authUserWrapper, me, updatePassword, restoreSession, hasSession, logout };
 });

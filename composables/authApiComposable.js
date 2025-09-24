@@ -55,3 +55,13 @@ export const updateUserPasswordComposable = async ( body ) => {
         throw new Error('Failed to update password');
     }
 }
+
+export const meComposable = async () => {
+    try {
+        return await retryFetch('/api/me', {
+            method: 'POST',
+        });
+    } catch (error) {
+        throw new Error('Failed to get self data');
+    }
+}

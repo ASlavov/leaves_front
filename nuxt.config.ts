@@ -52,9 +52,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // The private keys which are only available within server-side
-    apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
+    apiSecret: process.env.apiSecret,
     // JWT Secret Key
-    jwtSecret: '7aabecc0d18e944fc0337116275cbeb6e1b3bb6426c805da4235bd873350f5c8',
+    jwtSecret: process.env.jwtSecret,
     // Keys within public, will be also exposed to the client-side
     public: {
       apiBase: 'https://leavesbackend.whyagency.gr/api',

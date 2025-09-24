@@ -109,7 +109,8 @@ const login = async (event) => {
 
     // After a successful login, perform the redirection.
     if (isAuthenticated) {
-      await router.push({ path: '/home'});
+      centralStore.initialized = false;  // Triggers re-init on nav
+      await router.push({ path: '/home' });
     } else {
       useNuxtApp().$toast.error('Login failed. Please check your credentials.', {
         position: "bottom-right",

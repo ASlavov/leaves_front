@@ -518,7 +518,7 @@ const filteredUsers = computed(() => {
 });
 
 
-const newUser = () => { // TODO: Check wtf we need to do for new user
+const newUser = () => {
   selectedUserId.value = null;
   modalType.value = 'edit';
   showModal.value = true;

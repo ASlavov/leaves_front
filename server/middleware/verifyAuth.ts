@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     }
 
 
+
     // Read the auth_token from the cookie
     const authToken = getCookie(event, 'auth_token');
 
@@ -54,7 +55,16 @@ export default defineEventHandler(async (event) => {
             maxAge: 60 * 15,
         });
 
-    } catch (error) {
+        if (!url.startsWith('/api/notifications/get')) {
+            setCookie(event, 'auth_token', authToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 15,
+            });
+        }
+
+    } catch (error:any) {
         console.error('JWT verification failed:', error);
         // Clear the invalid cookie to prevent repeated failures
         setCookie(event, 'auth_token', '', { expires: new Date(0) });

@@ -128,7 +128,6 @@ const userLeaves = computed(() => leavesStore.leavesData.allUsers);
 const nameOptions = computed(() =>
     userStore.allUsers.map(user => ({
       id: user.name, // Workaround to use the name as value. CustomSelect doesnt actually use "id" as id.
-      // TODO: Add non-req prop to CustomSelect so it can have a variable object key as value
       name: user.name,
     }))
 );

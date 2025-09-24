@@ -1,6 +1,5 @@
 import { defineEventHandler, readBody} from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
-import { getSession } from '~/server/sessionStore';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -41,7 +40,7 @@ export default defineEventHandler(async (event) => {
         });
 
         return response; // Return the response from the external API
-    } catch (error) {
+    } catch (error:any) {
         // Handle errors from the external API
         console.error('Error posting department:', error);
         throw createError({
