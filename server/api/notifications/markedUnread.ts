@@ -1,7 +1,5 @@
 import { defineEventHandler, getCookie, deleteCookie, readBody, createError } from 'h3';
 import { useRuntimeConfig } from '#imports';
-import { deleteSession } from '~/server/sessionStore';
-/*import error from "nuxt/dist/core/runtime/nitro/error";*/
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -20,17 +18,6 @@ export default defineEventHandler(async (event) => {
                 },
             }
         );
-
-        // Check the response status
-        if (res.status === 403) {
-            const sessionId = getCookie(event, 'session_id') || '';
-            deleteSession(sessionId);
-            deleteCookie(event, 'session_id');
-            return {
-                statusCode: 403,
-                statusMessage: 'Session invalid or expired',
-            };
-        }
 
         // Get the Content-Type header
         const contentType = res.headers.get('content-type') || '';
@@ -54,7 +41,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'Something went wrong',
             };
         }
-    } catch (error) {
+    } catch (error:any) {
         // Handle errors from the external API
         console.error('Error fetching notifications:', error);
 

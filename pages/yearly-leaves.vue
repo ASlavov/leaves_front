@@ -36,16 +36,6 @@ const leavesData = computed(() => leavesStore.leavesData);
   }
 });*/
 </script>
-<script>
-import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
-import YearlyLeaves from '~/components/Leaves/YearlyLeaves.vue'
-export default {
-  components: {
-    Sidebar,
-    YearlyLeaves
-  }
-}
-</script>
 
 <style>
 .min-h-dvh-64 {

@@ -23,12 +23,14 @@ export default {
         'custom-green': '#4CAF50',
       },
       animation: {
-        'loading-bar': 'loading-bar 1s ease-in-out infinite',
+        'loading-bar': 'loading-bar 2s ease-in-out infinite',
       },
       keyframes: {
         'loading-bar': {
           '0%': { transform: 'scaleX(0)', 'transform-origin': 'left' },
-          '100%': { transform: 'scaleX(1)', 'transform-origin': 'left' },
+          '50%': { transform: 'scaleX(1)', 'transform-origin': 'left' },
+          '51%': { transform: 'scaleX(1)', 'transform-origin': 'right' },
+          '100%': { transform: 'scaleX(0)', 'transform-origin': 'right' },
         }
       }
     },

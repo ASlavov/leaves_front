@@ -44,18 +44,6 @@ const leavesData = computed(() => leavesStore.leavesData);
   }
 });*/
 </script>
-<script>
-import Sidebar from '~/components/SidebarTopbar/Sidebar.vue'
-import LeavesMetric from '~/components/Home/LeavesMetric.vue'
-import Info from '~/components/Home/Info.vue'
-export default {
-    components: {
-        Sidebar,
-        LeavesMetric,
-        Info
-    }
-}
-</script>
 
 <style>
 .min-h-dvh-64 {

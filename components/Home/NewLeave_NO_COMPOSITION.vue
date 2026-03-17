@@ -4,7 +4,7 @@
       class="bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-700 focus:outline-none"
       @click="openModal"
   >
-    Νέο αίτημα άδειας
+    ÎÎ­Î¿ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
   </button>
 
   <!-- Modal -->
@@ -18,7 +18,7 @@
       <!-- Modal Header -->
       <div class="flex justify-between items-center py-3 px-4 border-b dark:border-neutral-700">
         <h3 class="font-bold text-gray-800 dark:text-white text-lg">
-          Νέο αίτημα άδειας
+          ÎÎ­Î¿ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
         </h3>
         <button
             type="button"
@@ -43,7 +43,7 @@
             v-if="leaveType"
             class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg"
         >
-          <span class="leave-counter-text">Διαθέσιμες ημέρες </span>
+          <span class="leave-counter-text">Î”Î¹Î±Î¸Î­ÏƒÎ¹Î¼ÎµÏ‚ Î·Î¼Î­ÏÎµÏ‚ </span>
           <div class="leave-counter-count text-red-600 font-bold text-md text-lg">
             {{ selectedLeave?.remaining_days ?? '0' }}
           </div>
@@ -55,7 +55,7 @@
               <label
                   for="input1"
                   class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-              >Τύπος άδειας</label
+              >Î¤ÏÏ€Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚</label
               >
               <div class="space-y-3">
                 <select
@@ -66,7 +66,7 @@
                       class="dark:bg-neutral-800 dark:text-gray-100"
                       value=""
                       selected
-                  >Επιλέξτε άδεια</option
+                  >Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î¬Î´ÎµÎ¹Î±</option
                   >
                   <!-- Loop through mappedLeavesData to populate the options -->
                   <option
@@ -87,28 +87,28 @@
                 <label
                     for="input2"
                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-                >Ημ/νια από</label
+                >Î—Î¼/Î½Î¹Î± Î±Ï€ÏŒ</label
                 >
                 <input
                     type="text"
                     v-model="startDate"
                     ref="datePickerStart"
                     class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                    placeholder="Επιλέξτε ημ/νια"
+                    placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
                 />
               </div>
               <div>
                 <label
                     for="input3"
                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-                >Ημ/νια μέχρι</label
+                >Î—Î¼/Î½Î¹Î± Î¼Î­Ï‡ÏÎ¹</label
                 >
                 <input
                     type="text"
                     v-model="endDate"
                     ref="datePickerEnd"
                     class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                    placeholder="Επιλέξτε ημ/νια"
+                    placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
                 />
               </div>
             </div>
@@ -118,7 +118,7 @@
               <label
                   for="textarea"
                   class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-              >Σχόλια (προαιρετικό)</label
+              >Î£Ï‡ÏŒÎ»Î¹Î± (Ï€ÏÎ¿Î±Î¹ÏÎµÏ„Î¹ÎºÏŒ)</label
               >
               <div class="space-y-3">
                 <textarea
@@ -136,7 +136,7 @@
                   type="submit"
                   class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-red-600 bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none"
               >
-                Αποστολή αιτήματος
+                Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î¹Ï„Î®Î¼Î±Ï„Î¿Ï‚
               </button>
             </div>
           </form>
@@ -151,7 +151,7 @@ import { ref, computed, watchEffect, onMounted } from 'vue';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
@@ -219,7 +219,7 @@ const submitForm = async () => {
         leaveRequest.reason
     );
 
-    useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Ï…Ï€Î¿Î²Î»Î®Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000,
     });

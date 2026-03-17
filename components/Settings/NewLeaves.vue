@@ -1,19 +1,19 @@
 <template>
   <div class="p-4">
-    <h2 class="text-xl font-bold mb-4">Άναθεση αδειών σε χρήστες</h2>
+    <h2 class="text-xl font-bold mb-4">Î†Î½Î±Î¸ÎµÏƒÎ· Î±Î´ÎµÎ¹ÏŽÎ½ ÏƒÎµ Ï‡ÏÎ®ÏƒÏ„ÎµÏ‚</h2>
     <form @submit.prevent="submitForm">
       <!-- Leave Type Select -->
       <CustomSelect
           :options="leaveTypes"
           v-model="formData.leaveTypeId"
-          label="Τύπος Άδειας"
-          placeholder="Επιλέξτε τύπο άδειας"
+          label="Î¤ÏÏ€Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚"
+          placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Ï„ÏÏ€Î¿ Î¬Î´ÎµÎ¹Î±Ï‚"
           selectId="leave-type-select"
       />
 
       <!-- Entitled Days Input -->
       <div class="mt-4">
-        <label for="entitledDays" class="block text-sm font-bold mb-2 text-black dark:text-white">Ήμερες που δικαιούται</label>
+        <label for="entitledDays" class="block text-sm font-bold mb-2 text-black dark:text-white">Î‰Î¼ÎµÏÎµÏ‚ Ï€Î¿Ï… Î´Î¹ÎºÎ±Î¹Î¿ÏÏ„Î±Î¹</label>
         <input
             id="entitledDays"
             type="number"
@@ -26,9 +26,9 @@
 
       <!-- Selection Type Switch -->
       <div class="mt-4 grid grid-cols-2">
-        <span class="block text-sm font-bold mb-2 text-black dark:text-white col-span-2">Ανάθεση σε:</span>
+        <span class="block text-sm font-bold mb-2 text-black dark:text-white col-span-2">Î‘Î½Î¬Î¸ÎµÏƒÎ· ÏƒÎµ:</span>
         <div class="flex items-center ml-4">
-          <span class="mr-2 text-black dark:text-white">Χρήστες</span>
+          <span class="mr-2 text-black dark:text-white">Î§ÏÎ®ÏƒÏ„ÎµÏ‚</span>
           <!-- Toggle Button -->
           <button
               @click="toggleSelectionType"
@@ -45,7 +45,7 @@
                 ]"
             ></span>
           </button>
-          <span class="ml-2 text-black dark:text-white">Γκρουπ</span>
+          <span class="ml-2 text-black dark:text-white">Î“ÎºÏÎ¿Ï…Ï€</span>
         </div>
 
 
@@ -53,14 +53,14 @@
       <div v-if="selectionType === 'users'" class="contents">
         <!-- Add All and Clear All buttons -->
         <div class="flex items-center justify-end space-x-2 mb-2 col-span-1 text-red-500 font-bold">
-          <button @click="selectAllUsers" type="button" class="underline border-r border-r-neutral-500 pr-[10px]">+ Προσθήκη όλων</button>
-          <button @click="clearAllUsers" type="button" class="underline">&times; Αποεπιλογή όλων</button>
+          <button @click="selectAllUsers" type="button" class="underline border-r border-r-neutral-500 pr-[10px]">+ Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· ÏŒÎ»Ï‰Î½</button>
+          <button @click="clearAllUsers" type="button" class="underline">&times; Î‘Ï€Î¿ÎµÏ€Î¹Î»Î¿Î³Î® ÏŒÎ»Ï‰Î½</button>
         </div>
         <div class="col-span-2">
           <CustomMultiSelect
               :options="users"
               v-model="formData.selectedUsers"
-              placeholder="Επιλέξτε Χρήστες"
+              placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î§ÏÎ®ÏƒÏ„ÎµÏ‚"
           />
         </div>
       </div>
@@ -69,14 +69,14 @@
       <div v-if="selectionType === 'departments'" class="contents">
         <!-- Add All and Clear All buttons -->
         <div class="flex items-center justify-end space-x-2 mb-2 col-span-1 text-red-500 font-bold">
-          <button @click="selectAllDepartments" type="button" class="underline border-r border-r-neutral-500 pr-[10px]">+ Προσθήκη όλων</button>
-          <button @click="clearAllDepartments" type="button" class="underline">&times; Αποεπιλογή όλων</button>
+          <button @click="selectAllDepartments" type="button" class="underline border-r border-r-neutral-500 pr-[10px]">+ Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· ÏŒÎ»Ï‰Î½</button>
+          <button @click="clearAllDepartments" type="button" class="underline">&times; Î‘Ï€Î¿ÎµÏ€Î¹Î»Î¿Î³Î® ÏŒÎ»Ï‰Î½</button>
         </div>
         <div class="col-span-2">
           <CustomMultiSelect
               :options="departments"
               v-model="formData.selectedDepartments"
-              placeholder="Επιλέξτε Γκρουπ"
+              placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î“ÎºÏÎ¿Ï…Ï€"
           />
         </div>
       </div>
@@ -88,7 +88,7 @@
             type="submit"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none"
         >
-          Ανάθεση άδειας
+          Î‘Î½Î¬Î¸ÎµÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚
         </button>
       </div>
     </form>
@@ -97,7 +97,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useCentralStore } from '~/stores/centralStore.js';
+import { useCentralStore } from '~/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 
@@ -188,7 +188,7 @@ const submitForm = () => {
         alert('An error occurred: ' + error.message);
       });*/
 
-  console.log(payload);
+  //console.log(payload);
 };
 
 // Add these methods inside your <script setup>

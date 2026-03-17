@@ -94,7 +94,7 @@ import MyAccount from '~/components/SidebarTopbar/MyAccount.vue';
 import SidebarMenu from '~/components/SidebarTopbar/SidebarMenu.vue';
 import UserNotification from '~/components/SidebarTopbar/UserNotification.vue';
 import ColorModeSwitcher from "~/components/SidebarTopbar/ColorModeSwitcher.vue";
-import { useCentralStore } from "~/stores/centralStore.js";
+import { useCentralStore } from "~/stores/centralStore";
 
 const { notificationsStore } = useCentralStore();
 

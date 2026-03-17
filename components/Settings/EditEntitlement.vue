@@ -15,59 +15,59 @@
         <div class="grid grid-cols-12 pt-[10px] max-w-[947px]">
           <div class="grid grid-cols-2 col-span-12 gap-y-[15px] gap-x-[25px]">
             <div v-if="!entitlementId" class="max-w-[97%] col-span-2">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Εργαζόμενοι</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•ÏÎ³Î±Î¶ÏŒÎ¼ÎµÎ½Î¿Î¹</label>
               <CustomMultiSelect
                   v-model="formUserIds"
                   :options="users"
-                  placeholder="Επιλέξτε εργαζόμενο/ους"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ ÎµÏÎ³Î±Î¶ÏŒÎ¼ÎµÎ½Î¿/Î¿Ï…Ï‚"
               />
             </div>
             <div class="max-w-sm">
               <CustomSelect
                   v-model="formLeaveTypeId"
                   :options="leaveTypes"
-                  label="Είδος Άδειας"
-                  placeholder="Επιλέξτε είδος άδειας"
+                  label="Î•Î¯Î´Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ ÎµÎ¯Î´Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚"
                   selectId="leave-type-select"
               />
             </div>
             <div class="max-w-sm">
               <label class="block text-sm font-bold mb-2 text-black dark:text-white ">
-                Δικαιούμενες Ημέρες
+                Î”Î¹ÎºÎ±Î¹Î¿ÏÎ¼ÎµÎ½ÎµÏ‚ Î—Î¼Î­ÏÎµÏ‚
                 <span class="inline-block ml-1 align-middle cursor-pointer relative group">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-gray-600 dark:text-neutral-500 dark:group-hover:text-neutral-400 transition-colors" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                   </svg>
 
                   <div class="absolute z-10 top-0 left-1/2 -translate-y-full -translate-x-1/2 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-lg opacity-0 border-[1px] border-gray-700 dark:border-gray-500 group-hover:opacity-100 transition-opacity pointer-events-none dark:bg-neutral-800">
-                    Αν ο χρήστης έχει ήδη καταχωρημένες δικαιούμενες ημέρες για αυτό το έτος, οι ημέρες αυτές θα αντικατασταθούν.
+                    Î‘Î½ Î¿ Ï‡ÏÎ®ÏƒÏ„Î·Ï‚ Î­Ï‡ÎµÎ¹ Î®Î´Î· ÎºÎ±Ï„Î±Ï‡Ï‰ÏÎ·Î¼Î­Î½ÎµÏ‚ Î´Î¹ÎºÎ±Î¹Î¿ÏÎ¼ÎµÎ½ÎµÏ‚ Î·Î¼Î­ÏÎµÏ‚ Î³Î¹Î± Î±Ï…Ï„ÏŒ Ï„Î¿ Î­Ï„Î¿Ï‚, Î¿Î¹ Î·Î¼Î­ÏÎµÏ‚ Î±Ï…Ï„Î­Ï‚ Î¸Î± Î±Î½Ï„Î¹ÎºÎ±Ï„Î±ÏƒÏ„Î±Î¸Î¿ÏÎ½.
                   </div>
                 </span>
               </label>
-              <input v-model.number="formEntitledDays" type="number" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Αριθμός ημερών">
+              <input v-model.number="formEntitledDays" type="number" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î‘ÏÎ¹Î¸Î¼ÏŒÏ‚ Î·Î¼ÎµÏÏŽÎ½">
             </div>
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Ημερομηνία έναρξης</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î­Î½Î±ÏÎ¾Î·Ï‚</label>
               <input
                   type="text"
                   ref="datePickerStart"
                   v-model="formStartDate"
-                  placeholder="Επιλέξτε ημ/νια"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
                   class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Ημερομηνία λήξης</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î»Î®Î¾Î·Ï‚</label>
               <input
                   type="text"
                   ref="datePickerEnd"
                   v-model="formEndDate"
-                  placeholder="Επιλέξτε ημ/νια"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
                   class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
               <button @click="submitForm"
                       class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                {{ entitlementId ? 'Αποθήκευση Αλλαγών' : 'Προσθήκη Άδειας' }}
+                {{ entitlementId ? 'Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î‘Î»Î»Î±Î³ÏŽÎ½' : 'Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î†Î´ÎµÎ¹Î±Ï‚' }}
               </button>
             </div>
           </div>
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 import flatpickr from 'flatpickr';
@@ -168,14 +168,14 @@ onMounted(async () => {
       formStartDate.value = entitlementToEdit.start_from;
       formEndDate.value = entitlementToEdit.end_to;
     }
-    console.log(entitlementToEdit);
+    //console.log(entitlementToEdit);
   }
   loading.value = false;
 });
 
 const submitForm = async () => {
   if (!formUserIds.value.length || !formLeaveTypeId.value || !formEntitledDays.value || !formStartDate.value || !formEndDate.value) {
-    $toast.error('Παρακαλώ συμπληρώστε όλα τα πεδία!', { position: "bottom-right", autoClose: 5000 });
+    $toast.error('Î Î±ÏÎ±ÎºÎ±Î»ÏŽ ÏƒÏ…Î¼Ï€Î»Î·ÏÏŽÏƒÏ„Îµ ÏŒÎ»Î± Ï„Î± Ï€ÎµÎ´Î¯Î±!', { position: "bottom-right", autoClose: 5000 });
     return;
   }
 
@@ -190,7 +190,7 @@ const submitForm = async () => {
           formStartDate.value,
           formEndDate.value
       );
-      $toast.success('Η άδεια ενημερώθηκε επιτυχώς!', { position: "bottom-right", autoClose: 5000 });
+      $toast.success('Î— Î¬Î´ÎµÎ¹Î± ÎµÎ½Î·Î¼ÎµÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', { position: "bottom-right", autoClose: 5000 });
     } else {
       // Logic for adding one or more new entitlements
       await entitlementStore.addEntitledDays(
@@ -200,10 +200,10 @@ const submitForm = async () => {
           formStartDate.value,
           formEndDate.value
       );
-      $toast.success('Η νέα άδεια/ες προστέθηκε/αν επιτυχώς!', { position: "bottom-right", autoClose: 5000 });
+      $toast.success('Î— Î½Î­Î± Î¬Î´ÎµÎ¹Î±/ÎµÏ‚ Ï€ÏÎ¿ÏƒÏ„Î­Î¸Î·ÎºÎµ/Î±Î½ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', { position: "bottom-right", autoClose: 5000 });
     }
   } catch (error) {
-    $toast.error('Σφάλμα κατά την αποθήκευση της άδειας.', { position: "bottom-right", autoClose: 5000 });
+    $toast.error('Î£Ï†Î¬Î»Î¼Î± ÎºÎ±Ï„Î¬ Ï„Î·Î½ Î±Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Ï„Î·Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚.', { position: "bottom-right", autoClose: 5000 });
   }
 };
 </script>

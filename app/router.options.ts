@@ -1,6 +1,6 @@
 // app/router.options.ts
 export default {
-    scrollBehavior(to, from, savedPosition) {
+    scrollBehavior(to: any, from: any, savedPosition: any) {
         // Disable scrolling for the 'settings' route or any specific route you want
         if (to.path.startsWith('/settings')) {
             return false;

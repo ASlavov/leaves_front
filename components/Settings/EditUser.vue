@@ -49,18 +49,18 @@
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px]">
             <!-- First Name -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Όνομα</label>
-              <input v-model="formFirstName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Όνομα">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">ÎŒÎ½Î¿Î¼Î±</label>
+              <input v-model="formFirstName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="ÎŒÎ½Î¿Î¼Î±">
             </div>
             <!-- Last Name -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Επώνυμο</label>
-              <input v-model="formLastName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Επώνυμο">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•Ï€ÏŽÎ½Ï…Î¼Î¿</label>
+              <input v-model="formLastName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î•Ï€ÏŽÎ½Ï…Î¼Î¿">
             </div>
             <!-- Title -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Τίτλος</label>
-              <input v-model="formTitle" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Τίτλος">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î¤Î¯Ï„Î»Î¿Ï‚</label>
+              <input v-model="formTitle" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î¤Î¯Ï„Î»Î¿Ï‚">
             </div>
             <!-- Email -->
             <div class="max-w-sm">
@@ -69,22 +69,22 @@
             </div>
             <!-- Phone -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Κινητό</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">ÎšÎ¹Î½Î·Ï„ÏŒ</label>
               <input v-model="formPhone"
                      pattern="[0-9]{10}"
-                     type="tel" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Κινητό">
+                     type="tel" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="ÎšÎ¹Î½Î·Ï„ÏŒ">
             </div>
             <!-- Internal Phone -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Εσωτ. τηλέφωνο</label>
-              <input v-model="formInternalPhone" type="number" class="py-3 px-4 block w-full border-gray-200  border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Εσωτ. τηλέφωνο">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•ÏƒÏ‰Ï„. Ï„Î·Î»Î­Ï†Ï‰Î½Î¿</label>
+              <input v-model="formInternalPhone" type="number" class="py-3 px-4 block w-full border-gray-200  border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î•ÏƒÏ‰Ï„. Ï„Î·Î»Î­Ï†Ï‰Î½Î¿">
             </div>
             <div class="max-w-sm">
               <CustomSelect
                   v-model="formSelectedDepartmentId"
                   :options="departments"
-                  label="Γκρουπ"
-                  placeholder="Επιλέξτε Γκρουπ"
+                  label="Î“ÎºÏÎ¿Ï…Ï€"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î“ÎºÏÎ¿Ï…Ï€"
                   selectId="department-select"
               />
             </div>
@@ -94,8 +94,8 @@
               <CustomSelect
                   v-model="formRole"
                   :options="roles"
-                  label="Ρόλος"
-                  placeholder="Επιλέξτε Ρόλο χρήστη"
+                  label="Î¡ÏŒÎ»Î¿Ï‚"
+                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î¡ÏŒÎ»Î¿ Ï‡ÏÎ®ÏƒÏ„Î·"
                   selectId="role-select"
               />
             </div>
@@ -103,7 +103,7 @@
             <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
               <button @click="submitForm"
                       class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Αποθήκευση Αλλαγών
+                Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î‘Î»Î»Î±Î³ÏŽÎ½
               </button>
             </div>
           </div>
@@ -116,7 +116,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 
 const router = useRouter();
@@ -178,7 +178,7 @@ const handleFileChange = (event) => {
     };
     reader.readAsDataURL(file);
   } else {
-    $toast.error('Παρακαλώ επιλέξτε μια εικόνα τύπου JPEG ή PNG.', {
+    $toast.error('Î Î±ÏÎ±ÎºÎ±Î»ÏŽ ÎµÏ€Î¹Î»Î­Î¾Ï„Îµ Î¼Î¹Î± ÎµÎ¹ÎºÏŒÎ½Î± Ï„ÏÏ€Î¿Ï… JPEG Î® PNG.', {
       position: "bottom-right",
       autoClose: 5000,
     });
@@ -227,7 +227,7 @@ async function fetchUserData() {
       // Handle case when userId is not provided
     }
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    //console.error('Error fetching user data:', error);
     $toast.error('Error fetching user data.', {
       position: "bottom-right",
       autoClose: 5000,
@@ -311,12 +311,12 @@ const submitForm = async () => {
         userTitleDescription,
         userImage
     );
-    $toast.success('Το προφίλ του χρήστη ενημερώθηκε επιτυχώς!', {
+    $toast.success('Î¤Î¿ Ï€ÏÎ¿Ï†Î¯Î» Ï„Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î· ÎµÎ½Î·Î¼ÎµÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000,
     });
   } catch (error) {
-    $toast.error('Δεν μπορέσαμε να αποθηκεύσουμε το προφίλ του χρήστη!', {
+    $toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿Î¸Î·ÎºÎµÏÏƒÎ¿Ï…Î¼Îµ Ï„Î¿ Ï€ÏÎ¿Ï†Î¯Î» Ï„Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î·!', {
       position: "bottom-right",
       autoClose: 5000,
     });

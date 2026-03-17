@@ -1,7 +1,7 @@
 <template>
     <a href="#" class="py-3 px-5 inline-flex items-center gap-x-2 text-md dark:text-gray-100" aria-haspopup="dialog" aria-expanded="false"
         aria-controls="hs-scale-animation-modal" data-hs-overlay="#cancel-leaves">
-        Ακύρωση Άδειας
+        Î‘ÎºÏÏÏ‰ÏƒÎ· Î†Î´ÎµÎ¹Î±Ï‚
     </a>
 
     <div id="cancel-leaves"
@@ -24,10 +24,10 @@
                 <div class="flex items-center py-3 px-4">
                     <h3 id="hs-scale-animation-modal-label"
                         class="font-bold text-gray-800 dark:text-white max-w-[300px] mx-auto text-lg">
-                        Ακύρωση άδειας
+                        Î‘ÎºÏÏÏ‰ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚
                     </h3>
                 </div>
-                <div class="mx-auto font-extralight text-gray-500 dark:text-gray-100">Επιλέξετε την άδεια που θέλετε να ακυρώσετε</div>
+                <div class="mx-auto font-extralight text-gray-500 dark:text-gray-100">Î•Ï€Î¹Î»Î­Î¾ÎµÏ„Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î± Ï€Î¿Ï… Î¸Î­Î»ÎµÏ„Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎµÏ„Îµ</div>
                 <div class="p-4 overflow-y-auto">
                     <div class="new-leave-form py-10">
 
@@ -42,25 +42,25 @@
                                             class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                                             :value="leave" v-model="selectedLeave">
                                         <span class="text-xs text-gray-400 mx-auto">{{ leave.start_date }} - {{ leave.end_date }}<br>
-                                            <span class="text-sm text-black font-semibold dark:text-gray-100">{{ calculateDays(leave.start_date, leave.end_date) }} ημέρες</span>
+                                            <span class="text-sm text-black font-semibold dark:text-gray-100">{{ calculateDays(leave.start_date, leave.end_date) }} Î·Î¼Î­ÏÎµÏ‚</span>
                                         </span>
                                         <span class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold ">{{ getLeaveTypeName(leave.leave_type_id) }}</span>
-                                        <span class="text-sm ms-auto text-green-700 font-semibold dark:text-gray-100">{{ leave.status === 'pending' ? 'Αναμονή' : 'Αποδεκτή' }}</span>
+                                        <span class="text-sm ms-auto text-green-700 font-semibold dark:text-gray-100">{{ leave.status === 'pending' ? 'Î‘Î½Î±Î¼Î¿Î½Î®' : 'Î‘Ï€Î¿Î´ÎµÎºÏ„Î®' }}</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="space-y-3 pt-5">
-                                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Σχόλια
-                                    (προαιρετικό)</label>
+                                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î£Ï‡ÏŒÎ»Î¹Î±
+                                    (Ï€ÏÎ¿Î±Î¹ÏÎµÏ„Î¹ÎºÏŒ)</label>
                                 <textarea class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
-                                    rows="3" placeholder="Τα σχόλια σας" v-model="comment"></textarea>
+                                    rows="3" placeholder="Î¤Î± ÏƒÏ‡ÏŒÎ»Î¹Î± ÏƒÎ±Ï‚" v-model="comment"></textarea>
                             </div>
 
                             <div class="py-5">
                                 <button type="submit"
                                     class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                                    Αποστολή αιτήματος
+                                    Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î¹Ï„Î®Î¼Î±Ï„Î¿Ï‚
                                 </button>
                             </div>
 
@@ -75,7 +75,7 @@
 
 <script>
 import { ref, computed } from 'vue';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 export default {
     name: 'CancelLeave',
@@ -125,17 +125,21 @@ export default {
                         comment.value
                     );
 
-                    useNuxtApp().$toast.success('Η αίτηση άδειας ακυρώθηκε επιτυχώς!', {
+                    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
                         position: "bottom-right",
                         autoClose: 5000, // Close automatically after 5 seconds
                     });
 
                 } catch (error) {
-                    console.error('Error submitting leave request:', error);
+                    //console.error('Error submitting leave request:', error);
                     // Handle the error as needed
+                  useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
+                    position: "bottom-right",
+                    autoClose: 5000, // Close automatically after 5 seconds
+                  });
                 }
             } else {
-                console.log('No leave selected');
+                //console.log('No leave selected');
             }
         };
 

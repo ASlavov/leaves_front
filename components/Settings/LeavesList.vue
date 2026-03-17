@@ -23,12 +23,12 @@
             v-if="permissionsStore.can('profile_leave_balance','modify')"
             @click="newLeaves"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-          Προσθήκη νέων αδειών
+          Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î½Î­Ï‰Î½ Î±Î´ÎµÎ¹ÏŽÎ½
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
         <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          Φίλτρα:
+          Î¦Î¯Î»Ï„ÏÎ±:
         </div>
 
         <!-- First Name Filter -->
@@ -38,7 +38,7 @@
                 v-model="filters.firstName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Όνομα"
+                placeholder="ÎŒÎ½Î¿Î¼Î±"
             />
             <button
                 v-if="filters.firstName"
@@ -57,7 +57,7 @@
                 v-model="filters.lastName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Επώνυμο"
+                placeholder="Î•Ï€ÏŽÎ½Ï…Î¼Î¿"
             />
             <button
                 v-if="filters.lastName"
@@ -76,7 +76,7 @@
                 v-model="filters.job_title"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Τίτλος"
+                placeholder="Î¤Î¯Ï„Î»Î¿Ï‚"
             />
             <button
                 v-if="filters.job_title"
@@ -95,7 +95,7 @@
                 v-model="filters.department"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Γκρούπ"
+                placeholder="Î“ÎºÏÎ¿ÏÏ€"
             />
             <button
                 v-if="filters.department"
@@ -118,7 +118,7 @@
               "
               class="text-red-500"
           >
-            &times; Καθαρισμός φίλτρων
+            &times; ÎšÎ±Î¸Î±ÏÎ¹ÏƒÎ¼ÏŒÏ‚ Ï†Î¯Î»Ï„ÏÏ‰Î½
           </button>
         </div>
       </div>
@@ -154,7 +154,7 @@
               {{ user?.department?.name || '' }}
             </div>
             <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
-              <a v-if="permissionsStore.can('group','modify')" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Αδειών</a>
+              <a v-if="permissionsStore.can('group','modify')" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î± Î‘Î´ÎµÎ¹ÏŽÎ½</a>
             </div>
             <div class="col-span-2 lg:col-span-12 grid hidden
 overflow-auto max-h-[50vh]  gap-[10px] pr-[15px] -mr-[5px] [&::-webkit-scrollbar]:w-2
@@ -166,19 +166,19 @@ overflow-auto max-h-[50vh]  gap-[10px] pr-[15px] -mr-[5px] [&::-webkit-scrollbar
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500" :ref="(el) => { leavesUsersRefs[user.id] = el }">
               <div class="grid grid-cols-12 font-bold" v-if="loadedUsersLeaves[user.id]?.length">
                 <div class="col-span-2">
-                  <span class="border-b">Τύπος Άδειας:</span>
+                  <span class="border-b">Î¤ÏÏ€Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚:</span>
                 </div>
                 <div class="col-span-2 ">
-                  <span class="border-b">Κατάσταση:</span>
+                  <span class="border-b">ÎšÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ·:</span>
                 </div>
                 <div class="col-span-2 ">
-                  <span class="border-b">Ημέρες:</span>
+                  <span class="border-b">Î—Î¼Î­ÏÎµÏ‚:</span>
                 </div>
                 <div class="col-span-2 ">
-                  <span class="border-b">Ημερομηνία Έναρξης:</span>
+                  <span class="border-b">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± ÎˆÎ½Î±ÏÎ¾Î·Ï‚:</span>
                 </div>
                 <div class="col-span-2 ">
-                  <span class="border-b">Ημερομηνία Λήξης:</span>
+                  <span class="border-b">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î›Î®Î¾Î·Ï‚:</span>
                 </div>
               </div>
               <div v-if="loadedUsersLeaves[user.id]?.length" v-for="leave in loadedUsersLeaves[user.id]" :key="leave.id" class="grid grid-cols-12">
@@ -223,7 +223,7 @@ overflow-auto max-h-[50vh]  gap-[10px] pr-[15px] -mr-[5px] [&::-webkit-scrollbar
 </template>
 <script setup>
 import { ref, computed, watch } from 'vue';
-import {useCentralStore} from "~/stores/centralStore.js";
+import {useCentralStore} from "~/stores/centralStore";
 import NewLeaves from '@/components/Settings/NewLeaves.vue';
 // Compute the current theme
 const theme = computed(() => {
@@ -364,10 +364,10 @@ const toggleLeaves = async (userId) => {
   // Make API Call
   try {
     const result = await leavesStore.getAllByUserId(userId);
-    console.log(result);
+    //console.log(result);
     loadedUsersLeaves.value[userId] = result;
   } catch(e) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να φέρουμε τις άδειες του χρήστη!', {
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Ï†Î­ÏÎ¿Ï…Î¼Îµ Ï„Î¹Ï‚ Î¬Î´ÎµÎ¹ÎµÏ‚ Ï„Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î·!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });

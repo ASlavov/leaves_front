@@ -9,13 +9,16 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
+import { useCookie, useNuxtApp } from '#imports';
+
 useHead({
   htmlAttrs: {
     lang: 'el',
   },
 })
+
 const router = useRouter();
 
 const centralStore = useCentralStore();
@@ -23,24 +26,23 @@ const userStore = centralStore.userStore;
 const leavesStore = centralStore.leavesStore;
 const authStore = centralStore.authStore;
 
+const userAuthed = useCookie('user_authed');
+
 const runInitCode = async () => {
   try {
-
-    const hasSession = await authStore.hasSession();
-
-    // Restore session first
-    if (hasSession) {
-      await authStore.restoreSession();
-      console.log('initializing');
+    console.log('runInitCode: userAuthed =', userAuthed.value ); // Debug: Confirm cookie read
+    if (userAuthed.value === true) {  // Explicit string check for safety
+      await authStore.me();
       if (!centralStore.initialized) {
         await centralStore.init();
-        console.log('initialized')
+        console.log('initialized');
       }
     }
   } catch (error) {
+    console.error('runInitCode error:', error); // Debug
     useNuxtApp().$toast.error(error, {
       position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
+      autoClose: 5000,
     });
   }
 };
@@ -54,7 +56,24 @@ router.afterEach(async (to, from) => {
 });
 
 onMounted(async () => {
+  // Initial run on mount/refresh (key fix!)
   await runInitCode();
+
+  // Watch for changes to userAuthed (e.g., middleware updates it during API calls)
+  watch(
+      () => userAuthed.value,
+      async (newValue, oldValue) => {
+        console.log('userAuthed changed:', oldValue, '->', newValue); // Debug
+        if (newValue === 'true' && oldValue !== 'true') {
+          await runInitCode();
+        } else if (newValue !== 'true' && oldValue === 'true') {
+          // Optional: Handle logout/unauth (e.g., redirect)
+          router.push('/auth/login');
+        }
+      },
+      { immediate: true } // Check initial value immediately
+  );
+
   watch(
       () => centralStore.error,  // Watch the error state in the store
       (newError) => {
@@ -62,7 +81,7 @@ onMounted(async () => {
           // Show the toast when the error changes
           useNuxtApp().$toast.error(newError, {
             position: "bottom-right",
-            autoClose: 5000, // Close automatically after 5 seconds
+            autoClose: 5000,
           });
         }
       }
@@ -80,8 +99,6 @@ onMounted(async () => {
       }
   );
 });
-
-// Watch for error changes in the central store and trigger a toast
 </script>
 <style>
 body {

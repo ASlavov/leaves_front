@@ -37,7 +37,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 const theme = computed(() => {
   const {$colorMode} = useNuxtApp();

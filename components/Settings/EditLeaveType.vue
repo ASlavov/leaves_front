@@ -24,8 +24,8 @@
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px]">
             <!-- Leave Name -->
             <div class="w-full">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Όνομα Γκρουπ</label>
-              <input v-model="leaveTypeName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Όνομα τύπου άδειας">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">ÎŒÎ½Î¿Î¼Î± Î“ÎºÏÎ¿Ï…Ï€</label>
+              <input v-model="leaveTypeName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="ÎŒÎ½Î¿Î¼Î± Ï„ÏÏ€Î¿Ï… Î¬Î´ÎµÎ¹Î±Ï‚">
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
   </div>
 </template>
 <script setup>
-import { useCentralStore } from "~/stores/centralStore.js";
+import { useCentralStore } from "~/stores/centralStore";
 import {computed, onMounted, watch} from "vue";
 
 const centralStore = useCentralStore();

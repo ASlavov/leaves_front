@@ -1,6 +1,7 @@
 // server/middleware/verifySession.ts
 import { defineEventHandler, getCookie, createError } from 'h3';
-import { getSession } from '../sessionStore';
+import { verifyJWT } from '~/server/utils/auth';
+import {setCookie} from "#imports";
 
 export default defineEventHandler(async (event) => {
 
@@ -15,36 +16,63 @@ export default defineEventHandler(async (event) => {
         return;
     }
 
-    // Read the session ID from the cookie
-    const sessionId = getCookie(event, 'session_id') || '';
 
-    if (!sessionId) {
+
+    // Read the auth_token from the cookie
+    const authToken = getCookie(event, 'auth_token');
+
+    // If no token is present, we cannot verify. The request will proceed but event.context will not have auth data.
+    if (!authToken) {
+        setCookie(event, 'user_authed', 'false', {
+            httpOnly: false,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 0,
+        });
         return {
             statusCode: 403,
             statusMessage: 'Not authenticated',
         };
     }
 
-    // Retrieve the session from the session store
-    const session = getSession(sessionId);
-    if (!session) {
-        return {
+    try {
+        // Verify the JWT and extract the payload
+        const payload = verifyJWT(authToken);
+
+        if (!payload.userId || !payload.token) {
+            setCookie(event, 'user_authed', '', { expires: new Date(0) });
+            throw new Error('Invalid JWT payload');
+        }
+
+        // Attach user info to event.context for use in API handlers
+        event.context.requestingUserId = payload.userId;
+        event.context.token = payload.token;
+
+        setCookie(event, 'user_authed', 'true', {
+            httpOnly: false,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 60 * 15,
+        });
+
+        if (!url.startsWith('/api/notifications/get')) {
+            setCookie(event, 'auth_token', authToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 60 * 15,
+            });
+        }
+
+    } catch (error:any) {
+        console.error('JWT verification failed:', error);
+        // Clear the invalid cookie to prevent repeated failures
+        setCookie(event, 'auth_token', '', { expires: new Date(0) });
+        setCookie(event, 'user_authed', '', { expires: new Date(0) });
+        // Throw an error to block unauthorized access
+        throw createError({
             statusCode: 403,
-            statusMessage: 'Invalid session',
-        };
+            statusMessage: 'Invalid or expired authentication token',
+        });
     }
-
-    const { userId, token } = session;
-
-    if (!token || !userId) {
-        return {
-            statusCode: 403,
-            statusMessage: 'Invalid session',
-        };
-    }
-
-
-    // Attach user info to event.context for use in API handlers
-    event.context.requestingUserId = userId;
-    event.context.token = token;
 });

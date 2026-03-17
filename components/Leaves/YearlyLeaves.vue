@@ -29,10 +29,10 @@
       <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
           class="text-black dark:text-white font-bold flex items-center gap-2">
-        Αιτήματα άδειας <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
+        Î‘Î¹Ï„Î®Î¼Î±Ï„Î± Î¬Î´ÎµÎ¹Î±Ï‚ <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
       </div>
       <div v-else>
-        Άδειες έτους
+        Î†Î´ÎµÎ¹ÎµÏ‚ Î­Ï„Î¿Ï…Ï‚
       </div>
       <!-- Filters Section -->
       <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-4 w-full lg:max-w-3xl items-end lg:justify-self-end lg:self-end">
@@ -40,7 +40,7 @@
         <FilterInput
             v-model="filters.requesterName"
             type="text"
-            placeholder="Όνομα"
+            placeholder="ÎŒÎ½Î¿Î¼Î±"
             class="w-full"
         />
 
@@ -48,7 +48,7 @@
         <FilterInput
             v-model="filters.group"
             type="text"
-            placeholder="Γκρουπ"
+            placeholder="Î“ÎºÏÎ¿Ï…Ï€"
         />
 
         <!-- Year Filter -->
@@ -56,14 +56,14 @@
             v-model="filters.year"
             type="CustomSelect"
             :options="years"
-            placeholder="Έτος"
+            placeholder="ÎˆÏ„Î¿Ï‚"
 
             class="-ml-4 mr-4 lg:mr-0"
         />
       </div>
       <div class="lg:justify-self-end lg:self-end" v-else>
         <NuxtLink to="/yearly-leaves" class="text-[#EA021A] dark:text-[#FF021A] underline block">
-          Όλα τα αιτήματα άδειας
+          ÎŒÎ»Î± Ï„Î± Î±Î¹Ï„Î®Î¼Î±Ï„Î± Î¬Î´ÎµÎ¹Î±Ï‚
         </NuxtLink>
       </div>
       </div>
@@ -71,10 +71,10 @@
       <div class="col-span-2 grid grid-cols-1 gap-4">
         <!-- Table Headers -->
         <!--<div class="grid gap-4 font-bold pb-[25px] grid-cols-4">
-          <div>Ημερομηνίες / Τύπος Άδειας</div>
-          <div>Όνομα</div>
-          <div>Κατάσταση Άδειας</div>
-          <div>Ενέργειες</div>
+          <div>Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯ÎµÏ‚ / Î¤ÏÏ€Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚</div>
+          <div>ÎŒÎ½Î¿Î¼Î±</div>
+          <div>ÎšÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· Î†Î´ÎµÎ¹Î±Ï‚</div>
+          <div>Î•Î½Î­ÏÎ³ÎµÎ¹ÎµÏ‚</div>
 
         </div>-->
         <!-- Leaves Data -->
@@ -108,7 +108,7 @@
           <div class="lg:col-span-3 lg:mr-4" v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
             <input type="text"
                    class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
-                   placeholder="Συμπληρώστε εαν έχετε κάποιο σχόλιο"
+                   placeholder="Î£Ï…Î¼Ï€Î»Î·ÏÏŽÏƒÏ„Îµ ÎµÎ±Î½ Î­Ï‡ÎµÏ„Îµ ÎºÎ¬Ï€Î¿Î¹Î¿ ÏƒÏ‡ÏŒÎ»Î¹Î¿"
                    v-if="leave.status === 'pending'"
                    v-model="leaveComments[leave.leaveId]"
             />
@@ -150,7 +150,7 @@
                   dark:text-white dark:hover:text-neutral-700
                   "
               >
-                Ακύρωση
+                Î‘ÎºÏÏÏ‰ÏƒÎ·
               </button>
             </div>
         </div>
@@ -161,7 +161,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useCentralStore } from '~/stores/centralStore.js';
+import { useCentralStore } from '~/stores/centralStore';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import FilterInput from "~/components/misc/FilterInput.vue";
 
@@ -248,7 +248,11 @@ onMounted(async () => {
       });
     });
   } catch (error) {
-    console.error('Error fetching leaves:', error);
+    //console.error('Error fetching leaves:', error);
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿ÏÏÎ¯ÏˆÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
   } finally {
     loading.value = false; // Set loading to false when done
   }
@@ -306,12 +310,12 @@ const approveLeave = async (leaveId, userId) => {
     await leavesStore.approveLeave(userId, leaveId, 'approved', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Η αίτηση άδειας εγκρήθηκε επιτυχώς!', {
+    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ ÎµÎ³ÎºÏÎ®Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να εγκρίνουμε την άδεια!!', {
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± ÎµÎ³ÎºÏÎ¯Î½Î¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -323,12 +327,12 @@ const declineLeave = async (leaveId, userId) => {
     await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Η αίτηση άδειας απορρίφθηκε επιτυχώς!', {
+    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±Ï€Î¿ÏÏÎ¯Ï†Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να απορρίψουμε την άδεια!', {
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿ÏÏÎ¯ÏˆÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -340,12 +344,12 @@ const cancelLeave = async (leaveId) => {
     await leavesStore.cancelLeave(leaveId);
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Η αίτηση άδειας ακυρώθηκε επιτυχώς!', {
+    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να ακυρώσουμε την άδεια!', {
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -369,7 +373,11 @@ const refreshLeaves = async () => {
       });
     });
   } catch (error) {
-    console.error('Error refreshing leaves:', error);
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Ï†Î­ÏÎ¿Ï…Î¼Îµ Ï„Î¹Ï‚ Î¬Î´ÎµÎ¹ÎµÏ‚!', {
+      position: "bottom-right",
+      autoClose: 5000, // Close automatically after 5 seconds
+    });
+    //console.error('Error refreshing leaves:', error);
   } finally {
     loading.value = false;
   }
@@ -382,16 +390,16 @@ const formatDate = (dateStr) => {
 
 const getLeaveTypeName = (leaveTypeId) => {
   const leaveType = leavesStore.leavesData.leavesTypes.find(type => type.id === leaveTypeId);
-  return leaveType ? leaveType.name : 'Άγνωστος Τύπος';
+  return leaveType ? leaveType.name : 'Î†Î³Î½Ï‰ÏƒÏ„Î¿Ï‚ Î¤ÏÏ€Î¿Ï‚';
 };
 
 const getLeaveStatusLabel = (status) => {
   // Map status codes to labels (adjust as needed)
   const statusLabels = {
-    'pending': 'Σε Εκκρεμότητα',
-    'approved': 'Εγκεκριμένη',
-    'declined': 'Απορρίφθηκε',
-    'cancelled': 'Ακυρώθηκε',
+    'pending': 'Î£Îµ Î•ÎºÎºÏÎµÎ¼ÏŒÏ„Î·Ï„Î±',
+    'approved': 'Î•Î³ÎºÎµÎºÏÎ¹Î¼Î­Î½Î·',
+    'declined': 'Î‘Ï€Î¿ÏÏÎ¯Ï†Î¸Î·ÎºÎµ',
+    'cancelled': 'Î‘ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ',
     // Add other statuses if needed
   };
   return statusLabels[status] || status;

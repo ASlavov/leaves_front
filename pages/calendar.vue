@@ -37,16 +37,6 @@ const leavesData = computed(() => leavesStore.leavesData);
   }
 });*/
 </script>
-<script>
-import Sidebar from '~/components/SidebarTopbar/Sidebar.vue';
-import Calendar from '@/components/Calendar/Calendar.vue';
-export default {
-    components: {
-        Sidebar,
-        Calendar
-    }
-}
-</script>
 
 <style>
 .min-h-dvh-64 {

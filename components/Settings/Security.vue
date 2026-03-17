@@ -17,13 +17,13 @@
       </template>
       <template v-else>
 <!-- TODO: border-rounded to ::before instead -->
-        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px]">Αλλαγή κωδικού</h3>
+        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px]">Î‘Î»Î»Î±Î³Î® ÎºÏ‰Î´Î¹ÎºÎ¿Ï</h3>
         <div class="grid grid-cols-12 pt-[30px] max-w-[847px]">
           <!-- Info Details -->
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px] max-w-[625px]">
             <!-- Form Group -->
             <div class="max-w-[300px] col-span-2">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Υπάρχον κωδικός</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Î¥Ï€Î¬ÏÏ‡Î¿Î½ ÎºÏ‰Î´Î¹ÎºÏŒÏ‚</label>
               <div class="relative">
                 <input
                     v-model="currentPassword"
@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Νέος κωδικός</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">ÎÎ­Î¿Ï‚ ÎºÏ‰Î´Î¹ÎºÏŒÏ‚</label>
               <div class="relative">
                 <input
                     v-model="newPassword"
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Επιβεβαίωση νέου κωδικού</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Î•Ï€Î¹Î²ÎµÎ²Î±Î¯Ï‰ÏƒÎ· Î½Î­Î¿Ï… ÎºÏ‰Î´Î¹ÎºÎ¿Ï</label>
               <div class="relative">
                 <input
                     v-model="confirmPassword"
@@ -82,16 +82,16 @@
             <!-- End Form Group -->
           </div>
         </div>
-        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px] mt-[40px]">2ο Επίπεδο Ασφάλειας</h3>
+        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px] mt-[40px]">2Î¿ Î•Ï€Î¯Ï€ÎµÎ´Î¿ Î‘ÏƒÏ†Î¬Î»ÎµÎ¹Î±Ï‚</h3>
         <div class="">
-          <div class="max-w-[609px] mt-[20px] w-full text-black dark:text-gray-100 text-sm text-[14px] leading-[18px]">Αυξήστε την ασφάλεια του λογαριασμού σας.<br>Με το 2ο επίπεδο ασφάλειας, για να συνδεθείτε στο Control Panel θα συμπληρώνετε το password σας και έναν κωδικό επιβεβαίωσης από την εφαρμογή του κινητού σας τηλεφώνου.</div>
+          <div class="max-w-[609px] mt-[20px] w-full text-black dark:text-gray-100 text-sm text-[14px] leading-[18px]">Î‘Ï…Î¾Î®ÏƒÏ„Îµ Ï„Î·Î½ Î±ÏƒÏ†Î¬Î»ÎµÎ¹Î± Ï„Î¿Ï… Î»Î¿Î³Î±ÏÎ¹Î±ÏƒÎ¼Î¿Ï ÏƒÎ±Ï‚.<br>ÎœÎµ Ï„Î¿ 2Î¿ ÎµÏ€Î¯Ï€ÎµÎ´Î¿ Î±ÏƒÏ†Î¬Î»ÎµÎ¹Î±Ï‚, Î³Î¹Î± Î½Î± ÏƒÏ…Î½Î´ÎµÎ¸ÎµÎ¯Ï„Îµ ÏƒÏ„Î¿ Control Panel Î¸Î± ÏƒÏ…Î¼Ï€Î»Î·ÏÏŽÎ½ÎµÏ„Îµ Ï„Î¿ password ÏƒÎ±Ï‚ ÎºÎ±Î¹ Î­Î½Î±Î½ ÎºÏ‰Î´Î¹ÎºÏŒ ÎµÏ€Î¹Î²ÎµÎ²Î±Î¯Ï‰ÏƒÎ·Ï‚ Î±Ï€ÏŒ Ï„Î·Î½ ÎµÏ†Î±ÏÎ¼Î¿Î³Î® Ï„Î¿Ï… ÎºÎ¹Î½Î·Ï„Î¿Ï ÏƒÎ±Ï‚ Ï„Î·Î»ÎµÏ†ÏŽÎ½Î¿Ï….</div>
         </div>
 
         <!-- Save Changes Button -->
         <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
           <button @click="submitForm"
                   class="inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-            Αποθήκευση Αλλαγών
+            Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î‘Î»Î»Î±Î³ÏŽÎ½
           </button>
         </div>
       </template>
@@ -101,7 +101,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 const { authStore, userStore } = useCentralStore();
 
@@ -129,7 +129,7 @@ const submitForm = async () => {
   // Validate that new password and confirm password match
   if (newPassword.value !== confirmPassword.value) {
     // Handle the error, e.g., show an error message
-    useNuxtApp().$toast.error('Ο νέος κωδικός και ο κωδικός επιβεβαίωσης δεν ταιριάζουν!', {
+    useNuxtApp().$toast.error('ÎŸ Î½Î­Î¿Ï‚ ÎºÏ‰Î´Î¹ÎºÏŒÏ‚ ÎºÎ±Î¹ Î¿ ÎºÏ‰Î´Î¹ÎºÏŒÏ‚ ÎµÏ€Î¹Î²ÎµÎ²Î±Î¯Ï‰ÏƒÎ·Ï‚ Î´ÎµÎ½ Ï„Î±Î¹ÏÎ¹Î¬Î¶Î¿Ï…Î½!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -147,14 +147,14 @@ const submitForm = async () => {
     // Call the API to update the password
     await userStore.updatePassword(data);
 
-    useNuxtApp().$toast.success('Ο κωδικός σας άλλαξε επιτυχώς!', {
+    useNuxtApp().$toast.success('ÎŸ ÎºÏ‰Î´Î¹ÎºÏŒÏ‚ ÏƒÎ±Ï‚ Î¬Î»Î»Î±Î¾Îµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
     // Handle errors, e.g., show an error message
-    console.error('Error updating password:', error);
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας!', {
+    //console.error('Error updating password:', error);
+    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Î»Î»Î¬Î¾Î¿Ï…Î¼Îµ Ï„Î¿Î½ ÎºÏ‰Î´Î¹ÎºÏŒ ÏƒÎ±Ï‚!', {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });

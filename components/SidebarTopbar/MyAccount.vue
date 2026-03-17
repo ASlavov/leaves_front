@@ -27,7 +27,7 @@
             <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
             <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
           </svg>
-          Επεξεργασία προφίλ
+          Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î± Ï€ÏÎ¿Ï†Î¯Î»
         </a>
         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
            href="settings#permissions">
@@ -38,7 +38,7 @@
             <path d="M3 6h18" />
             <path d="M16 10a4 4 0 0 1-8 0" />
           </svg>
-          Δικαιώματα
+          Î”Î¹ÎºÎ±Î¹ÏŽÎ¼Î±Ï„Î±
         </a>
         <a class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
            href="settings#security">
@@ -49,7 +49,7 @@
             <path d="M12 12v9" />
             <path d="m8 17 4 4 4-4" />
           </svg>
-          Ασφάλεια
+          Î‘ÏƒÏ†Î¬Î»ÎµÎ¹Î±
         </a>
 
         <!-- Logout Button -->
@@ -65,7 +65,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 import { computed } from "vue";
 
 const router = useRouter();
@@ -96,7 +96,7 @@ const logout = async () => {
     // Redirect to login page
     await router.push('/auth/login');
   } catch (error) {
-    console.error('Logout error:', error);
+    //console.error('Logout error:', error);
   }
 };
 

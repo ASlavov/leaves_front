@@ -1,7 +1,7 @@
 <template>
   <button class="bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-600 focus:outline-none"
           @click="openModal">
-    Νέο αίτημα άδειας
+    ÎÎ­Î¿ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
   </button>
 
   <div
@@ -25,14 +25,14 @@
       <div class="flex justify-between items-center py-3 px-4">
         <h3 id="hs-scale-animation-modal-label"
             class="font-bold text-gray-800 dark:text-white max-w-[300px] mx-auto text-lg">
-          Νεό αίτημα άδειας
+          ÎÎµÏŒ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
         </h3>
       </div>
       <div class="p-4 overflow-y-auto">
         <!-- Conditionally render the leave counter if leaveType is selected -->
         <div v-if="leaveType"
              class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg">
-          <span class="leave-counter-text">Διαθέσιμες ημέρες </span>
+          <span class="leave-counter-text">Î”Î¹Î±Î¸Î­ÏƒÎ¹Î¼ÎµÏ‚ Î·Î¼Î­ÏÎµÏ‚ </span>
           <div class="leave-counter-count text-red-600 font-bold text-md text-lg">
             {{ selectedLeave?.remaining_days ?? '0' }}
           </div>
@@ -42,13 +42,13 @@
             <!-- First row: Single input -->
             <div>
               <label for="input1"
-                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Τύπος
-                άδειας</label>
+                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î¤ÏÏ€Î¿Ï‚
+                Î¬Î´ÎµÎ¹Î±Ï‚</label>
               <div class="space-y-3">
                 <select v-model="leaveType"
                         class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100">
-                  <option class="dark:bg-neutral-800 dark:text-gray-100" value="">Επιλέξτε
-                    άδεια
+                  <option class="dark:bg-neutral-800 dark:text-gray-100" value="">Î•Ï€Î¹Î»Î­Î¾Ï„Îµ
+                    Î¬Î´ÎµÎ¹Î±
                   </option>
                   <!-- Loop through leavesData to populate the options -->
                   <option class="dark:bg-neutral-800 dark:text-gray-100"
@@ -64,31 +64,31 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label for="input2"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Ημ/νια
-                  απο</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î—Î¼/Î½Î¹Î±
+                  Î±Ï€Î¿</label>
                 <input type="text" v-model="startDate" ref="datePickerStart"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                       placeholder="Επιλέξτε ημ/νια">
+                       placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±">
               </div>
               <div>
                 <label for="input3"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Ημ/νια
-                  μέχρι</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î—Î¼/Î½Î¹Î±
+                  Î¼Î­Ï‡ÏÎ¹</label>
                 <input type="text" v-model="endDate" ref="datePickerEnd"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                       placeholder="Επιλέξτε ημ/νια">
+                       placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±">
               </div>
             </div>
 
             <!-- Third row: Textarea -->
             <div>
               <label for="textarea"
-                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Σχόλια
-                (προαιρετικό)</label>
+                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î£Ï‡ÏŒÎ»Î¹Î±
+                (Ï€ÏÎ¿Î±Î¹ÏÎµÏ„Î¹ÎºÏŒ)</label>
               <div class="space-y-3">
                 <textarea v-model="comments"
                           class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
-                          rows="3" placeholder="Σχόλιο"></textarea>
+                          rows="3" placeholder="Î£Ï‡ÏŒÎ»Î¹Î¿"></textarea>
               </div>
             </div>
 
@@ -96,7 +96,7 @@
             <div>
               <button type="submit"
                       class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-red-600 bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Αποστολή αιτήματος
+                Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î¹Ï„Î®Î¼Î±Ï„Î¿Ï‚
               </button>
             </div>
           </form>
@@ -112,7 +112,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ref, computed, nextTick, watch } from 'vue';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 export default {
   name: 'NewLeave',
@@ -254,7 +254,7 @@ export default {
       try {
         await leavesStore.newLeave(user_id.value, leaveRequest.leave_type_id, leaveRequest.start_date, leaveRequest.end_date, leaveRequest.reason);
 
-        useNuxtApp().$toast.success('Η αίτηση άδειας υποβλήθηκε επιτυχώς!', {
+        useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Ï…Ï€Î¿Î²Î»Î®Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
           position: "bottom-right",
           autoClose: 5000,
         });
@@ -262,8 +262,8 @@ export default {
         closeModal(); // Close modal on success
 
       } catch (error) {
-        console.error('Error submitting leave request:', error);
-        useNuxtApp().$toast.error('Σφάλμα κατά την υποβολή της αίτησης άδειας.', {
+        //console.error('Error submitting leave request:', error);
+        useNuxtApp().$toast.error('Î£Ï†Î¬Î»Î¼Î± ÎºÎ±Ï„Î¬ Ï„Î·Î½ Ï…Ï€Î¿Î²Î¿Î»Î® Ï„Î·Ï‚ Î±Î¯Ï„Î·ÏƒÎ·Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚.', {
           position: "bottom-right",
           autoClose: 5000,
         });

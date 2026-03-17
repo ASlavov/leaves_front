@@ -22,12 +22,12 @@
         <button
             @click="newLeaveType"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-          Προσθήκη νέου τύπου αδειών
+          Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î½Î­Î¿Ï… Ï„ÏÏ€Î¿Ï… Î±Î´ÎµÎ¹ÏŽÎ½
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold hidden">
         <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          Φίλτρα:
+          Î¦Î¯Î»Ï„ÏÎ±:
         </div>
 
         <!-- Leave Type Name Filter -->
@@ -37,7 +37,7 @@
                 v-model="filters.leaveTypeName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leaveTypeName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Τύπος άδειας"
+                placeholder="Î¤ÏÏ€Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚"
             />
             <button
                 v-if="filters.leaveTypeName"
@@ -56,7 +56,7 @@
                 v-model="filters.leavesTypeDays"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leavesTypeDays ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Ημέρες"
+                placeholder="Î—Î¼Î­ÏÎµÏ‚"
             />
             <button
                 v-if="filters.leavesTypeDays"
@@ -75,7 +75,7 @@
                 v-model="filters.users"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.users ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Χρήστες"
+                placeholder="Î§ÏÎ®ÏƒÏ„ÎµÏ‚"
             />
             <button
                 v-if="filters.users"
@@ -94,7 +94,7 @@
                 v-model="filters.department"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Γκρούπ"
+                placeholder="Î“ÎºÏÎ¿ÏÏ€"
             />
             <button
                 v-if="filters.department"
@@ -117,21 +117,21 @@
               "
               class="text-red-500"
           >
-            &times; Καθαρισμός φίλτρων
+            &times; ÎšÎ±Î¸Î±ÏÎ¹ÏƒÎ¼ÏŒÏ‚ Ï†Î¯Î»Ï„ÏÏ‰Î½
           </button>
         </div>
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold hidden">
         <div class="col-span-1 ">
-          Ταξινόμηση κατά:
+          Î¤Î±Î¾Î¹Î½ÏŒÎ¼Î·ÏƒÎ· ÎºÎ±Ï„Î¬:
         </div>
         <!-- First Name Sort Button -->
         <div
             @click="sortBy('leaveTypeName')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Τύπος άδειας
+          Î¤ÏÏ€Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚
           <span v-if="currentSortKey === 'leaveTypeName'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -152,7 +152,7 @@
             @click="sortBy('leaveTypeDays')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Ημέρες
+          Î—Î¼Î­ÏÎµÏ‚
           <span v-if="currentSortKey === 'leaveTypeDays'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -173,7 +173,7 @@
             @click="sortBy('users')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Χρήστες
+          Î§ÏÎ®ÏƒÏ„ÎµÏ‚
           <span v-if="currentSortKey === 'users'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -194,7 +194,7 @@
             @click="sortBy('department')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Γκρούπς
+          Î“ÎºÏÎ¿ÏÏ€Ï‚
           <span v-if="currentSortKey === 'department'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -231,7 +231,7 @@
               {{ leaveType.name || '' }}
             </div>
             <div class="col-span-4 justify-self-end flex gap-[25px] items-center">
-              <a v-if="permissionsStore.can('leave_types','modify')" @click="editLeaveType(leaveType.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Επεξεργασία Προφίλ</a>
+              <a v-if="permissionsStore.can('leave_types','modify')" @click="editLeaveType(leaveType.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î± Î ÏÎ¿Ï†Î¯Î»</a>
             </div>
           </div>
         </div>
@@ -263,7 +263,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { useCentralStore } from '~/stores/centralStore.js';
+import { useCentralStore } from '~/stores/centralStore';
 import EditLeaveType from "~/components/Settings/EditLeaveType.vue";
 
 

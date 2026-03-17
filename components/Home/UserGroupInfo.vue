@@ -1,5 +1,5 @@
 <template>
-    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Γκρουπ</h3>
+    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Î“ÎºÏÎ¿Ï…Ï€</h3>
 
     <!-- Use a single container and conditional rendering for loading and data -->
     <div v-if="loading" class="bg-gray-200 border rounded-lg shadow-md p-4 flex-1 flex items-center justify-center dark:bg-neutral-800 dark:text-gray-100">
@@ -16,7 +16,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore.js';
+import { useCentralStore } from '@/stores/centralStore';
 
 const router = useRouter();
 const { authStore, userStore } = useCentralStore();

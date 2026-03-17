@@ -1,5 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  nitro: {
+    preset: 'netlify',
+  },
+  routeRules: {
+    '/api/**': {
+      cors: true,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    }
+  },
   compatibilityDate: '2024-04-03',
   devtools: {
     enabled: true,
@@ -9,10 +20,10 @@ export default defineNuxtConfig({
     },
   },
   script: [
-      {
-        src: '/_nuxt/node_modules/preline/dist/preline.js',
-        defer: true
-      }
+    {
+      src: '/_nuxt/node_modules/preline/dist/preline.js',
+      defer: true
+    }
   ],
   css: [
     '~/assets/css/main.css',
@@ -20,10 +31,10 @@ export default defineNuxtConfig({
   ],
 
   plugins: [
-      "~/plugins/preline.client.ts",
-      /*"~/plugins/fetchInterceptor.js",*/
-      "~/plugins/apexcharts.client.ts",
-      "~/plugins/vue3-toastify.client.js"
+    "~/plugins/preline.client.ts",
+    /*"~/plugins/fetchInterceptor.js",*/
+    "~/plugins/apexcharts.client.ts",
+    "~/plugins/vue3-toastify.client.js"
   ],
   pinia: {
     autoImports: ['defineStore', 'acceptHMRUpdate'],
@@ -39,9 +50,9 @@ export default defineNuxtConfig({
   },
 
   modules: [
-      '@pinia/nuxt',
-      '@nuxtjs/color-mode',
-      'pinia-plugin-persistedstate/nuxt',
+    '@pinia/nuxt',
+    '@nuxtjs/color-mode',
+    'pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder
@@ -49,10 +60,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // The private keys which are only available within server-side
-    apiSecret: 'elRs9s4XoR6O7hveAhbeqqBzJhVhno5k6FStyQ0b',
+    apiSecret: process.env.apiSecret,
+    // JWT Secret Key
+    jwtSecret: process.env.jwtSecret,
     // Keys within public, will be also exposed to the client-side
     public: {
-      apiBase: 'http://127.0.0.1:8000/api',
+      apiBase: 'https://leavesbackend.whyagency.gr/api',
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',

@@ -1,76 +1,35 @@
-import { defineEventHandler, getCookie, setCookie } from 'h3';
-import { getSession, createSession } from '~/server/sessionStore'; // Import session management
-import { useRuntimeConfig } from '#imports';
+import { defineEventHandler, getCookie, createError } from 'h3';
+import { verifyJWT } from '~/server/utils/auth';
 
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
+    // Read the auth_token directly from the cookie
+    const authToken = getCookie(event, 'auth_token');
 
-    // Retrieve the session ID from the cookie
-    const sessionId = getCookie(event, 'session_id');
-
-    if (!sessionId) {
+    // If no token is present, throw an error
+    if (!authToken) {
         throw createError({
             statusCode: 401,
-            message: 'Session not found',
+            message: 'Authentication token not found.',
         });
     }
 
-    // Retrieve the session from the session store
-    const session = getSession(sessionId);
-
-    if (!session) {
-        throw createError({
-            statusCode: 401,
-            message: 'Invalid session',
-        });
-    }
-
-    const {
-        userId,
-        token
-    } = session;
-
-    // Call the token refresh API using the existing token
     try {
-        /*const refreshResult = await $fetch(`${config.public.apiBase}${config.public.auth.tokenRefresh}`, {
-            method: 'POST',
-            body: {
-                userId: userId,
-            },
-            headers: {
-                /!*'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.token}`,  // Send the current token
-                "X-CSRF-TOKEN": config.apiSecret,*!/
-                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
-            },
-        });
+        // Verify the JWT to check if the session is still valid
+        const payload = verifyJWT(authToken);
 
-        if (!refreshResult || !refreshResult.token) {
-            console.log(refreshResult);
-            throw new Error('Token refresh failed');
-        }*/
-
-        // Update the session with the new token
-        const newToken = session.token;
-        const newSession = createSession(session.userId, newToken);  // Update the session store with the new token
-
-        // Optionally, refresh the session ID cookie if needed
-        setCookie(event, 'session_id', newSession, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-        });
-
-        // Return the userId and other session-related data
+        // If verification is successful, the session is valid.
+        // Return a confirmation and the user ID from the token's payload.
         return {
-            userId: session.userId,
+            authenticated: true,
+            userId: payload.userId,
+            message: 'Session is valid.',
         };
-    } catch (error) {
-        console.error('Error refreshing token:', error);
-        console.log(error);
+    } catch (error:any) {
+        // If the token is invalid or expired, a verification error will be thrown.
+        console.error('Error refreshing session:', error);
         throw createError({
             statusCode: 401,
-            message: 'Token refresh failed',
+            message: 'Invalid or expired token.',
         });
     }
 });

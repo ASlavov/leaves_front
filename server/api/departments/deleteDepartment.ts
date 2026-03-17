@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         });
 
         return response; // Return the response from the external API
-    } catch (error) {
+    } catch (error:any) {
         // Handle errors from the external API
         console.error('Error deleting department:', error);
         throw createError({
