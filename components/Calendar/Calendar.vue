@@ -5,40 +5,40 @@
     <div class="grid grid-cols-12 gap-4 mb-4 dark:text-white items-end">
       <!-- Name Filter -->
       <div class="col-span-12 sm:col-span-3 dark:text-white">
-        <CustomSelect
+        <MiscCustomSelect
             v-model="selectedName"
             :options="nameOptions"
-            label="Όνομα"
-            placeholder="Όλα τα ονόματα"
+            :label="$t('common.name')"
+            :placeholder="$t('calendar.allNames')"
             selectId="name-select"
         />
       </div>
 
       <!-- Department Filter -->
       <div class="col-span-12 sm:col-span-3 dark:text-white">
-        <CustomSelect
+        <MiscCustomSelect
             v-model="selectedDepartment"
             :options="departments"
-            label="Γκρουπ"
-            placeholder="Όλα τα Γκρουπ"
+            :label="$t('settings.group')"
+            :placeholder="$t('calendar.allGroups')"
             selectId="department-select"
         />
       </div>
 
       <!-- Leave Type Filter -->
       <div class="col-span-12 sm:col-span-3 dark:text-white">
-        <CustomSelect
+        <MiscCustomSelect
             v-model="selectedLeaveType"
             :options="leaveTypeOptions"
-            label="Τύπος Άδειας"
-            placeholder="Όλοι οι τύποι"
+            :label="$t('settings.leaveType')"
+            :placeholder="$t('calendar.allTypes')"
             selectId="leave-type-select"
         />
       </div>
 
       <div class="col-span-12 sm:col-span-3 leading-[46px] justify-self-end" v-if="selectedDepartment || selectedLeaveType || selectedName">
         <button @click="clearFilters" class="btn btn-secondary text-red-500">
-          &times; Καθαρισμός φίλτρων
+          &times; {{ $t('settings.clearFilters') }}
         </button>
       </div>
     </div>
@@ -100,7 +100,9 @@ import { createEventModalPlugin } from '@schedule-x/event-modal';
 import '@schedule-x/theme-default/dist/index.css';
 import {useCentralStore} from '@/stores/centralStore';
 import {format} from 'date-fns';
-import CustomSelect from "~/components/misc/CustomSelect.vue";
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
 
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
@@ -128,6 +130,7 @@ const userLeaves = computed(() => leavesStore.leavesData.allUsers);
 const nameOptions = computed(() =>
     userStore.allUsers.map(user => ({
       id: user.name, // Workaround to use the name as value. CustomSelect doesnt actually use "id" as id.
+      // TODO: Add non-req prop to CustomSelect so it can have a variable object key as value
       name: user.name,
     }))
 );
@@ -258,6 +261,7 @@ const events = computed(() => {
     };
   }).filter(Boolean) || [];
 
+  console.log('Events:', eventsArray);
   return eventsArray;
 });
 
@@ -266,7 +270,14 @@ const theme = computed(() => {
   return $colorMode?.value || 'light';
 });
 
+const localeComputed = computed(() => {
+  return locale.value === 'el' ? 'el-GR' : 'en-US';
+});
+
 function initializeCalendar() {
+  if (calendarApp.value) {
+    calendarApp.value.destroy();
+  }
   calendarApp.value = createCalendar({
     selectedDate: format(new Date(), 'yyyy-MM-dd'),
     views: [
@@ -276,7 +287,7 @@ function initializeCalendar() {
       createViewMonthGrid()
     ],
     plugins: [eventsServicePlugin, createEventModalPlugin()],
-    locale: 'el-GR',
+    locale: localeComputed.value,
     defaultView: viewMonthGrid.name,
     monthGridOptions: {
       nEventsPerDay: 4,
@@ -288,7 +299,7 @@ function initializeCalendar() {
 
   // Update events when they change
   watch(events, (newEvents) => {
-    //console.log('Updating events:', newEvents);
+    console.log('Updating events:', newEvents);
     if (calendarApp.value) {
       eventsServicePlugin.set(newEvents || []);
     }
@@ -301,6 +312,14 @@ function initializeCalendar() {
     }
   }, {immediate: true});
 }
+
+
+  // Watch for locale changes to re-initialize calendar
+  watch(localeComputed, (newVal) => {
+    if (calendarApp.value) {
+      initializeCalendar();
+    }
+  }, {immediate: true});
 
 onMounted(async () => {
   // Wait for data to load

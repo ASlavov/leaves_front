@@ -3,7 +3,7 @@
       v-if="permissionsStore.can('profile_leave_balance','request_leave')
     || permissionsStore.can('profile_leave_balance','cancel_leave')"
       class="container">
-    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Υπόλοιπα άδειας</h3>
+    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">{{ $t('leaves.balance') }}</h3>
     <template v-if="loading && !leavesDataLoaded">
       <!-- Loading Skeleton -->
       <div class="border rounded-lg animate-pulse p-4">
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div v-else class="text-center py-4 text-gray-600 dark:text-gray-100">
-        Δεν υπάρχουν διαθέσιμες άδειες
+        {{ $t('leaves.noAvailableLeaves') }}
       </div>
     </template>
   </div>

@@ -1,10 +1,10 @@
 <template>
-  <Sidebar />
+  <SidebarTopbarSidebar />
   <!-- Content -->
   <div class="w-full lg:ps-64 bg-red min-h-dvh-64 dark:bg-neutral-900">
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <!-- your content goes here ... -->
-      <YearlyLeaves />
+      <LeavesYearlyLeaves />
     </div>
   </div>
   <!-- End Content -->

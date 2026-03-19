@@ -29,10 +29,10 @@
       <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
           class="text-black dark:text-white font-bold flex items-center gap-2">
-        Î‘Î¹Ï„Î®Î¼Î±Ï„Î± Î¬Î´ÎµÎ¹Î±Ï‚ <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
+        {{ $t('leaves.leaveRequests') }} <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
       </div>
       <div v-else>
-        Î†Î´ÎµÎ¹ÎµÏ‚ Î­Ï„Î¿Ï…Ï‚
+        {{ $t('leaves.yearlyLeaves') }}
       </div>
       <!-- Filters Section -->
       <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-4 w-full lg:max-w-3xl items-end lg:justify-self-end lg:self-end">
@@ -40,7 +40,7 @@
         <FilterInput
             v-model="filters.requesterName"
             type="text"
-            placeholder="ÎŒÎ½Î¿Î¼Î±"
+            :placeholder="$t('common.name')"
             class="w-full"
         />
 
@@ -48,7 +48,7 @@
         <FilterInput
             v-model="filters.group"
             type="text"
-            placeholder="Î“ÎºÏÎ¿Ï…Ï€"
+            :placeholder="$t('settings.group')"
         />
 
         <!-- Year Filter -->
@@ -56,14 +56,14 @@
             v-model="filters.year"
             type="CustomSelect"
             :options="years"
-            placeholder="ÎˆÏ„Î¿Ï‚"
+            :placeholder="$t('common.year')"
 
             class="-ml-4 mr-4 lg:mr-0"
         />
       </div>
       <div class="lg:justify-self-end lg:self-end" v-else>
         <NuxtLink to="/yearly-leaves" class="text-[#EA021A] dark:text-[#FF021A] underline block">
-          ÎŒÎ»Î± Ï„Î± Î±Î¹Ï„Î®Î¼Î±Ï„Î± Î¬Î´ÎµÎ¹Î±Ï‚
+          {{ $t('leaves.allRequests') }}
         </NuxtLink>
       </div>
       </div>
@@ -71,10 +71,10 @@
       <div class="col-span-2 grid grid-cols-1 gap-4">
         <!-- Table Headers -->
         <!--<div class="grid gap-4 font-bold pb-[25px] grid-cols-4">
-          <div>Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯ÎµÏ‚ / Î¤ÏÏ€Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚</div>
-          <div>ÎŒÎ½Î¿Î¼Î±</div>
-          <div>ÎšÎ±Ï„Î¬ÏƒÏ„Î±ÏƒÎ· Î†Î´ÎµÎ¹Î±Ï‚</div>
-          <div>Î•Î½Î­ÏÎ³ÎµÎ¹ÎµÏ‚</div>
+          <div>Ημερομηνίες / Τύπος Άδειας</div>
+          <div>Όνομα</div>
+          <div>Κατάσταση Άδειας</div>
+          <div>Ενέργειες</div>
 
         </div>-->
         <!-- Leaves Data -->
@@ -108,7 +108,7 @@
           <div class="lg:col-span-3 lg:mr-4" v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
             <input type="text"
                    class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
-                   placeholder="Î£Ï…Î¼Ï€Î»Î·ÏÏŽÏƒÏ„Îµ ÎµÎ±Î½ Î­Ï‡ÎµÏ„Îµ ÎºÎ¬Ï€Î¿Î¹Î¿ ÏƒÏ‡ÏŒÎ»Î¹Î¿"
+                   :placeholder="$t('leaves.commentPlaceholder')"
                    v-if="leave.status === 'pending'"
                    v-model="leaveComments[leave.leaveId]"
             />
@@ -150,7 +150,7 @@
                   dark:text-white dark:hover:text-neutral-700
                   "
               >
-                Î‘ÎºÏÏÏ‰ÏƒÎ·
+                {{ $t('common.cancel') }}
               </button>
             </div>
         </div>
@@ -161,9 +161,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useCentralStore } from '~/stores/centralStore';
+import { useCentralStore } from '~/stores/centralStore.js';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import FilterInput from "~/components/misc/FilterInput.vue";
+import { useI18n } from 'vue-i18n';
+
+const { t, locale } = useI18n();
 
 // Setup stores
 const centralStore = useCentralStore();
@@ -226,8 +229,11 @@ const years = computed(() => {
 const leaveClass = {
   pending:'text-[#E59926]',
   canceled:'text-[#FF455F]',
+  cancelled:'text-[#FF455F]',
   approved:'text-[#16DBAA]',
   denied:'text-[#FF455F]',
+  rejected:'text-[#FF455F]',
+  declined:'text-[#FF455F]',
 };
 
 onMounted(async () => {
@@ -248,11 +254,7 @@ onMounted(async () => {
       });
     });
   } catch (error) {
-    //console.error('Error fetching leaves:', error);
-    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿ÏÏÎ¯ÏˆÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
+    console.error('Error fetching leaves:', error);
   } finally {
     loading.value = false; // Set loading to false when done
   }
@@ -310,12 +312,12 @@ const approveLeave = async (leaveId, userId) => {
     await leavesStore.approveLeave(userId, leaveId, 'approved', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ ÎµÎ³ÎºÏÎ®Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
+    useNuxtApp().$toast.success(t('leaves.approveSuccess'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± ÎµÎ³ÎºÏÎ¯Î½Î¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!!', {
+    useNuxtApp().$toast.error(t('leaves.approveError'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -327,12 +329,12 @@ const declineLeave = async (leaveId, userId) => {
     await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±Ï€Î¿ÏÏÎ¯Ï†Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
+    useNuxtApp().$toast.success(t('leaves.rejectSuccess'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿ÏÏÎ¯ÏˆÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
+    useNuxtApp().$toast.error(t('leaves.rejectError'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -344,12 +346,12 @@ const cancelLeave = async (leaveId) => {
     await leavesStore.cancelLeave(leaveId);
     // Refresh data
     await refreshLeaves();
-    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
+    useNuxtApp().$toast.success(t('leaves.cancelSuccess'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
+    useNuxtApp().$toast.error(t('leaves.cancelError'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
@@ -373,11 +375,7 @@ const refreshLeaves = async () => {
       });
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Ï†Î­ÏÎ¿Ï…Î¼Îµ Ï„Î¹Ï‚ Î¬Î´ÎµÎ¹ÎµÏ‚!', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
-    //console.error('Error refreshing leaves:', error);
+    console.error('Error refreshing leaves:', error);
   } finally {
     loading.value = false;
   }
@@ -385,21 +383,24 @@ const refreshLeaves = async () => {
 
 const formatDate = (dateStr) => {
   const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  return new Date(dateStr).toLocaleDateString('el-GR', options);
+  return new Date(dateStr).toLocaleDateString(locale.value === 'el' ? 'el-GR' : 'en-US', options);
 };
 
 const getLeaveTypeName = (leaveTypeId) => {
   const leaveType = leavesStore.leavesData.leavesTypes.find(type => type.id === leaveTypeId);
-  return leaveType ? leaveType.name : 'Î†Î³Î½Ï‰ÏƒÏ„Î¿Ï‚ Î¤ÏÏ€Î¿Ï‚';
+  return leaveType ? leaveType.name : t('common.unknownType');
 };
 
 const getLeaveStatusLabel = (status) => {
   // Map status codes to labels (adjust as needed)
   const statusLabels = {
-    'pending': 'Î£Îµ Î•ÎºÎºÏÎµÎ¼ÏŒÏ„Î·Ï„Î±',
-    'approved': 'Î•Î³ÎºÎµÎºÏÎ¹Î¼Î­Î½Î·',
-    'declined': 'Î‘Ï€Î¿ÏÏÎ¯Ï†Î¸Î·ÎºÎµ',
-    'cancelled': 'Î‘ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ',
+    'pending': t('leaves.pending'),
+    'approved': t('leaves.approved'),
+    'declined': t('leaves.rejected'),
+    'rejected': t('leaves.rejected'),
+    'denied': t('leaves.rejected'),
+    'cancelled': t('leaves.cancelled'),
+    'canceled': t('leaves.cancelled'),
     // Add other statuses if needed
   };
   return statusLabels[status] || status;

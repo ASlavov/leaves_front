@@ -49,18 +49,18 @@
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px]">
             <!-- First Name -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">ÎŒÎ½Î¿Î¼Î±</label>
-              <input v-model="formFirstName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="ÎŒÎ½Î¿Î¼Î±">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.firstName') }}</label>
+              <input v-model="formFirstName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.firstName')">
             </div>
             <!-- Last Name -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•Ï€ÏŽÎ½Ï…Î¼Î¿</label>
-              <input v-model="formLastName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î•Ï€ÏŽÎ½Ï…Î¼Î¿">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.lastName') }}</label>
+              <input v-model="formLastName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.lastName')">
             </div>
             <!-- Title -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î¤Î¯Ï„Î»Î¿Ï‚</label>
-              <input v-model="formTitle" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î¤Î¯Ï„Î»Î¿Ï‚">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.jobTitle') }}</label>
+              <input v-model="formTitle" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.jobTitle')">
             </div>
             <!-- Email -->
             <div class="max-w-sm">
@@ -69,22 +69,22 @@
             </div>
             <!-- Phone -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">ÎšÎ¹Î½Î·Ï„ÏŒ</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.phone') }}</label>
               <input v-model="formPhone"
                      pattern="[0-9]{10}"
-                     type="tel" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="ÎšÎ¹Î½Î·Ï„ÏŒ">
+                     type="tel" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.phone')">
             </div>
             <!-- Internal Phone -->
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•ÏƒÏ‰Ï„. Ï„Î·Î»Î­Ï†Ï‰Î½Î¿</label>
-              <input v-model="formInternalPhone" type="number" class="py-3 px-4 block w-full border-gray-200  border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î•ÏƒÏ‰Ï„. Ï„Î·Î»Î­Ï†Ï‰Î½Î¿">
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.internalPhone') }}</label>
+              <input v-model="formInternalPhone" type="number" class="py-3 px-4 block w-full border-gray-200  border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.internalPhone')">
             </div>
             <div class="max-w-sm">
               <CustomSelect
                   v-model="formSelectedDepartmentId"
                   :options="departments"
-                  label="Î“ÎºÏÎ¿Ï…Ï€"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î“ÎºÏÎ¿Ï…Ï€"
+                  :label="$t('settings.group')"
+                  :placeholder="$t('settings.selectGroup')"
                   selectId="department-select"
               />
             </div>
@@ -94,16 +94,16 @@
               <CustomSelect
                   v-model="formRole"
                   :options="roles"
-                  label="Î¡ÏŒÎ»Î¿Ï‚"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î¡ÏŒÎ»Î¿ Ï‡ÏÎ®ÏƒÏ„Î·"
+                  :label="$t('settings.role')"
+                  :placeholder="$t('settings.selectRole')"
                   selectId="role-select"
               />
             </div>
             <!-- Save Changes Button -->
             <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
               <button @click="submitForm"
-                      class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î‘Î»Î»Î±Î³ÏŽÎ½
+                      class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                {{ $t('settings.saveChanges') }}
               </button>
             </div>
           </div>
@@ -116,9 +116,11 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 
+const { t } = useI18n();
 const router = useRouter();
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -178,7 +180,7 @@ const handleFileChange = (event) => {
     };
     reader.readAsDataURL(file);
   } else {
-    $toast.error('Î Î±ÏÎ±ÎºÎ±Î»ÏŽ ÎµÏ€Î¹Î»Î­Î¾Ï„Îµ Î¼Î¹Î± ÎµÎ¹ÎºÏŒÎ½Î± Ï„ÏÏ€Î¿Ï… JPEG Î® PNG.', {
+    $toast.error(t('settings.selectImageError'), {
       position: "bottom-right",
       autoClose: 5000,
     });
@@ -311,20 +313,18 @@ const submitForm = async () => {
         userTitleDescription,
         userImage
     );
-    $toast.success('Î¤Î¿ Ï€ÏÎ¿Ï†Î¯Î» Ï„Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î· ÎµÎ½Î·Î¼ÎµÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
+    $toast.success(t('settings.profileUpdated'), {
       position: "bottom-right",
       autoClose: 5000,
     });
   } catch (error) {
-    $toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±Ï€Î¿Î¸Î·ÎºÎµÏÏƒÎ¿Ï…Î¼Îµ Ï„Î¿ Ï€ÏÎ¿Ï†Î¯Î» Ï„Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î·!', {
+    $toast.error(t('settings.profileUpdateError'), {
       position: "bottom-right",
       autoClose: 5000,
     });
   }
 };
 </script>
-
-
 
 <style scoped>
 /* Additional styles if needed */

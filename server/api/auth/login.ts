@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     //console.log('Requesting with:', body.email, body.password);  // Log the values before making the request
     try {
         // Make a POST request to authenticate the user with the external API
+        console.log(`${config.public.apiBase}${config.public.auth.auth}`);
         const result = await $fetch(`${config.public.apiBase}${config.public.auth.auth}`, {
             method: 'POST',
             body: {
@@ -40,15 +41,16 @@ export default defineEventHandler(async (event) => {
             const authToken = createJWT(user_id, token);
 
             // Set a secure, HTTP-only cookie with the JWT
+            const isSecure = process.env.NODE_ENV === 'production';
             setCookie(event, 'auth_token', authToken, {
                 httpOnly: true,
-                secure: true,
+                secure: isSecure,
                 sameSite: 'strict',
                 maxAge: 60 * 15,
             });
             setCookie(event, 'user_authed', 'true', {
                 httpOnly: false,
-                secure: true,
+                secure: isSecure,
                 sameSite: 'strict',
                 maxAge: 60 * 15,
             });

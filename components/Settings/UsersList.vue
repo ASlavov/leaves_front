@@ -24,12 +24,12 @@
         <button
             @click="newUser"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-          Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î½Î­Î¿Ï… Ï‡ÏÎ®ÏƒÏ„Î·
+          {{ $t('settings.addUser') }}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
         <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          Î¦Î¯Î»Ï„ÏÎ±:
+          {{ $t('settings.filters') }}
         </div>
 
         <!-- First Name Filter -->
@@ -39,7 +39,7 @@
                 v-model="filters.firstName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="ÎŒÎ½Î¿Î¼Î±"
+                :placeholder="$t('settings.firstName')"
             />
             <button
                 v-if="filters.firstName"
@@ -58,7 +58,7 @@
                 v-model="filters.lastName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Î•Ï€ÏŽÎ½Ï…Î¼Î¿"
+                :placeholder="$t('settings.lastName')"
             />
             <button
                 v-if="filters.lastName"
@@ -77,7 +77,7 @@
                 v-model="filters.job_title"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Î¤Î¯Ï„Î»Î¿Ï‚"
+                :placeholder="$t('settings.jobTitle')"
             />
             <button
                 v-if="filters.job_title"
@@ -96,7 +96,7 @@
                 v-model="filters.department"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Î“ÎºÏÎ¿ÏÏ€"
+                :placeholder="$t('settings.group')"
             />
             <button
                 v-if="filters.department"
@@ -117,145 +117,24 @@
                 filters.job_title  = '';
                 filters.department = '';
               "
-              class="text-red-500"
+              class="text-red-500 text-sm"
           >
-            &times; ÎšÎ±Î¸Î±ÏÎ¹ÏƒÎ¼ÏŒÏ‚ Ï†Î¯Î»Ï„ÏÏ‰Î½
+            &times; {{ $t('settings.clearFilters') }}
           </button>
         </div>
       </div>
-      <!-- Filter Toggle Section -->
-<!--      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-1 flex items-center cursor-pointer" @click="toggleFilters">
-          <span>Filter By:</span>
-          &lt;!&ndash; Filled Triangle SVG &ndash;&gt;
-          <svg
-              :class="`ml-2 transform transition-transform duration-300 ${showFilters ? '' : 'rotate-180'}`"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-          >
-            <polygon points="5,0 15,10 5,20" />
-          </svg>
-        </div>
-
-        &lt;!&ndash; Filters Section &ndash;&gt;
-        <transition class="grid-cols-8" name="slide-left">
-          <div
-              v-if="showFilters"
-              class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-          >
-            &lt;!&ndash; First Name Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.firstName"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="ÎŒÎ½Î¿Î¼Î±"
-                />
-                <button
-                    v-if="filters.firstName"
-                    @click="filters.firstName = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Last Name Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.lastName"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Î•Ï€ÏŽÎ½Ï…Î¼Î¿"
-                />
-                <button
-                    v-if="filters.lastName"
-                    @click="filters.lastName = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Title Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.job_title"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Î¤Î¯Ï„Î»Î¿Ï‚"
-                />
-                <button
-                    v-if="filters.job_title"
-                    @click="filters.job_title = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-
-            &lt;!&ndash; Department Filter &ndash;&gt;
-            <div class="lg:col-span-2 text-black dark:text-white">
-              &lt;!&ndash; Your existing filter input and button &ndash;&gt;
-              <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-                <input
-                    v-model="filters.department"
-                    :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                    type="text"
-                    placeholder="Î“ÎºÏÎ¿ÏÏ€"
-                />
-                <button
-                    v-if="filters.department"
-                    @click="filters.department = ''"
-                    class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-          </div>
-        </transition>
-
-        &lt;!&ndash; "Clear all" Button &ndash;&gt;
-        <div class="lg:col-span-3 lg:justify-self-end items-center">
-          <button
-              v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
-              @click="
-              filters.firstName = '';
-              filters.lastName  = '';
-              filters.job_title  = '';
-              filters.department = '';
-            "
-              class="text-red-500"
-          >
-            &times; Clear all
-          </button>
-        </div>
-      </div>-->
 
 
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
         <div class="col-span-1">
-          Î¤Î±Î¾Î¹Î½ÏŒÎ¼Î·ÏƒÎ· ÎºÎ±Ï„Î¬:
+          {{ $t('settings.sortBy') }}
         </div>
         <!-- First Name Sort Button -->
         <div
             @click="sortBy('firstName')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          ÎŒÎ½Î¿Î¼Î±
+          {{ $t('settings.firstName') }}
           <span v-if="currentSortKey === 'firstName'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -276,7 +155,7 @@
             @click="sortBy('lastName')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Î•Ï€ÏŽÎ½Ï…Î¼Î¿
+          {{ $t('settings.lastName') }}
           <span v-if="currentSortKey === 'lastName'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -297,7 +176,7 @@
             @click="sortBy('job_title')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Î¤Î¯Ï„Î»Î¿Ï‚
+          {{ $t('settings.jobTitle') }}
           <span v-if="currentSortKey === 'job_title'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -318,7 +197,7 @@
             @click="sortBy('department')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Î“ÎºÏÎ¿ÏÏ€
+          {{ $t('settings.group') }}
           <span v-if="currentSortKey === 'department'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -366,25 +245,13 @@
               {{ user?.department?.name || '' }}
             </div>
             <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
-              <a v-if="permissionsStore.can('all_users','modify')" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î± Î ÏÎ¿Ï†Î¯Î»</a>
+              <a v-if="permissionsStore.can('all_users','modify')" @click="editUser(user.id)" class="cursor-pointer text-[#EA021A] font-bold underline">{{ $t('settings.editProfile') }}</a>
               <svg v-if="permissionsStore.can('all_users','modify')" @click="deleteUser(user.id)" class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="16" height="19" viewBox="0 0 16 19" fill="none">
-                <path d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.66667C6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z" :fill="theme === 'light' ? 'black' : 'white'"/>
+                <path d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z" :fill="theme === 'light' ? 'black' : 'white'"/>
               </svg>
             </div>
           </div>
         </div>
-
-        <!-- Fade effect at the top -->
-<!--        <div
-            v-if="showTopFade"
-            class="pointer-events-none absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-gray-100 to-transparent dark:from-neutral-900 dark:to-transparent"
-        ></div>
-
-        &lt;!&ndash; Fade effect at the bottom &ndash;&gt;
-        <div
-            v-if="showBottomFade"
-            class="pointer-events-none absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-100 to-transparent dark:from-neutral-900 dark:to-transparent"
-        ></div>-->
       </div>
     </div>
   </template>
@@ -399,7 +266,7 @@
           @click="closeModal"
           class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
       >
-        <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
+        <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:hover:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
           <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -413,10 +280,12 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { useCentralStore } from '~/stores/centralStore';
+import { useI18n } from 'vue-i18n';
+import { useCentralStore } from '~/stores/centralStore.js';
 import EditUser from '@/components/Settings/EditUser.vue';
 // import DeleteUser from '@/components/Settings/DeleteUser.vue'; // Uncomment when available
 
+const { t } = useI18n();
 // Access the necessary stores
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -543,11 +412,8 @@ const closeModal = () => {
 
 // Compute the component to render in the modal
 const modalComponent = computed(() => {
-  return modalType.value === 'edit' ? EditUser : DeleteUser;
+  return modalType.value === 'edit' ? EditUser : null;
 });
-</script>
-
-<script>
 </script>
 
 <style scoped>
@@ -567,6 +433,4 @@ const modalComponent = computed(() => {
 .slide-left-leave-to {
   transform: translateX(-100%);
 }
-
-/* Include any other existing styles */
 </style>

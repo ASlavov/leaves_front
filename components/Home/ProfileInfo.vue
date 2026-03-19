@@ -1,5 +1,5 @@
 <template>
-    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">Î Î»Î·ÏÎ¿Ï†Î¿ÏÎ¯ÎµÏ‚</h3>
+    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">{{ $t('common.profileInformation') }}</h3>
     <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
         <div class="flex-1">
             <template v-if="loading">
@@ -29,13 +29,13 @@
                 </div>
                 <!-- Info Details -->
                 <div class="pt-4 space-y-2">
-                    <p><span class="font-bold">ÎŒÎ½Î¿Î¼Î±: </span><span class="text-gray-500 dark:text-gray-100">{{ firstName }}</span></p>
-                    <p><span class="font-bold">Î•Ï€ÏŽÎ½Ï…Î¼Î¿: </span><span class="text-gray-500 dark:text-gray-100"> {{ lastName }}</span></p>
-                    <p><span class="font-bold">Î¤Î¯Ï„Î»Î¿Ï‚: </span><span class="text-gray-500 dark:text-gray-100"> {{ userTitle }}</span></p>
-                    <p><span class="font-bold">Email: </span><span class="text-gray-500 dark:text-gray-100"> {{ userEmail }}</span></p>
-                    <p><span class="font-bold">ÎšÎ¹Î½Î·Ï„ÏŒ: </span><span class="text-gray-500 dark:text-gray-100"> {{ userphone }}</span></p>
-                    <p><span class="font-bold">Î•ÏƒÏ‰Ï„. Î¤Î·Î»Î­Ï†Ï‰Î½Î¿: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_internal_phone }}</span></p>
-                    <p><span class="font-bold">Î“ÎºÏÎ¿Ï…Ï€: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_department }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.firstName') }}: </span><span class="text-gray-500 dark:text-gray-100">{{ firstName }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.lastName') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ lastName }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.jobTitle') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userTitle }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.email') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userEmail }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.phone') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userphone }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.internalPhone') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_internal_phone }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.group') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_department }}</span></p>
                 </div>
             </template>
         </div>
@@ -44,13 +44,13 @@
                 @click="openModal"
                 v-if="permissionsStore.can('profile_info','modify')"
                 class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î±
+                {{ $t('common.edit') }}
             </button>
             <button
                 @click="redirectPassChange"
                 v-if="permissionsStore.can('profile_info','change_password')"
                 class="font-bold text-gray-800 dark:text-white mx-auto text-md">
-                Î‘Î»Î»Î±Î³Î® ÎºÏ‰Î´Î¹ÎºÎ¿Ï
+                {{ $t('settings.changePassword') }}
             </button>
         </div>
         <div
@@ -78,7 +78,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore';
+import { useCentralStore } from '@/stores/centralStore.js';
 import EditUser from '@/components/Settings/EditUser.vue';
 
 const router = useRouter();

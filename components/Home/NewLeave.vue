@@ -1,7 +1,7 @@
 <template>
   <button class="bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-600 focus:outline-none"
           @click="openModal">
-    ÎÎ­Î¿ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
+    {{ $t('leaves.newLeaveRequest') }}
   </button>
 
   <div
@@ -25,14 +25,14 @@
       <div class="flex justify-between items-center py-3 px-4">
         <h3 id="hs-scale-animation-modal-label"
             class="font-bold text-gray-800 dark:text-white max-w-[300px] mx-auto text-lg">
-          ÎÎµÏŒ Î±Î¯Ï„Î·Î¼Î± Î¬Î´ÎµÎ¹Î±Ï‚
+          {{ $t('leaves.newLeaveRequest') }}
         </h3>
       </div>
       <div class="p-4 overflow-y-auto">
         <!-- Conditionally render the leave counter if leaveType is selected -->
         <div v-if="leaveType"
-             class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg">
-          <span class="leave-counter-text">Î”Î¹Î±Î¸Î­ÏƒÎ¹Î¼ÎµÏ‚ Î·Î¼Î­ÏÎµÏ‚ </span>
+             class="leave-counter bg-gray-100 py-2 max-w-[200px] text-center mx-auto text-sm rounded-lg dark:bg-neutral-800">
+          <span class="leave-counter-text dark:text-gray-300">{{ $t('leaves.availableDays') }} </span>
           <div class="leave-counter-count text-red-600 font-bold text-md text-lg">
             {{ selectedLeave?.remaining_days ?? '0' }}
           </div>
@@ -42,14 +42,11 @@
             <!-- First row: Single input -->
             <div>
               <label for="input1"
-                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î¤ÏÏ€Î¿Ï‚
-                Î¬Î´ÎµÎ¹Î±Ï‚</label>
+                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.leaveType') }}</label>
               <div class="space-y-3">
                 <select v-model="leaveType"
                         class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100">
-                  <option class="dark:bg-neutral-800 dark:text-gray-100" value="">Î•Ï€Î¹Î»Î­Î¾Ï„Îµ
-                    Î¬Î´ÎµÎ¹Î±
-                  </option>
+                  <option class="dark:bg-neutral-800 dark:text-gray-100" value="">{{ $t('leaves.selectLeave') }}</option>
                   <!-- Loop through leavesData to populate the options -->
                   <option class="dark:bg-neutral-800 dark:text-gray-100"
                           v-for="(leave, index) in filteredLeavesTypes" :key="index"
@@ -64,31 +61,28 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label for="input2"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î—Î¼/Î½Î¹Î±
-                  Î±Ï€Î¿</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.fromDate') }}</label>
                 <input type="text" v-model="startDate" ref="datePickerStart"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                       placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±">
+                       :placeholder="$t('common.selectDate')">
               </div>
               <div>
                 <label for="input3"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î—Î¼/Î½Î¹Î±
-                  Î¼Î­Ï‡ÏÎ¹</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.toHuman') }}</label>
                 <input type="text" v-model="endDate" ref="datePickerEnd"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                       placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±">
+                       :placeholder="$t('common.selectDate')">
               </div>
             </div>
 
             <!-- Third row: Textarea -->
             <div>
               <label for="textarea"
-                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î£Ï‡ÏŒÎ»Î¹Î±
-                (Ï€ÏÎ¿Î±Î¹ÏÎµÏ„Î¹ÎºÏŒ)</label>
+                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.comments') }}</label>
               <div class="space-y-3">
                 <textarea v-model="comments"
                           class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
-                          rows="3" placeholder="Î£Ï‡ÏŒÎ»Î¹Î¿"></textarea>
+                          rows="3" :placeholder="$t('leaves.yourComments')"></textarea>
               </div>
             </div>
 
@@ -96,7 +90,7 @@
             <div>
               <button type="submit"
                       class="py-3 inline-flex justify-center rounded-3xl border border-transparent dark:bg-red-600 bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î¹Ï„Î®Î¼Î±Ï„Î¿Ï‚
+                {{ $t('leaves.sendRequest') }}
               </button>
             </div>
           </form>
@@ -108,190 +102,167 @@
 </template>
 
 
-<script>
+<script setup>
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ref, computed, nextTick, watch } from 'vue';
-import { useCentralStore } from '@/stores/centralStore';
+import { useI18n } from 'vue-i18n';
+import { useCentralStore } from '@/stores/centralStore.js';
 
-export default {
-  name: 'NewLeave',
-  setup() {
-    const datePickerStart = ref(null);
-    const datePickerEnd = ref(null);
+const { t } = useI18n();
+const datePickerStart = ref(null);
+const datePickerEnd = ref(null);
 
-    const centralStore = useCentralStore();
-    const leavesStore = centralStore.leavesStore;
-    const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
-    const leavesTypes = computed(() => leavesStore.leavesData?.leavesTypes);
-    const userStore = centralStore.userStore;
-    const user_id = computed(() => userStore.userId);
+const centralStore = useCentralStore();
+const leavesStore = centralStore.leavesStore;
+const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays || []);
+const leavesTypes = computed(() => leavesStore.leavesData?.leavesTypes);
+const userStore = centralStore.userStore;
+const user_id = computed(() => userStore.userId);
 
-    const leaveType = ref('');
-    const startDate = ref('');
-    const endDate = ref('');
-    const comments = ref('');
-    const successMessage = ref('');
+const leaveType = ref('');
+const startDate = ref('');
+const endDate = ref('');
+const comments = ref('');
+const successMessage = ref('');
 
-    const isModalOpen = ref(false);
+const isModalOpen = ref(false);
 
-    const datePickrSettings = {
-      dateFormat: "Y-m-d",
-      disable: [function (date) {
-        return (date.getDay() === 0 || date.getDay() === 6);
-      },],
+const datePickrSettings = {
+  dateFormat: "Y-m-d",
+  disable: [function (date) {
+    return (date.getDay() === 0 || date.getDay() === 6);
+  },],
+}
+
+// --- NEW: A helper function to manage the date pickers ---
+const initializeDatePickers = () => {
+  const today = new Date();
+
+  // Get the remaining days from the selected leave type
+  const maxDays = selectedLeave.value?.remaining_days - 1 ?? 0;
+
+  // Logic for the start date picker
+  const startDateInstance = flatpickr(datePickerStart.value, {
+    ...datePickrSettings,
+    minDate: today,
+    onChange: (selectedDates) => {
+      if (selectedDates.length) {
+        const startDateInside = selectedDates[0];
+        startDate.value = startDateInside;
+        // Update the end date picker based on new start date and maxDays
+        updateEndDateDatePicker(startDateInside, maxDays);
+      }
     }
+  });
 
-    // --- NEW: A helper function to manage the date pickers ---
-    const initializeDatePickers = () => {
-      const today = new Date();
+  // Logic for the end date picker
+  const endDateInstance = flatpickr(datePickerEnd.value, {
+    ...datePickrSettings,
+    minDate: today,
+    maxDate: maxDays > 0 ? new Date(today.getTime() + maxDays * 24 * 60 * 60 * 1000) : null
+  });
 
-      // Get the remaining days from the selected leave type
-      const maxDays = selectedLeave.value?.remaining_days - 1 ?? 0;
+  // Function to update end date picker options
+  const updateEndDateDatePicker = (minDate, daysToAdd) => {
+    const newMinDate = new Date(minDate);
+    const newMaxDate = addWorkingDays(minDate, daysToAdd);
 
-      // Logic for the start date picker
-      const startDateInstance = flatpickr(datePickerStart.value, {
-        ...datePickrSettings,
-        minDate: today,
-        onChange: (selectedDates) => {
-          if (selectedDates.length) {
-            const startDateInside = selectedDates[0];
-            startDate.value = startDateInside;
-            // Update the end date picker based on new start date and maxDays
-            updateEndDateDatePicker(startDateInside, maxDays);
-          }
-        }
-      });
-
-      // Logic for the end date picker
-      const endDateInstance = flatpickr(datePickerEnd.value, {
-        ...datePickrSettings,
-        minDate: today,
-        maxDate: maxDays > 0 ? new Date(today.getTime() + maxDays * 24 * 60 * 60 * 1000) : null
-      });
-
-      // Function to update end date picker options
-      const updateEndDateDatePicker = (minDate, daysToAdd) => {
-        const newMinDate = new Date(minDate);
-        const newMaxDate = addWorkingDays(minDate, daysToAdd);
-
-        // Destroy and re-initialize to apply new min/max dates
-        if (endDateInstance) {
-          endDateInstance.destroy();
-        }
-        flatpickr(datePickerEnd.value, {
-          ...datePickrSettings,
-          defaultDate: newMinDate,
-          minDate: newMinDate,
-          maxDate: newMaxDate
-        });
-      };
-
-      const addWorkingDays = (startDate, days) => {
-        const date = new Date(startDate);
-        let daysAdded = 0;
-        while (daysAdded < days) {
-          date.setDate(date.getDate() + 1);
-          const dayOfWeek = date.getDay();
-          if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
-            daysAdded++;
-          }
-        }
-        return date;
-      };
-    };
-
-    // --- NEW: Watchers for reactivity ---
-    // Watch for changes in leaveType to update the date pickers
-    watch(leaveType, (newLeaveType, oldLeaveType) => {
-      // Re-initialize date pickers only if the type has changed
-      if (newLeaveType !== oldLeaveType) {
-        initializeDatePickers();
-      }
+    // Destroy and re-initialize to apply new min/max dates
+    if (endDateInstance) {
+      endDateInstance.destroy();
+    }
+    flatpickr(datePickerEnd.value, {
+      ...datePickrSettings,
+      defaultDate: newMinDate,
+      minDate: newMinDate,
+      maxDate: newMaxDate
     });
+  };
 
-    const openModal = () => {
-      isModalOpen.value = true;
-      nextTick(() => {
-        // Initialize the date pickers only when the modal is first opened
-        initializeDatePickers();
-      });
-    };
+  const addWorkingDays = (startDate, days) => {
+    const date = new Date(startDate);
+    let daysAdded = 0;
+    while (daysAdded < days) {
+      date.setDate(date.getDate() + 1);
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+        daysAdded++;
+      }
+    }
+    return date;
+  };
+};
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-      // Optional: Reset form fields here if needed
-      leaveType.value = '';
-      startDate.value = '';
-      endDate.value = '';
-      comments.value = '';
-    };
+// --- Watchers for reactivity ---
+// Watch for changes in leaveType to update the date pickers
+watch(leaveType, (newLeaveType, oldLeaveType) => {
+  // Re-initialize date pickers only if the type has changed
+  if (newLeaveType !== oldLeaveType) {
+    initializeDatePickers();
+  }
+});
 
-    const filteredLeavesTypes = computed(
-        () => leavesData.value.filter(
-            leave => leavesTypes.value.some(
-                leaveType => leave.leave_type_id === leaveType.id
-            )
+const openModal = () => {
+  isModalOpen.value = true;
+  nextTick(() => {
+    // Initialize the date pickers only when the modal is first opened
+    initializeDatePickers();
+  });
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  // Optional: Reset form fields here if needed
+  leaveType.value = '';
+  startDate.value = '';
+  endDate.value = '';
+  comments.value = '';
+};
+
+const filteredLeavesTypes = computed(
+    () => leavesData.value.filter(
+        leave => leavesTypes.value.some(
+            leaveType => leave.leave_type_id === leaveType.id
         )
-    );
+    )
+);
 
-    const selectedLeave = computed(() => {
-      if (leavesData.value && leaveType.value) {
-        return leavesData.value.find(leave => leave.leave_type_id === leaveType.value) || null;
-      }
-      return null;
+const selectedLeave = computed(() => {
+  if (leavesData.value && leaveType.value) {
+    return leavesData.value.find(leave => leave.leave_type_id === leaveType.value) || null;
+  }
+  return null;
+});
+
+const submitForm = async () => {
+  const leaveRequest = {
+    id: user_id.value,
+    leave_type_id: leaveType.value,
+    start_date: startDate.value,
+    end_date: endDate.value,
+    reason: comments.value,
+  };
+
+  try {
+    await leavesStore.newLeave(user_id.value, leaveRequest.leave_type_id, leaveRequest.start_date, leaveRequest.end_date, leaveRequest.reason);
+
+    useNuxtApp().$toast.success(t('leaves.submitSuccess'), {
+      position: "bottom-right",
+      autoClose: 5000,
     });
 
-    const submitForm = async () => {
-      const leaveRequest = {
-        id: user_id.value,
-        leave_type_id: leaveType.value,
-        start_date: startDate.value,
-        end_date: endDate.value,
-        reason: comments.value,
-      };
+    closeModal(); // Close modal on success
 
-      try {
-        await leavesStore.newLeave(user_id.value, leaveRequest.leave_type_id, leaveRequest.start_date, leaveRequest.end_date, leaveRequest.reason);
-
-        useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Ï…Ï€Î¿Î²Î»Î®Î¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
-          position: "bottom-right",
-          autoClose: 5000,
-        });
-
-        closeModal(); // Close modal on success
-
-      } catch (error) {
-        //console.error('Error submitting leave request:', error);
-        useNuxtApp().$toast.error('Î£Ï†Î¬Î»Î¼Î± ÎºÎ±Ï„Î¬ Ï„Î·Î½ Ï…Ï€Î¿Î²Î¿Î»Î® Ï„Î·Ï‚ Î±Î¯Ï„Î·ÏƒÎ·Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚.', {
-          position: "bottom-right",
-          autoClose: 5000,
-        });
-      }
-    };
-
-    return {
-      user_id,
-      leavesData,
-      leaveType,
-      startDate,
-      endDate,
-      comments,
-      selectedLeave,
-      filteredLeavesTypes,
-      isModalOpen,
-      openModal,
-      closeModal,
-      successMessage,
-      submitForm,
-      datePickerStart,
-      datePickerEnd
-    };
-  },
-  // Ensure the date pickers are initialized if the component is mounted directly, although the `openModal` method already handles this.
-  mounted() {
-    // This part is not strictly necessary anymore due to the `openModal` logic, but it's good practice for standalone components.
-    // initializeDatePickers();
-  },
+  } catch (error) {
+    console.error('Error submitting leave request:', error);
+    useNuxtApp().$toast.error(t('leaves.submitError'), {
+      position: "bottom-right",
+      autoClose: 5000,
+    });
+  }
 };
 </script>
+
+<style scoped>
+</style>

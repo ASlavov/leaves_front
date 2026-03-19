@@ -3,7 +3,7 @@
         <div v-if="leavesData.message" class="text-center text-gray-500 font-semibold">
             <div class="flex items-center justify-center h-64">
                 <div class="text-center text-gray-500 font-semibold">
-                    Δεν υπάρχουν άδειες
+                    {{ $t('leaves.noLeaves') }}
                 </div>
             </div>
         </div>
@@ -50,14 +50,14 @@
                             'text-red-500': leave.status === 'cancelled',
                             'text-red-700': leave.status === 'rejected'
                         }">
-                            {{ leave.status === 'approved' ? 'Αποδεκτή' : leave.status === 'pending' ? 'Σε εκκρεμότητα' :
-                                leave.status === 'cancelled' ? 'Ακυρώθηκε' :
-                                    'Απορρίφθηκε' }}
+                            {{ leave.status === 'approved' ? $t('leaves.approved') : leave.status === 'pending' ? $t('leaves.pending') :
+                                leave.status === 'cancelled' ? $t('leaves.cancelled') :
+                                    $t('leaves.rejected') }}
                         </div>
                     </div>
                     <!-- Third Text Column (Right Aligned) -->
                     <div class="flex-1 text-right">
-                        <button @click="cancelLeave(leave.id)" v-if="leave.status === 'approved' || leave.status === 'pending' " class="font-semibold underline text-black dark:text-gray-100">Ακύρωση άδειας</button>
+                        <button @click="cancelLeave(leave.id)" v-if="leave.status === 'approved' || leave.status === 'pending' " class="font-semibold underline text-black dark:text-gray-100">{{ $t('leaves.cancelLeaveAction') }}</button>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,9 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 const userStore = centralStore.userStore;
@@ -81,19 +83,19 @@ const leaveTypes = computed(() => leavesStore.leavesData?.leavesTypes || []);
 // Function to get leave type name based on leave_type_id
 const getLeaveTypeName = (leaveTypeId) => {
     const leaveType = leaveTypes.value.find(type => type.id === leaveTypeId);
-    return leaveType ? leaveType.name : 'Unknown'; // Default to 'Unknown' if not found
+    return leaveType ? leaveType.name : t('common.unknown'); // Default to 'Unknown' if not found
 };
 
 const cancelLeave = async (leaveId) => {
   loading.value = true;
   try {
     await leavesStore.cancelLeave(userStore.userId, leaveId, 'cancelled', 'cancelled by requester');
-    useNuxtApp().$toast.success('Η ακύρωση έγινε επιτυχώς!', {
+    useNuxtApp().$toast.success(t('leaves.cancelSuccess'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να ακυρώσουμε την άδεια!', {
+    useNuxtApp().$toast.error(t('leaves.cancelError'), {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });

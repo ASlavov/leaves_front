@@ -1,7 +1,7 @@
 <template>
     <a href="#" class="py-3 px-5 inline-flex items-center gap-x-2 text-md dark:text-gray-100" aria-haspopup="dialog" aria-expanded="false"
         aria-controls="hs-scale-animation-modal" data-hs-overlay="#cancel-leaves">
-        Î‘ÎºÏÏÏ‰ÏƒÎ· Î†Î´ÎµÎ¹Î±Ï‚
+        {{ $t('leaves.cancelLeave') }}
     </a>
 
     <div id="cancel-leaves"
@@ -24,10 +24,10 @@
                 <div class="flex items-center py-3 px-4">
                     <h3 id="hs-scale-animation-modal-label"
                         class="font-bold text-gray-800 dark:text-white max-w-[300px] mx-auto text-lg">
-                        Î‘ÎºÏÏÏ‰ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚
+                        {{ $t('leaves.cancelLeave') }}
                     </h3>
                 </div>
-                <div class="mx-auto font-extralight text-gray-500 dark:text-gray-100">Î•Ï€Î¹Î»Î­Î¾ÎµÏ„Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î± Ï€Î¿Ï… Î¸Î­Î»ÎµÏ„Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎµÏ„Îµ</div>
+                <div class="mx-auto font-extralight text-gray-500 dark:text-gray-100">{{ $t('leaves.selectLeaveToCancel') }}</div>
                 <div class="p-4 overflow-y-auto">
                     <div class="new-leave-form py-10">
 
@@ -42,25 +42,24 @@
                                             class="shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"
                                             :value="leave" v-model="selectedLeave">
                                         <span class="text-xs text-gray-400 mx-auto">{{ leave.start_date }} - {{ leave.end_date }}<br>
-                                            <span class="text-sm text-black font-semibold dark:text-gray-100">{{ calculateDays(leave.start_date, leave.end_date) }} Î·Î¼Î­ÏÎµÏ‚</span>
+                                            <span class="text-sm text-black font-semibold dark:text-gray-100">{{ calculateDays(leave.start_date, leave.end_date) }} {{ $t('leaves.days') }}</span>
                                         </span>
                                         <span class="text-sm text-black-600 dark:text-neutral-400 mx-auto font-semibold ">{{ getLeaveTypeName(leave.leave_type_id) }}</span>
-                                        <span class="text-sm ms-auto text-green-700 font-semibold dark:text-gray-100">{{ leave.status === 'pending' ? 'Î‘Î½Î±Î¼Î¿Î½Î®' : 'Î‘Ï€Î¿Î´ÎµÎºÏ„Î®' }}</span>
+                                        <span class="text-sm ms-auto text-green-700 font-semibold dark:text-gray-100">{{ leave.status === 'pending' ? $t('leaves.pending') : $t('leaves.approved') }}</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="space-y-3 pt-5">
-                                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">Î£Ï‡ÏŒÎ»Î¹Î±
-                                    (Ï€ÏÎ¿Î±Î¹ÏÎµÏ„Î¹ÎºÏŒ)</label>
+                                <label for="textarea" class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.comments') }}</label>
                                 <textarea class="py-3 px-4 block w-full border-gray-200 border text-sm rounded-lg dark:bg-neutral-800 dark:text-gray-100"
-                                    rows="3" placeholder="Î¤Î± ÏƒÏ‡ÏŒÎ»Î¹Î± ÏƒÎ±Ï‚" v-model="comment"></textarea>
+                                    rows="3" :placeholder="$t('leaves.yourComments')" v-model="comment"></textarea>
                             </div>
 
                             <div class="py-5">
                                 <button type="submit"
-                                    class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                                    Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î¹Ï„Î®Î¼Î±Ï„Î¿Ï‚
+                                    class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                                    {{ $t('leaves.sendRequest') }}
                                 </button>
                             </div>
 
@@ -73,86 +72,70 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 
-export default {
-    name: 'CancelLeave',
-    setup() {
-        const centralStore = useCentralStore();
-        const leavesStore = centralStore.leavesStore;
+const { t } = useI18n();
+const centralStore = useCentralStore();
+const leavesStore = centralStore.leavesStore;
 
-        // Ensure leavesData is always an array
-        const leavesData = computed(() => Array.isArray(leavesStore.leavesData?.currentUser) ? leavesStore.leavesData.currentUser : []);
+// Ensure leavesData is always an array
+const leavesData = computed(() => Array.isArray(leavesStore.leavesData?.currentUser) ? leavesStore.leavesData.currentUser : []);
 
-        const leaveTypes = computed(() => leavesStore.leavesData?.leavesTypes || []);
-        
-        // Filter leaves based on status
-        const filteredLeavesData = computed(() =>
-            leavesData.value.filter(leave =>
-                leave.status === 'pending' || leave.status === 'approved'
-            )
-        );
+const leaveTypes = computed(() => leavesStore.leavesData?.leavesTypes || []);
 
-        // Selected leave and comment
-        const selectedLeave = ref(null);
-        const comment = ref('');
+// Filter leaves based on status
+const filteredLeavesData = computed(() =>
+    leavesData.value.filter(leave =>
+        leave.status === 'pending' || leave.status === 'approved'
+    )
+);
 
-        // Function to get leave type name based on leave_type_id
-        const getLeaveTypeName = (leaveTypeId) => {
-            const leaveType = leaveTypes.value.find(type => type.id === leaveTypeId);
-            return leaveType ? leaveType.name : 'Unknown'; // Default to 'Unknown' if not found
-        };
+// Selected leave and comment
+const selectedLeave = ref(null);
+const comment = ref('');
 
-        // Function to calculate the number of days between start_date and end_date
-        const calculateDays = (startDate, endDate) => {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include the end date
-            return diffDays;
-        };
+// Function to get leave type name based on leave_type_id
+const getLeaveTypeName = (leaveTypeId) => {
+    const leaveType = leaveTypes.value.find(type => type.id === leaveTypeId);
+    return leaveType ? leaveType.name : 'Unknown'; // Default to 'Unknown' if not found
+};
 
-        // Handle form submission
-        const handleSubmit = async () => {
-            if (selectedLeave.value) {
-                try {
-                    await leavesStore.cancelLeave(
-                        centralStore.userStore.userId, // Pass userId
-                        selectedLeave.value.id,   
-                        'cancelled',      // Pass leaveId
-                        comment.value
-                    );
+// Function to calculate the number of days between start_date and end_date
+const calculateDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include the end date
+    return diffDays;
+};
 
-                    useNuxtApp().$toast.success('Î— Î±Î¯Ï„Î·ÏƒÎ· Î¬Î´ÎµÎ¹Î±Ï‚ Î±ÎºÏ…ÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', {
-                        position: "bottom-right",
-                        autoClose: 5000, // Close automatically after 5 seconds
-                    });
+// Handle form submission
+const handleSubmit = async () => {
+    if (selectedLeave.value) {
+        try {
+            await leavesStore.cancelLeave(
+                centralStore.userStore.userId, // Pass userId
+                selectedLeave.value.id,   
+                'cancelled',      // Pass leaveId
+                comment.value
+            );
 
-                } catch (error) {
-                    //console.error('Error submitting leave request:', error);
-                    // Handle the error as needed
-                  useNuxtApp().$toast.error('Î”ÎµÎ½ Î¼Ï€Î¿ÏÎ­ÏƒÎ±Î¼Îµ Î½Î± Î±ÎºÏ…ÏÏŽÏƒÎ¿Ï…Î¼Îµ Ï„Î·Î½ Î¬Î´ÎµÎ¹Î±!', {
-                    position: "bottom-right",
-                    autoClose: 5000, // Close automatically after 5 seconds
-                  });
-                }
-            } else {
-                //console.log('No leave selected');
-            }
-        };
+            useNuxtApp().$toast.success(t('leaves.cancelSuccess'), {
+                position: "bottom-right",
+                autoClose: 5000, // Close automatically after 5 seconds
+            });
 
-        return {
-            filteredLeavesData,
-            selectedLeave,
-            comment,
-            calculateDays,
-            getLeaveTypeName,
-            handleSubmit
-        };
+        } catch (error) {
+            console.error('Error submitting leave request:', error);
+            // Handle the error as needed
+        }
+    } else {
+        console.log('No leave selected');
     }
-}
+};
 </script>
 
 <style scoped>

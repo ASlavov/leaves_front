@@ -15,59 +15,59 @@
         <div class="grid grid-cols-12 pt-[10px] max-w-[947px]">
           <div class="grid grid-cols-2 col-span-12 gap-y-[15px] gap-x-[25px]">
             <div v-if="!entitlementId" class="max-w-[97%] col-span-2">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î•ÏÎ³Î±Î¶ÏŒÎ¼ÎµÎ½Î¿Î¹</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.employees') }}</label>
               <CustomMultiSelect
                   v-model="formUserIds"
                   :options="users"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ ÎµÏÎ³Î±Î¶ÏŒÎ¼ÎµÎ½Î¿/Î¿Ï…Ï‚"
+                  :placeholder="$t('settings.selectEmployees')"
               />
             </div>
             <div class="max-w-sm">
               <CustomSelect
                   v-model="formLeaveTypeId"
                   :options="leaveTypes"
-                  label="Î•Î¯Î´Î¿Ï‚ Î†Î´ÎµÎ¹Î±Ï‚"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ ÎµÎ¯Î´Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚"
+                  :label="$t('settings.leaveType')"
+                  :placeholder="$t('settings.selectLeaveType')"
                   selectId="leave-type-select"
               />
             </div>
             <div class="max-w-sm">
               <label class="block text-sm font-bold mb-2 text-black dark:text-white ">
-                Î”Î¹ÎºÎ±Î¹Î¿ÏÎ¼ÎµÎ½ÎµÏ‚ Î—Î¼Î­ÏÎµÏ‚
+                {{ $t('settings.entitledDays') }}
                 <span class="inline-block ml-1 align-middle cursor-pointer relative group">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 group-hover:text-gray-600 dark:text-neutral-500 dark:group-hover:text-neutral-400 transition-colors" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
                   </svg>
 
                   <div class="absolute z-10 top-0 left-1/2 -translate-y-full -translate-x-1/2 w-48 p-4 bg-black text-white text-xs rounded-lg shadow-lg opacity-0 border-[1px] border-gray-700 dark:border-gray-500 group-hover:opacity-100 transition-opacity pointer-events-none dark:bg-neutral-800">
-                    Î‘Î½ Î¿ Ï‡ÏÎ®ÏƒÏ„Î·Ï‚ Î­Ï‡ÎµÎ¹ Î®Î´Î· ÎºÎ±Ï„Î±Ï‡Ï‰ÏÎ·Î¼Î­Î½ÎµÏ‚ Î´Î¹ÎºÎ±Î¹Î¿ÏÎ¼ÎµÎ½ÎµÏ‚ Î·Î¼Î­ÏÎµÏ‚ Î³Î¹Î± Î±Ï…Ï„ÏŒ Ï„Î¿ Î­Ï„Î¿Ï‚, Î¿Î¹ Î·Î¼Î­ÏÎµÏ‚ Î±Ï…Ï„Î­Ï‚ Î¸Î± Î±Î½Ï„Î¹ÎºÎ±Ï„Î±ÏƒÏ„Î±Î¸Î¿ÏÎ½.
+                    {{ $t('settings.entitledDaysTooltip') }}
                   </div>
                 </span>
               </label>
-              <input v-model.number="formEntitledDays" type="number" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Î‘ÏÎ¹Î¸Î¼ÏŒÏ‚ Î·Î¼ÎµÏÏŽÎ½">
+              <input v-model.number="formEntitledDays" type="number" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.numberOfDays')">
             </div>
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î­Î½Î±ÏÎ¾Î·Ï‚</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.startDate') }}</label>
               <input
                   type="text"
                   ref="datePickerStart"
                   v-model="formStartDate"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
+                  :placeholder="$t('common.selectDate')"
                   class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="max-w-sm">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Î—Î¼ÎµÏÎ¿Î¼Î·Î½Î¯Î± Î»Î®Î¾Î·Ï‚</label>
+              <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.endDate') }}</label>
               <input
                   type="text"
                   ref="datePickerEnd"
                   v-model="formEndDate"
-                  placeholder="Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Î·Î¼/Î½Î¹Î±"
+                  :placeholder="$t('common.selectDate')"
                   class="cursor-pointer py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400">
             </div>
             <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
               <button @click="submitForm"
                       class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                {{ entitlementId ? 'Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î‘Î»Î»Î±Î³ÏŽÎ½' : 'Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î†Î´ÎµÎ¹Î±Ï‚' }}
+                {{ entitlementId ? $t('settings.saveChanges') : $t('settings.addLeave') }}
               </button>
             </div>
           </div>
@@ -79,12 +79,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const { t } = useI18n();
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const entitlementStore = centralStore.entitlementStore;
@@ -168,14 +170,13 @@ onMounted(async () => {
       formStartDate.value = entitlementToEdit.start_from;
       formEndDate.value = entitlementToEdit.end_to;
     }
-    //console.log(entitlementToEdit);
   }
   loading.value = false;
 });
 
 const submitForm = async () => {
   if (!formUserIds.value.length || !formLeaveTypeId.value || !formEntitledDays.value || !formStartDate.value || !formEndDate.value) {
-    $toast.error('Î Î±ÏÎ±ÎºÎ±Î»ÏŽ ÏƒÏ…Î¼Ï€Î»Î·ÏÏŽÏƒÏ„Îµ ÏŒÎ»Î± Ï„Î± Ï€ÎµÎ´Î¯Î±!', { position: "bottom-right", autoClose: 5000 });
+    $toast.error(t('settings.fillAllFields'), { position: "bottom-right", autoClose: 5000 });
     return;
   }
 
@@ -190,7 +191,7 @@ const submitForm = async () => {
           formStartDate.value,
           formEndDate.value
       );
-      $toast.success('Î— Î¬Î´ÎµÎ¹Î± ÎµÎ½Î·Î¼ÎµÏÏŽÎ¸Î·ÎºÎµ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', { position: "bottom-right", autoClose: 5000 });
+      $toast.success(t('settings.leaveUpdated'), { position: "bottom-right", autoClose: 5000 });
     } else {
       // Logic for adding one or more new entitlements
       await entitlementStore.addEntitledDays(
@@ -200,10 +201,10 @@ const submitForm = async () => {
           formStartDate.value,
           formEndDate.value
       );
-      $toast.success('Î— Î½Î­Î± Î¬Î´ÎµÎ¹Î±/ÎµÏ‚ Ï€ÏÎ¿ÏƒÏ„Î­Î¸Î·ÎºÎµ/Î±Î½ ÎµÏ€Î¹Ï„Ï…Ï‡ÏŽÏ‚!', { position: "bottom-right", autoClose: 5000 });
+      $toast.success(t('settings.leaveAdded'), { position: "bottom-right", autoClose: 5000 });
     }
   } catch (error) {
-    $toast.error('Î£Ï†Î¬Î»Î¼Î± ÎºÎ±Ï„Î¬ Ï„Î·Î½ Î±Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Ï„Î·Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚.', { position: "bottom-right", autoClose: 5000 });
+    $toast.error(t('settings.saveLeaveError'), { position: "bottom-right", autoClose: 5000 });
   }
 };
 </script>

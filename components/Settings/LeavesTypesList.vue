@@ -22,12 +22,12 @@
         <button
             @click="newLeaveType"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-          Î ÏÎ¿ÏƒÎ¸Î®ÎºÎ· Î½Î­Î¿Ï… Ï„ÏÏ€Î¿Ï… Î±Î´ÎµÎ¹ÏŽÎ½
+          {{ $t('settings.addLeaveType') }}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold hidden">
         <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          Î¦Î¯Î»Ï„ÏÎ±:
+          {{ $t('settings.filters') }}
         </div>
 
         <!-- Leave Type Name Filter -->
@@ -37,7 +37,7 @@
                 v-model="filters.leaveTypeName"
                 :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leaveTypeName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
                 type="text"
-                placeholder="Î¤ÏÏ€Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚"
+                :placeholder="$t('settings.leaveType')"
             />
             <button
                 v-if="filters.leaveTypeName"
@@ -48,63 +48,6 @@
             </button>
           </div>
         </div>
-
-        <!-- Leaves Type Days Filter -->
-<!--        <div class="lg:col-span-2 text-black dark:text-white">
-          <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-            <input
-                v-model="filters.leavesTypeDays"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.leavesTypeDays ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                type="text"
-                placeholder="Î—Î¼Î­ÏÎµÏ‚"
-            />
-            <button
-                v-if="filters.leavesTypeDays"
-                @click="filters.leavesTypeDays = ''"
-                class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-            >
-              &times;
-            </button>
-          </div>
-        </div>-->
-
-        <!-- Title Filter -->
-<!--        <div class="lg:col-span-2 text-black dark:text-white">
-          <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-            <input
-                v-model="filters.users"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.users ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                type="text"
-                placeholder="Î§ÏÎ®ÏƒÏ„ÎµÏ‚"
-            />
-            <button
-                v-if="filters.users"
-                @click="filters.users = ''"
-                class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-            >
-              &times;
-            </button>
-          </div>
-        </div>-->
-
-        <!-- Department Filter -->
-<!--        <div class="lg:col-span-2 text-black dark:text-white">
-          <div class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500">
-            <input
-                v-model="filters.department"
-                :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-                type="text"
-                placeholder="Î“ÎºÏÎ¿ÏÏ€"
-            />
-            <button
-                v-if="filters.department"
-                @click="filters.department = ''"
-                class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-            >
-              &times;
-            </button>
-          </div>
-        </div>-->
 
         <div class="lg:col-span-3 lg:justify-self-end items-center">
           <button
@@ -117,21 +60,21 @@
               "
               class="text-red-500"
           >
-            &times; ÎšÎ±Î¸Î±ÏÎ¹ÏƒÎ¼ÏŒÏ‚ Ï†Î¯Î»Ï„ÏÏ‰Î½
+            &times; {{ $t('settings.clearFilters') }}
           </button>
         </div>
       </div>
 
       <div class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold hidden">
         <div class="col-span-1 ">
-          Î¤Î±Î¾Î¹Î½ÏŒÎ¼Î·ÏƒÎ· ÎºÎ±Ï„Î¬:
+          {{ $t('settings.sortBy') }}
         </div>
         <!-- First Name Sort Button -->
         <div
             @click="sortBy('leaveTypeName')"
             class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
         >
-          Î¤ÏÏ€Î¿Ï‚ Î¬Î´ÎµÎ¹Î±Ï‚
+          {{ $t('settings.leaveType') }}
           <span v-if="currentSortKey === 'leaveTypeName'" class="ml-1">
             <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor">
@@ -147,69 +90,6 @@
             </svg>
           </span>
         </div>
-        <!-- Last Name Sort Button -->
-<!--        <div
-            @click="sortBy('leaveTypeDays')"
-            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-        >
-          Î—Î¼Î­ÏÎµÏ‚
-          <span v-if="currentSortKey === 'leaveTypeDays'" class="ml-1">
-            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Up Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 15l7-7 7 7"/>
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Down Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7"/>
-            </svg>
-          </span>
-        </div>-->
-        <!-- First Name Sort Button -->
-<!--        <div
-            @click="sortBy('users')"
-            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-        >
-          Î§ÏÎ®ÏƒÏ„ÎµÏ‚
-          <span v-if="currentSortKey === 'users'" class="ml-1">
-            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Up Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 15l7-7 7 7"/>
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Down Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7"/>
-            </svg>
-          </span>
-        </div>-->
-        <!-- First Name Sort Button -->
-<!--        <div
-            @click="sortBy('department')"
-            class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-        >
-          Î“ÎºÏÎ¿ÏÏ€Ï‚
-          <span v-if="currentSortKey === 'department'" class="ml-1">
-            <svg v-if="sortDirection" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Up Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 15l7-7 7 7"/>
-            </svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-              &lt;!&ndash; Down Arrow &ndash;&gt;
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M19 9l-7 7-7-7"/>
-            </svg>
-          </span>
-        </div>-->
       </div>
       <div class="relative -m-4 p-4 mt-0">
         <div ref="scrollContainer"
@@ -221,17 +101,11 @@
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
           <div v-for="leaveType in filteredLeavesTypes" :key="leaveType.id" class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
-<!--            <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
-              <img v-if="user.profile.profile_image" :src="user.profile.profile_image" />
-              <span v-else class="text-white font-bold">
-                  {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
-              </span>
-            </div>-->
             <div class="col-span-8">
               {{ leaveType.name || '' }}
             </div>
             <div class="col-span-4 justify-self-end flex gap-[25px] items-center">
-              <a v-if="permissionsStore.can('leave_types','modify')" @click="editLeaveType(leaveType.id)" class="cursor-pointer text-[#EA021A] font-bold underline">Î•Ï€ÎµÎ¾ÎµÏÎ³Î±ÏƒÎ¯Î± Î ÏÎ¿Ï†Î¯Î»</a>
+              <a v-if="permissionsStore.can('leave_types','modify')" @click="editLeaveType(leaveType.id)" class="cursor-pointer text-[#EA021A] font-bold underline">{{ $t('settings.editLeaveType') }}</a>
             </div>
           </div>
         </div>
@@ -263,7 +137,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { useCentralStore } from '~/stores/centralStore';
+import { useCentralStore } from '~/stores/centralStore.js';
 import EditLeaveType from "~/components/Settings/EditLeaveType.vue";
 
 

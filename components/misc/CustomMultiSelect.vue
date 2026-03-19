@@ -6,20 +6,24 @@
     >
       <template v-for="option in selectedOptions" :key="option.id">
         <div
-            class="flex flex-nowrap items-center relative z-10 bg-white border border-gray-200 rounded-full p-1 m-1 dark:bg-neutral-900 dark:border-neutral-700"
+            class="flex flex-nowrap items-center relative z-10 bg-white border border-gray-200 rounded-full p-1 m-1 dark:bg-neutral-900 dark:border-neutral-700 shadow-sm"
         >
           <div class="size-6 me-1" v-html="option.icon"></div>
-          <div class="whitespace-nowrap text-gray-800 dark:text-neutral-200">
+          <div class="whitespace-nowrap text-gray-800 dark:text-neutral-200 text-xs font-bold px-1">
             {{ option.name }}
           </div>
           <div
-              class="inline-flex shrink-0 justify-center items-center size-5 ms-2 rounded-full text-gray-800 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm dark:bg-neutral-700/50 dark:hover:bg-neutral-700 dark:text-neutral-400 cursor-pointer"
+              class="inline-flex shrink-0 justify-center items-center size-5 ms-1 rounded-full text-gray-800 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 text-sm dark:bg-neutral-700/50 dark:hover:bg-neutral-700 dark:text-neutral-400 cursor-pointer transition-colors"
               @click.stop="removeOption(option)"
           >
             <svg
                 class="shrink-0 stroke-red-500 size-3"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
+                fill="none"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
             >
               <path d="M18 6 6 18"></path>
               <path d="M6 6l12 12"></path>
@@ -48,8 +52,7 @@
     </div>
     <div
         v-if="isOpen"
-        class="absolute mt-2 z-50 w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg overflow-hidden overflow-y-auto dark:bg-neutral-900 dark:border-neutral-700
-        z-99
+        class="absolute mt-2 z-[110] w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-neutral-900 dark:border-neutral-700 overflow-hidden overflow-y-auto
  [&::-webkit-scrollbar]:w-2
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
@@ -63,31 +66,31 @@
         <button
             v-if="!isAllSelected"
             @click="selectAllOptions"
-            class="w-full text-left font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-600"
+            class="w-full text-left font-bold text-[11px] text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-600"
         >
-          Επιλογή Όλων
+          {{ $t('common.selectAll') }}
         </button>
         <button
             v-if="selectedOptions.length > 0"
             @click="deselectAllOptions"
-            class="w-full text-right font-semibold text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
+            class="w-full text-right font-bold text-[11px] text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
         >
-          Διαγραφή Όλων
+          {{ $t('common.deleteAll') }}
         </button>
       </div>
 
       <div
           v-for="option in filteredOptions"
           :key="option.id"
-          class="flex items-center py-2 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-100 rounded-lg focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800"
+          class="flex items-center py-2.5 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-50 rounded-lg focus:outline-none focus:bg-gray-50 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800 transition-colors"
           @click="selectOption(option)"
       >
-        <div class="size-8 me-2" v-html="option.icon"></div>
+        <div v-if="option.icon" class="size-8 me-2" v-html="option.icon"></div>
         <div>
           <div class="text-sm font-semibold text-gray-800 dark:text-neutral-200">
             {{ option.name }}
           </div>
-          <div class="text-xs text-gray-500 dark:text-neutral-500">
+          <div v-if="option.description" class="text-xs text-gray-500 dark:text-neutral-500">
             {{ option.description }}
           </div>
         </div>
@@ -150,7 +153,6 @@ export default {
       },
     },
     isAllSelected() {
-      // Corrected logic to handle no options
       return this.options.length > 0 && this.selectedOptions.length === this.options.length;
     },
     hasOptions() {
@@ -160,7 +162,6 @@ export default {
       const lowerInput = this.inputValue.toLowerCase();
       const selectedIds = this.selectedOptions.map(option => option.id);
 
-      // We need a small delay here for the user data to populate
       if (!this.options || this.options.length === 0) {
         return [];
       }

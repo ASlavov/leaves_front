@@ -1,7 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   nitro: {
-    preset: 'netlify',
+    // Preset is controlled by NITRO_PRESET env var on Netlify.
+    // Do NOT hardcode 'netlify' here — it breaks local dev routing.
+    ...(process.env.NITRO_PRESET ? { preset: process.env.NITRO_PRESET } : {}),
   },
   routeRules: {
     '/api/**': {
@@ -53,7 +55,28 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxtjs/color-mode',
     'pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/i18n',
   ],
+  i18n: {
+    lazy: true,
+    restructureDir: '',
+    langDir: 'locales',
+    defaultLocale: 'en',
+    strategy: 'no_prefix',
+    detectBrowserLanguage: false,
+    locales: [
+      {
+        code: 'en',
+        language: 'en-US',
+        file: 'en.json'
+      },
+      {
+        code: 'el',
+        language: 'el-GR',
+        file: 'el.json'
+      }
+    ]
+  },
   imports: {
     dirs: ['stores'],  // If your stores are in the "stores" folder
   },
@@ -65,7 +88,10 @@ export default defineNuxtConfig({
     jwtSecret: process.env.jwtSecret,
     // Keys within public, will be also exposed to the client-side
     public: {
-      apiBase: 'https://leavesbackend.whyagency.gr/api',
+      // Uses local base when apiBaseLocal is defined in .env (local dev), falls back to prod
+      apiBase: process.env.apiBaseLocal ?? process.env.apiBaseProd,
+      apiBaseLocal: 'http://localhost:8000/api',
+      apiBaseProd: 'https://leavesbackend.whyagency.gr/api',
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',

@@ -2,7 +2,7 @@
   <Sidebar />
   <!-- Content -->
   <div class="w-full lg:pl-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
-    <h3 class="px-4 pt-9 sm:px-6 font-semibold text-lg dark:text-gray-100">Ρυθμίσεις</h3>
+    <h3 class="px-4 pt-9 sm:px-6 font-semibold text-lg dark:text-gray-100">{{ $t('settings.title') }}</h3>
     <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
       <div class="w-full bg-white rounded-lg shadow-md dark:bg-neutral-800 duration-300">
         <div class="border-b border-gray-200 px-4 dark:border-neutral-700 duration-300">
@@ -24,7 +24,7 @@
                 :aria-controls="'basic-tabs-' + tab.name"
                 role="tab"
             >
-              {{ tab.label }}
+              {{ $t(tab.labelKey) }}
             </button>
           </nav>
         </div>
@@ -77,11 +77,11 @@ const userId = computed(() => userStore.userId);
 const route = useRoute();
 const router = useRouter();
 
-// Define tabs array with unique names
+// Define tabs array with unique names and translation keys
 const tabs = [
   {
     name: 'edit-profile',
-    label: 'Επεξεργασία Προφίλ',
+    labelKey: 'settings.editProfile',
     component: EditUser,
     props: () => ({
       userId: userId.value,
@@ -90,37 +90,37 @@ const tabs = [
   },
   {
     name: 'permissions',
-    label: 'Δικαιώματα',
+    labelKey: 'settings.permissions',
     component: Permissions,
     permission: { category: 'permissions', action: 'view' },
   },
   {
     name: 'security',
-    label: 'Ασφάλεια',
+    labelKey: 'settings.security',
     component: Security,
     permission: null,
   },
   {
     name: 'users',
-    label: 'Χρήστες',
+    labelKey: 'settings.users',
     component: UsersList,
     permission: null,
   },
   {
     name: 'groups',
-    label: 'Γκρουπς',
+    labelKey: 'settings.groups',
     component: GroupsList,
     permission: null,
   },
   {
     name: 'leave-types',
-    label: 'Τύποι Αδειών',
+    labelKey: 'settings.leaveTypes',
     component: LeavesTypesList,
     permission: { category: 'leave_types', action: 'view' },
   },
   {
     name: 'entitlement-days',
-    label: 'Ημέρες Αδειών',
+    labelKey: 'settings.leaveDays',
     component: EntitlementDays,
     permission: { category: 'entitlement', action: 'view' },
   },
@@ -180,7 +180,7 @@ watch(
 watch(
     () => visibleTabs.value,
     (newTabs) => {
-      if (!newTabs.find((tab) => tab.name === activeTab.value)) {
+      if (activeTab.value && !newTabs.find((tab) => tab.name === activeTab.value)) {
         if (newTabs.length > 0) {
           changeTab(newTabs[0].name);
         } else {
@@ -193,7 +193,7 @@ watch(
 // Function to compute tab button classes
 function tabButtonClass(tabName) {
   const baseClasses =
-      'py-4 px-1 inline-flex items-center gap-x-2 border-b-2 text-sm whitespace-nowrap focus:outline-none disabled:opacity-50 disabled:pointer-events-none';
+      'py-4 px-1 inline-flex items-center gap-x-2 border-b-2 text-sm whitespace-nowrap focus:outline-none disabled:opacity-50 disabled:pointer-events-none transition-all duration-300';
   const activeClasses =
       'border-red-600 text-black font-bold dark:text-white';
   const inactiveClasses =
