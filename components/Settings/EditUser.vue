@@ -127,6 +127,7 @@ const userStore = centralStore.userStore;
 const departmentsStore = centralStore.departmentsStore;
 const permissionsStore = centralStore.permissionsStore;
 const { $toast } = useNuxtApp();
+const emit = defineEmits(['saved']);
 
 // Loading state
 const loading = computed(() => userStore && userStore.loading);
@@ -260,32 +261,7 @@ const formSelectedDepartmentId = ref(null);
 const departments = computed(() => departmentsStore.departmentsData);
 
 // List of roles
-const roles = computed(() => {
-  /*const flatMapper = userStore.allUsers.flatMap(user => user?.roles);
-  return Object.values(flatMapper.reduce((accumulator, currentItem) => {
-    accumulator[currentItem.id] = currentItem;
-    return accumulator;
-  }, {}));*/
-
-  return [
-    {
-      name: 'admin',
-      id: 1,
-    },
-    {
-      name: 'hr-manager',
-      id: 2,
-    },
-    {
-      name: 'head',
-      id: 3,
-    },
-    {
-      name: 'user',
-      id: 4,
-    },
-  ];
-});
+const roles = computed(() => permissionsStore.allRoles);
 
 // Submit form method
 const submitForm = async () => {
@@ -317,6 +293,7 @@ const submitForm = async () => {
       position: "bottom-right",
       autoClose: 5000,
     });
+    emit('saved');
   } catch (error) {
     $toast.error(t('settings.profileUpdateError'), {
       position: "bottom-right",

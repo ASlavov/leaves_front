@@ -8,6 +8,7 @@ import {
     addEntitledDaysForMultipleUsersComposable,
     addEntitledRemoteDaysForMultipleUsersComposable,
 } from '@/composables/entitlementApiComposable';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/user';
 import type { Entitlement } from '~/types';
 
@@ -18,6 +19,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
     const loading = ref(false);
     const error = ref<string | null>(null);
     const userStore = useUserStore();
+    const { t } = useI18n();
     const isDataLoaded = ref(false);
 
     function reset() {
@@ -41,7 +43,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             });*/
             isDataLoaded.value = true;
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
+            setError(t('errors.entitlement.initFailed'));
         }
     }
     async function getEntitledDaysForUser(userId: string | number, forceRefresh = false) {
@@ -77,7 +79,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
 
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
+            setError(t('errors.entitlement.fetchFailed'));
         } finally {
             loading.value = false;
         }
@@ -104,7 +106,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                 }
             } catch (err) {
                 // Handle errors and set the error state
-                setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
+                setError(t('errors.entitlement.createFailed'));
             } finally {
                 // Ensure loading is set to false and any post-processing is done
                 loading.value = false;
@@ -166,7 +168,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             }
 
         } catch (err) {
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες');
+            setError(t('errors.entitlement.createFailed'));
             throw err; // Re-throw the error to be handled by the component
         } finally {
             loading.value = false;
@@ -197,7 +199,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                 });
             } else {
                 // Should never be the case?!
-                throw new Error('Κάτι πήγε στραβά!');
+                throw new Error(t('errors.common.somethingWentWrong'));
             }
 
             // After successful creation, clear the cache for all affected users
@@ -210,7 +212,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             }
 
         } catch (err) {
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες');
+            setError(t('errors.entitlement.createFailed'));
             throw err; // Re-throw the error to be handled by the component
         } finally {
             loading.value = false;
@@ -244,7 +246,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
+            setError(t('errors.entitlement.updateFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -263,7 +265,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
+            setError(t('errors.entitlement.deleteFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;

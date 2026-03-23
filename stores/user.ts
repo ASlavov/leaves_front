@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import getUserProfileComposable, {
     getAllUsersComposable,
     editUserComposable,
@@ -7,6 +7,7 @@ import getUserProfileComposable, {
 } from "~/composables/userApiComposable";
 import { newLeaveComposable } from "~/composables/leavesApiComposable";
 import type { User } from '~/types';
+import { useDepartmentsStore } from '~/stores/departments';
 
 export const useUserStore = defineStore('userStore', () => {
     const userId = ref<string | number | null>(null);
@@ -15,6 +16,8 @@ export const useUserStore = defineStore('userStore', () => {
     const userInfo = ref<User>({} as User);
     const allUsers = ref<User[]>([]);
     const error = ref<string | null>(null);
+    const { t } = useI18n();
+    const departmentsStore = useDepartmentsStore();
 
     function reset() {
         userInfo.value = {} as User;
@@ -49,7 +52,7 @@ export const useUserStore = defineStore('userStore', () => {
                 };//Uncomment when API is ready: fullProfile.permissions;
                 userInfo.value = fullProfile;
             } catch (err) {
-                setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
+                setError(t('errors.user.fetchProfileFailed'));
             } finally {
                 loading.value = false;
             }
@@ -99,10 +102,11 @@ export const useUserStore = defineStore('userStore', () => {
                 } else {
                     await getAllUsers();
                 }
+                try { await departmentsStore.getAll(); } catch (e) { console.error('Failed to refresh departments', e); }
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να επεξεργαστούμε τον χρήστη');
+            setError(t('errors.user.editFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -128,7 +132,8 @@ export const useUserStore = defineStore('userStore', () => {
                 // Nothing else to do here
             }
         } catch (err) {
-            setError('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας');
+            setError(t('errors.user.changePasswordFailed'));
+            throw err;
         } finally {
             loading.value = false;
         }
@@ -140,7 +145,7 @@ export const useUserStore = defineStore('userStore', () => {
                 loading.value = true;
                 allUsers.value = Object.values(await getAllUsersComposable());
             } catch (err) {
-                setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
+                setError(t('errors.user.fetchUsersFailed'));
             } finally {
                 loading.value = false;
             }
@@ -157,7 +162,7 @@ export const useUserStore = defineStore('userStore', () => {
                 await getAllUsers();
             }
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρχικοποιήσουμε το προφίλ σας');
+            setError(t('errors.user.initFailed'));
         } finally {
             loading.value = false;
         }

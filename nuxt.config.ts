@@ -35,7 +35,6 @@ export default defineNuxtConfig({
   plugins: [
     "~/plugins/preline.client.ts",
     /*"~/plugins/fetchInterceptor.js",*/
-    "~/plugins/apexcharts.client.ts",
     "~/plugins/vue3-toastify.client.js"
   ],
   pinia: {

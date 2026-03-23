@@ -1,5 +1,5 @@
 <template>
-    <h3 class="py-4 font-semibold text-lg dark:text-gray-100">{{ $t('common.profileInformation') }}</h3>
+    <h3 class="py-4 font-semibold text-[16px] dark:text-gray-100">{{ $t('common.profileInformation') }}</h3>
     <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
         <div class="flex-1">
             <template v-if="loading">
@@ -43,7 +43,7 @@
             <button
                 @click="openModal"
                 v-if="permissionsStore.can('profile_info','modify')"
-                class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                class="py-3 inline-flex min-w-[120px] justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
                 {{ $t('common.edit') }}
             </button>
             <button

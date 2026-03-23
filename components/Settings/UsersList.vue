@@ -272,7 +272,7 @@
         </svg>
       </button>
       <!-- Conditionally render EditUser or DeleteUser component -->
-      <component :is="modalComponent" :userId="selectedUserId" />
+      <component :is="modalComponent" :userId="selectedUserId" @saved="closeModal" />
     </div>
   </div>
 

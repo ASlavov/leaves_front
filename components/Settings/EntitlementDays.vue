@@ -212,7 +212,7 @@
           <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <component :is="modalComponent" :entitlementId="selectedEntitlementId" />
+      <component :is="modalComponent" :entitlementId="selectedEntitlementId" @saved="closeModal" />
     </div>
   </div>
 
@@ -235,6 +235,7 @@ const leavesStore = centralStore.leavesStore;
 const showModal = ref(false);
 const modalType = ref(''); // 'edit' or 'delete'
 const selectedEntitlementId = ref(null);
+const selectedEntitlementUserId = ref(null);
 
 // Reactive variable to store all users
 const allUsers = ref([]);
@@ -344,12 +345,22 @@ const newEntitlement = () => {
 
 const editEntitlement = (entitlementId) => {
   selectedEntitlementId.value = entitlementId;
+  const allEntitlements = Object.values(entitlementStore.entitledDaysData.savedUsers)
+      .flatMap(Object.values)
+      .flat();
+  const target = allEntitlements.find(e => e.id === entitlementId);
+  selectedEntitlementUserId.value = target?.user_id ?? null;
   modalType.value = 'edit';
   showModal.value = true;
 };
 
 const deleteEntitlement = (entitlementId) => {
   selectedEntitlementId.value = entitlementId;
+  const allEntitlements = Object.values(entitlementStore.entitledDaysData.savedUsers)
+      .flatMap(Object.values)
+      .flat();
+  const target = allEntitlements.find(e => e.id === entitlementId);
+  selectedEntitlementUserId.value = target?.user_id ?? null;
   modalType.value = '';
   showModal.value = true;
 };
@@ -366,12 +377,12 @@ const toggleUserEntitlements = async (userId) => {
 };
 
 // Watch for changes in toggled users to trigger data fetch
-watch(toggledUsers.value, async (newToggledUsers) => {
+watch(() => toggledUsers.value, async (newToggledUsers) => {
   const usersToFetch = Object.keys(newToggledUsers);
   for (const userId of usersToFetch) {
     await entitlementStore.getEntitledDaysForUser(userId);
   }
-});
+}, { deep: true });
 
 // Watch for changes in the year filter and re-fetch data for currently toggled users
 watch(() => filters.value.year, (newYear, oldYear) => {
@@ -382,9 +393,13 @@ watch(() => filters.value.year, (newYear, oldYear) => {
 });
 
 
-const closeModal = () => {
+const closeModal = async () => {
   showModal.value = false;
+  if (selectedEntitlementUserId.value && toggledUsers.value[selectedEntitlementUserId.value]) {
+      await entitlementStore.getEntitledDaysForUser(selectedEntitlementUserId.value, true);
+  }
   selectedEntitlementId.value = null;
+  selectedEntitlementUserId.value = null;
 };
 
 // The modal will always render EditEntitlement

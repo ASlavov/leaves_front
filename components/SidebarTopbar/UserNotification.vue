@@ -15,10 +15,10 @@
         <div v-if="showNotifications" class="fixed top-[60px] right-0 h-full w-80 bg-white border border-gray-200 shadow-lg dark:bg-neutral-800 dark:border-neutral-600 overflow-y-auto z-[100]">
             <!-- Tabs for Unread and Read -->
             <div :class="`flex justify-around py-2 border-b dark:border-neutral-600 ${(theme === 'light') ? 'text-black' : 'text-white'}`">
-                <button :class="{'font-semibold': activeTab === 'unread'}" @click="setTab('unread')" class="uppercase text-xs tracking-wider">
+                <button :class="{'font-semibold': activeTab === 'unread'}" @click="setTab('unread')" class="uppercase text-xs">
                     {{ $t('common.unread') }}
                 </button>
-                <button :class="{'font-semibold': activeTab === 'read'}" @click="setTab('read')" class="uppercase text-xs tracking-wider">
+                <button :class="{'font-semibold': activeTab === 'read'}" @click="setTab('read')" class="uppercase text-xs">
                     {{ $t('common.read') }}
                 </button>
             </div>
@@ -64,7 +64,7 @@ const handleClickOutside = (event) => {
     }
 };
 
-// Filter notifications based on active tab (Unread/Read)
+// Filter and sort notifications based on active tab (Unread/Read)
 const filteredNotifications = computed(() => {
     // Check user has notifications
     if (notifications.value.message) {
@@ -77,11 +77,19 @@ const filteredNotifications = computed(() => {
       ]
     }
 
+    let filtered = [];
     if (activeTab.value === 'unread') {
-        return notifications.value.filter(notification => notification.is_read === 0);
+        filtered = notifications.value.filter(notification => notification.is_read === 0);
     } else {
-        return notifications.value.filter(notification => notification.is_read === 1);
+        filtered = notifications.value.filter(notification => notification.is_read === 1);
     }
+
+    // Sort: newest first (descending by created_at)
+    return filtered.sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+    });
 });
 
 // Switch between tabs

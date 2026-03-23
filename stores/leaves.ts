@@ -6,8 +6,10 @@ import {
     getLeavesStatusesComposable,
     getLeavesAvailableDaysComposable,
     cancelLeaveComposable, getAllUserLeavesComposable,
-    adminLeaveActionComposable
+    adminLeaveActionComposable,
+    updateLeaveTypeComposable
 } from '@/composables/leavesApiComposable';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/user';
 import type { Leave, LeaveType, User } from '~/types';
 
@@ -28,6 +30,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     const loading = ref(false);
     const error = ref<string | null>(null);
     const userStore = useUserStore();
+    const { t } = useI18n();
     const isDataLoaded = ref(false);
 
     function reset() {
@@ -56,7 +59,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
                 isDataLoaded.value = true;
             });
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
+            setError(t('errors.leaves.initFailed'));
         }
     }
 
@@ -68,7 +71,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             return await getUserLeavesComposable(userId);
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
+            setError(t('errors.leaves.fetchFailed'));
         } finally {
         }
 
@@ -87,7 +90,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
+            setError(t('errors.leaves.fetchFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -108,7 +111,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
+            setError(t('errors.leaves.createFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -125,7 +128,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+            setError(t('errors.leaves.fetchUsersFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -143,7 +146,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+            setError(t('errors.leaves.cancelFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -161,7 +164,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
+            setError(t('errors.leaves.cancelFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -181,12 +184,26 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τους τύπους αδειών');
+            setError(t('errors.leaves.fetchTypesFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
 
+    }
+
+    async function updateLeaveType(id: string | number, name: string) {
+        try {
+            loading.value = true;
+            const result = await updateLeaveTypeComposable({ id, name });
+            if (result) {
+                await getLeavesTypes();
+            }
+        } catch (err) {
+            setError(t('errors.leaves.updateTypeFailed'));
+        } finally {
+            loading.value = false;
+        }
     }
 
     async function getLeavesStatuses() {
@@ -202,7 +219,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τις διαθέσιμες ενέργειες αδειών');
+            setError(t('errors.leaves.fetchStatusesFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -222,7 +239,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τις υπολοιπόμενες ήμερες αδειών σας');
+            setError(t('errors.leaves.fetchAvailableDaysFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -241,7 +258,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να εγκρύνουμε την άδεια');
+            setError(t('errors.leaves.approveFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -260,7 +277,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να απορρίψουμε την άδεια');
+            setError(t('errors.leaves.rejectFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -287,5 +304,6 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         getLeavesAvailableDays,
         approveLeave,
         declineLeave,
+        updateLeaveType,
     };
 });

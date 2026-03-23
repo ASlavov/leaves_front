@@ -28,9 +28,8 @@ export default async function retryFetch<T = any>(
                 throw error; // Immediately break and throw the error back to the caller
             }
 
-            if (status === 422) {
-                console.error('Validation Error: 422');
-                throw error; // Don't retry validation errors
+            if (status === 400 || status === 422) {
+                throw error; // Don't retry client errors
             }
 
             // Only retry on network errors or 500s. Rethrow if it's the last attempt.

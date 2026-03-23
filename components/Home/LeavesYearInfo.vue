@@ -35,7 +35,7 @@
                     </div>
                     <!-- First Text Column -->
                     <div class="flex-1">
-                        <div class="text-sm text-gray-300">
+                        <div class="text-sm text-[#808080]">
                             {{ leave.start_date }} - {{ leave.end_date }}
                         </div>
                         <div class="font-semibold">

@@ -2,11 +2,14 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Department } from '~/types';
 import { getAllDepartmentsComposable, newDepartmentComposable, editDepartmentComposable } from '@/composables/departmentsApiComposable';
-
+import { useI18n } from 'vue-i18n';
+import { useUserStore } from '~/stores/user';
 export const useDepartmentsStore = defineStore('departmentsStore', () => {
     const departmentsData = ref<Department[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);
+    const { t } = useI18n();
+    const userStore = useUserStore();
 
     function reset() {
         departmentsData.value = [];
@@ -20,7 +23,7 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
                 await getAll();
             }
         } catch (err) {
-            setError('Δεν μπορέσαμε να αρηκοποιήσουμε τα γκρουπς');
+            setError(t('errors.departments.initFailed'));
         }
     }
 
@@ -35,7 +38,7 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να φέρουμε τα γκρουπς');
+            setError(t('errors.departments.fetchFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -62,10 +65,11 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             if (result) {
                 // Recall getAll to refresh the store data.
                 await getAll();
+                try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να δημιουργήσουμε νέο γκρουπ');
+            setError(t('errors.departments.createFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -90,10 +94,11 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             if (result) {
                 // Recall getAll to refresh the store data.
                 await getAll();
+                try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να επεξεργαστούμε το γκρουπ που ζητήσατε');
+            setError(t('errors.departments.editFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -108,10 +113,11 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             if (result) {
                 // Recall getAll to refresh the store data.
                 await getAll();
+                try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError('Δεν μπορέσαμε να σβήσουμε το γκρουπ που ζητήσατε');
+            setError(t('errors.departments.deleteFailed'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;

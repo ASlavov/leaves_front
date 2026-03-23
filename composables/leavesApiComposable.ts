@@ -38,6 +38,14 @@ export const getLeavesTypesComposable = () => {
         method: 'POST',
     });
 };
+
+export const updateLeaveTypeComposable = (body: { id: string | number; name: string }) => {
+    return retryFetch('/api/leaves/updateLeaveType', {
+        method: 'POST',
+        body,
+    });
+};
+
 export const getLeavesStatusesComposable = () => {
     return retryFetch('/api/leaves/getLeavesStatuses', {
         method: 'POST',

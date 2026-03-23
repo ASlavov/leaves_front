@@ -99,8 +99,9 @@ import {createEventsServicePlugin} from '@schedule-x/events-service';
 import { createEventModalPlugin } from '@schedule-x/event-modal';
 import '@schedule-x/theme-default/dist/index.css';
 import {useCentralStore} from '@/stores/centralStore';
-import {format} from 'date-fns';
+import { format } from 'date-fns';
 import { useI18n } from 'vue-i18n';
+import { getTypeColor } from '@/utils/leaveColors';
 
 const { t, locale } = useI18n();
 
@@ -138,36 +139,10 @@ const nameOptions = computed(() =>
 const calendarApp = shallowRef(null);
 const eventsServicePlugin = createEventsServicePlugin();
 
-const colorList = [
-  '#F44336',
-  '#9C27B0',
-  '#3F51B5',
-  '#2196F3',
-  '#009688',
-  '#FFC107',
-  '#FF5722',
-  '#795548',
-  '#607D8B',
-  '#4CAF50',
-];
+// Removed local colorList and getTypeColor - now using utils/leaveColors.ts
 
-// Updated getTypeColor function
-const getTypeColor = (vacationId, userId) => {
-  if (!vacationId) return '#F00';
-
-  const index = parseInt(vacationId) % colorList.length;
-  const baseColor = colorList[index];
-
-  const hsl = hexToHSL(baseColor);
-
-  // Adjust the hue slightly based on userId
-  const userHash = parseInt(userId) || 0; // Ensure userId is a number
-  const hueAdjustment = (userHash * 7) % 10 - 5; // Adjust by -5 to +5 degrees
-
-  const newHue = (hsl.h + hueAdjustment + 360) % 360;
-
-  return HSLToHex(newHue, hsl.s, hsl.l);
-};
+// Updated getTypeColor function usage in component (if any specific local wrap needed)
+// ... already imported ...
 
 
 function getEventClass(calendarEvent) {
@@ -330,88 +305,7 @@ onMounted(async () => {
   initializeCalendar();
 });
 
-/*HELPERS*/
-
-// Function to convert HEX to HSL
-function hexToHSL(H) {
-  // Convert hex to RGB
-  let r = 0, g = 0, b = 0;
-  if (H.length === 4) {
-    r = "0x" + H[1] + H[1];
-    g = "0x" + H[2] + H[2];
-    b = "0x" + H[3] + H[3];
-  } else if (H.length === 7) {
-    r = "0x" + H[1] + H[2];
-    g = "0x" + H[3] + H[4];
-    b = "0x" + H[5] + H[6];
-  }
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  let cmin = Math.min(r, g, b),
-      cmax = Math.max(r, g, b),
-      delta = cmax - cmin,
-      h = 0,
-      s = 0,
-      l = 0;
-
-  if (delta === 0)
-    h = 0;
-  else if (cmax === r)
-    h = ((g - b) / delta) % 6;
-  else if (cmax === g)
-    h = (b - r) / delta + 2;
-  else
-    h = (r - g) / delta + 4;
-
-  h = Math.round(h * 60);
-  if (h < 0)
-    h += 360;
-
-  l = (cmax + cmin) / 2;
-  s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
-  s = +(s * 100).toFixed(1);
-  l = +(l * 100).toFixed(1);
-
-  return { h, s, l };
-}
-
-// Function to convert HSL to HEX
-function HSLToHex(h, s, l) {
-  s /= 100;
-  l /= 100;
-  let c = (1 - Math.abs(2 * l - 1)) * s,
-      x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-      m = l - c / 2,
-      r = 0,
-      g = 0,
-      b = 0;
-
-  if (0 <= h && h < 60) {
-    r = c; g = x; b = 0;
-  } else if (60 <= h && h < 120) {
-    r = x; g = c; b = 0;
-  } else if (120 <= h && h < 180) {
-    r = 0; g = c; b = x;
-  } else if (180 <= h && h < 240) {
-    r = 0; g = x; b = c;
-  } else if (240 <= h && h < 300) {
-    r = x; g = 0; b = c;
-  } else if (300 <= h && h < 360) {
-    r = c; g = 0; b = x;
-  }
-  r = Math.round((r + m) * 255).toString(16);
-  g = Math.round((g + m) * 255).toString(16);
-  b = Math.round((b + m) * 255).toString(16);
-  if (r.length === 1)
-    r = "0" + r;
-  if (g.length === 1)
-    g = "0" + g;
-  if (b.length === 1)
-    b = "0" + b;
-  return "#" + r + g + b;
-}
-
+/*HELPERS REMOVED - MOVED TO utils/leaveColors.ts*/
 
 </script>
 

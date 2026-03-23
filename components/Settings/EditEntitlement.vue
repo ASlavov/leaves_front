@@ -92,6 +92,7 @@ const userStore = centralStore.userStore;
 const entitlementStore = centralStore.entitlementStore;
 const leavesStore = centralStore.leavesStore;
 const { $toast } = useNuxtApp();
+const emit = defineEmits(['saved']);
 
 const props = defineProps({
   entitlementId: {
@@ -192,6 +193,7 @@ const submitForm = async () => {
           formEndDate.value
       );
       $toast.success(t('settings.leaveUpdated'), { position: "bottom-right", autoClose: 5000 });
+      emit('saved');
     } else {
       // Logic for adding one or more new entitlements
       await entitlementStore.addEntitledDays(
@@ -202,6 +204,7 @@ const submitForm = async () => {
           formEndDate.value
       );
       $toast.success(t('settings.leaveAdded'), { position: "bottom-right", autoClose: 5000 });
+      emit('saved');
     }
   } catch (error) {
     $toast.error(t('settings.saveLeaveError'), { position: "bottom-right", autoClose: 5000 });

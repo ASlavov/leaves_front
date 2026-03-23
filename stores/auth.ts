@@ -9,12 +9,14 @@ import {
     updateUserPasswordComposable
 } from '~/composables/authApiComposable';
 import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 
 export const useAuthStore = defineStore('authStore', () => {
     const loading = ref(false);
     const error = ref<string | null>(null);
     const isAuthenticated = computed(() => !!useCookie('auth_token').value);
     const userStore = useUserStore();
+    const { t } = useI18n();
 
     const setError = (errorMessage: string | null) => {
         error.value = errorMessage;
@@ -28,7 +30,7 @@ export const useAuthStore = defineStore('authStore', () => {
             // Check for the existence of the cookie
             return !!authToken.value;
         } catch (err) {
-            setError('No session found for user');
+            setError(t('errors.auth.noSession'));
         } finally {
             loading.value = false;
         }
@@ -45,7 +47,7 @@ export const useAuthStore = defineStore('authStore', () => {
             }
             return false; // Return false on failure
         } catch (err) {
-            setError('Μη έγκυρος e-mail ή κωδικός');
+            setError(t('errors.auth.invalidCredentials'));
             throw new Error('Authentication failed');
         } finally {
             loading.value = false;
@@ -62,7 +64,7 @@ export const useAuthStore = defineStore('authStore', () => {
                 await router.push('/auth/login');
             }
         } catch (err) {
-            setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
+            setError(t('errors.auth.sessionNotFound'));
         }
     }
 
@@ -81,7 +83,7 @@ export const useAuthStore = defineStore('authStore', () => {
                 return result;
             }
         } catch (err) {
-            setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
+            setError(t('errors.auth.sessionNotFound'));
         }
     }
 
@@ -89,7 +91,7 @@ export const useAuthStore = defineStore('authStore', () => {
         try {
             await logoutUserComposable();
         } catch (err) {
-            setError('Δεν μπορέσαμε να σας αποσυνδέσουμε');
+            setError(t('errors.auth.logoutFailed'));
         }
     }
 
@@ -100,7 +102,7 @@ export const useAuthStore = defineStore('authStore', () => {
                 userStore.setUserId(response.userId);
             }
         } catch (err) {
-            setError('Δεν μπορέσαμε να φέρουμε τα δεδομένα σας');
+            setError(t('errors.auth.fetchDataFailed'));
         }
     }
 

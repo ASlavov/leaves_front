@@ -120,3 +120,8 @@ export interface LeaveActionPayload {
     reason?: string;
     status?: string | number;
 }
+
+export interface UpdateLeaveTypePayload {
+    id: string | number;
+    name: string;
+}

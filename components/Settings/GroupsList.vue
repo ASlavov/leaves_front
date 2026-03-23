@@ -278,7 +278,7 @@
         </svg>
       </button>
       <!-- Conditionally render EditUser or DeleteUser component -->
-      <component :is="modalComponent" :groupId="selectedGroupId" />
+      <component :is="modalComponent" :groupId="selectedGroupId" @saved="closeModal" />
     </div>
   </div>
 
@@ -398,7 +398,7 @@ const filteredGroups = computed(() => {
     return {
       ...department,
       users: [
-          ...filteredUsers.value.filter(user => user?.department.id === department.id)
+          ...filteredUsers.value.filter(user => user?.department?.id === department.id)
       ],
     };
   });

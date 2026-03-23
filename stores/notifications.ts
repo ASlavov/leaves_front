@@ -5,6 +5,7 @@ import {
     markNotificationReadComposable,
     markNotificationUnreadComposable
 } from '@/composables/notificationsApiComposable';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from "~/stores/user";
 import { useRouter } from 'vue-router';
 import type { Notification } from '~/types';
@@ -17,6 +18,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
     let notificationsActive = false;
     let intervalId: ReturnType<typeof setInterval> | null = null;
     const userStore = useUserStore();
+    const { t } = useI18n();
 
     function reset() {
         notificationsData.value = [];
@@ -33,7 +35,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             notificationsActive = true;
             beginPolling();  // Assuming polling happens after initial data load
         } catch (err) {
-            setError(err ? String(err) : 'Unknown error');
+            setError(err ? String(err) : t('errors.common.unknownError'));
         }
     }
 
@@ -48,7 +50,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError(err ? String(err) : 'Unknown error');
+            setError(err ? String(err) : t('errors.common.unknownError'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;
@@ -73,7 +75,7 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
             }
         } catch (err) {
             // Handle errors and set the error state
-            setError(err ? String(err) : 'Unknown error');
+            setError(err ? String(err) : t('errors.common.unknownError'));
         } finally {
             // Ensure loading is set to false and any post-processing is done
             loading.value = false;

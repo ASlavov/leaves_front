@@ -73,8 +73,17 @@
         "twoFactorAuth": "Two-Factor Authentication",
         "twoFactorDesc": "Increase your account security. With 2FA, to log in you will enter your password and a verification code from your mobile app.",
         "passwordMismatch": "New password and confirmation do not match!",
+        "passwordInvalid": "Password does not meet requirements!",
         "passwordChangeSuccess": "Password changed successfully!",
         "passwordChangeError": "Could not change your password!",
+        "passwordRequirements": {
+            "title": "Password requirements",
+            "uppercase": "At least 1 uppercase letter",
+            "lowercase": "At least 1 lowercase letter",
+            "symbol": "At least 1 symbol",
+            "number": "At least 1 number",
+            "length": "At least 8 characters"
+        },
         "remainingDays": "Remaining",
         "assignLeavesTitle": "Assign leaves to users",
         "assignTo": "Assign to:",
@@ -185,5 +194,57 @@
         "allNames": "All names",
         "allGroups": "All groups",
         "allTypes": "All types"
+    },
+    "roles": {
+        "admin": "Administrator",
+        "hr_manager": "HR Manager",
+        "head": "Head",
+        "user": "User"
+    },
+    "errors": {
+        "common": {
+            "somethingWentWrong": "Something went wrong",
+            "unknownError": "Unknown error"
+        },
+        "auth": {
+            "noSession": "No session found for user",
+            "invalidCredentials": "Invalid email or password",
+            "sessionNotFound": "Could not find existing session",
+            "logoutFailed": "Could not logout",
+            "fetchDataFailed": "Could not fetch user data"
+        },
+        "departments": {
+            "initFailed": "Could not initialize groups",
+            "fetchFailed": "Could not fetch groups",
+            "createFailed": "Could not create new group",
+            "editFailed": "Could not edit the requested group",
+            "deleteFailed": "Could not delete the requested group"
+        },
+        "entitlement": {
+            "initFailed": "Could not initialize leave data",
+            "fetchFailed": "Could not fetch leaves",
+            "createFailed": "Could not create new leave(s)",
+            "updateFailed": "Could not update leave",
+            "deleteFailed": "Could not delete leave"
+        },
+        "leaves": {
+            "initFailed": "Could not initialize your leave data",
+            "fetchFailed": "Could not fetch your leaves",
+            "createFailed": "Could not create new leave",
+            "cancelFailed": "Could not cancel leave",
+            "fetchUsersFailed": "Could not fetch users",
+            "fetchTypesFailed": "Could not fetch leave types",
+            "fetchStatusesFailed": "Could not fetch leave statuses",
+            "fetchAvailableDaysFailed": "Could not fetch remaining leave days",
+            "approveFailed": "Could not approve leave",
+            "rejectFailed": "Could not reject leave"
+        },
+        "user": {
+            "initFailed": "Could not initialize your profile",
+            "fetchProfileFailed": "Could not fetch your profile",
+            "fetchUsersFailed": "Could not fetch users",
+            "editFailed": "Could not edit user",
+            "changePasswordFailed": "Could not change your password"
+        }
     }
 }

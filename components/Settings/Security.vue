@@ -79,6 +79,31 @@
                 </button>
               </div>
             </div>
+            <!-- Password Requirements Block -->
+            <div class="col-span-2 pt-2">
+              <div class="flex flex-col gap-[6px] items-start relative size-full text-[12px]">
+                <p class="font-bold leading-[normal] relative shrink-0 text-black dark:text-white">
+                  {{ $t('settings.passwordRequirements.title') }}
+                </p>
+                <ul class="block font-medium leading-[18px] list-disc text-[#808080] dark:text-neutral-400 ml-4">
+                  <li :class="{'text-green-600 dark:text-green-400': passwordRequirements.length}">
+                    {{ $t('settings.passwordRequirements.length') }}
+                  </li>
+                  <li :class="{'text-green-600 dark:text-green-400': passwordRequirements.uppercase}">
+                    {{ $t('settings.passwordRequirements.uppercase') }}
+                  </li>
+                  <li :class="{'text-green-600 dark:text-green-400': passwordRequirements.lowercase}">
+                    {{ $t('settings.passwordRequirements.lowercase') }}
+                  </li>
+                  <li :class="{'text-green-600 dark:text-green-400': passwordRequirements.number}">
+                    {{ $t('settings.passwordRequirements.number') }}
+                  </li>
+                  <li :class="{'text-green-600 dark:text-green-400': passwordRequirements.symbol}">
+                    {{ $t('settings.passwordRequirements.symbol') }}
+                  </li>
+                </ul>
+              </div>
+            </div>
             <!-- End Form Group -->
           </div>
         </div>
@@ -124,9 +149,35 @@ const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 
+// Password requirements validation
+const passwordRequirements = computed(() => {
+  const p = newPassword.value;
+  return {
+    length: p.length >= 8,
+    uppercase: /[A-Z]/.test(p),
+    lowercase: /[a-z]/.test(p),
+    number: /[0-9]/.test(p),
+    symbol: /[^A-Za-z0-9]/.test(p)
+  };
+});
+
+const isPasswordValid = computed(() => {
+  const r = passwordRequirements.value;
+  return r.length && r.uppercase && r.lowercase && r.number && r.symbol;
+});
+
 // Submit form method
 const submitForm = async () => {
   const userId = userStore.userId;
+
+  // Validate password requirements
+  if (!isPasswordValid.value) {
+    useNuxtApp().$toast.error(t('settings.passwordInvalid'), {
+      position: "bottom-right",
+      autoClose: 5000,
+    });
+    return;
+  }
 
   // Validate that new password and confirm password match
   if (newPassword.value !== confirmPassword.value) {
@@ -153,13 +204,36 @@ const submitForm = async () => {
       position: "bottom-right",
       autoClose: 5000, // Close automatically after 5 seconds
     });
+
+    // Success - Force Logout after a short delay
+    setTimeout(async () => {
+      await logout();
+    }, 2000);
+
   } catch (error) {
     // Handle errors, e.g., show an error message
     console.error('Error updating password:', error);
-    useNuxtApp().$toast.error(t('settings.passwordChangeError'), {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
+
+    const status = error.response?.status;
+    const errorData = error.response?._data;
+
+    if (status === 400 && errorData?.error) {
+      useNuxtApp().$toast.error(errorData.error, {
+        position: "bottom-right",
+        autoClose: 5000,
+      });
+    } else if (status === 422 && errorData?.errors) {
+      const firstError = Object.values(errorData.errors)[0][0];
+      useNuxtApp().$toast.error(firstError, {
+        position: "bottom-right",
+        autoClose: 5000,
+      });
+    } else {
+      useNuxtApp().$toast.error(t('settings.passwordChangeError'), {
+        position: "bottom-right",
+        autoClose: 5000, // Close automatically after 5 seconds
+      });
+    }
   }
 };
 

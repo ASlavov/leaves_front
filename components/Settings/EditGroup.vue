@@ -82,6 +82,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(['saved']);
+
 // Reactive variables for form fields
 const formGroupName = ref('');
 const formSelectedDepartmentHead = ref('');
@@ -127,7 +129,7 @@ watch(
 
 function initializeFormFields(dptData) {
   formGroupName.value = dptData.name;
-  formUsers.value = dptData.users.map(user => user.id);
+  formUsers.value = dptData.users?.map(user => user.id) || [];
   // Set the correct head using the head ID from dptData
   formSelectedDepartmentHead.value = dptData.head || null;
 }
@@ -170,6 +172,7 @@ const submitForm = async () => {
       position: "bottom-right",
       autoClose: 5000,
     });
+    emit('saved');
   } catch (error) {
     console.error('Submission error:', error);
     useNuxtApp().$toast.error(t('settings.saveGroupError'), {

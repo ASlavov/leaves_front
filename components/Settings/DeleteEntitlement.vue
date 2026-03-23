@@ -94,6 +94,7 @@ const deleteEntitlement = async () => {
     await leavesStore.deleteEntitlement(props.entitlement.id);
     useNuxtApp().$toast.success(t('settings.deleteEntitlementSuccess'));
     emit('deleted');
+    emit('saved');
     closeModal();
   } catch (error) {
     useNuxtApp().$toast.error(t('settings.deleteEntitlementError'));

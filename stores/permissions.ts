@@ -1,6 +1,5 @@
-// permissions.js
-import { defineStore } from 'pinia';
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useUserStore } from '~/stores/user';
 import type { Role } from '~/types';
 
@@ -41,6 +40,15 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         }
     };
 
+    const { t } = useI18n();
+
+    const allRoles = computed(() => [
+        { id: 1, key: 'admin', name: t('roles.admin') },
+        { id: 2, key: 'hr-manager', name: t('roles.hr_manager') },
+        { id: 3, key: 'head', name: t('roles.head') },
+        { id: 4, key: 'user', name: t('roles.user') }
+    ]);
+
     const userRoles = computed(() => {
         const roles = userStore.userInfo?.roles || [];
         return roles.map((role: Role) => role.name);
@@ -72,5 +80,6 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
         userRoles,
         isAdmin,
         permissions,
+        allRoles,
     };
 });
