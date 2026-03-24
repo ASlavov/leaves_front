@@ -1,6 +1,6 @@
 <template>
   <div class="h-full mt-auto">
-    <main class="bg-gray-100">
+    <main class="bg-gray-100 dark:bg-neutral-900 transition-colors duration-300">
       <NuxtPage />
     </main>
   </div>

@@ -138,9 +138,12 @@
         "cancelLeaveAction": "Cancel leave",
         "rejectLeave": "Reject leave",
         "approveLeave": "Approve leave",
-        "requestLeave": "Request leave"
+        "requestLeave": "Request leave",
+        "processedReason": "Processed reason",
+        "reason": "Reason"
     },
     "common": {
+        "delete": "Delete",
         "select": "Select",
         "date": "Date",
         "selectDate": "Select date",

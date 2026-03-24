@@ -2,14 +2,9 @@
   <!-- Dropdown -->
   <div class="hs-dropdown [--placement:bottom-right] relative ">
     <button id="hs-dropdown-account" type="button"
-            class="border-0 size-[38px] justify-center bg-gray-300 items-center gap-x-2 text-sm font-semibold rounded-full border-transparent text-gray-800 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-white"
+            class="border-0 border-transparent size-[45px] justify-center  items-center gap-x-2 text-sm font-semibold rounded-full text-gray-800 focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:text-white"
             aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-            <img
-                class="rounded-full size-[38px] object-cover"
-                v-if="user?.profile?.profile_image_base64" :src="user?.profile?.profile_image_base64" />
-            <span v-else class="text-white font-bold">
-                {{ user?.firstNameInitial || '' }}{{ user?.lastNameInitial || '' }}
-            </span>
+            <SharedUserAvatar :user="user" :size="45" />
     </button>
 
     <div class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg mt-2 dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:divide-neutral-700 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
@@ -68,6 +63,7 @@ import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import { computed } from "vue";
+import UserAvatar from '@/components/shared/UserAvatar.vue';
 
 const { t } = useI18n();
 const router = useRouter();

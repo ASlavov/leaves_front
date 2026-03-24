@@ -1,9 +1,9 @@
 <template>
     <div class="h-full flex flex-col group-info-container">
-        <h3 class="py-4 font-bold text-[16px] text-black dark:text-gray-100">
+        <h3 class="py-4 font-bold text-[16px] text-[#212121] dark:text-gray-100">
             {{ $t('settings.group') }}
         </h3>
-        <div class="bg-white border border-[#dfeaf2] rounded-[8px] hover:shadow-md transition-all duration-300 h-[392px] dark:bg-neutral-800 dark:border-neutral-700 p-6 flex flex-col items-center justify-between relative shadow-sm">
+        <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
             <!-- Center Content -->
             <div class="flex-1 flex items-center justify-center w-full">
                 <template v-if="loading">
@@ -17,16 +17,16 @@
             </div>
 
             <!-- Actions Footer -->
-            <div v-if="permissionsStore.can('group', 'modify')" class="flex flex-col items-center gap-4 w-full pb-4">
+            <div v-if="permissionsStore.can('group', 'modify')" class="flex items-center justify-center gap-[25px] w-full pb-4">
                 <button
                     @click="openEditModal"
-                    class="bg-[#ea021a] hover:bg-red-700 text-white font-bold text-[14px] px-[30px] py-[15px] rounded-[70px] w-auto transition-colors shadow-sm active:scale-95"
+                    class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"
                 >
                     {{ $t('common.edit') }}
                 </button>
                 <button
                     @click="confirmDelete"
-                    class="text-[14px] font-bold text-black dark:text-gray-300 underline decoration-1 underline-offset-4 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    class="text-[14px] font-bold text-black dark:text-white underline decoration-1 underline-offset-4 hover:text-[#EA021A] hover:dark:text-[#EA021A] transition-colors"
                 >
                     {{ $t('common.delete') }}
                 </button>

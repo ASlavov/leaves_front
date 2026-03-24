@@ -1,11 +1,11 @@
 <template>
   <div class="flex">
-    <div @click="$colorMode.preference = $colorMode.preference === 'dark' ? 'light' : 'dark'"
+    <div @click="$colorMode.preference = $colorMode.value === 'dark' ? 'light' : 'dark'"
          class="relative inline-block w-12 h-6 cursor-pointer">
       <!-- Background -->
-      <span :class="$colorMode.preference === 'dark' ? 'bg-gray-600' : 'bg-gray-100'"
+      <span :class="$colorMode.value === 'dark' ? 'bg-gray-600' : 'bg-gray-100'"
             class="absolute inset-0 rounded-full transition duration-300 ease-in-out">
-        <svg v-if="$colorMode.preference === 'dark'" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+        <svg v-if="$colorMode.value === 'dark'" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
              viewBox="0 0 24 24"
              fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
              class="feather feather-moon px-1">
@@ -25,7 +25,7 @@
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
       </svg>
       </span>
-      <span :class="$colorMode.preference === 'dark' ? 'translate-x-6 bg-gray-100' : 'translate-x-0 bg-gray-600'"
+      <span :class="$colorMode.value === 'dark' ? 'translate-x-6 bg-gray-100' : 'translate-x-0 bg-gray-600'"
             class="absolute left-0 top-0 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out shadow">
       </span>
     </div>

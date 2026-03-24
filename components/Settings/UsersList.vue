@@ -224,13 +224,8 @@
   dark:[&::-webkit-scrollbar-track]:bg-neutral-700
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
           <div v-for="user in filteredUsers" :key="user.id" class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]">
-            <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
-              <img
-                  class="rounded-full object-cover size-[50px]"
-                  v-if="user?.profile?.profile_image_base64" :src="user?.profile?.profile_image_base64" />
-              <span v-else class="text-white font-bold">
-                  {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
-              </span>
+            <div class="mr-4 flex items-center justify-start col-span-1 ">
+              <SharedUserAvatar :user="user" :size="50" />
             </div>
             <div class="col-span-2">
               {{ user.firstName || '' }}
@@ -283,6 +278,7 @@ import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '~/stores/centralStore.js';
 import EditUser from '@/components/Settings/EditUser.vue';
+import UserAvatar from '@/components/shared/UserAvatar.vue';
 // import DeleteUser from '@/components/Settings/DeleteUser.vue'; // Uncomment when available
 
 const { t } = useI18n();

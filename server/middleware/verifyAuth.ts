@@ -1,7 +1,7 @@
 // server/middleware/verifySession.ts
 import { defineEventHandler, getCookie, createError } from 'h3';
 import { verifyJWT } from '~/server/utils/auth';
-import {setCookie} from "#imports";
+import { setCookie } from "#imports";
 
 export default defineEventHandler(async (event) => {
 
@@ -48,11 +48,13 @@ export default defineEventHandler(async (event) => {
         event.context.requestingUserId = payload.userId;
         event.context.token = payload.token;
 
+        const maxAge = process.env.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
+
         setCookie(event, 'user_authed', 'true', {
             httpOnly: false,
             secure: true,
             sameSite: 'strict',
-            maxAge: 60 * 15,
+            maxAge: maxAge,
         });
 
         if (!url.startsWith('/api/notifications/get')) {
@@ -60,11 +62,11 @@ export default defineEventHandler(async (event) => {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'strict',
-                maxAge: 60 * 15,
+                maxAge: maxAge,
             });
         }
 
-    } catch (error:any) {
+    } catch (error: any) {
         console.error('JWT verification failed:', error);
         // Clear the invalid cookie to prevent repeated failures
         setCookie(event, 'auth_token', '', { expires: new Date(0) });

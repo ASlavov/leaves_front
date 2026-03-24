@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "mcp__plugin_figma_figma__get_design_context"
+      "mcp__plugin_figma_figma__get_design_context",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -path ./node_modules -prune -o -path ./intelligence_translations -prune -o -name *vatar* -type f -print)"
     ]
   }
 }

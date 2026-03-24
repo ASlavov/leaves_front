@@ -138,9 +138,12 @@
         "cancelLeaveAction": "Ακύρωση άδειας",
         "rejectLeave": "Απόρριψη άδειας",
         "approveLeave": "Έγκριση άδειας",
-        "requestLeave": "Αίτημα άδειας"
+        "requestLeave": "Αίτημα άδειας",
+        "processedReason": "Αιτιολογία επεξεργασίας",
+        "reason": "Αιτιολογία"
     },
     "common": {
+        "delete": "Διαγραφή",
         "select": "Επιλέξτε",
         "date": "Ημ/νια",
         "selectDate": "Επιλέξτε ημ/νια",
@@ -161,7 +164,7 @@
         "internalPhone": "Εσωτ. τηλέφωνο",
         "edit": "Επεξεργασία",
         "saveChanges": "Αποθήκευση Αλλαγών",
-        "name": "Όνομα",
+        "name": "Ονοματεπώνυμο",
         "employee": "Εργαζόμενος",
         "total": "Σύνολο:",
         "loading": "Φόρτωση...",

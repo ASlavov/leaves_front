@@ -42,17 +42,19 @@ export default defineEventHandler(async (event) => {
 
             // Set a secure, HTTP-only cookie with the JWT
             const isSecure = process.env.NODE_ENV === 'production';
+            const maxAge = process.env.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
+
             setCookie(event, 'auth_token', authToken, {
                 httpOnly: true,
                 secure: isSecure,
                 sameSite: 'strict',
-                maxAge: 60 * 15,
+                maxAge: maxAge,
             });
             setCookie(event, 'user_authed', 'true', {
                 httpOnly: false,
                 secure: isSecure,
                 sameSite: 'strict',
-                maxAge: 60 * 15,
+                maxAge: maxAge,
             });
             return { userId: user_id, message: 'Authenticated successfully' };
         }

@@ -3,6 +3,20 @@
 This file tracks all changes made by the AI agent during the architectural stabilization phase.
 
 ---
+## 5. Centralized User Avatar
+
+### Problem
+The avatar rendering pattern (image fallback to initials) was duplicated inline across 7+ components with no overarching abstraction. Additionally, the `User` type did not declare the `profile` sub-object, creating a type safety gap when accessing `user.profile.profile_image_base64`.
+
+### Implementation Rationale
+By creating a single `UserAvatar` component, we standardize the rendering logic, size propagation, and fallback initial calculation based on the `name` property. Updating the TypeScript `User` and `UserProfile` interfaces ensures type safety when handling avatar paths.
+
+### Code Changes
+- **Types Migrated**: Added `UserProfile` interface to `types/index.ts` and attached `profile?: UserProfile` to the `User` interface.
+- **Component Created**: Created `components/shared/UserAvatar.vue` to handle the generic avatar rendering logic (`img` or initialized `span` based on the specified size).
+- **Inline Avatars Removed**: Replaced duplicate code blocks with explicit local `<UserAvatar>` imports in `MyAccount.vue`, `ProfileInfo.vue`, `GroupsList.vue`, `UsersList.vue`, `LeavesList.vue`, and `EntitlementDays.vue`.
+
+---
 ## 4. TypeScript Migration
 
 ### Problem

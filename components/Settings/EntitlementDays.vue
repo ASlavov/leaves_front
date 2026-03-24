@@ -151,13 +151,8 @@
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
           <div v-for="user in filteredUsers" :key="user.id" :class="`flex flex-col border border-[#DFEAF2] rounded-lg ${ !toggledUsers[user.id] ? 'hover:bg-neutral-100 dark:hover:bg-neutral-600 pl-[20px] pr-[30px] py-[10px]' : ''} text-[#808080]`">
             <div :class="`grid gap-[10px] grid-cols-2  lg:grid-cols-12 items-center cursor-pointer ${ toggledUsers[user.id] ? 'rounded-t-lg hover:bg-neutral-100 dark:hover:bg-neutral-600 pb-4 pl-[20px] pr-[30px] pt-[10px]' : ''}`" @click="toggleUserEntitlements(user.id)">
-              <div class="w-[50px] h-[50px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-1 ">
-                <img
-                    class="rounded-full object-cover size-[50px]"
-                    v-if="user?.profile?.profile_image_base64" :src="user?.profile?.profile_image_base64" />
-                <span v-else class="text-white font-bold">
-                  {{ user.firstName.charAt(0) || '' }}{{ user.lastName?.charAt(0) || '' }}
-              </span>
+              <div class="mr-4 flex flex-shrink-0 items-center justify-center col-span-1 ">
+                <SharedUserAvatar :user="user" :size="50" />
               </div>
               <div class="col-span-2">
                 {{ user.firstName || '' }}
@@ -223,6 +218,7 @@ import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
 import EditEntitlement from "~/components/Settings/EditEntitlement.vue";
 import DeleteEntitlement from "~/components/Settings/DeleteEntitlement.vue";
+import UserAvatar from '@/components/shared/UserAvatar.vue';
 
 // Access the necessary stores
 const centralStore = useCentralStore();

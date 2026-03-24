@@ -25,44 +25,69 @@
     <div class="grid grid-cols-2 text-black gap-y-2 dark:text-white"
     :class="{'mt-[45px]': props.isSmallComponent}"
     >
-      <div class="flex flex-col col-span-2 gap-2 lg:gap-0 lg:grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2">
-      <div
-          v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-          class="text-black dark:text-white font-bold flex items-center gap-2">
-        {{ $t('leaves.leaveRequests') }} <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
-      </div>
-      <div v-else>
-        {{ $t('leaves.yearlyLeaves') }}
-      </div>
+      <div class="flex flex-col col-span-2 gap-2 lg:gap-0 lg:grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-4">
+        <div
+            v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
+            class="text-black dark:text-white col-span-1 font-bold flex items-center gap-2">
+          {{ $t('leaves.leaveRequests') }} <span class="text-[#EA021A]">({{filteredLeaves.length}})</span>
+        </div>
+        <div v-else>
+          {{ $t('leaves.yearlyLeaves') }}
+        </div>
       <!-- Filters Section -->
-      <div v-if="!props.isSmallComponent" class="ml-4 grid grid-cols-1 sm:grid-cols-3 gap-2 lg:gap-4 w-full lg:max-w-3xl items-end lg:justify-self-end lg:self-end">
-        <!-- Requester Name Filter -->
-        <FilterInput
+      <div v-if="!props.isSmallComponent"
+           class="ml-4 grid col-span-3 grid-cols-1 gap-2 lg:gap-4 w-full items-end lg:justify-self-end lg:self-end"
+           :class="permissionsStore.can('profile_leave_balance', 'accept_leave') ? 'sm:grid-cols-5' : 'sm:grid-cols-3'"
+      >
+        <!-- Clear Filters Button -->
+        <div class="flex items-center h-full pb-2 lg:pb-0 justify-start sm:justify-center leading-[46px]">
+          <button @click="clearFilters" class="btn btn-secondary text-red-500 whitespace-nowrap" 
+          v-if="filters.group || filters.leaveType || filters.requesterName || filters.year !== currentYear">
+            &times; {{ $t('settings.clearFilters') }}
+          </button>
+        </div>
+
+        <!-- Requester Name Filter (Admins/Managers) -->
+        <MiscCustomSelect
+            v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
             v-model="filters.requesterName"
-            type="text"
+            :options="userOptions"
+            :label="$t('common.name')"
             :placeholder="$t('common.name')"
-            class="w-full"
+            selectId="name-select"
         />
 
-        <!-- Group Filter -->
-        <FilterInput
+        <!-- Group Filter (Admins/Managers) -->
+        <MiscCustomSelect
+            v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
             v-model="filters.group"
-            type="text"
+            :options="groupOptions"
+            :label="$t('settings.group')"
             :placeholder="$t('settings.group')"
+            selectId="group-select"
         />
 
-        <!-- Year Filter -->
-        <FilterInput
+        <!-- Leave Type Filter (Everyone) -->
+        <MiscCustomSelect
+            v-model="filters.leaveType"
+            :options="leaveTypeOptions"
+            :label="$t('settings.leaveType')"
+            :placeholder="$t('leaves.leaveType')"
+            selectId="leave-type-select"
+        />
+
+        <!-- Year Filter (Everyone) -->
+        <MiscCustomSelect
             v-model="filters.year"
-            type="CustomSelect"
             :options="years"
+            :label="$t('common.year')"
             :placeholder="$t('common.year')"
-
-            class="-ml-4 mr-4 lg:mr-0"
+            selectId="year-select"
         />
+
       </div>
-      <div class="lg:justify-self-end lg:self-end" v-else>
-        <NuxtLink to="/yearly-leaves" class="text-[#EA021A] dark:text-[#FF021A] underline block">
+      <div class="justify-self-end self-end w-full col-span-3" v-else>
+        <NuxtLink to="/yearly-leaves" class="text-right text-[#EA021A] dark:text-[#FF021A] underline block">
           {{ $t('leaves.allRequests') }}
         </NuxtLink>
       </div>
@@ -82,7 +107,7 @@
             v-for="leave in filteredLeaves"
             :key="leave.id"
             :class="permissionsStore.can('profile_leave_balance','accept_leave') ? 'lg:grid-cols-10' : 'lg:grid-cols-8'"
-            class="grid grid-rows-6 lg:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] lg:gap-y-0 items-center justify-items-start w-full lg:justify-items-stretch border p-4 rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
+            class="grid grid-rows-6 lg:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] lg:gap-y-0 items-center justify-items-start w-full lg:justify-items-stretch border px-[30px] py-[12px] rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >
           <!-- Column 1: Date from - Date to on top, leave type on bottom -->
           <div class="lg:col-span-2 lg:gap-x-2 lg:justify-self-start contents lg:grid grid-cols-4 grid-rows-2 justify-start items-center">
@@ -110,8 +135,19 @@
                    class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
                    :placeholder="$t('leaves.commentPlaceholder')"
                    v-if="leave.status === 'pending'"
-                   v-model="leaveComments[leave.leaveId]"
+                   v-model="leaveComments[leave.id]"
             />
+            <div
+                v-if="leave.reason || leave.processed_reason"
+                class="text-[#808080] dark:text-gray-300 italic text-sm flex flex-col gap-y-[5px]"
+            >
+              <span v-if="leave?.processed_reason">
+                {{ $t('leaves.processedReason') }}: {{ leave?.processed_reason }}
+              </span>
+              <span v-if="leave?.reason">
+                {{ $t('leaves.reason') }}: {{ leave?.reason }}
+              </span>
+            </div>
           </div>
 
           <!-- Column 5: Actions -->
@@ -163,7 +199,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import FilterInput from "~/components/misc/FilterInput.vue";
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
@@ -195,35 +230,24 @@ const leaveComments = ref([]);
 // Fetch data
 const allLeaves = ref([]);
 const years = computed(() => {
-  const returnYears = [];
+  const yearSet = new Set();
+  yearSet.add(currentYear);
 
   allLeaves.value.forEach((leave) => {
-
-    const startDate  = new Date(leave?.start_date).getFullYear();
-    const endDate = new Date(leave?.end_date).getFullYear();
-
-    if(startDate) {
-      returnYears[startDate] = {
-        id: `${startDate}`,
-        name: `${startDate}`,
-      };
+    if (leave?.start_date) {
+      yearSet.add(new Date(leave.start_date).getFullYear());
     }
-    if(endDate) {
-      returnYears[endDate] = {
-        id: `${endDate}`,
-        name: `${endDate}`,
-      };
+    if (leave?.end_date) {
+      yearSet.add(new Date(leave.end_date).getFullYear());
     }
   });
 
-  if(returnYears.length) {
-    return [{
-      id: `${currentYear}`,
-      name: `${currentYear}`,
-    }];
-  }
-
-  return returnYears;
+  return Array.from(yearSet)
+    .sort((a, b) => b - a)
+    .map(year => ({
+      id: `${year}`,
+      name: `${year}`
+    }));
 });
 
 const leaveClass = {
@@ -236,36 +260,57 @@ const leaveClass = {
   declined:'text-[#FF455F]',
 };
 
+// Filter Options
+const userOptions = computed(() => {
+  const usersWithLeaves = new Map();
+  allLeaves.value.forEach(l => {
+    if (l.user && !usersWithLeaves.has(l.user.id)) {
+      usersWithLeaves.set(l.user.id, l.user.name);
+    }
+  });
+  return Array.from(usersWithLeaves.entries()).map(([id, name]) => ({ id: name, name: name }));
+});
+
+const groupOptions = computed(() => {
+  const departmentIdsWithLeaves = new Set(allLeaves.value.map(l => l.user?.department_id).filter(id => id !== undefined));
+  return centralStore.departmentsStore.departmentsData
+    .filter(dept => departmentIdsWithLeaves.has(dept.id))
+    .map(dept => ({ id: dept.id, name: dept.name }));
+});
+
+const leaveTypeOptions = computed(() => {
+  const leaveTypeIdsWithLeaves = new Set(allLeaves.value.map(l => l.leave_type_id));
+  return leavesStore.leavesData.leavesTypes
+    .filter(type => leaveTypeIdsWithLeaves.has(type.id))
+    .map(type => ({ id: type.id, name: type.name }));
+});
+
+
 onMounted(async () => {
   try {
-    await leavesStore.getAllUsers(); // Fetch leavesStore.leavesData.allUsers
-    const usersData = leavesStore.leavesData.allUsers;
-
-    // Build allLeaves array
-    allLeaves.value = [];
-    usersData.forEach(user => {
-      const userLeaves = user.leaves || [];
-      userLeaves.forEach(leave => {
-        allLeaves.value.push({
-          ...leave,
-          user, // include user data
-          class: leaveClass[leave.status] ?? '',
-        });
-      });
-    });
+    await refreshLeaves();
+    console.log('Available years:', years.value);
   } catch (error) {
     console.error('Error fetching leaves:', error);
-  } finally {
-    loading.value = false; // Set loading to false when done
   }
 });
 
 // Filters
 const filters = ref({
-  requesterName: '',
-  group: '',
+  requesterName: null,
+  group: null,
+  leaveType: null,
   year: currentYear,
 });
+
+const clearFilters = () => {
+  filters.value = {
+    requesterName: null,
+    group: null,
+    leaveType: null,
+    year: currentYear,
+  };
+};
 
 // Computed property for filtered leaves
 const filteredLeaves = computed(() => {
@@ -273,12 +318,17 @@ const filteredLeaves = computed(() => {
       .filter(leave => {
         // Filter by requester's name
         const requesterNameMatch = filters.value.requesterName
-            ? leave.user.name.toLowerCase().includes(filters.value.requesterName.toLowerCase())
+            ? leave.user.name === filters.value.requesterName
             : true;
 
-        // Filter by group (assuming group is user.department_id)
+        // Filter by group
         const groupMatch = filters.value.group
-            ? leave.user.department_id && leave.user.department_id.toString().includes(filters.value.group)
+            ? leave.user.department_id && leave.user.department_id.toString() === filters.value.group.toString()
+            : true;
+
+        // Filter by leave type
+        const leaveTypeMatch = filters.value.leaveType
+            ? leave.leave_type_id && leave.leave_type_id.toString() === filters.value.leaveType.toString()
             : true;
 
         // Filter by year
@@ -286,9 +336,9 @@ const filteredLeaves = computed(() => {
             ? new Date(leave.start_date).getFullYear() === parseInt(filters.value.year)
             : true;
 
-        const requesterMatchesUserNotAdmin = (permissionsStore.isAdmin() || userStore.userId !== leave.user_id);
+        const requesterMatchesUserNotAdmin = (permissionsStore.isAdmin() || userStore.userId === leave.user_id);
 
-        return requesterNameMatch && groupMatch && yearMatch && requesterMatchesUserNotAdmin;
+        return requesterNameMatch && groupMatch && leaveTypeMatch && yearMatch && requesterMatchesUserNotAdmin;
       })
       .sort((a, b) => {
         if(a.status === 'pending' && b.status !== 'pending') {
@@ -309,7 +359,7 @@ const filteredLeaves = computed(() => {
 // Methods for actions
 const approveLeave = async (leaveId, userId) => {
   try {
-    await leavesStore.approveLeave(userId, leaveId, 'approved', (leaveComments[leaveId] ?? ''));
+    await leavesStore.approveLeave(userId, leaveId, 'approved', (leaveComments.value[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
     useNuxtApp().$toast.success(t('leaves.approveSuccess'), {
@@ -326,7 +376,7 @@ const approveLeave = async (leaveId, userId) => {
 
 const declineLeave = async (leaveId, userId) => {
   try {
-    await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments[leaveId] ?? ''));
+    await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments.value[leaveId] ?? ''));
     // Refresh data
     await refreshLeaves();
     useNuxtApp().$toast.success(t('leaves.rejectSuccess'), {
@@ -371,6 +421,7 @@ const refreshLeaves = async () => {
         allLeaves.value.push({
           ...leave,
           user,
+          class: leaveClass[leave.status] ?? '',
         });
       });
     });

@@ -8,7 +8,7 @@
         <div
             class="flex flex-nowrap items-center relative z-10 bg-white border border-gray-200 rounded-full p-1 m-1 dark:bg-neutral-900 dark:border-neutral-700 shadow-sm"
         >
-          <div class="size-6 me-1" v-html="option.icon"></div>
+          <SharedUserAvatar :user="option" :size="24" />
           <div class="whitespace-nowrap text-gray-800 dark:text-neutral-200 text-xs font-bold px-1">
             {{ option.name }}
           </div>

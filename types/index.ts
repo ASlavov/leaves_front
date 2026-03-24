@@ -1,9 +1,23 @@
+export interface UserProfile {
+    id?: number;
+    user_id?: number;
+    phone?: string | null;
+    internal_phone?: number | string | null;
+    job_title?: string | null;
+    job_description?: string | null;
+    profile_image_base64?: string | null;
+    created_at?: string;
+    updated_at?: string;
+}
+
 export interface User {
     id: number | string;
     email: string;
     name?: string;
     roles?: Role[];
     department_id?: number | string;
+    department?: { id: number | string; name: string };
+    profile?: UserProfile;
     phone?: string;
     internal_phone?: string;
     title?: string;

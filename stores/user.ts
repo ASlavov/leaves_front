@@ -5,7 +5,6 @@ import getUserProfileComposable, {
     editUserComposable,
     updatePasswordComposable
 } from "~/composables/userApiComposable";
-import { newLeaveComposable } from "~/composables/leavesApiComposable";
 import type { User } from '~/types';
 import { useDepartmentsStore } from '~/stores/departments';
 

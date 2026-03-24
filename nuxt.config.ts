@@ -41,6 +41,8 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', 'acceptHMRUpdate'],
   },
   colorMode: {
+    preference: 'dark',
+    fallback: 'dark',
     classSuffix: ''
   },
   postcss: {

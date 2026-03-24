@@ -1,6 +1,6 @@
 <template>
-    <h3 class="py-4 font-semibold text-[16px] dark:text-gray-100">{{ $t('common.profileInformation') }}</h3>
-    <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
+    <h3 class="py-4 font-bold text-[16px] text-[#212121] dark:text-gray-100">{{ $t('common.profileInformation') }}</h3>
+    <div class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 py-[25px] px-[35px] flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
         <div class="flex-1">
             <template v-if="loading">
                 <!-- Avatar Skeleton -->
@@ -18,38 +18,32 @@
             </template>
             <template v-else>
                 <!-- Avatar -->
-                <div class="w-[90px] h-[90px] bg-gray-300 rounded-full mr-4 flex items-center justify-center">
-                  <img
-                       v-if="userPhoto" class="cursor-pointer inline-block w-[90px] h-[90px] rounded-full object-cover"
-                       :src="userPhoto"
-                       alt="Avatar" />
-                  <span v-else class="text-white font-bold">
-                    {{ firstNameInitial }}{{ lastNameInitial }}
-                  </span>
+                <div class="flex items-center justify-start">
+                  <SharedUserAvatar :user="userStore.userInfo" :size="90" />
                 </div>
                 <!-- Info Details -->
-                <div class="pt-4 space-y-2">
-                    <p><span class="font-bold">{{ $t('settings.firstName') }}: </span><span class="text-gray-500 dark:text-gray-100">{{ firstName }}</span></p>
-                    <p><span class="font-bold">{{ $t('settings.lastName') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ lastName }}</span></p>
-                    <p><span class="font-bold">{{ $t('settings.jobTitle') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userTitle }}</span></p>
-                    <p><span class="font-bold">{{ $t('common.email') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userEmail }}</span></p>
-                    <p><span class="font-bold">{{ $t('common.phone') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ userphone }}</span></p>
-                    <p><span class="font-bold">{{ $t('common.internalPhone') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_internal_phone }}</span></p>
-                    <p><span class="font-bold">{{ $t('settings.group') }}: </span><span class="text-gray-500 dark:text-gray-100"> {{ user_department }}</span></p>
+                <div class="pt-[15px] space-y-2 text-[14px] leading-[16px]">
+                    <p><span class="font-bold">{{ $t('settings.firstName') }}: </span><span class="text-[#808080] dark:text-gray-300">{{ firstName }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.lastName') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ lastName }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.jobTitle') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ userTitle }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.email') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ userEmail }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.phone') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ userphone }}</span></p>
+                    <p><span class="font-bold">{{ $t('common.internalPhone') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ user_internal_phone }}</span></p>
+                    <p><span class="font-bold">{{ $t('settings.group') }}: </span><span class="text-[#808080] dark:text-gray-300"> {{ user_department }}</span></p>
                 </div>
             </template>
         </div>
-        <div class="info-actions pt-10 pb-5 flex gap-4">
+        <div class="info-actions pt-[30px] flex gap-[25px]">
             <button
                 @click="openModal"
                 v-if="permissionsStore.can('profile_info','modify')"
-                class="py-3 inline-flex min-w-[120px] justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
+                class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none">
                 {{ $t('common.edit') }}
             </button>
             <button
                 @click="redirectPassChange"
                 v-if="permissionsStore.can('profile_info','change_password')"
-                class="font-bold text-gray-800 dark:text-white mx-auto text-md">
+                class="font-bold text-black dark:text-white mx-auto shrink-0 text-[14px] underline hover:text-[#EA021A] hover:dark:text-[#EA021A] transition-colors">
                 {{ $t('settings.changePassword') }}
             </button>
         </div>
@@ -80,6 +74,7 @@ import { ref, computed } from "vue";
 import { useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore.js';
 import EditUser from '@/components/Settings/EditUser.vue';
+import UserAvatar from '@/components/shared/UserAvatar.vue';
 
 const router = useRouter();
 const { authStore, userStore, permissionsStore } = useCentralStore();

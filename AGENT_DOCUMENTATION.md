@@ -23,9 +23,10 @@ Nuxt 3 (SSR), TypeScript, Pinia (Setup Stores), Tailwind CSS, Preline UI, @nuxtj
 - `MyAccount.vue`, `UserNotification.vue`: User-specific header tools.
 - **Sub-components**: `IconDark.vue`, `IconLight.vue`, `IconSepia.vue`, `IconSystem.vue` (Color mode icons), `ColorModeSwitcher.vue`, `LanguageSwitcher.vue`.
 - `Search.vue`: Global search functionality.
-### Common & Utilities (`components/misc`)
+### Common & Utilities (`components/misc` & `components/shared`)
 - `CustomSelect.vue`, `CustomMultiSelect.vue`: Standardized dropdowns.
 - `FilterInput.vue`: Reusable filter field for lists.
+- `UserAvatar.vue` (`components/shared`): Centralized component for rendering user profile images or fallback initials.
 ### Feature Areas
 - `components/Calendar`: `Calendar.vue` (Schedule-x wrapper).
 - `components/Leaves`: `YearlyLeaves.vue` (Main leave request list/filter/action).

@@ -79,7 +79,9 @@
               <label class="block text-sm font-bold mb-2 text-black dark:text-white">{{ $t('settings.internalPhone') }}</label>
               <input v-model="formInternalPhone" type="number" class="py-3 px-4 block w-full border-gray-200  border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" :placeholder="$t('settings.internalPhone')">
             </div>
-            <div class="max-w-sm">
+            <div
+                v-if="permissionsStore.can('group', 'modify')"
+                class="max-w-sm">
               <CustomSelect
                   v-model="formSelectedDepartmentId"
                   :options="departments"
