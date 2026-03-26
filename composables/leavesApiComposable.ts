@@ -33,9 +33,31 @@ export const adminLeaveActionComposable = (body: LeaveActionPayload) => {
     });
 };
 
-export const getLeavesTypesComposable = () => {
+export const getLeavesTypesComposable = (includeArchived = false) => {
     return retryFetch('/api/leaves/getLeavesTypes', {
         method: 'POST',
+        body: includeArchived ? { includeArchived: true } : {},
+    });
+};
+
+export const deleteLeaveTypeComposable = (leaveTypeId: string | number) => {
+    return retryFetch('/api/leaves/deleteLeaveType', {
+        method: 'POST',
+        body: { leaveTypeId },
+    });
+};
+
+export const restoreLeaveTypeComposable = (leaveTypeId: string | number) => {
+    return retryFetch('/api/leaves/restoreLeaveType', {
+        method: 'POST',
+        body: { leaveTypeId },
+    });
+};
+
+export const newLeaveTypeComposable = (name: string) => {
+    return retryFetch('/api/leaves/newLeaveType', {
+        method: 'POST',
+        body: { name },
     });
 };
 

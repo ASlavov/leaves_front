@@ -1,7 +1,7 @@
 <template>
   <div class="relative" v-click-outside="handleClickOutside">
     <div
-        class="custom-scrollbar relative overflow-y-auto max-h-40 ps-0.5 pe-9 min-h-[46px] flex items-center flex-wrap w-full border border-gray-200 rounded-lg text-start text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 cursor-text"
+        class="custom-scrollbar relative overflow-y-auto max-h-40 ps-0.5 pe-9 min-h-[40px] flex items-center flex-wrap w-full border border-[#DFEAF2] rounded-[8px] text-start text-[14px] transition-all hover:border-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-400 dark:hover:border-neutral-400 cursor-text"
         @click="focusInput"
     >
       <template v-for="option in selectedOptions" :key="option.id">

@@ -22,18 +22,22 @@ export default defineEventHandler(async (event) => {
             entitledDays,
             year,
             startDate,
-            endDate
+            endDate,
+            rolloverPrevious,
+            rolloverUntil,
         } = body;
-        console.log(body);
+
         const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.massLeaves}`, {
             method: 'POST',
             body: {
-                userIds: userIds,
+                userIds,
                 leave_type_id: leaveTypeId,
                 entitled_days: entitledDays,
                 year,
                 startDate,
-                endDate
+                endDate,
+                rollover_previous: rolloverPrevious ?? false,
+                rollover_until: rolloverUntil ?? null,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

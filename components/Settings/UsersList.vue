@@ -251,25 +251,15 @@
     </div>
   </template>
 
-  <div
-      v-if="showModal"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-      @click.self="closeModal"
-  >
-    <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] relative">
-      <button
-          @click="closeModal"
-          class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-      >
-        <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:hover:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
-          <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <!-- Conditionally render EditUser or DeleteUser component -->
-      <component :is="modalComponent" :userId="selectedUserId" @saved="closeModal" />
-    </div>
-  </div>
+  <SharedBaseModal v-model="showModal">
+    <!-- Conditionally render EditUser or DeleteUser component -->
+    <component 
+      :is="modalComponent" 
+      :userId="selectedUserId" 
+      :asModal="true"
+      @saved="closeModal" 
+    />
+  </SharedBaseModal>
 
 </template>
 

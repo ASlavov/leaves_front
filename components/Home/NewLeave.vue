@@ -42,7 +42,7 @@
             <!-- First row: Single input -->
             <div>
               <label for="input1"
-                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.leaveType') }}</label>
+                     class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.leaveType') }} <span class="text-[#EA021A]">*</span></label>
               <div class="space-y-3">
                 <select v-model="leaveType"
                         class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100">
@@ -61,14 +61,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
                 <label for="input2"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.fromDate') }}</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.fromDate') }} <span class="text-[#EA021A]">*</span></label>
                 <input type="text" v-model="startDate" ref="datePickerStart"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
                        :placeholder="$t('common.selectDate')">
               </div>
               <div>
                 <label for="input3"
-                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.toHuman') }}</label>
+                       class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">{{ $t('leaves.toHuman') }} <span class="text-[#EA021A]">*</span></label>
                 <input type="text" v-model="endDate" ref="datePickerEnd"
                        class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
                        :placeholder="$t('common.selectDate')">

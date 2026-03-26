@@ -54,6 +54,8 @@ export interface Leave {
 export interface LeaveType {
     id: number | string;
     name: string;
+    depends_on_type_id?: number | string | null;
+    deleted_at?: string | null;
     [key: string]: any;
 }
 
@@ -101,6 +103,19 @@ export interface EditUserPayload {
     userImage?: any;
 }
 
+export interface AddUserPayload {
+    userName: string;
+    userEmail: string;
+    userDepartment: string | number;
+    userRole: string | number;
+    userPassword: string;
+    userPhone?: string;
+    userInternalPhone?: string;
+    userTitle?: string;
+    userTitleDescription?: string;
+    userImage?: string;
+}
+
 export interface NewDepartmentPayload {
     groupName: string;
     head: string | number;
@@ -119,6 +134,8 @@ export interface AddEntitlementPayload {
     year: number;
     startDate: string;
     endDate: string;
+    rolloverPrevious?: boolean;
+    rolloverUntil?: string;
 }
 
 export interface UpdateEntitlementPayload extends AddEntitlementPayload {

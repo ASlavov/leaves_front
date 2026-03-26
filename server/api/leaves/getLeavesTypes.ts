@@ -3,9 +3,9 @@ import { useRuntimeConfig } from '#imports'; // Runtime config to access the bas
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
-    
-    const {requestingUserId, token } = event.context;
-    
+
+    const { token } = event.context;
+
     if (!token) {
         throw createError({
             statusCode: 403,
@@ -13,12 +13,15 @@ export default defineEventHandler(async (event) => {
         });
     }
 
+    const body = await readBody(event).catch(() => ({}));
+    const includeArchived = body?.includeArchived === true;
+
     try {
-        // Use the token to make a GET request to the external API
         const response = await $fetch(`${config.public.apiBase}${config.public.leaves.getLeaveTypes}`, {
             method: 'GET',
+            query: includeArchived ? { include_archived: 1 } : {},
             headers: {
-                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+                Authorization: `Bearer ${token}`,
             },
         });
 

@@ -65,6 +65,18 @@
         "addEntitlement": "Add new entitlement",
         "addNewLeaves": "Add new leaves",
         "editLeaveType": "Edit Leave Type",
+        "archive": "Archive",
+        "restore": "Restore",
+        "archived": "Archived",
+        "showArchived": "Show archived types",
+        "hideArchived": "Hide archived types",
+        "archiveLeaveType": "Archive Leave Type",
+        "archiveLeaveTypeConfirm": "Archive \"{name}\"? Employees will no longer be able to request this leave type. Existing records are preserved.",
+        "leaveTypeArchived": "Leave type archived",
+        "leaveTypeRestored": "Leave type restored",
+        "rolloverPreviousYear": "Extend remaining balance from previous year",
+        "rolloverUntil": "Extend previous year balance until",
+        "rolloverUntilRequired": "Please select a rollover end date",
         "editDays": "Edit Days",
         "changePassword": "Change password",
         "currentPassword": "Current password",
@@ -98,7 +110,9 @@
         "permissionsLeaves": "Leaves",
         "userProfile": "User Profile",
         "allUsers": "All Users",
-        "departments": "Departments"
+        "departments": "Departments",
+        "password": "Password",
+        "requiredFieldsMissing": "Please fill in all required fields."
     },
     "leaves": {
         "cancelLeave": "Cancel Leave",
@@ -139,8 +153,8 @@
         "rejectLeave": "Reject leave",
         "approveLeave": "Approve leave",
         "requestLeave": "Request leave",
-        "processedReason": "Processed reason",
-        "reason": "Reason"
+        "processedReason": "Manager's comment",
+        "reason": "Requester's comment"
     },
     "common": {
         "delete": "Delete",
@@ -240,7 +254,11 @@
             "fetchStatusesFailed": "Could not fetch leave statuses",
             "fetchAvailableDaysFailed": "Could not fetch remaining leave days",
             "approveFailed": "Could not approve leave",
-            "rejectFailed": "Could not reject leave"
+            "rejectFailed": "Could not reject leave",
+            "createTypeFailed": "Could not create new leave type",
+            "updateTypeFailed": "Could not update leave type",
+            "deleteTypeFailed": "Could not archive leave type",
+            "restoreTypeFailed": "Could not restore leave type"
         },
         "user": {
             "initFailed": "Could not initialize your profile",

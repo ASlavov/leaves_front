@@ -1,4 +1,4 @@
-import type { EditUserPayload, UpdatePasswordPayload } from '~/types';
+import type { EditUserPayload, UpdatePasswordPayload, AddUserPayload } from '~/types';
 
 const getUserProfileComposable = async (userId: string | number) => {
     return retryFetch('/api/user/getProfile', {
@@ -21,6 +21,13 @@ export const editUserComposable = async (body: EditUserPayload) => {
         body: {
             ...body
         },
+    });
+}
+
+export const addUserComposable = async (body: AddUserPayload) => {
+    return retryFetch('/api/user/addUser', {
+        method: 'POST',
+        body: { ...body },
     });
 }
 

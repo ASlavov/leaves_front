@@ -22,8 +22,9 @@ export default defineEventHandler(async (event) => {
         console.log(body);
         const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.get}/${userId}`, {
             method: 'GET',
+            query: { include_archived: 1 },
             headers: {
-                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+                Authorization: `Bearer ${token}`,
             },
         });
         console.log(response);

@@ -23,7 +23,7 @@
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px] max-w-[625px]">
             <!-- Form Group -->
             <div class="max-w-[300px] col-span-2">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.currentPassword') }}</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.currentPassword') }} <span class="text-[#EA021A]">*</span></label>
               <div class="relative">
                 <input
                     v-model="currentPassword"
@@ -42,7 +42,7 @@
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.newPassword') }}</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.newPassword') }} <span class="text-[#EA021A]">*</span></label>
               <div class="relative">
                 <input
                     v-model="newPassword"
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.confirmPassword') }}</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white">{{ $t('settings.confirmPassword') }} <span class="text-[#EA021A]">*</span></label>
               <div class="relative">
                 <input
                     v-model="confirmPassword"

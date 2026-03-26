@@ -11,14 +11,14 @@
 
       <form class="space-y-6" @submit="login">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Διεύθυνση Email</label>
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Διεύθυνση Email <span class="text-[#EA021A]">*</span></label>
           <input v-model="email" id="email" name="email" type="email" required
                  class="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                  placeholder="Enter your email">
         </div>
 
         <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Κωδικός</label>
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Κωδικός <span class="text-[#EA021A]">*</span></label>
 <!--          <input v-model="password" id="password" name="password" type="password" required
                  class="w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                  placeholder="Enter your password">-->

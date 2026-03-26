@@ -1,9 +1,9 @@
 <template>
   <div ref="dropdownRef" class="relative">
-    <label v-if="label" :for="selectId" class="block text-sm font-bold mb-2 text-black dark:text-white">{{ label }}</label>
+    <label v-if="label" :for="selectId" class="block text-[14px] font-bold mb-[8px] text-black dark:text-gray-100" v-html="label"></label>
     <div @click="toggleDropdown" class="cursor-pointer">
       <div
-          class="py-3 px-4 flex items-center justify-between w-full border border-gray-200 rounded-lg bg-white text-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 focus-within:ring-2 focus-within:ring-blue-500 transition-all shadow-sm"
+          class="h-[40px] py-[8px] px-[16px] flex items-center justify-between w-full border border-[#DFEAF2] rounded-[8px] bg-white text-[14px] transition-all hover:border-gray-400 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-400 dark:hover:border-neutral-400"
       >
         <div>
           <span v-if="selectedOption" class="font-medium">{{ selectedOption.name }}</span>

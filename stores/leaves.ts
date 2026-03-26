@@ -5,9 +5,14 @@ import {
     newLeaveComposable,
     getLeavesStatusesComposable,
     getLeavesAvailableDaysComposable,
-    cancelLeaveComposable, getAllUserLeavesComposable,
+    cancelLeaveComposable,
+    getAllUserLeavesComposable,
     adminLeaveActionComposable,
-    updateLeaveTypeComposable
+    updateLeaveTypeComposable,
+    newLeaveTypeComposable,
+    getLeavesTypesComposable,
+    deleteLeaveTypeComposable,
+    restoreLeaveTypeComposable,
 } from '@/composables/leavesApiComposable';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/user';
@@ -171,25 +176,42 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
-    async function getLeavesTypes() {
-
+    async function getLeavesTypes(includeArchived = false) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
-            const result = await getLeavesTypesComposable();
-
+            const result = await getLeavesTypesComposable(includeArchived);
             if (result) {
-                // Process the result and store it in leavesData
                 leavesData.value.leavesTypes = result;
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.leaves.fetchTypesFailed'));
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
+    }
 
+    async function deleteLeaveType(id: string | number) {
+        try {
+            loading.value = true;
+            await deleteLeaveTypeComposable(id);
+        } catch (err) {
+            setError(t('errors.leaves.deleteTypeFailed'));
+            throw err;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    async function restoreLeaveType(id: string | number) {
+        try {
+            loading.value = true;
+            await restoreLeaveTypeComposable(id);
+        } catch (err) {
+            setError(t('errors.leaves.restoreTypeFailed'));
+            throw err;
+        } finally {
+            loading.value = false;
+        }
     }
 
     async function updateLeaveType(id: string | number, name: string) {
@@ -201,6 +223,20 @@ export const useLeavesStore = defineStore('leavesStore', () => {
             }
         } catch (err) {
             setError(t('errors.leaves.updateTypeFailed'));
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    async function createLeaveType(name: string) {
+        try {
+            loading.value = true;
+            const result = await newLeaveTypeComposable(name);
+            if (result) {
+                await getLeavesTypes();
+            }
+        } catch (err) {
+            setError(t('errors.leaves.createTypeFailed'));
         } finally {
             loading.value = false;
         }
@@ -305,5 +341,8 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         approveLeave,
         declineLeave,
         updateLeaveType,
+        createLeaveType,
+        deleteLeaveType,
+        restoreLeaveType,
     };
 });

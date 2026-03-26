@@ -114,11 +114,13 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
         }*/
 
     async function addEntitledDays(
-        userIds: (string | number)[], // <-- Accepts an array of user IDs
+        userIds: (string | number)[],
         leaveTypeId: string | number,
         entitledDays: number,
         startDate: string,
-        endDate: string
+        endDate: string,
+        rolloverPrevious = false,
+        rolloverUntil = ''
     ) {
         try {
             loading.value = true;
@@ -131,22 +133,21 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                     entitledDays,
                     year,
                     startDate,
-                    endDate
+                    endDate,
                 });
             } else {
                 if (userIds.length > 1) {
-                    // Call the bulk endpoint for multiple users
                     await addEntitledDaysForMultipleUsersComposable({
                         userIds,
                         leaveTypeId,
                         entitledDays,
                         year,
                         startDate,
-                        endDate
+                        endDate,
+                        rolloverPrevious,
+                        rolloverUntil: rolloverUntil || undefined,
                     });
-
                 } else {
-                    // Call the single-user endpoint
                     const userId = userIds[0];
                     await addEntitledDaysForUserComposable({
                         userId,
@@ -154,7 +155,9 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                         entitledDays,
                         year,
                         startDate,
-                        endDate
+                        endDate,
+                        rolloverPrevious,
+                        rolloverUntil: rolloverUntil || undefined,
                     });
                 }
             }

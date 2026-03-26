@@ -22,7 +22,9 @@ export default defineEventHandler(async (event) => {
             entitledDays,
             year,
             startDate,
-            endDate
+            endDate,
+            rolloverPrevious,
+            rolloverUntil,
         } = body;
 
         const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.add}`, {
@@ -33,7 +35,9 @@ export default defineEventHandler(async (event) => {
                 entitled_days: entitledDays,
                 year: year,
                 start_from: startDate,
-                end_to: endDate
+                end_to: endDate,
+                rollover_previous: rolloverPrevious ?? false,
+                rollover_until: rolloverUntil ?? null,
             },
             headers: {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header

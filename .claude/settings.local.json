@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "mcp__plugin_figma_figma__get_design_context",
-      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -path ./node_modules -prune -o -path ./intelligence_translations -prune -o -name *vatar* -type f -print)"
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -path ./node_modules -prune -o -path ./intelligence_translations -prune -o -name *vatar* -type f -print)",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -type f -name *entitlement*)",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence/server -type f -name *.ts)",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence/intelligence-back -type f -name *Entitlement* -o -name *entitlement*)",
+      "Bash(grep -E \"\\\\.\\(php|ts\\)$\")",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -type f -path */types* -name *.ts -o -name types.ts)",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence/server/api/leaves -type f -name *.ts -o -name *.js)",
+      "Bash(xargs grep:*)"
     ]
   }
 }

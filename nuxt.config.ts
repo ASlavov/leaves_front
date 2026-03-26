@@ -120,6 +120,10 @@ export default defineNuxtConfig({
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',
+        newLeaveType: '/new_leave_type',
+        updateLeaveType: '/update_leave_type',
+        deleteLeaveType: '/delete_leave_type',
+        restoreLeaveType: '/restore_leave_type',
       },
       departments: {
         getAll: '/departments',

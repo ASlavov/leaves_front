@@ -13,6 +13,11 @@
 - **Reason**: Role names are used both for UI display (in `EditUser.vue` and `Permissions.vue`) and as logical identifiers (in the permissions matrix). Centralizing them ensures that the display names are consistent across the app and correctly translated, while the logic remains decoupled from the translated strings.
 - **Key Implementation**: The store provides an `allRoles` computed property that maps internal keys (like `admin`, `hr-manager`) to translated names using `t('roles.key')`.
 
+### User Management Separation
+- **Decision**: Separated "Add User" (`POST /api/users`) from "Edit User" (`PUT /api/user-update`).
+- **Reason**: The backend `user_update` requires a non-null `user_id`. Attempting to use the update endpoint for creation resulted in 422/500 errors.
+- **Frontend Strategy**: Overloaded `EditUser.vue` with an `isNewUser` computed check to conditionally show the `password` field and select the correct API endpoint.
+
 ## Resolved Issues
 
 ### Greek Character Encoding
@@ -32,3 +37,6 @@
 
 ### Pinia Stores
 - Stores are accessed through `useCentralStore()` which provides a unified access point to `userStore`, `leavesStore`, etc.
+
+### Form Validation
+- Standardized required field indicators using `<span class="text-[#EA021A]">*</span>` within `<label>` tags. Consistent with `API_REPORT.md` and `API_CALLS.md` validation requirements.

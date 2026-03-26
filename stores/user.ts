@@ -3,9 +3,10 @@ import { useI18n } from 'vue-i18n';
 import getUserProfileComposable, {
     getAllUsersComposable,
     editUserComposable,
+    addUserComposable,
     updatePasswordComposable
 } from "~/composables/userApiComposable";
-import type { User } from '~/types';
+import type { User, AddUserPayload } from '~/types';
 import { useDepartmentsStore } from '~/stores/departments';
 
 export const useUserStore = defineStore('userStore', () => {
@@ -138,6 +139,47 @@ export const useUserStore = defineStore('userStore', () => {
         }
     }
 
+    async function addUser(
+        userName: string,
+        userEmail: string,
+        userDepartment: string | number,
+        userRole: string | number,
+        userPassword: string,
+        userPhone: string,
+        userInternalPhone: string,
+        userTitle: string,
+        userTitleDescription: string,
+        userImage: string
+    ) {
+        try {
+            loading.value = true;
+            const result = await addUserComposable({
+                userName,
+                userEmail,
+                userDepartment,
+                userRole,
+                userPassword,
+                userPhone,
+                userInternalPhone,
+                userTitle,
+                userTitleDescription,
+                userImage,
+            });
+
+            if (result?.errors) {
+                throw new Error();
+            }
+
+            await getAllUsers();
+            try { await departmentsStore.getAll(); } catch (e) { console.error('Failed to refresh departments', e); }
+        } catch (err) {
+            setError(t('errors.user.editFailed'));
+            throw err;
+        } finally {
+            loading.value = false;
+        }
+    }
+
     async function getAllUsers() {
         if (userId.value) {
             try {
@@ -183,6 +225,7 @@ export const useUserStore = defineStore('userStore', () => {
         error,
         allUsers,
         getAllUsers,
+        addUser,
         updatePassword
     };
 });
