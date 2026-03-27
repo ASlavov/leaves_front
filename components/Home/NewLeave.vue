@@ -103,6 +103,7 @@
 
 
 <script setup>
+import { extractApiError } from '@/utils/extractApiError';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ref, computed, nextTick, watch } from 'vue';
@@ -119,6 +120,19 @@ const leavesData = computed(() => leavesStore.leavesData?.leavesAvailableDays ||
 const leavesTypes = computed(() => leavesStore.leavesData?.leavesTypes);
 const userStore = centralStore.userStore;
 const user_id = computed(() => userStore.userId);
+const workWeekStore = centralStore.workWeekStore;
+const holidaysStore = centralStore.holidaysStore;
+
+// Working days as a Set for fast lookup (0=Sun, 1=Mon, ..., 6=Sat)
+const workingDaySet = computed(() => new Set(workWeekStore.days));
+// Moving (year-specific) holidays: exact YYYY-MM-DD Set
+const movingHolidaySet = computed(() =>
+  new Set(holidaysStore.holidays.filter(h => !h.is_recurring).map(h => h.date))
+);
+// Recurring holidays: MM-DD Set (applies every year)
+const recurringMonthDaySet = computed(() =>
+  new Set(holidaysStore.holidays.filter(h => h.is_recurring).map(h => h.date.slice(5)))
+);
 
 const leaveType = ref('');
 const startDate = ref('');
@@ -128,29 +142,43 @@ const successMessage = ref('');
 
 const isModalOpen = ref(false);
 
-const datePickrSettings = {
-  dateFormat: "Y-m-d",
-  disable: [function (date) {
-    return (date.getDay() === 0 || date.getDay() === 6);
-  },],
-}
+// Format a JS Date as YYYY-MM-DD using local time (avoids UTC offset issues)
+const toLocalDateStr = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
 
-// --- NEW: A helper function to manage the date pickers ---
+// Helper: is a given JS Date a non-working day (off-day or public holiday)?
+const isExcludedDay = (date) => {
+  const dow = date.getDay();
+  const dateStr = toLocalDateStr(date);
+  const monthDay = dateStr.slice(5); // "MM-DD"
+  const isHoliday = movingHolidaySet.value.has(dateStr) || recurringMonthDaySet.value.has(monthDay);
+  return !workingDaySet.value.has(dow) || isHoliday;
+};
+
+const datePickrSettings = computed(() => ({
+  dateFormat: "Y-m-d",
+  disable: [isExcludedDay],
+}));
+
+// --- A helper function to manage the date pickers ---
 const initializeDatePickers = () => {
   const today = new Date();
 
   // Get the remaining days from the selected leave type
-  const maxDays = selectedLeave.value?.remaining_days - 1 ?? 0;
+  const maxDays = (selectedLeave.value?.remaining_days ?? 1) - 1;
 
   // Logic for the start date picker
   const startDateInstance = flatpickr(datePickerStart.value, {
-    ...datePickrSettings,
+    ...datePickrSettings.value,
     minDate: today,
     onChange: (selectedDates) => {
       if (selectedDates.length) {
         const startDateInside = selectedDates[0];
-        startDate.value = startDateInside;
-        // Update the end date picker based on new start date and maxDays
+        startDate.value = toLocalDateStr(startDateInside);
         updateEndDateDatePicker(startDateInside, maxDays);
       }
     }
@@ -158,9 +186,14 @@ const initializeDatePickers = () => {
 
   // Logic for the end date picker
   const endDateInstance = flatpickr(datePickerEnd.value, {
-    ...datePickrSettings,
+    ...datePickrSettings.value,
     minDate: today,
-    maxDate: maxDays > 0 ? new Date(today.getTime() + maxDays * 24 * 60 * 60 * 1000) : null
+    maxDate: maxDays > 0 ? addWorkingDays(today, maxDays) : null,
+    onChange: (selectedDates) => {
+      if (selectedDates.length) {
+        endDate.value = toLocalDateStr(selectedDates[0]);
+      }
+    }
   });
 
   // Function to update end date picker options
@@ -168,16 +201,22 @@ const initializeDatePickers = () => {
     const newMinDate = new Date(minDate);
     const newMaxDate = addWorkingDays(minDate, daysToAdd);
 
-    // Destroy and re-initialize to apply new min/max dates
     if (endDateInstance) {
       endDateInstance.destroy();
     }
-    flatpickr(datePickerEnd.value, {
-      ...datePickrSettings,
+    const newInstance = flatpickr(datePickerEnd.value, {
+      ...datePickrSettings.value,
       defaultDate: newMinDate,
       minDate: newMinDate,
-      maxDate: newMaxDate
+      maxDate: newMaxDate,
+      onChange: (selectedDates) => {
+        if (selectedDates.length) {
+          endDate.value = toLocalDateStr(selectedDates[0]);
+        }
+      }
     });
+    // Pre-fill endDate with the default (start date)
+    endDate.value = toLocalDateStr(newMinDate);
   };
 
   const addWorkingDays = (startDate, days) => {
@@ -185,8 +224,7 @@ const initializeDatePickers = () => {
     let daysAdded = 0;
     while (daysAdded < days) {
       date.setDate(date.getDate() + 1);
-      const dayOfWeek = date.getDay();
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
+      if (!isExcludedDay(date)) {
         daysAdded++;
       }
     }
@@ -256,7 +294,8 @@ const submitForm = async () => {
 
   } catch (error) {
     console.error('Error submitting leave request:', error);
-    useNuxtApp().$toast.error(t('leaves.submitError'), {
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('leaves.submitError'), {
       position: "bottom-right",
       autoClose: 5000,
     });

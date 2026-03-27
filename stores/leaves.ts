@@ -107,7 +107,6 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
             const result = await newLeaveComposable({ userId, leaveTypeId, startDate, endDate, reason });
 
             if (result) {
@@ -115,10 +114,9 @@ export const useLeavesStore = defineStore('leavesStore', () => {
                 await getLeavesAvailableDays(userId);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.leaves.createFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
 
@@ -160,18 +158,15 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function cancelLeave(userId: string | number, leaveId: string | number, status: string, reason: string) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
             const result = await cancelLeaveComposable({ userId, leaveId, status, reason });
 
             if (result) {
-                // Process the result and store it in leavesData
                 await getAll(userId);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.leaves.cancelFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
@@ -214,29 +209,31 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         }
     }
 
-    async function updateLeaveType(id: string | number, name: string) {
+    async function updateLeaveType(id: string | number, name: string, dependsOnTypeId?: string | number | null, allowRollover?: boolean) {
         try {
             loading.value = true;
-            const result = await updateLeaveTypeComposable({ id, name });
+            const result = await updateLeaveTypeComposable({ id, name, dependsOnTypeId, allowRollover });
             if (result) {
                 await getLeavesTypes();
             }
         } catch (err) {
             setError(t('errors.leaves.updateTypeFailed'));
+            throw err;
         } finally {
             loading.value = false;
         }
     }
 
-    async function createLeaveType(name: string) {
+    async function createLeaveType(name: string, dependsOnTypeId?: string | number | null, allowRollover?: boolean) {
         try {
             loading.value = true;
-            const result = await newLeaveTypeComposable(name);
+            const result = await newLeaveTypeComposable({ name, dependsOnTypeId, allowRollover });
             if (result) {
                 await getLeavesTypes();
             }
         } catch (err) {
             setError(t('errors.leaves.createTypeFailed'));
+            throw err;
         } finally {
             loading.value = false;
         }
@@ -285,18 +282,15 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function approveLeave(userId: string | number, leaveId: string | number, status: string, reason: string) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
             const result = await adminLeaveActionComposable({ userId, leaveId, status, reason });
 
             if (result) {
-                // Process the result and store it in leavesData
                 await getAll(userId);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.leaves.approveFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
@@ -304,18 +298,15 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     async function declineLeave(userId: string | number, leaveId: string | number, status: string, reason: string) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
             const result = await adminLeaveActionComposable({ userId, leaveId, status, reason });
 
             if (result) {
-                // Process the result and store it in leavesData
                 await getAll(userId);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.leaves.rejectFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }

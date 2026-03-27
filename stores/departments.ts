@@ -68,10 +68,9 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
                 try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.departments.createFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
@@ -92,15 +91,13 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
             });
 
             if (result) {
-                // Recall getAll to refresh the store data.
                 await getAll();
                 try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.departments.editFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
@@ -116,10 +113,9 @@ export const useDepartmentsStore = defineStore('departmentsStore', () => {
                 try { await userStore.getAllUsers(); } catch (e) { console.error('Failed to refresh users', e); }
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.departments.deleteFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }

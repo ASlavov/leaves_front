@@ -5,9 +5,9 @@
         "password": "Password",
         "rememberMe": "Remember Me",
         "forgotPassword": "Forgot my password",
-        "sendLink": "SEND LINK",
+        "sendLink": "Send link",
         "backToLogin": "Back to login",
-        "enterEmail": "Enter your email",
+        "emailPlaceholder": "Enter your email",
         "signedInAs": "Signed in as",
         "logout": "Logout"
     },
@@ -63,6 +63,16 @@
         "sortBy": "Sort by:",
         "addLeaveType": "Add new leave type",
         "addEntitlement": "Add new entitlement",
+        "massDeleteEntitlements": "Mass Delete",
+        "massDeleteStep1Title": "Select scope to delete",
+        "massDeletePreviewSafe": "No issues — {count} wallet(s) ready to delete.",
+        "massDeletePreviewBlocked": "{count} wallet(s) have days already consumed.",
+        "massDeleteBlockedWarning": "These wallets cannot be deleted by default because employees have already used days from them. Enable the override below to force-delete them — pending leave requests tied to these wallets will lose their entitlement reference.",
+        "massDeleteForceLabel": "I understand — force-delete all wallets, including those with used days",
+        "massDeleteConfirm": "Delete {count} wallet(s)",
+        "massDeleteSuccess": "{deleted} wallet(s) deleted.",
+        "massDeleteSuccessSkipped": "{deleted} deleted, {skipped} skipped (days already used).",
+        "massDeleteNothingFound": "No entitlement wallets found matching this selection.",
         "addNewLeaves": "Add new leaves",
         "editLeaveType": "Edit Leave Type",
         "archive": "Archive",
@@ -77,6 +87,10 @@
         "rolloverPreviousYear": "Extend remaining balance from previous year",
         "rolloverUntil": "Extend previous year balance until",
         "rolloverUntilRequired": "Please select a rollover end date",
+        "dependsOnLeaveType": "Only usable after",
+        "dependsOnLeaveTypePlaceholder": "Select prerequisite leave type (optional)",
+        "allowRollover": "Allow rollover to next year",
+        "allowRolloverOff": "Unused days are forfeited at year end — no rollover.",
         "editDays": "Edit Days",
         "changePassword": "Change password",
         "currentPassword": "Current password",
@@ -97,6 +111,8 @@
             "length": "At least 8 characters"
         },
         "remainingDays": "Remaining",
+        "daysUsed": "Days used",
+        "leaveAllEmpty": "leave empty to include all",
         "assignLeavesTitle": "Assign leaves to users",
         "assignTo": "Assign to:",
         "selectGroups": "Select Groups",
@@ -112,7 +128,51 @@
         "allUsers": "All Users",
         "departments": "Departments",
         "password": "Password",
-        "requiredFieldsMissing": "Please fill in all required fields."
+        "requiredFieldsMissing": "Please fill in all required fields.",
+        "workWeek": "Work Week",
+        "workWeekDesc": "Select which days of the week count as working days. Leave requests will only deduct days that fall on working days.",
+        "workWeekSaved": "Work week settings saved!",
+        "workWeekSaveError": "Could not save work week settings.",
+        "workWeekEmpty": "At least one working day must be selected.",
+        "days": {
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        },
+        "publicHolidays": "Public Holidays",
+        "addHoliday": "Add holiday",
+        "editHoliday": "Edit holiday",
+        "deleteHoliday": "Delete holiday",
+        "deleteHolidayConfirm": "Delete \"{name}\"? This holiday will no longer be excluded from leave calculations.",
+        "holidayName": "Holiday name",
+        "holidayNamePlaceholder": "e.g. National Day",
+        "noHolidays": "No public holidays found for this year.",
+        "holidayAdded": "Holiday added successfully!",
+        "holidayUpdated": "Holiday updated successfully!",
+        "holidayDeleted": "Holiday deleted successfully!",
+        "holidaySaveError": "Could not save holiday.",
+        "holidayDeleteError": "Could not delete holiday.",
+        "holidayRecurring": "Repeats every year (fixed date)",
+        "holidayRecurringDesc": "This holiday falls on the same date every year (e.g. Christmas). It will be excluded from leave calculations automatically.",
+        "holidayOneTimeDesc": "This holiday only applies to the specific date entered (e.g. a moving religious holiday). You must add each year's date manually.",
+        "recurring": "Recurring",
+        "oneTime": "One-time",
+        "massAddHolidays": "Mass add",
+        "massAddDesc": "Select multiple dates at once. A shared name can be set — leave it empty to use \"Public Holiday\" as the default.",
+        "selectDates": "Select dates",
+        "clickToSelectDates": "Click to pick dates...",
+        "datesSelected": "{count} date(s) selected",
+        "addHolidaysCount": "Add {count} holiday(s)",
+        "massAddSuccess": "{count} holiday(s) added successfully!",
+        "massDeleteSelected": "Delete selected ({count})",
+        "massDeleteHolidays": "Delete selected holidays",
+        "massDeleteHolidaysConfirm": "You are about to delete {count} holiday(s). This cannot be undone.",
+        "massDeleteConfirmBtn": "Delete {count}",
+        "massDeleteSuccess": "{count} holiday(s) deleted."
     },
     "leaves": {
         "cancelLeave": "Cancel Leave",
@@ -159,6 +219,9 @@
     "common": {
         "delete": "Delete",
         "select": "Select",
+        "preview": "Preview",
+        "back": "Back",
+        "done": "Done",
         "date": "Date",
         "selectDate": "Select date",
         "search": "Search",
@@ -205,7 +268,8 @@
         "modify": "Modify",
         "view": "View",
         "cancel": "Cancel",
-        "irreversibleAction": "This action cannot be undone."
+        "irreversibleAction": "This action cannot be undone.",
+        "none": "None"
     },
     "calendar": {
         "allNames": "All names",
@@ -242,7 +306,8 @@
             "fetchFailed": "Could not fetch leaves",
             "createFailed": "Could not create new leave(s)",
             "updateFailed": "Could not update leave",
-            "deleteFailed": "Could not delete leave"
+            "deleteFailed": "Could not delete leave",
+            "massDeleteFailed": "Could not delete entitlements"
         },
         "leaves": {
             "initFailed": "Could not initialize your leave data",
@@ -266,6 +331,16 @@
             "fetchUsersFailed": "Could not fetch users",
             "editFailed": "Could not edit user",
             "changePasswordFailed": "Could not change your password"
+        },
+        "holidays": {
+            "fetchFailed": "Could not fetch public holidays",
+            "createFailed": "Could not create holiday",
+            "updateFailed": "Could not update holiday",
+            "deleteFailed": "Could not delete holiday"
+        },
+        "workWeek": {
+            "fetchFailed": "Could not fetch work week settings",
+            "updateFailed": "Could not update work week settings"
         }
     }
 }

@@ -89,6 +89,7 @@ import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 import { useI18n } from 'vue-i18n';
 import { useFormStyles } from '@/composables/useFormStyles';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const emit = defineEmits(['cancel', 'saved']);
@@ -169,7 +170,8 @@ const assignLeaves = async () => {
     useNuxtApp().$toast.success(t('settings.leaveAdded'));
     emit('saved');
   } catch (error) {
-    useNuxtApp().$toast.error(t('settings.saveLeaveError'));
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('settings.saveLeaveError'));
   } finally {
     loading.value = false;
   }

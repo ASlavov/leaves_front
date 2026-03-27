@@ -1,5 +1,6 @@
-import {defineEventHandler, parseCookies, readBody} from 'h3'; // Import cookie helper from h3
-import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
+import { defineEventHandler, readBody } from 'h3';
+import { useRuntimeConfig } from '#imports';
+import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -43,15 +44,8 @@ export default defineEventHandler(async (event) => {
                 Authorization: `Bearer ${token}`, // Use the token in the Authorization header
             },
         });
-        console.log(response);
-
-        return response; // Return the response from the external API
-    } catch (error:any) {
-        // Handle errors from the external API
-        console.error('Error posting leave:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error posting leaves',
-        });
+        return response;
+    } catch (error: any) {
+        throw proxyError(error);
     }
 });

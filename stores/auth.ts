@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('authStore', () => {
             return false; // Return false on failure
         } catch (err) {
             setError(t('errors.auth.invalidCredentials'));
-            throw new Error('Authentication failed');
+            //throw new Error('Authentication failed');
         } finally {
             loading.value = false;
         }

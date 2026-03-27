@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -41,10 +42,6 @@ export default defineEventHandler(async (event) => {
 
         return response;
     } catch (error: any) {
-        console.error('Error creating user:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error creating user',
-        });
+        throw proxyError(error);
     }
 });

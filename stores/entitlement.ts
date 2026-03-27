@@ -7,6 +7,7 @@ import {
     updateEntitledDaysForUserComposable,
     addEntitledDaysForMultipleUsersComposable,
     addEntitledRemoteDaysForMultipleUsersComposable,
+    massDeleteEntitlementsComposable,
 } from '@/composables/entitlementApiComposable';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '@/stores/user';
@@ -232,7 +233,6 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
     ) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
             const year = new Date(startDate).getFullYear();
             const result = await updateEntitledDaysForUserComposable({
                 entitlementId,
@@ -248,10 +248,9 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
                 await getEntitledDaysForUser(userId, true);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.entitlement.updateFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
     }
@@ -259,18 +258,33 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
     async function deleteEntitledDaysForUser(userId: string | number, entitlementId: string | number) {
         try {
             loading.value = true;
-            // Call the composable with the necessary parameters
-
             const result = await deleteEntitledDaysForUserComposable(entitlementId);
 
             if (result) {
                 await getEntitledDaysForUser(userId, true);
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.entitlement.deleteFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
+            loading.value = false;
+        }
+    }
+
+    async function massDeleteEntitlements(
+        leaveTypeId: string | number,
+        year: number,
+        userIds: (string | number)[] = [],
+        dryRun = true,
+        force = false
+    ) {
+        loading.value = true;
+        try {
+            return await massDeleteEntitlementsComposable({ leaveTypeId, year, userIds, dryRun, force });
+        } catch (err) {
+            setError(t('errors.entitlement.massDeleteFailed'));
+            throw err;
+        } finally {
             loading.value = false;
         }
     }
@@ -286,5 +300,6 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
         deleteEntitledDaysForUser,
         getEntitledDaysForUser,
         updateEntitledDaysForUser,
+        massDeleteEntitlements,
     };
 });

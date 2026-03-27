@@ -55,6 +55,7 @@ export interface LeaveType {
     id: number | string;
     name: string;
     depends_on_type_id?: number | string | null;
+    allow_rollover?: boolean;
     deleted_at?: string | null;
     [key: string]: any;
 }
@@ -155,4 +156,19 @@ export interface LeaveActionPayload {
 export interface UpdateLeaveTypePayload {
     id: string | number;
     name: string;
+    dependsOnTypeId?: string | number | null;
+    allowRollover?: boolean;
+}
+
+export interface PublicHoliday {
+    id: number | string;
+    date: string;
+    name: string;
+    is_recurring: boolean;
+    created_at?: string;
+    updated_at?: string;
+}
+
+export interface WorkWeekSettings {
+    days: number[]; // 0=Sunday, 1=Monday, ..., 6=Saturday
 }

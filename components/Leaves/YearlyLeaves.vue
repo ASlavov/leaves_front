@@ -110,11 +110,11 @@
             class="grid grid-rows-6 lg:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] lg:gap-y-0 items-center justify-items-start w-full lg:justify-items-stretch border px-[30px] py-[12px] rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >
           <!-- Column 1: Date from - Date to on top, leave type on bottom -->
-          <div class="lg:col-span-2 lg:gap-x-2 lg:justify-self-start contents lg:grid grid-cols-4 grid-rows-2 justify-start items-center">
-            <div class="row-span-6 lg:col-span-1 lg:row-span-2 self-start justify-self-end">
+          <div class="lg:col-span-2 lg:gap-x-2 lg:justify-self-start contents lg:grid grid-cols-4 grid-rows-[20px_1fr] justify-start items-center">
+            <div class="row-span-6 lg:col-span-1 lg:row-span-2 self-start justify-self-end w-full">
               <img src="https://placehold.co/50x50" alt="Icon" class="rounded-md">
             </div>
-            <div class="text-sm text-gray-500 lg:col-span-3 lg:row-span-1">
+            <div class="text-sm text-gray-500 lg:col-span-3 lg:row-span-1 whitespace-nowrap">
               {{ formatDate(leave.start_date) }} - {{ formatDate(leave.end_date) }}
             </div>
             <div class="font-bold lg:col-span-3 lg:row-span-1">
@@ -200,6 +200,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t, locale } = useI18n();
 
@@ -367,9 +368,10 @@ const approveLeave = async (leaveId, userId) => {
       autoClose: 5000, // Close automatically after 5 seconds
     });
   } catch (error) {
-    useNuxtApp().$toast.error(t('leaves.approveError'), {
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('leaves.approveError'), {
       position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
+      autoClose: 5000,
     });
   }
 };
@@ -377,16 +379,16 @@ const approveLeave = async (leaveId, userId) => {
 const declineLeave = async (leaveId, userId) => {
   try {
     await leavesStore.declineLeave(userId, leaveId, 'rejected', (leaveComments.value[leaveId] ?? ''));
-    // Refresh data
     await refreshLeaves();
     useNuxtApp().$toast.success(t('leaves.rejectSuccess'), {
       position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
+      autoClose: 5000,
     });
   } catch (error) {
-    useNuxtApp().$toast.error(t('leaves.rejectError'), {
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('leaves.rejectError'), {
       position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
+      autoClose: 5000,
     });
   }
 };

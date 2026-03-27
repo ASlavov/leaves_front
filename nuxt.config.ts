@@ -62,7 +62,7 @@ export default defineNuxtConfig({
     lazy: true,
     restructureDir: '',
     langDir: 'locales',
-    defaultLocale: 'en',
+    defaultLocale: 'el',
     strategy: 'no_prefix',
     detectBrowserLanguage: false,
     locales: [
@@ -111,6 +111,7 @@ export default defineNuxtConfig({
         get: '/entitlement_days',
         massRemote: '/import-workfromhome',
         massLeaves: '/import-mass-leaves',
+        massDelete: '/mass-delete-entitlements',
       },
       leaves: {
         getAll: '/user_leaves',
@@ -135,7 +136,17 @@ export default defineNuxtConfig({
         getNotifications: '/user-notifications',
         markedRead: '/notification-marked-read',
         markedUnread: '/notification-marked-unread',
-      }
+      },
+      holidays: {
+        getAll: '/public-holidays',
+        create: '/public-holidays',
+        update: '/public-holidays',
+        delete: '/public-holidays',
+        batch: '/public-holidays/batch',
+      },
+      companySettings: {
+        workWeek: '/company-settings/work-week',
+      },
     }
   },
 })

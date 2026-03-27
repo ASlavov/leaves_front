@@ -98,6 +98,20 @@ const permissionCategories = computed(() => ({
       view: { label: t('common.view') },
       modify: { label: t('common.modify') }
     }
+  },
+  work_week: {
+    label: t('settings.workWeek'),
+    actions: {
+      view: { label: t('common.view') },
+      modify: { label: t('common.modify') }
+    }
+  },
+  public_holidays: {
+    label: t('settings.publicHolidays'),
+    actions: {
+      view: { label: t('common.view') },
+      modify: { label: t('common.modify') }
+    }
   }
 }));
 
@@ -112,7 +126,9 @@ const hasPermission = (roleKey, category, action) => {
       all_users: { view: true, modify: true },
       entitlements: { view: true, modify: true },
       departments: { view: true, modify: true },
-      leave_types: { view: true, modify: true }
+      leave_types: { view: true, modify: true },
+      work_week: { view: true, modify: true },
+      public_holidays: { view: true, modify: true }
     },
     head: {
       leaves: { view: true, request: true, cancel: true, approve: true, reject: true },
@@ -120,7 +136,9 @@ const hasPermission = (roleKey, category, action) => {
       all_users: { view: true, modify: false },
       entitlements: { view: true, modify: false },
       departments: { view: true, modify: false },
-      leave_types: { view: true, modify: false }
+      leave_types: { view: true, modify: false },
+      work_week: { view: true, modify: false },
+      public_holidays: { view: true, modify: false }
     },
     user: {
       leaves: { view: true, request: true, cancel: true, approve: false, reject: false },
@@ -128,7 +146,9 @@ const hasPermission = (roleKey, category, action) => {
       all_users: { view: false, modify: false },
       entitlements: { view: false, modify: false },
       departments: { view: false, modify: false },
-      leave_types: { view: false, modify: false }
+      leave_types: { view: false, modify: false },
+      work_week: { view: true, modify: false },
+      public_holidays: { view: true, modify: false }
     }
   };
 

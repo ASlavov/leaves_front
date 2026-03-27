@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody, createError } from 'h3';
 import { useRuntimeConfig } from '#imports';
+import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
@@ -7,32 +8,24 @@ export default defineEventHandler(async (event) => {
     const { token } = event.context;
 
     if (!token) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Not authenticated',
-        });
+        throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
     }
 
     try {
-        const { name } = body;
+        const { name, dependsOnTypeId, allowRollover } = body;
 
-        // Map frontend payload to backend expectations
         const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeaveType}`, {
             method: 'POST',
             body: {
                 leave_type_name: name,
+                depends_on_type_id: dependsOnTypeId ?? null,
+                allow_rollover: allowRollover !== false,
             },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
         });
 
         return response;
     } catch (error: any) {
-        console.error('Error creating leave type:', error);
-        throw createError({
-            statusCode: error.statusCode || 500,
-            statusMessage: error.statusMessage || 'Error creating leave type',
-        });
+        throw proxyError(error);
     }
 });

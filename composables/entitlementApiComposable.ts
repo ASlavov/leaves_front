@@ -55,3 +55,16 @@ export const deleteEntitledDaysForUserComposable = (entitlementId: string | numb
         }
     });
 }
+
+export const massDeleteEntitlementsComposable = (body: {
+    leaveTypeId: string | number;
+    year: number;
+    userIds?: (string | number)[];
+    dryRun?: boolean;
+    force?: boolean;
+}) => {
+    return retryFetch('/api/entitlement/massDelete', {
+        method: 'POST',
+        body,
+    });
+}

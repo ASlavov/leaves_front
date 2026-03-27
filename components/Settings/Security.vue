@@ -128,6 +128,7 @@
 import { ref, computed } from "vue";
 import { useCentralStore } from '@/stores/centralStore.js';
 import { useI18n } from 'vue-i18n';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const { authStore, userStore } = useCentralStore();
@@ -211,29 +212,11 @@ const submitForm = async () => {
     }, 2000);
 
   } catch (error) {
-    // Handle errors, e.g., show an error message
-    console.error('Error updating password:', error);
-
-    const status = error.response?.status;
-    const errorData = error.response?._data;
-
-    if (status === 400 && errorData?.error) {
-      useNuxtApp().$toast.error(errorData.error, {
-        position: "bottom-right",
-        autoClose: 5000,
-      });
-    } else if (status === 422 && errorData?.errors) {
-      const firstError = Object.values(errorData.errors)[0][0];
-      useNuxtApp().$toast.error(firstError, {
-        position: "bottom-right",
-        autoClose: 5000,
-      });
-    } else {
-      useNuxtApp().$toast.error(t('settings.passwordChangeError'), {
-        position: "bottom-right",
-        autoClose: 5000, // Close automatically after 5 seconds
-      });
-    }
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('settings.passwordChangeError'), {
+      position: "bottom-right",
+      autoClose: 5000,
+    });
   }
 };
 

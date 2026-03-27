@@ -227,6 +227,7 @@ import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import { useFormStyles } from '@/composables/useFormStyles';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -393,7 +394,8 @@ const submitForm = async () => {
     $toast.success(t('settings.profileUpdated'), { position: 'bottom-right', autoClose: 5000 });
     emit('saved');
   } catch (error) {
-    $toast.error(t('settings.profileUpdateError'), { position: 'bottom-right', autoClose: 5000 });
+    const { type, message } = extractApiError(error);
+    $toast.error(type === 'user' && message ? message : t('settings.profileUpdateError'), { position: 'bottom-right', autoClose: 5000 });
   }
 };
 </script>

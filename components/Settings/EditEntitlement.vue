@@ -74,8 +74,15 @@
               >
             </div>
 
-            <!-- Rollover toggle (add mode only) -->
-            <div v-if="!entitlementId" :class="asModal ? 'w-full' : 'col-span-2'">
+            <!-- No-rollover info (add mode only, when leave type forbids rollover) -->
+            <div v-if="!entitlementId && !leaveTypeAllowsRollover && formLeaveTypeId" :class="asModal ? 'w-full' : 'col-span-2'">
+              <p class="text-[13px] text-amber-600 dark:text-amber-400">
+                {{ $t('settings.allowRolloverOff') }}
+              </p>
+            </div>
+
+            <!-- Rollover toggle (add mode only, only for leave types that allow rollover) -->
+            <div v-if="!entitlementId && leaveTypeAllowsRollover" :class="asModal ? 'w-full' : 'col-span-2'">
               <div class="flex items-center gap-[10px]">
                 <button
                   type="button"
@@ -126,6 +133,7 @@ import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { useFormStyles } from '@/composables/useFormStyles';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const centralStore = useCentralStore();
@@ -176,6 +184,12 @@ const leaveTypes = computed(() => leavesStore.leavesData.leavesTypes
   .map(type => ({ id: type.id, name: type.name }))
 );
 
+const selectedLeaveType = computed(() =>
+  leavesStore.leavesData.leavesTypes.find(t => String(t.id) === String(formLeaveTypeId.value))
+);
+
+const leaveTypeAllowsRollover = computed(() => selectedLeaveType.value?.allow_rollover !== false);
+
 onMounted(async () => {
   loading.value = true;
 
@@ -220,6 +234,18 @@ onMounted(async () => {
     }
   }
   loading.value = false;
+});
+
+// When a non-rollover leave type is selected, snap end date to Dec 31 of that year
+watch(formLeaveTypeId, () => {
+  if (!leaveTypeAllowsRollover.value && formStartDate.value) {
+    const year = new Date(formStartDate.value).getFullYear();
+    formEndDate.value = `${year}-12-31`;
+  }
+  // Clear rollover state when switching to a type that doesn't allow it
+  if (!leaveTypeAllowsRollover.value) {
+    rolloverPrevious.value = false;
+  }
 });
 
 // Initialise the rollover date picker when the toggle is turned on
@@ -284,7 +310,8 @@ const submitForm = async () => {
       emit('saved');
     }
   } catch (error) {
-    $toast.error(t('settings.saveLeaveError'), { position: "bottom-right", autoClose: 5000 });
+    const { type, message } = extractApiError(error);
+    $toast.error(type === 'user' && message ? message : t('settings.saveLeaveError'), { position: "bottom-right", autoClose: 5000 });
   }
 };
 </script>

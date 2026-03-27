@@ -65,6 +65,8 @@ import GroupsList from '~/components/Settings/GroupsList.vue';
 import LeavesTypesList from '~/components/Settings/LeavesTypesList.vue';
 import Permissions from '~/components/Settings/Permissions.vue';
 import EntitlementDays from '~/components/Settings/EntitlementDays.vue';
+import WorkWeekSettings from '~/components/Settings/WorkWeekSettings.vue';
+import PublicHolidays from '~/components/Settings/PublicHolidays.vue';
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -123,6 +125,18 @@ const tabs = [
     labelKey: 'settings.leaveDays',
     component: EntitlementDays,
     permission: { category: 'entitlement', action: 'view' },
+  },
+  {
+    name: 'work-week',
+    labelKey: 'settings.workWeek',
+    component: WorkWeekSettings,
+    permission: { category: 'work_week', action: 'view' },
+  },
+  {
+    name: 'public-holidays',
+    labelKey: 'settings.publicHolidays',
+    component: PublicHolidays,
+    permission: { category: 'public_holidays', action: 'view' },
   },
 ];
 

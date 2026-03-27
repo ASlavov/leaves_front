@@ -61,6 +61,7 @@ import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
 import { useFormStyles } from '@/composables/useFormStyles';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -148,7 +149,8 @@ const submitForm = async () => {
     useNuxtApp().$toast.success(t('settings.groupUpdated'), { position: "bottom-right", autoClose: 5000 });
     emit('saved');
   } catch (error) {
-    useNuxtApp().$toast.error(t('settings.saveGroupError'), { position: "bottom-right", autoClose: 5000 });
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('settings.saveGroupError'), { position: "bottom-right", autoClose: 5000 });
   }
 };
 </script>

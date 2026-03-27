@@ -54,14 +54,14 @@ export const restoreLeaveTypeComposable = (leaveTypeId: string | number) => {
     });
 };
 
-export const newLeaveTypeComposable = (name: string) => {
+export const newLeaveTypeComposable = (body: { name: string; dependsOnTypeId?: string | number | null; allowRollover?: boolean }) => {
     return retryFetch('/api/leaves/newLeaveType', {
         method: 'POST',
-        body: { name },
+        body,
     });
 };
 
-export const updateLeaveTypeComposable = (body: { id: string | number; name: string }) => {
+export const updateLeaveTypeComposable = (body: { id: string | number; name: string; dependsOnTypeId?: string | number | null; allowRollover?: boolean }) => {
     return retryFetch('/api/leaves/updateLeaveType', {
         method: 'POST',
         body,

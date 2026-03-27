@@ -17,11 +17,16 @@
     <div class="flex flex-col gap-[10px]">
       <div
           v-if="permissionsStore.can('entitlement', 'modify')"
-          class="info-actions pb-5 flex gap-4 col-span-2">
+          class="info-actions pb-5 flex gap-4 col-span-2 flex-wrap">
         <button
             @click="newEntitlement"
             class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
           {{ $t('settings.addEntitlement') }}
+        </button>
+        <button
+            @click="openMassDelete"
+            class="py-3 inline-flex justify-center rounded-3xl border border-gray-300 dark:border-neutral-600 px-4 text-md font-medium text-gray-700 dark:text-neutral-300 shadow-sm hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none transition-colors">
+          {{ $t('settings.massDeleteEntitlements') }}
         </button>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold">
@@ -193,12 +198,16 @@
   </template>
 
   <SharedBaseModal v-model="showModal">
-    <component 
-      :is="modalComponent" 
-      :entitlementId="selectedEntitlementId" 
+    <component
+      :is="modalComponent"
+      :entitlementId="selectedEntitlementId"
       :asModal="true"
-      @saved="closeModal" 
+      @saved="closeModal"
     />
+  </SharedBaseModal>
+
+  <SharedBaseModal v-model="showMassDeleteModal" :title="$t('settings.massDeleteEntitlements')" maxWidth="max-w-[600px]">
+    <MassDeleteEntitlement @saved="closeMassDelete" />
   </SharedBaseModal>
 
 </template>
@@ -206,8 +215,9 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
-import EditEntitlement from "~/components/Settings/EditEntitlement.vue";
-import DeleteEntitlement from "~/components/Settings/DeleteEntitlement.vue";
+import EditEntitlement from '~/components/Settings/EditEntitlement.vue';
+import DeleteEntitlement from '~/components/Settings/DeleteEntitlement.vue';
+import MassDeleteEntitlement from '~/components/Settings/MassDeleteEntitlement.vue';
 import UserAvatar from '@/components/shared/UserAvatar.vue';
 
 // Access the necessary stores
@@ -219,6 +229,7 @@ const leavesStore = centralStore.leavesStore;
 
 // Reactive variables for modal management
 const showModal = ref(false);
+const showMassDeleteModal = ref(false);
 const modalType = ref(''); // 'edit' or 'delete'
 const selectedEntitlementId = ref(null);
 const selectedEntitlementUserId = ref(null);
@@ -327,6 +338,19 @@ const newEntitlement = () => {
   selectedEntitlementId.value = null;
   modalType.value = 'edit';
   showModal.value = true;
+};
+
+const openMassDelete = () => {
+  showMassDeleteModal.value = true;
+};
+
+const closeMassDelete = () => {
+  showMassDeleteModal.value = false;
+  // Refresh any currently expanded user rows
+  const usersToReFetch = Object.keys(toggledUsers.value);
+  for (const userId of usersToReFetch) {
+    entitlementStore.getEntitledDaysForUser(userId, true);
+  }
 };
 
 const editEntitlement = (entitlementId) => {

@@ -113,6 +113,7 @@
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore.js';
 import EditLeaveType from '~/components/Settings/EditLeaveType.vue';
+import { extractApiError } from '@/utils/extractApiError';
 
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
@@ -170,8 +171,9 @@ const handleArchive = async () => {
     showArchiveConfirm.value = false;
     archiveTarget.value = null;
     await leavesStore.getLeavesTypes(showArchived.value);
-  } catch {
-    useNuxtApp().$toast.error(useNuxtApp().$i18n.t('errors.leaves.deleteTypeFailed'));
+  } catch (error) {
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : useNuxtApp().$i18n.t('errors.leaves.deleteTypeFailed'));
   } finally {
     archiveLoading.value = false;
   }
@@ -182,8 +184,9 @@ const handleRestore = async (leaveTypeId) => {
     await leavesStore.restoreLeaveType(leaveTypeId);
     useNuxtApp().$toast.success(useNuxtApp().$i18n.t('settings.leaveTypeRestored'));
     await leavesStore.getLeavesTypes(showArchived.value);
-  } catch {
-    useNuxtApp().$toast.error(useNuxtApp().$i18n.t('errors.leaves.restoreTypeFailed'));
+  } catch (error) {
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : useNuxtApp().$i18n.t('errors.leaves.restoreTypeFailed'));
   }
 };
 

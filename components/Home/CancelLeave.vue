@@ -76,6 +76,7 @@
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const centralStore = useCentralStore();
@@ -129,8 +130,11 @@ const handleSubmit = async () => {
             });
 
         } catch (error) {
-            console.error('Error submitting leave request:', error);
-            // Handle the error as needed
+            const { type, message } = extractApiError(error);
+            useNuxtApp().$toast.error(type === 'user' && message ? message : t('leaves.cancelError'), {
+                position: "bottom-right",
+                autoClose: 5000,
+            });
         }
     } else {
         console.log('No leave selected');

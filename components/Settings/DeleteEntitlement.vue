@@ -70,6 +70,7 @@
 import { ref } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 import { useI18n } from 'vue-i18n';
+import { extractApiError } from '@/utils/extractApiError';
 
 const { t } = useI18n();
 const props = defineProps({
@@ -97,7 +98,8 @@ const deleteEntitlement = async () => {
     emit('saved');
     closeModal();
   } catch (error) {
-    useNuxtApp().$toast.error(t('settings.deleteEntitlementError'));
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(type === 'user' && message ? message : t('settings.deleteEntitlementError'));
   } finally {
     loading.value = false;
   }

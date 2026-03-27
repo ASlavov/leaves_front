@@ -105,10 +105,9 @@ export const useUserStore = defineStore('userStore', () => {
                 try { await departmentsStore.getAll(); } catch (e) { console.error('Failed to refresh departments', e); }
             }
         } catch (err) {
-            // Handle errors and set the error state
             setError(t('errors.user.editFailed'));
+            throw err;
         } finally {
-            // Ensure loading is set to false and any post-processing is done
             loading.value = false;
         }
 
