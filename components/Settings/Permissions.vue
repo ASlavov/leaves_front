@@ -112,6 +112,13 @@ const permissionCategories = computed(() => ({
       view: { label: t('common.view') },
       modify: { label: t('common.modify') }
     }
+  },
+  invitations: {
+    label: t('settings.invitations'),
+    actions: {
+      view: { label: t('common.view') },
+      modify: { label: t('common.modify') }
+    }
   }
 }));
 
@@ -128,7 +135,8 @@ const hasPermission = (roleKey, category, action) => {
       departments: { view: true, modify: true },
       leave_types: { view: true, modify: true },
       work_week: { view: true, modify: true },
-      public_holidays: { view: true, modify: true }
+      public_holidays: { view: true, modify: true },
+      invitations: { view: true, modify: true }
     },
     head: {
       leaves: { view: true, request: true, cancel: true, approve: true, reject: true },
@@ -138,7 +146,8 @@ const hasPermission = (roleKey, category, action) => {
       departments: { view: true, modify: false },
       leave_types: { view: true, modify: false },
       work_week: { view: true, modify: false },
-      public_holidays: { view: true, modify: false }
+      public_holidays: { view: true, modify: false },
+      invitations: { view: true, modify: true }
     },
     user: {
       leaves: { view: true, request: true, cancel: true, approve: false, reject: false },
@@ -148,7 +157,8 @@ const hasPermission = (roleKey, category, action) => {
       departments: { view: false, modify: false },
       leave_types: { view: false, modify: false },
       work_week: { view: true, modify: false },
-      public_holidays: { view: true, modify: false }
+      public_holidays: { view: true, modify: false },
+      invitations: { view: true, modify: true }
     }
   };
 

@@ -21,19 +21,12 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
-  script: [
-    {
-      src: '/_nuxt/node_modules/preline/dist/preline.js',
-      defer: true
-    }
-  ],
   css: [
     '~/assets/css/main.css',
     '@schedule-x/theme-default/dist/index.css'
   ],
 
   plugins: [
-    "~/plugins/preline.client.ts",
     /*"~/plugins/fetchInterceptor.js",*/
     "~/plugins/vue3-toastify.client.js"
   ],
@@ -146,6 +139,12 @@ export default defineNuxtConfig({
       },
       companySettings: {
         workWeek: '/company-settings/work-week',
+      },
+      invitations: {
+        list: '/invitations',
+        create: '/new-invitation',
+        updateStatus: '/invitations',
+        delete: '/invitations',
       },
     }
   },

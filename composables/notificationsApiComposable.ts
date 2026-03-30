@@ -1,27 +1,22 @@
-export const getNotificationsComposable = (userId: string | number) => {
+import type { Notification, MessageResponse } from '~/types';
 
-    return retryFetch('/api/notifications/getNotifications', {
+export const getNotificationsComposable = (userId: string | number): Promise<Notification[]> => {
+    return retryFetch<Notification[]>('/api/notifications/getNotifications', {
         method: 'POST',
-        body: {
-            userId: userId
-        },
+        body: { userId },
     });
 };
-export const markNotificationReadComposable = (notificationId: string | number) => {
 
-    return retryFetch('/api/notifications/markedRead', {
+export const markNotificationReadComposable = (notificationId: string | number): Promise<MessageResponse> => {
+    return retryFetch<MessageResponse>('/api/notifications/markedRead', {
         method: 'POST',
-        body: {
-            notificationId: notificationId
-        },
+        body: { notificationId },
     });
 };
-export const markNotificationUnreadComposable = (notificationId: string | number) => {
 
-    return retryFetch('/api/notifications/markedUnread', {
+export const markNotificationUnreadComposable = (notificationId: string | number): Promise<MessageResponse> => {
+    return retryFetch<MessageResponse>('/api/notifications/markedUnread', {
         method: 'POST',
-        body: {
-            notificationId: notificationId
-        },
+        body: { notificationId },
     });
 };

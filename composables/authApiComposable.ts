@@ -1,8 +1,8 @@
-// Authenticate user
-import type { AuthUserPayload, UpdatePasswordPayload } from '~/types';
-export const authUserComposable = async (params: AuthUserPayload) => {
+import type { AuthUserPayload, AuthResponse, MessageResponse, User } from '~/types';
+
+export const authUserComposable = async (params: AuthUserPayload): Promise<AuthResponse> => {
     try {
-        const response = await retryFetch('/api/auth/login', {
+        const response = await retryFetch<AuthResponse>('/api/auth/login', {
             method: 'POST',
             body: {
                 email: params.email,
@@ -20,49 +20,43 @@ export const authUserComposable = async (params: AuthUserPayload) => {
     }
 };
 
-// Restore session
-export const refreshSessionComposable = async () => {
+export const refreshSessionComposable = async (): Promise<AuthResponse> => {
     try {
-        const result = await retryFetch('/api/auth/refreshSession', {
+        return await retryFetch<AuthResponse>('/api/auth/refreshSession', {
             method: 'GET',
         });
-
-        return result;
     } catch (error) {
         throw new Error('Failed to restore session');
     }
 };
 
-// Logout user
-export const logoutUserComposable = async () => {
+export const logoutUserComposable = async (): Promise<MessageResponse> => {
     try {
-        const result = await retryFetch('/api/auth/logout', {
+        return await retryFetch<MessageResponse>('/api/auth/logout', {
             method: 'GET',
         });
-
-        return result;
     } catch (error) {
         throw new Error('Failed to delete session');
     }
 };
 
-export const updateUserPasswordComposable = async (body: UpdatePasswordPayload) => {
+export const updateUserPasswordComposable = async (body: AuthUserPayload): Promise<MessageResponse> => {
     try {
-        return await retryFetch('/api/auth/updatePassword', {
+        return await retryFetch<MessageResponse>('/api/auth/updatePassword', {
             method: 'POST',
-            body
+            body,
         });
     } catch (error) {
         throw new Error('Failed to update password');
     }
-}
+};
 
-export const meComposable = async () => {
+export const meComposable = async (): Promise<User> => {
     try {
-        return await retryFetch('/api/me', {
+        return await retryFetch<User>('/api/me', {
             method: 'POST',
         });
     } catch (error) {
         throw new Error('Failed to get self data');
     }
-}
+};

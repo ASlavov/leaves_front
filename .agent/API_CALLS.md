@@ -197,3 +197,103 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Backend Path:** `/notification-marked-read/{id}` | `/notification-marked-unread/{id}`
 - **Parameters:** `notificationId`
 - **Success Response (200 OK):** `{"message": "Notification marked as read/unread successfully."}`
+
+---
+
+## 7. Public Holidays
+
+### Get Holidays
+- **Frontend Path:** `/api/holidays`
+- **Method:** `GET`
+- **Backend Path:** `/public-holidays`
+- **Query Params:** `year` (optional integer — omit to get all recurring + current-year moving)
+- **Success Response (200 OK):** Array of `PublicHoliday` objects.
+
+### Create Holiday
+- **Frontend Path:** `/api/holidays`
+- **Method:** `POST`
+- **Backend Path:** `/public-holidays`
+- **Parameters:** `date` (YYYY-MM-DD), `name` (string), `is_recurring` (boolean, default true)
+- **Success Response (201 Created):** Created `PublicHoliday` object.
+
+### Update Holiday
+- **Frontend Path:** `/api/holidays/:id`
+- **Method:** `PUT`
+- **Backend Path:** `/public-holidays/{id}`
+- **Parameters:** `date`, `name`, `is_recurring`
+- **Success Response (200 OK):** Updated `PublicHoliday` object.
+
+### Delete Holiday
+- **Frontend Path:** `/api/holidays/:id`
+- **Method:** `DELETE`
+- **Backend Path:** `/public-holidays/{id}`
+- **Success Response (200 OK):** `{"message": "Holiday deleted."}`
+
+### Batch Create Holidays
+- **Frontend Path:** `/api/holidays/batch`
+- **Method:** `POST`
+- **Backend Path:** `/public-holidays/batch`
+- **Parameters:** `dates` (string[], YYYY-MM-DD), `name` (string), `is_recurring` (boolean)
+- **Success Response (200 OK):** `{"created": number, "holidays": PublicHoliday[]}`
+
+### Batch Delete Holidays
+- **Frontend Path:** `/api/holidays/batchDelete`
+- **Method:** `DELETE`
+- **Backend Path:** `/public-holidays/batch`
+- **Parameters:** `ids` (number[])
+- **Success Response (200 OK):** `{"deleted": number}`
+
+---
+
+## 8. Company Settings
+
+### Get Work Week
+- **Frontend Path:** `/api/settings/workWeek`
+- **Method:** `GET`
+- **Backend Path:** `/company-settings/work-week`
+- **Success Response (200 OK):** `{"days": [1,2,3,4,5]}` (0=Sunday … 6=Saturday)
+
+### Update Work Week
+- **Frontend Path:** `/api/settings/workWeek`
+- **Method:** `PUT`
+- **Backend Path:** `/company-settings/work-week`
+- **Parameters:** `days` (integer[], each 0–6)
+- **Success Response (200 OK):** `{"days": [...]}`
+
+---
+
+## 9. Calendar Invitations
+
+### List Invitations
+- **Frontend Path:** `/api/invitations`
+- **Method:** `GET`
+- **Backend Path:** `/invitations?user_id={id}`
+- **Notes:** `user_id` injected server-side from `event.context.requestingUserId`; not sent by client.
+- **Success Response (200 OK):**
+  ```json
+  {
+    "sent": [ "...Invitation[] with receiver" ],
+    "received": [ "...Invitation[] with sender" ]
+  }
+  ```
+
+### Send Invitation
+- **Frontend Path:** `/api/invitations`
+- **Method:** `POST`
+- **Backend Path:** `/new-invitation`
+- **Parameters:** `user_id_from` (int), `user_id_to` (int[])
+- **Success Response (201 Created):** `{"message": "...", "invitations": Invitation[]}`
+
+### Update Invitation Status (Accept / Decline)
+- **Frontend Path:** `/api/invitations/:id`
+- **Method:** `PATCH`
+- **Backend Path:** `/invitations/{id}/status`
+- **Parameters:** `user_id` (int), `status` ("accepted" | "declined")
+- **Success Response (200 OK):** `{"message": "...", "invitation": Invitation}`
+
+### Revoke Invitation
+- **Frontend Path:** `/api/invitations/:id`
+- **Method:** `DELETE`
+- **Backend Path:** `/invitations/{id}`
+- **Notes:** `user_id` injected server-side from `event.context.requestingUserId`; not sent by client.
+- **Success Response (200 OK):** `{"message": "Invitation revoked successfully."}`

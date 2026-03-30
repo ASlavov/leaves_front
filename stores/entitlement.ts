@@ -47,7 +47,7 @@ export const useEntitlementStore = defineStore('entitlementStore', () => {
             setError(t('errors.entitlement.initFailed'));
         }
     }
-    async function getEntitledDaysForUser(userId: string | number, forceRefresh = false) {
+    async function getEntitledDaysForUser(userId: string | number, forceRefresh = false): Promise<Record<number | string, Entitlement[]> | undefined> {
         // Check if data for this user is already cached
         if (!forceRefresh && entitledDaysData.value.savedUsers[userId]) {
             return entitledDaysData.value.savedUsers[userId];

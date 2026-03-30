@@ -30,13 +30,12 @@ const userAuthed = useCookie('user_authed');
 
 const runInitCode = async () => {
   try {
-    console.log('runInitCode: userAuthed =', userAuthed.value ); // Debug: Confirm cookie read
-    if (userAuthed.value === true) {  // Explicit string check for safety
+    const isAuthed = userAuthed.value === 'true' || userAuthed.value === true;
+    if (isAuthed && !centralStore.initialized) {
+      console.log('runInitCode: Initializing...'); // Debug
       await authStore.me();
-      if (!centralStore.initialized) {
-        await centralStore.init();
-        console.log('initialized');
-      }
+      await centralStore.init();
+      console.log('runInitCode: Initialization complete');
     }
   } catch (error) {
     console.error('runInitCode error:', error); // Debug
@@ -51,28 +50,31 @@ const runInitCode = async () => {
 const userId = computed(() => userStore.userId);
 
 router.afterEach(async (to, from) => {
-  // Runs after every navigation, including router.push and NuxtLink clicks
-  await runInitCode();
+  // Only try to init if we're not initialized and might be authed
+  const isAuthed = userAuthed.value === 'true' || userAuthed.value === true;
+  if (!centralStore.initialized && isAuthed) {
+    await runInitCode();
+  }
 });
 
 onMounted(async () => {
-  // Initial run on mount/refresh (key fix!)
-  await runInitCode();
-
   // Watch for changes to userAuthed (e.g., middleware updates it during API calls)
-  watch(
-      () => userAuthed.value,
-      async (newValue, oldValue) => {
-        console.log('userAuthed changed:', oldValue, '->', newValue); // Debug
-        if (newValue === 'true' && oldValue !== 'true') {
-          await runInitCode();
-        } else if (newValue !== 'true' && oldValue === 'true') {
-          // Optional: Handle logout/unauth (e.g., redirect)
-          router.push('/auth/login');
-        }
-      },
-      { immediate: true } // Check initial value immediately
-  );
+    watch(
+        () => userAuthed.value,
+        async (newValue, oldValue) => {
+          console.log('userAuthed changed:', oldValue, '->', newValue); // Debug
+          const isNewAuthed = newValue === 'true' || newValue === true;
+          const isOldAuthed = oldValue === 'true' || oldValue === true;
+          
+          if (isNewAuthed && !isOldAuthed) {
+            await runInitCode();
+          } else if (!isNewAuthed && isOldAuthed) {
+            // Optional: Handle logout/unauth (e.g., redirect)
+            router.push('/auth/login');
+          }
+        },
+        { immediate: true } // Check initial value immediately
+    );
 
   watch(
       () => centralStore.error,  // Watch the error state in the store

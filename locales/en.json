@@ -20,6 +20,7 @@
         "groups": "Groups",
         "leaveTypes": "Leave Types",
         "leaveDays": "Leave Days",
+        "invitations": "Calendar Sharing",
         "firstName": "First Name",
         "lastName": "Last Name",
         "jobTitle": "Job Title",
@@ -268,6 +269,7 @@
         "modify": "Modify",
         "view": "View",
         "cancel": "Cancel",
+        "sending": "Sending…",
         "irreversibleAction": "This action cannot be undone.",
         "none": "None"
     },
@@ -320,6 +322,12 @@
             "fetchAvailableDaysFailed": "Could not fetch remaining leave days",
             "approveFailed": "Could not approve leave",
             "rejectFailed": "Could not reject leave",
+            "leaveDoesNotExist": "Leave request does not exist.",
+            "userDoesNotExist": "User does not exist.",
+            "userHasNoRoles": "User has no assigned roles.",
+            "cannotProcessOwnLeave": "You cannot reject or accept your own leaves.",
+            "userNotAuthorized": "User is not authorized.",
+            "notHeadOfDepartment": "User is not head of department for this user or department is missing.",
             "createTypeFailed": "Could not create new leave type",
             "updateTypeFailed": "Could not update leave type",
             "deleteTypeFailed": "Could not archive leave type",
@@ -336,11 +344,50 @@
             "fetchFailed": "Could not fetch public holidays",
             "createFailed": "Could not create holiday",
             "updateFailed": "Could not update holiday",
-            "deleteFailed": "Could not delete holiday"
+            "deleteFailed": "Could not delete holiday",
+            "batchCreateFailed": "Could not add holidays",
+            "batchDeleteFailed": "Could not delete holidays"
         },
         "workWeek": {
             "fetchFailed": "Could not fetch work week settings",
             "updateFailed": "Could not update work week settings"
+        },
+        "invitations": {
+            "fetchFailed": "Could not fetch invitations",
+            "sendFailed": "Could not send invitation",
+            "respondFailed": "Could not update invitation status",
+            "revokeFailed": "Could not revoke invitation"
+        }
+    },
+    "invitations": {
+        "title": "Calendar Sharing",
+        "sent": "Invitations Sent",
+        "sentDesc": "People who can view your leave calendar",
+        "received": "Invitations Received",
+        "receivedDesc": "People sharing their leave calendar with you",
+        "sendNew": "Send Invitation",
+        "sendModalDesc": "Select colleagues to share your leave calendar with. They will be able to see your approved and pending leave days.",
+        "searchUsers": "Search by name or email…",
+        "noSent": "You haven't sent any invitations yet.",
+        "noReceived": "You haven't received any invitations yet.",
+        "noUsersToInvite": "No available users to invite.",
+        "send": "Send",
+        "accept": "Accept",
+        "decline": "Decline",
+        "revoke": "Revoke",
+        "revokeConfirmTitle": "Revoke invitation?",
+        "revokeConfirmDesc": "This will remove the calendar sharing access associated with this invitation.",
+        "sendSuccess": "Invitation sent successfully.",
+        "sendError": "Could not send invitation.",
+        "acceptSuccess": "Invitation accepted.",
+        "declineSuccess": "Invitation declined.",
+        "respondError": "Could not update invitation.",
+        "revokeSuccess": "Invitation revoked.",
+        "revokeError": "Could not revoke invitation.",
+        "status": {
+            "pending": "Pending",
+            "accepted": "Active",
+            "declined": "Declined"
         }
     }
 }

@@ -79,7 +79,73 @@ export interface Entitlement {
     [key: string]: any;
 }
 
-// API Payloads
+// ─── Response shapes ─────────────────────────────────────────────────────────
+
+/** Generic { message } envelope returned by most mutating endpoints. */
+export interface MessageResponse {
+    message: string;
+}
+
+/** Returned by login and refreshSession. */
+export interface AuthResponse {
+    userId: number | string;
+    message: string;
+}
+
+/** Returned by create / edit user endpoints. */
+export interface UserResponse {
+    success: boolean;
+    message: string;
+    data: User;
+}
+
+/** Returned by create / edit department endpoints. */
+export interface DepartmentResponse {
+    success: boolean;
+    message: string;
+    data: Department;
+}
+
+/** User object augmented with an eager-loaded leaves array (calendar endpoint). */
+export interface UserWithLeaves extends User {
+    leaves: Leave[];
+}
+
+/** Shape returned by GET /api/leaves/getLeavesByUser. */
+export interface UserLeavesResponse {
+    currentUser: Leave[];
+    leavesTypes: LeaveType[];
+    [key: string]: any;
+}
+
+/** Returned by newLeave. */
+export interface LeaveResponse {
+    message: string;
+    leave: Leave;
+}
+
+/** Returned by newLeaveType / updateLeaveType. */
+export interface LeaveTypeResponse {
+    message: string;
+    leave_type?: LeaveType;
+}
+
+/** Returned by massDeleteEntitlements. */
+export interface MassDeleteResponse {
+    deleted: number;
+    message?: string;
+}
+
+/** Available leave days per leave type for a user. */
+export interface AvailableDaysEntry {
+    leave_type_id: number | string;
+    available_days: number;
+    used_days?: number;
+    entitled_days?: number;
+}
+
+// ─── API Payloads ─────────────────────────────────────────────────────────────
+
 export interface AuthUserPayload {
     email?: string;
     password?: string;
@@ -171,4 +237,21 @@ export interface PublicHoliday {
 
 export interface WorkWeekSettings {
     days: number[]; // 0=Sunday, 1=Monday, ..., 6=Saturday
+}
+
+export interface InvitationUser {
+    id: number | string;
+    name?: string;
+    email: string;
+}
+
+export interface Invitation {
+    id: number | string;
+    user_id_from: number | string;
+    user_id_to: number | string;
+    status: 'pending' | 'accepted' | 'declined';
+    sender?: InvitationUser;
+    receiver?: InvitationUser;
+    created_at?: string;
+    updated_at?: string;
 }

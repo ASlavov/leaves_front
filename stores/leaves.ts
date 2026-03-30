@@ -52,6 +52,33 @@ export const useLeavesStore = defineStore('leavesStore', () => {
         error.value = errorMessage;
     };
 
+    const handleLeaveError = (err: any, defaultKey: string) => {
+        const message = err?.data?.data?.message || err?.data?.message || err?.response?._data?.message || err?.message;
+        
+        switch (message) {
+            case 'Leave request does not exist.':
+                setError(t('errors.leaves.leaveDoesNotExist'));
+                break;
+            case 'User does not exist.':
+                setError(t('errors.leaves.userDoesNotExist'));
+                break;
+            case 'User has no assigned roles.':
+                setError(t('errors.leaves.userHasNoRoles'));
+                break;
+            case 'You cannot reject or accept your own leaves.':
+                setError(t('errors.leaves.cannotProcessOwnLeave'));
+                break;
+            case 'User is not authorized.':
+                setError(t('errors.leaves.userNotAuthorized'));
+                break;
+            case 'User is not head of department for this user or department is missing.':
+                setError(t('errors.leaves.notHeadOfDepartment'));
+                break;
+            default:
+                setError(t(defaultKey));
+        }
+    };
+
     async function init(userId: string | number) {
         isDataLoaded.value = false;
         try {
@@ -162,9 +189,11 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 await getAll(userId);
+            } else {
+                throw new Error(t('errors.leaves.cancelFailed'));
             }
-        } catch (err) {
-            setError(t('errors.leaves.cancelFailed'));
+        } catch (err: any) {
+            handleLeaveError(err, 'errors.leaves.cancelFailed');
             throw err;
         } finally {
             loading.value = false;
@@ -286,9 +315,11 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 await getAll(userId);
+            } else {
+                throw new Error(t('errors.leaves.approveFailed'));
             }
-        } catch (err) {
-            setError(t('errors.leaves.approveFailed'));
+        } catch (err: any) {
+            handleLeaveError(err, 'errors.leaves.approveFailed');
             throw err;
         } finally {
             loading.value = false;
@@ -302,9 +333,11 @@ export const useLeavesStore = defineStore('leavesStore', () => {
 
             if (result) {
                 await getAll(userId);
+            } else {
+                throw new Error(t('errors.leaves.rejectFailed'));
             }
-        } catch (err) {
-            setError(t('errors.leaves.rejectFailed'));
+        } catch (err: any) {
+            handleLeaveError(err, 'errors.leaves.rejectFailed');
             throw err;
         } finally {
             loading.value = false;

@@ -67,6 +67,7 @@ import Permissions from '~/components/Settings/Permissions.vue';
 import EntitlementDays from '~/components/Settings/EntitlementDays.vue';
 import WorkWeekSettings from '~/components/Settings/WorkWeekSettings.vue';
 import PublicHolidays from '~/components/Settings/PublicHolidays.vue';
+import Invitations from '~/components/Settings/Invitations.vue';
 
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
@@ -137,6 +138,12 @@ const tabs = [
     labelKey: 'settings.publicHolidays',
     component: PublicHolidays,
     permission: { category: 'public_holidays', action: 'view' },
+  },
+  {
+    name: 'invitations',
+    labelKey: 'settings.invitations',
+    component: Invitations,
+    permission: { category: 'invitations', action: 'view' },
   },
 ];
 

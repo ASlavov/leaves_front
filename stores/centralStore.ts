@@ -9,6 +9,7 @@ import { useNotificationsStore } from "~/stores/notifications";
 import { usePermissionsStore } from "~/stores/permissions";   // Import the notifications store
 import { useHolidaysStore } from "~/stores/holidays";
 import { useWorkWeekStore } from "~/stores/workWeek";
+import { useInvitationsStore } from "~/stores/invitations";
 
 export const useCentralStore = defineStore('centralStore', () => {
     const authStore = useAuthStore();
@@ -20,6 +21,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const permissionsStore = usePermissionsStore();
     const holidaysStore = useHolidaysStore();
     const workWeekStore = useWorkWeekStore();
+    const invitationsStore = useInvitationsStore();
 
     const error = ref<string | null>(null);
     const loading = computed(() =>
@@ -52,6 +54,7 @@ export const useCentralStore = defineStore('centralStore', () => {
                     entitlementStore.init(),
                     holidaysStore.fetchHolidays(),
                     workWeekStore.fetchWorkWeek(),
+                    invitationsStore.fetchInvitations(),
                 ]);
 
                 initialized.value = true
@@ -69,6 +72,7 @@ export const useCentralStore = defineStore('centralStore', () => {
 
     async function logout() {
         try {
+            notificationsStore.stopPollingNotifications();
             userStore.reset();
             leavesStore.reset();
             departmentsStore.reset();
@@ -76,6 +80,7 @@ export const useCentralStore = defineStore('centralStore', () => {
             entitlementStore.reset();
             holidaysStore.reset();
             workWeekStore.reset();
+            invitationsStore.reset();
             initialized.value = false;
             await authStore.logout();
         } catch (e) {
@@ -111,6 +116,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     const proxiedEntitlementStore = new Proxy(entitlementStore, dynamicProxyHandler);
     const proxiedHolidaysStore = new Proxy(holidaysStore, dynamicProxyHandler);
     const proxiedWorkWeekStore = new Proxy(workWeekStore, dynamicProxyHandler);
+    const proxiedInvitationsStore = new Proxy(invitationsStore, dynamicProxyHandler);
 
     return {
         error,
@@ -127,5 +133,6 @@ export const useCentralStore = defineStore('centralStore', () => {
         entitlementStore: proxiedEntitlementStore,
         holidaysStore: proxiedHolidaysStore,
         workWeekStore: proxiedWorkWeekStore,
+        invitationsStore: proxiedInvitationsStore,
     };
 });

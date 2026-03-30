@@ -6,7 +6,6 @@ export default {
     "./plugins/**/*.{js,ts}",
     "./app.vue",
     "./error.vue",
-    './node_modules/preline/preline.js',
   ],
   theme: {
     extend: {
@@ -35,9 +34,7 @@ export default {
       }
     },
   },
-  plugins: [
-    require('preline/plugin'),
-  ],
+  plugins: [],
   darkMode: 'class',
 }
 

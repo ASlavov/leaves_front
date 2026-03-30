@@ -3,6 +3,169 @@
 This file tracks all changes made by the AI agent during the architectural stabilization phase.
 
 ---
+## 18. Store Error Reporting Consistency
+
+### Problem
+Three newly created stores (`holidays.ts`, `workWeek.ts`, `invitations.ts`) had inconsistent or missing error reporting compared to the established pattern in `entitlement.ts` and `notifications.ts`. `holidays.ts` used hardcoded English strings instead of i18n keys for the fetch error and had bare `throw err` with no `setError` call in mutation actions. `workWeek.ts` had the same two problems. `invitations.ts` had no `error` ref, no `setError` helper, and no `useI18n` at all. Additionally, both stores were missing locale keys for batch operations (`batchCreateFailed`, `batchDeleteFailed`) and no `errors.invitations.*` keys existed in either locale.
+
+### Implementation Rationale
+All stores should follow the same contract: `const { t } = useI18n()` + `const setError = (msg) => { error.value = msg; }` + every `catch` block calls `setError(t('errors.category.action'))` then rethrows so the consuming component can still show a toast. Background fetches also rethrow so init failures surface. This makes the `error` ref on each store usable for in-component error display if ever needed, and ensures all user-facing error strings go through the i18n pipeline.
+
+### Code Changes
+- **`stores/holidays.ts`**: Added `useI18n` import, `setError` helper. Replaced hardcoded `'Failed to fetch holidays'` with `t('errors.holidays.fetchFailed')`. Added `setError` calls to all six actions (`createHoliday`, `updateHoliday`, `deleteHoliday`, `createHolidayBatch`, `deleteHolidayBatch`).
+- **`stores/workWeek.ts`**: Added `useI18n` import, `setError` helper. Replaced hardcoded string in `fetchWorkWeek`. Added `setError` to `updateWorkWeek`.
+- **`stores/invitations.ts`**: Added `error` ref, `useI18n` import, `setError` helper. All four actions (`fetchInvitations`, `sendInvitation`, `respondToInvitation`, `revokeInvitation`) now call `setError` before rethrowing. `reset()` now also clears `error`. `error` added to the returned store object.
+- **`locales/en.json`**: Added `errors.holidays.batchCreateFailed`, `errors.holidays.batchDeleteFailed`, `errors.invitations.fetchFailed`, `errors.invitations.sendFailed`, `errors.invitations.respondFailed`, `errors.invitations.revokeFailed`.
+- **`locales/el.json`**: Same keys added in Greek.
+
+---
+## 17. Calendar Leave Visibility for Connected Users
+
+### Problem
+The `allUserLeaves` endpoint in `LeavesController` — which the calendar page calls — did not include connected users' leaves for role 4 (regular user). It only queried `WHERE id = $userId`, completely ignoring the `connected_users` JSON column populated by the invitations system. This meant the calendar sharing feature was non-functional: an accepted invitation updated `connected_users` correctly but the calendar never reflected it. A second bug was also present: role 2 (hr-manager) matched no `if` block and silently returned `null`.
+
+### Implementation Rationale
+The fix is purely backend. The calendar frontend already iterates over an array of `{ id, name, leaves[] }` user objects, so appending additional user objects for connected users requires no frontend changes. Role 4 now collects its own ID plus all IDs in `connected_users`, then performs a single `whereIn` query returning all relevant users with their leaves. Admin and HR manager are collapsed into a single `whereIn('role_id', [1, 2])` check.
+
+### Code Changes
+- **`app/Http/Controllers/Api/LeavesController.php`** (`allUserLeaves` method):
+  - Replaced the three separate `if` blocks for roles 1, 3, 4 with a cleaner ordering: admin+HR first (roles 1+2 together), then head (role 3), then regular user (role 4).
+  - Role 4 block: decodes `connected_users` (with `json_decode` guard for string vs array storage), merges IDs, and issues a single `User::whereIn('id', $userIds)->with('leaves')->get()`.
+  - Role 2 (hr-manager) now returns all users with leaves instead of `null`.
+
+---
+## 16. Calendar Invitations System
+
+### Problem
+There was no mechanism for regular users to share their leave calendar with specific colleagues. Only admins and HR could see all leaves; heads could see their department; users were isolated to their own data. A previous developer had partially implemented an `invitations` table and `InvitationController` (create + updateStatus endpoints) along with a `connected_users` JSON column on the `users` table, but there were no GET or DELETE endpoints, no frontend UI, and no store or composable layer.
+
+### Implementation Rationale
+The invitation model: User X sends an invitation to User Y → Y accepts → X's `connected_users` gets Y's ID appended → X can now see Y's leaves on the calendar (one-directional). The UI lives in a dedicated "Calendar Sharing" settings tab visible to all roles. All API calls go through a composable layer (`invitationsApiComposable.ts`) — no `$fetch` directly in the store. The server routes inject `requestingUserId` from `event.context` for the GET and DELETE endpoints so the client never needs to pass `user_id` manually for those; PATCH follows the existing `updateStatus` pattern and accepts `user_id` in the body.
+
+### Code Changes
+**Backend:**
+- **`app/Http/Controllers/Api/InvitationController.php`**: Added `list()` — validates `user_id` query param (required, integer, exists:users), returns `{ sent: [...], received: [...] }` with `sender`/`receiver` relationships eager-loaded. Added `destroy()` — validates `user_id` in body, checks ownership with explicit `(int)` casts, cleans up `connected_users` if invitation was accepted (with `json_decode` guard), then deletes the record.
+- **`routes/api.php`**: Added `GET /invitations` and `DELETE /invitations/{id}` routes with `auth:sanctum` middleware.
+
+**Frontend:**
+- **`nuxt.config.ts`**: Added `invitations: { list, create, updateStatus, delete }` to `runtimeConfig.public`.
+- **`types/index.ts`**: Added `InvitationUser` and `Invitation` interfaces.
+- **`server/api/invitations/index.get.ts`**: Proxies GET, injects `requestingUserId` from context as `?user_id=` query param.
+- **`server/api/invitations/index.post.ts`**: Proxies POST for new invitation.
+- **`server/api/invitations/[id].patch.ts`**: Proxies PATCH for accept/decline, forwards `user_id` + `status` body.
+- **`server/api/invitations/[id].delete.ts`**: Proxies DELETE, injects `requestingUserId` from context as `user_id` in body.
+- **`composables/invitationsApiComposable.ts`**: Exports `getInvitationsComposable`, `createInvitationComposable`, `updateInvitationStatusComposable`, `deleteInvitationComposable` — all via `retryFetch`.
+- **`stores/invitations.ts`**: Pinia store with `sent`, `received`, `loading`, `error` refs. Actions: `fetchInvitations`, `sendInvitation`, `respondToInvitation`, `revokeInvitation`.
+- **`stores/centralStore.ts`**: `useInvitationsStore` imported, initialized in `Promise.all`, reset on logout, exposed as `invitationsStore`.
+- **`stores/permissions.ts`**: Added `invitations: { view: all roles, modify: all roles }`.
+- **`components/Settings/Invitations.vue`**: Two-panel layout — left panel shows sent invitations (status badge + revoke X), right panel shows received (accept/decline buttons for pending, status badge otherwise, revoke X). "Send Invitation" button opens a searchable multi-select modal (already-invited users filtered out). Revoke has a confirmation modal. All actions show toast on success/failure.
+- **`pages/settings.vue`**: Added "Calendar Sharing" tab using `invitations.view` permission.
+- **`components/Settings/Permissions.vue`**: Added `invitations` row to category definitions and `hasPermission` matrix for all four roles.
+- **`locales/en.json` + `locales/el.json`**: Added full `invitations.*` key tree and `common.sending`.
+
+---
+## 15. Preline UI Removal
+
+### Problem
+The project had Preline UI as a dependency whose JavaScript plugin was throwing console errors. Several components relied on Preline's CSS-class-driven state machines (`hs-overlay`, `hs-dropdown`, `hs-accordion-group`) for modals and dropdowns, which required the Preline plugin to initialize on each page navigation — an inherently fragile pattern incompatible with Nuxt's SPA routing.
+
+### Implementation Rationale
+Replace every Preline-driven behavior with native Vue 3 reactivity (`ref` booleans, `:class` bindings, `<Transition>`, `<Teleport>`). This eliminates the external dependency entirely and makes all interactive behavior deterministic and inspectable without a browser plugin.
+
+### Code Changes
+- **`plugins/preline.client.ts`**: Deleted.
+- **`nuxt.config.ts`**: Removed `script[]` block and plugin entry for Preline.
+- **`tailwind.config.js`**: Removed `node_modules/preline/dist/*.js` from `content[]` and `require('preline/plugin')` from `plugins[]`.
+- **`package.json`**: `preline` uninstalled.
+- **`components/Home/CancelLeave.vue`**: Replaced `hs-overlay` modal with `v-if="isOpen"` + `<Teleport to="body">` + `<Transition name="modal">` fade. Trigger changed to `@click.prevent="isOpen = true"`. Backdrop click closes.
+- **`components/SidebarTopbar/MyAccount.vue`**: Replaced `hs-dropdown` with `isOpen` ref + `onClickOutside(dropdownRef, ...)` from VueUse. `<Transition name="dropdown">` with slide+fade animation.
+- **`components/SidebarTopbar/Sidebar.vue`**: Replaced `hs-overlay` mobile sidebar with `sidebarOpen` ref. `:class` toggles `translate-x-0 / -translate-x-full`. Semi-transparent backdrop with `<Transition name="backdrop">`. `watch(route.path)` closes sidebar on navigation.
+- **`components/SidebarTopbar/SidebarMenu.vue`**: Removed `hs-accordion-group` class and `data-hs-accordion-always-open` attribute. Added `defineEmits(['navigate'])`; all `NuxtLink`s emit `navigate` on click so the sidebar can close on mobile.
+
+---
+## 14. Permissions for WorkWeek & PublicHolidays
+
+### Problem
+The newly added WorkWeek and PublicHolidays settings tabs had no permissions gating — any role could modify them. The Permissions page matrix also did not list these new categories.
+
+### Implementation Rationale
+HR and admin should be the only roles that can modify company-wide settings like working days and public holidays. All roles can view them (so leaves are calculated correctly and transparently). The `canModify` computed in each component gates all write controls.
+
+### Code Changes
+- **`stores/permissions.ts`**: Added `work_week: { view: all, modify: admin+hr-manager }` and `public_holidays: { view: all, modify: admin+hr-manager }`.
+- **`components/Settings/WorkWeekSettings.vue`**: Added `canModify` computed; save button and day-click handlers wrapped with `v-if="canModify"` / disabled state.
+- **`components/Settings/PublicHolidays.vue`**: All write controls (add, edit, delete, mass-add, mass-delete buttons) wrapped with `v-if="canModify"`.
+- **`components/Settings/Permissions.vue`**: Added `work_week` and `public_holidays` to `categoryDefinitions` computed and to the `hasPermission` matrix for all four roles.
+
+---
+## 13. Mass Add/Delete + Recurring/Moving Holidays
+
+### Problem
+The initial public holidays implementation only supported adding one holiday at a time and had no way to distinguish between fixed-date holidays (that repeat every year, e.g. Christmas) and one-off moving holidays (e.g. Easter, which falls on a different date each year).
+
+### Implementation Rationale
+**Recurring vs moving**: A holiday with `is_recurring = true` is stored once and matched by `MM-DD` regardless of year. A holiday with `is_recurring = false` is matched by exact `YYYY-MM-DD`. This maps cleanly to the two real-world categories and requires no duplicate storage for recurring holidays. **Batch operations**: HR teams need to add multiple days off at once (e.g. a whole holiday week). Using flatpickr `mode: "multiple"` and a single `INSERT IGNORE` batch query makes this efficient.
+
+### Code Changes
+**Backend:**
+- **Migration** `add_is_recurring_to_public_holidays_table.php`: Added `boolean is_recurring default true`.
+- **`PublicHoliday` model**: Added `is_recurring` to `$fillable` and cast to boolean.
+- **`WorkingDaysHelper::countWorkingDays()`**: Fetches moving holidays (exact date match) and recurring holidays (`MM-DD` hash) separately for O(1) per-day lookup.
+- **`PublicHolidaysController`**: `index()` returns recurring holidays always + moving holidays filtered by year. `store/update` accept `is_recurring`. Added `storeBatch()` (uses `insertOrIgnore`) and `destroyBatch()`.
+- **`routes/api.php`**: Batch routes placed before `{id}` routes to avoid parameter conflicts.
+- **`server/api/holidays/index.post.ts` + `[id].put.ts`**: Fixed to forward `is_recurring: body.is_recurring ?? true` (was being silently dropped).
+
+**Frontend:**
+- **`server/api/holidays/batch.post.ts`** + **`batchDelete.delete.ts`**: New Nuxt server routes.
+- **`composables/holidaysApiComposable.ts`**: Added `createHolidayBatchComposable` and `deleteHolidayBatchComposable`.
+- **`stores/holidays.ts`**: Added `createHolidayBatch` and `deleteHolidayBatch` actions.
+- **`components/Settings/PublicHolidays.vue`**: Year navigator, recurring/one-time badge, checkbox multi-select, mass-delete button (appears when items checked), mass-add modal with flatpickr `mode: "multiple"`, add/edit modal with recurring toggle.
+
+---
+## 12. NewLeave.vue Date Format Bug Fix
+
+### Problem
+The start date stored in `startDate.value` was a raw JS `Date` object, which serialized as an ISO string with UTC offset (e.g. `2026-04-07T21:00:00.000Z`) when sent to the backend. The backend expected `YYYY-MM-DD`. The same UTC-offset issue existed in `isExcludedDay` which called `toISOString()`. Additionally, the end date flatpickr instance had no `onChange` handler, so `endDate.value` was never updated after the picker re-initialized.
+
+### Implementation Rationale
+Using `getFullYear/getMonth/getDate` (local time methods) instead of `toISOString()` (UTC) ensures the date string always reflects the user's local calendar date regardless of timezone. A `toLocalDateStr()` helper centralizes this logic.
+
+### Code Changes
+- **`components/Home/NewLeave.vue`**: Added `toLocalDateStr(date)` helper using `getFullYear/getMonth/getDate`. Applied to `startDate.value` assignment, `endDate.value` assignment (via new `onChange` handler on the end-date picker), and replaced `toISOString()` in `isExcludedDay`. `datePickrSettings` changed from plain object to `computed(() => ({...}))` to reactively update when work week or holidays change.
+
+---
+## 11. Working Days & Public Holidays System
+
+### Problem
+Leave day counts were calculated using raw calendar days (`diffInDays + 1`), ignoring weekends and public holidays. There was no admin interface to configure which days of the week are working days, and no public holiday management.
+
+### Implementation Rationale
+The backend counts working days by iterating each day in the requested range, skipping non-working days of the week (configurable) and public holidays (with efficient `MM-DD` hash for recurring ones). The frontend mirrors this logic exactly in the flatpickr `disable` function so the day count shown to the user before submitting is always accurate.
+
+### Code Changes
+**Backend:**
+- **Migrations**: `create_public_holidays_table` (id, date UNIQUE, name, timestamps) and `create_company_settings_table` (id, key UNIQUE, value JSON, timestamps).
+- **`app/Models/PublicHoliday.php`**: Fillable `date`, `name`, `is_recurring`; boolean cast.
+- **`app/Models/CompanySetting.php`**: Key-value JSON store with static `get(key, default)` / `set(key, value)` helpers.
+- **`app/Helpers/WorkingDaysHelper.php`**: `countWorkingDays(start, end)` iterates each day, checks `dayOfWeek` against configured working days and holiday hashes.
+- **`app/Http/Controllers/Api/LeavesController.php`**: Replaced `diffInDays + 1` with `WorkingDaysHelper::countWorkingDays()`.
+- **`app/Http/Controllers/Api/PublicHolidaysController.php`**: Full CRUD.
+- **`app/Http/Controllers/Api/CompanySettingsController.php`**: `getWorkWeek()` / `updateWorkWeek()`.
+- **`routes/api.php`**: All new routes registered.
+
+**Frontend:**
+- **`nuxt.config.ts`**: Added `holidays` and `companySettings` endpoint groups to `runtimeConfig.public`.
+- **`types/index.ts`**: Added `PublicHoliday` and `WorkWeekSettings` interfaces.
+- **`server/api/holidays/`** + **`server/api/settings/`**: Full set of proxy routes.
+- **`composables/holidaysApiComposable.ts`** + **`composables/settingsApiComposable.ts`**: All API calls via `retryFetch`.
+- **`stores/holidays.ts`** + **`stores/workWeek.ts`**: Pinia stores with full CRUD / fetch+update.
+- **`stores/centralStore.ts`**: Both stores initialized in `Promise.all`, reset on logout, exposed.
+- **`components/Settings/WorkWeekSettings.vue`**: Day toggle buttons (Mon–Sun), save, read-only mode for non-modifiers.
+- **`components/Settings/PublicHolidays.vue`**: Year navigator, holiday list, add/edit/delete modals.
+- **`pages/settings.vue`**: Two new tabs — "Work Week" and "Public Holidays".
+- **`locales/en.json` + `locales/el.json`**: All new keys for work week, days, public holidays, recurring/one-time.
+
+---
 ## 10. Modal Styling Unification (Figma Design System)
 
 ### Problem

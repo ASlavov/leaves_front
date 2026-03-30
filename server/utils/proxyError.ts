@@ -15,15 +15,17 @@ export function proxyError(error: any): never {
     const laravelBody: any = error.data ?? {};
 
     // Auth errors — retryFetch already handles logout; just preserve status
-    if (status === 401 || status === 403) {
+    if (status === 401) {
         throw createError({ statusCode: status, statusMessage: 'Unauthorized' });
     }
 
-    // Client / business errors (400, 409, 422, etc.)
+    // Client / business errors (400, 403, 409, 422, etc.)
     if (status >= 400 && status < 500) {
         let message: string | null = null;
 
-        if (typeof laravelBody.error === 'string') {
+        if (typeof laravelBody.message === 'string') {
+            message = laravelBody.message;
+        } else if (typeof laravelBody.error === 'string') {
             // { "error": "You must exhaust your Paid Leave balance..." }
             message = laravelBody.error;
         } else if (laravelBody.errors && typeof laravelBody.errors === 'object') {

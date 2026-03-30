@@ -7,11 +7,15 @@ export default async function retryFetch<T = any>(
     for (let i = 0; i < retries; i++) {
         try {
             // $fetch automatically throws on 4xx and 5xx errors
-            const response = await $fetch<T>(url, options);
+            const response = await $fetch(url, options) as T;
 
             // If the API explicitly returns 200 OK but packages errors inside the body:
+            if ((response as any)?.statusCode === 401) {
+                await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
+                throw new Error("Unauthorized");
+            }
+
             if ((response as any)?.statusCode === 403) {
-                await $fetch('/api/auth/logout', { method: 'POST' });
                 throw new Error("Forbidden");
             }
 
@@ -22,10 +26,18 @@ export default async function retryFetch<T = any>(
             const status = error.response?.status || error.statusCode;
 
             // Do NOT retry client errors (400s)
-            if (status === 403 || status === 401) {
-                console.error('Authentication Error: 401/403');
+            if (status === 401) {
+                console.error('Authentication Error: 401');
                 await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => { });
+                if (process.client) {
+                    window.location.href = '/auth/login';
+                }
                 throw error; // Immediately break and throw the error back to the caller
+            }
+
+            if (status === 403) {
+                console.error('Authorization Error: 403 Forbidden');
+                throw error; // Break and throw, but do NOT logout
             }
 
             if (status === 400 || status === 422) {

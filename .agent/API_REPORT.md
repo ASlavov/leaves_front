@@ -48,12 +48,49 @@ This report documents the required and optional fields for each API endpoint fou
 ---
 
 ## InvitationController
+- **GET `/api/invitations`**
+    - **Required:** `user_id` (query param, integer, exists:users)
 - **POST `/api/new-invitation`**
     - **Required:** `user_id_from` (int), `user_id_to` (array of ints)
     - **Optional:** `status` (pending, accepted, declined)
 - **PATCH `/api/invitations/{id}/status`**
     - **Required:** `user_id`, `status` (pending, accepted, declined)
     - **Path Param:** `id`
+- **DELETE `/api/invitations/{id}`**
+    - **Required:** `user_id` (body, integer, exists:users) — must be sender or receiver
+    - **Path Param:** `id`
+    - **Note:** Cleans up `connected_users` on the sender if invitation was accepted.
+
+---
+
+## PublicHolidaysController
+- **GET `/api/public-holidays`**
+    - **Optional:** `year` (query param, integer) — filters moving holidays by year; recurring always returned
+- **POST `/api/public-holidays`**
+    - **Required:** `date` (date), `name` (string)
+    - **Optional:** `is_recurring` (boolean, default true)
+- **PUT `/api/public-holidays/{id}`**
+    - **Required:** `date` (date), `name` (string)
+    - **Optional:** `is_recurring` (boolean)
+    - **Path Param:** `id`
+- **DELETE `/api/public-holidays/{id}`**
+    - **Path Param:** `id`
+- **POST `/api/public-holidays/batch`**
+    - **Required:** `dates` (array of date strings), `name` (string)
+    - **Optional:** `is_recurring` (boolean, default true)
+    - **Note:** Uses `insertOrIgnore` — duplicate dates are silently skipped.
+- **DELETE `/api/public-holidays/batch`**
+    - **Required:** `ids` (array of integers)
+
+---
+
+## CompanySettingsController
+- **GET `/api/company-settings/work-week`**
+    - **Required:** None
+    - **Success Response:** `{"days": [1,2,3,4,5]}`
+- **PUT `/api/company-settings/work-week`**
+    - **Required:** `days` (array of integers, each 0–6)
+    - **Note:** Array is validated, sorted, and stored as JSON under key `work_week`.
 
 ---
 

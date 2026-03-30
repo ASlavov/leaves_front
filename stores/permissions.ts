@@ -46,6 +46,10 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
             view: ['admin', 'hr-manager', 'head', 'user'],
             modify: ['admin', 'hr-manager'],
         },
+        invitations: {
+            view: ['admin', 'hr-manager', 'head', 'user'],
+            modify: ['admin', 'hr-manager', 'head', 'user'],
+        },
     };
 
     const { t } = useI18n();
