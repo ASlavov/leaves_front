@@ -14,66 +14,68 @@ Source node: `882:2465` — "rest leaves" frame, file `Ycvr5CtHbdxCad3Ai7f704`.
 
 ### 2.1 Card Dimensions & Layout
 
-| Property | Value |
-|---|---|
-| Card size | 382 × 120 px |
-| Card background | `#FFFFFF` light / `neutral-800` dark |
-| Card border | `1px solid #DFEAF2` light / `neutral-700` dark |
-| Card border-radius | `8px` |
-| Card padding | no explicit padding — children use absolute insets |
+| Property           | Value                                              |
+| ------------------ | -------------------------------------------------- |
+| Card size          | 382 × 120 px                                       |
+| Card background    | `#FFFFFF` light / `neutral-800` dark               |
+| Card border        | `1px solid #DFEAF2` light / `neutral-700` dark     |
+| Card border-radius | `8px`                                              |
+| Card padding       | no explicit padding — children use absolute insets |
 
 ### 2.2 Text Area (left side of card)
 
-| Element | Font | Size | Weight | Color |
-|---|---|---|---|---|
-| Leave type name | Roboto | 16px | 700 | Dynamic from `getTypeColor()` |
-| "Σύνολο:" / Total label | Roboto | 13px | 700 | `#000000` light / `#D1D5DB` dark |
-| Total value | Roboto | 13px | 600 | `#808080` light / `#9CA3AF` dark |
-| "Κατοχυρωμένες:" / Used label | Roboto | 13px | 700 | `#000000` light / `#D1D5DB` dark |
-| Used value | Roboto | 13px | 600 | `#808080` light / `#9CA3AF` dark |
+| Element                       | Font   | Size | Weight | Color                            |
+| ----------------------------- | ------ | ---- | ------ | -------------------------------- |
+| Leave type name               | Roboto | 16px | 700    | Dynamic from `getTypeColor()`    |
+| "Σύνολο:" / Total label       | Roboto | 13px | 700    | `#000000` light / `#D1D5DB` dark |
+| Total value                   | Roboto | 13px | 600    | `#808080` light / `#9CA3AF` dark |
+| "Κατοχυρωμένες:" / Used label | Roboto | 13px | 700    | `#000000` light / `#D1D5DB` dark |
+| Used value                    | Roboto | 13px | 600    | `#808080` light / `#9CA3AF` dark |
 
 Text block: left `30px`, top `25px`, gap between name and stats row `15px`, gap between stat rows `4px`.
 
 ### 2.3 Chart Container (right side of card)
 
 From Figma inset `[18px 30px 18px 268px]` within the 382 × 120px card:
+
 - **Width:** 382 − 268 − 30 = **84px**
 - **Height:** 120 − 18 − 18 = **84px**
 - Chart is horizontally centered within this 84×84 box.
 
 ### 2.4 Radial Bar Visual Spec
 
-| Property | Value |
-|---|---|
-| SVG viewBox | `0 0 84 84` |
-| Circle center | (42, 42) |
-| Outer radius | 38px |
-| Inner radius (hollow) | 19px (50% of outer → `hollow: '50%'`) |
-| Arc stroke radius (center of stroke) | 28.5px |
-| Stroke width | 19px |
-| Stroke linecap | `round` |
-| Track color (light) | `#F3F4F6` |
-| Track color (dark) | `#374151` |
-| Fill color | Dynamic — `getTypeColor(leave_type_id)` |
-| Arc direction | Clockwise, starts at 12 o'clock (−90° rotation) |
+| Property                             | Value                                           |
+| ------------------------------------ | ----------------------------------------------- |
+| SVG viewBox                          | `0 0 84 84`                                     |
+| Circle center                        | (42, 42)                                        |
+| Outer radius                         | 38px                                            |
+| Inner radius (hollow)                | 19px (50% of outer → `hollow: '50%'`)           |
+| Arc stroke radius (center of stroke) | 28.5px                                          |
+| Stroke width                         | 19px                                            |
+| Stroke linecap                       | `round`                                         |
+| Track color (light)                  | `#F3F4F6`                                       |
+| Track color (dark)                   | `#374151`                                       |
+| Fill color                           | Dynamic — `getTypeColor(leave_type_id)`         |
+| Arc direction                        | Clockwise, starts at 12 o'clock (−90° rotation) |
 
 ### 2.5 Center Labels (inside the ring)
 
-| Element | Font | Size | Weight | Color |
-|---|---|---|---|---|
-| "Υπόλοιπο" / label | Roboto | 12px | 500 | `#000000` light / `#9CA3AF` dark |
-| Remaining days value | Roboto | 20px | 700 | `#000000` light / `#F3F4F6` dark |
+| Element              | Font   | Size | Weight | Color                            |
+| -------------------- | ------ | ---- | ------ | -------------------------------- |
+| "Υπόλοιπο" / label   | Roboto | 12px | 500    | `#000000` light / `#9CA3AF` dark |
+| Remaining days value | Roboto | 20px | 700    | `#000000` light / `#F3F4F6` dark |
 
 Positioning (relative to SVG center at 42, 42):
+
 - Label: `y = 36` (`text-anchor: middle`, `dominant-baseline: middle`)
 - Value: `y = 54` (`text-anchor: middle`, `dominant-baseline: middle`)
 
 ### 2.6 Observed Colors per Leave Type (Figma samples)
 
-| Leave Type | Color |
-|---|---|
-| Πληρωμένη άδεια (Paid) | `#9747FF` |
-| Επιπλέον ημέρες WHY | `#52D3D8` |
+| Leave Type                 | Color     |
+| -------------------------- | --------- |
+| Πληρωμένη άδεια (Paid)     | `#9747FF` |
+| Επιπλέον ημέρες WHY        | `#52D3D8` |
 | Εργασία από το σπίτι (WFH) | `#3330BA` |
 
 These are derived at runtime by `getTypeColor(leave_type_id)` — no hardcoding needed.
@@ -100,19 +102,19 @@ No new utilities, no new stores, no package installs.
 ```ts
 interface Props {
   // Required
-  percentage: number       // 0–100, drives the fill arc
-  value: number            // the number shown in the center (remaining_days)
-  color: string            // hex color for the filled arc stroke
-  label: string            // i18n-translated label shown inside ring (e.g. "Remaining")
+  percentage: number; // 0–100, drives the fill arc
+  value: number; // the number shown in the center (remaining_days)
+  color: string; // hex color for the filled arc stroke
+  label: string; // i18n-translated label shown inside ring (e.g. "Remaining")
 
   // Optional / override
-  size?: number            // rendered px size, default 84
-  strokeWidth?: number     // default 19 (matches Figma hollow 50%)
-  trackColorLight?: string // default '#F3F4F6'
-  trackColorDark?: string  // default '#374151'
-  labelFontSize?: number   // default 12
-  valueFontSize?: number   // default 20
-  animationDuration?: number // ms, default 900
+  size?: number; // rendered px size, default 84
+  strokeWidth?: number; // default 19 (matches Figma hollow 50%)
+  trackColorLight?: string; // default '#F3F4F6'
+  trackColorDark?: string; // default '#374151'
+  labelFontSize?: number; // default 12
+  valueFontSize?: number; // default 20
+  animationDuration?: number; // ms, default 900
 }
 ```
 
@@ -180,7 +182,9 @@ The `<circle>` element is rotated −90° via `transform="rotate(-90, cx, cy)"` 
       font-weight="500"
       font-family="Roboto, sans-serif"
       :fill="labelColor"
-    >{{ label }}</text>
+    >
+      {{ label }}
+    </text>
 
     <!-- Value text (remaining_days) -->
     <text
@@ -192,7 +196,9 @@ The `<circle>` element is rotated −90° via `transform="rotate(-90, cx, cy)"` 
       font-weight="700"
       font-family="Roboto, sans-serif"
       :fill="valueColor"
-    >{{ value }}</text>
+    >
+      {{ value }}
+    </text>
   </svg>
 </template>
 ```
@@ -200,6 +206,7 @@ The `<circle>` element is rotated −90° via `transform="rotate(-90, cx, cy)"` 
 > **Note on y values:** When `size` deviates from 84, `y="36"` and `y="54"` must be computed as `center - 6` and `center + 12` respectively (proportional offsets). These are computed properties, not hardcoded.
 
 Exact formula:
+
 ```
 labelY = center - (size * 0.071)   // ≈ 6px offset at size=84
 valueY = center + (size * 0.143)   // ≈ 12px offset at size=84
@@ -208,18 +215,12 @@ valueY = center + (size * 0.143)   // ≈ 12px offset at size=84
 ### 4.4 Color Mode Reactivity
 
 ```ts
-const { $colorMode } = useNuxtApp()
-const isDark = computed(() => $colorMode?.value === 'dark')
+const { $colorMode } = useNuxtApp();
+const isDark = computed(() => $colorMode?.value === 'dark');
 
-const trackColor = computed(() =>
-  isDark.value ? props.trackColorDark : props.trackColorLight
-)
-const labelColor = computed(() =>
-  isDark.value ? '#9CA3AF' : '#000000'
-)
-const valueColor = computed(() =>
-  isDark.value ? '#F3F4F6' : '#000000'
-)
+const trackColor = computed(() => (isDark.value ? props.trackColorDark : props.trackColorLight));
+const labelColor = computed(() => (isDark.value ? '#9CA3AF' : '#000000'));
+const valueColor = computed(() => (isDark.value ? '#F3F4F6' : '#000000'));
 ```
 
 No watchers needed — computed properties re-evaluate automatically when `$colorMode.value` changes. This eliminates the `watch(theme, () => mychart.value.updateOptions(...))` pattern from the old code.
@@ -229,32 +230,33 @@ No watchers needed — computed properties re-evaluate automatically when `$colo
 Use a single `animatedDashOffset` ref driven by `requestAnimationFrame` (no CSS transition, for full control and SSR safety):
 
 ```ts
-const animatedDashOffset = ref(circumference.value) // starts at full offset (empty arc)
+const animatedDashOffset = ref(circumference.value); // starts at full offset (empty arc)
 
 function animateArc(targetOffset: number, duration: number) {
-  const start = performance.now()
-  const from = circumference.value
-  const to = targetOffset
+  const start = performance.now();
+  const from = circumference.value;
+  const to = targetOffset;
 
   function step(now: number) {
-    const elapsed = now - start
-    const progress = Math.min(elapsed / duration, 1)
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
     // ease-out cubic
-    const eased = 1 - Math.pow(1 - progress, 3)
-    animatedDashOffset.value = from + (to - from) * eased
-    if (progress < 1) requestAnimationFrame(step)
+    const eased = 1 - Math.pow(1 - progress, 3);
+    animatedDashOffset.value = from + (to - from) * eased;
+    if (progress < 1) requestAnimationFrame(step);
   }
 
-  requestAnimationFrame(step)
+  requestAnimationFrame(step);
 }
 
 onMounted(() => {
-  const targetOffset = circumference.value - (props.percentage / 100) * circumference.value
-  animateArc(targetOffset, props.animationDuration)
-})
+  const targetOffset = circumference.value - (props.percentage / 100) * circumference.value;
+  animateArc(targetOffset, props.animationDuration);
+});
 ```
 
 **Arc fill formula:**
+
 ```
 dashOffset = circumference - filledLength
            = circumference - (percentage / 100) * circumference
@@ -267,10 +269,13 @@ When `dashOffset = 0` → arc is fully filled.
 **Reactive percentage change** (e.g. after data reload): watch `percentage` prop and re-run `animateArc` from the current animated position rather than from zero, to avoid jarring resets:
 
 ```ts
-watch(() => props.percentage, () => {
-  const targetOffset = circumference.value - (props.percentage / 100) * circumference.value
-  animateArc(targetOffset, props.animationDuration)
-})
+watch(
+  () => props.percentage,
+  () => {
+    const targetOffset = circumference.value - (props.percentage / 100) * circumference.value;
+    animateArc(targetOffset, props.animationDuration);
+  },
+);
 ```
 
 ### 4.6 i18n Reactivity
@@ -294,27 +299,30 @@ The `label` prop is passed as a **computed/reactive value** from the parent (`Me
 ### 5.2 Add RadialBarChart
 
 Import:
+
 ```ts
-import RadialBarChart from '~/components/Home/RadialBarChart.vue'
+import RadialBarChart from '~/components/Home/RadialBarChart.vue';
 ```
 
 Computed values to pass as props:
+
 ```ts
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 // Already exists:
-const leaveColor = computed(() => getTypeColor(props.leave.leave_type_id))
+const leaveColor = computed(() => getTypeColor(props.leave.leave_type_id));
 const percentageUsed = computed(() => {
-  const entitled = props.leave.entitled_days || 0
-  if (entitled === 0) return 0
-  return Math.min(100, (usedDays.value / entitled) * 100)
-})
+  const entitled = props.leave.entitled_days || 0;
+  if (entitled === 0) return 0;
+  return Math.min(100, (usedDays.value / entitled) * 100);
+});
 
 // New — reactive label (re-evaluates on locale change automatically):
-const chartLabel = computed(() => t('leaves.remaining'))
+const chartLabel = computed(() => t('leaves.remaining'));
 ```
 
 Template replacement (inside the right column `div.chart-container`):
+
 ```html
 <template v-if="loading">
   <div class="w-[84px] h-[84px] rounded-full bg-gray-100 animate-pulse dark:bg-neutral-700"></div>
@@ -338,12 +346,12 @@ Current ApexCharts uses `height="120" width="120"` which exceeds the Figma spec.
 
 ## 6. Reactivity Contract
 
-| Trigger | How it propagates | Old behavior |
-|---|---|---|
-| `locale` changes | `chartLabel = computed(() => t('leaves.remaining'))` re-evaluates → passed as prop → SVG `<text>` updates | Manual `watch(locale)` + `mychart.updateOptions()` |
-| `$colorMode` changes | `trackColor`, `labelColor`, `valueColor` are computed → SVG attributes update | Manual `watch(theme)` + `mychart.updateOptions()` |
-| `leave` prop changes (data reload) | `percentageUsed` and `leaveColor` are computed → re-animate via `watch(percentage)` | No handling — ApexCharts chart options were static refs |
-| Component mount | `onMounted` triggers fill animation from 0 → target | ApexCharts had built-in animation |
+| Trigger                            | How it propagates                                                                                         | Old behavior                                            |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `locale` changes                   | `chartLabel = computed(() => t('leaves.remaining'))` re-evaluates → passed as prop → SVG `<text>` updates | Manual `watch(locale)` + `mychart.updateOptions()`      |
+| `$colorMode` changes               | `trackColor`, `labelColor`, `valueColor` are computed → SVG attributes update                             | Manual `watch(theme)` + `mychart.updateOptions()`       |
+| `leave` prop changes (data reload) | `percentageUsed` and `leaveColor` are computed → re-animate via `watch(percentage)`                       | No handling — ApexCharts chart options were static refs |
+| Component mount                    | `onMounted` triggers fill animation from 0 → target                                                       | ApexCharts had built-in animation                       |
 
 ---
 
@@ -358,37 +366,38 @@ Current ApexCharts uses `height="120" width="120"` which exceeds the Figma spec.
 
 ## 8. Dark Mode Visual Spec (not in Figma — derived from code)
 
-| Element | Light | Dark |
-|---|---|---|
-| Card background | `#FFFFFF` | `neutral-800` (`#262626`) |
-| Card border | `#DFEAF2` | `neutral-700` (`#404040`) |
-| Leave type name | `getTypeColor()` | same |
-| "Total" / "Used" labels | `#000000` | `#D1D5DB` (`gray-300`) |
-| Label/value numbers | `#808080` | `#9CA3AF` (`gray-400`) |
-| Arc track | `#F3F4F6` | `#374151` |
-| Arc fill | `getTypeColor()` | same |
-| Center label text | `#000000` | `#9CA3AF` |
-| Center value text | `#000000` | `#F3F4F6` |
+| Element                 | Light            | Dark                      |
+| ----------------------- | ---------------- | ------------------------- |
+| Card background         | `#FFFFFF`        | `neutral-800` (`#262626`) |
+| Card border             | `#DFEAF2`        | `neutral-700` (`#404040`) |
+| Leave type name         | `getTypeColor()` | same                      |
+| "Total" / "Used" labels | `#000000`        | `#D1D5DB` (`gray-300`)    |
+| Label/value numbers     | `#808080`        | `#9CA3AF` (`gray-400`)    |
+| Arc track               | `#F3F4F6`        | `#374151`                 |
+| Arc fill                | `getTypeColor()` | same                      |
+| Center label text       | `#000000`        | `#9CA3AF`                 |
+| Center value text       | `#000000`        | `#F3F4F6`                 |
 
 ---
 
 ## 9. Edge Cases
 
-| Case | Behavior |
-|---|---|
-| `entitled_days = 0` | `percentageUsed = 0` → arc is empty (dashOffset = circumference) |
-| `remaining_days > entitled_days` | clamped by `Math.max(0, entitled - remaining)` for used days; `percentageUsed` clamped to 100 |
-| `percentage = 100` | full arc; `dashOffset = 0` |
-| `percentage = 0` | empty arc; `dashOffset = circumference` |
-| Component re-used with different `leave` prop (v-for key change) | `onMounted` fires again → fresh animation |
-| Same component updated in-place (same key, data refresh) | `watch(percentage)` fires → re-animate from current position |
-| Very long `leave_type_name` | Already handled by `line-clamp-2` in Metrics.vue — no change needed |
+| Case                                                             | Behavior                                                                                      |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `entitled_days = 0`                                              | `percentageUsed = 0` → arc is empty (dashOffset = circumference)                              |
+| `remaining_days > entitled_days`                                 | clamped by `Math.max(0, entitled - remaining)` for used days; `percentageUsed` clamped to 100 |
+| `percentage = 100`                                               | full arc; `dashOffset = 0`                                                                    |
+| `percentage = 0`                                                 | empty arc; `dashOffset = circumference`                                                       |
+| Component re-used with different `leave` prop (v-for key change) | `onMounted` fires again → fresh animation                                                     |
+| Same component updated in-place (same key, data refresh)         | `watch(percentage)` fires → re-animate from current position                                  |
+| Very long `leave_type_name`                                      | Already handled by `line-clamp-2` in Metrics.vue — no change needed                           |
 
 ---
 
 ## 10. Implementation Checklist
 
 ### Phase 1 — Create `RadialBarChart.vue`
+
 - [ ] Define Props interface with all fields from §4.1
 - [ ] Compute geometry: `center`, `outerRadius`, `innerRadius`, `strokeRadius`, `strokeWidth`, `circumference`
 - [ ] Compute `labelY` and `valueY` from `center` (not hardcoded)
@@ -401,6 +410,7 @@ Current ApexCharts uses `height="120" width="120"` which exceeds the Figma spec.
 - [ ] Verify `stroke-linecap="round"` on fill circle only (not track)
 
 ### Phase 2 — Update `Metrics.vue`
+
 - [ ] Remove ApexCharts import and all related refs/computed/watchers
 - [ ] Import `RadialBarChart`
 - [ ] Add `chartLabel` computed using `t('leaves.remaining')`
@@ -409,6 +419,7 @@ Current ApexCharts uses `height="120" width="120"` which exceeds the Figma spec.
 - [ ] Remove `<style scoped>` ApexCharts deep selector
 
 ### Phase 3 — Verify
+
 - [ ] Light mode: arc color, track, text colors match Figma
 - [ ] Dark mode: track `#374151`, labels `#9CA3AF`/`#F3F4F6`
 - [ ] Locale switch (el ↔ en): center label updates without re-mount
@@ -423,11 +434,13 @@ Current ApexCharts uses `height="120" width="120"` which exceeds the Figma spec.
 ## 11. Uninstall ApexCharts (Optional — After Verification)
 
 Once `RadialBarChart` is confirmed stable, if `vue3-apexcharts` is not used elsewhere:
+
 ```bash
 npm uninstall vue3-apexcharts apexcharts
 ```
 
 Check first:
+
 ```bash
 grep -r "apexcharts\|ApexCharts" components/ pages/ plugins/ --include="*.vue" --include="*.ts"
 ```

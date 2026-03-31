@@ -1,42 +1,20 @@
-# Project Memory
+# Memory
 
 ## Architecture Decisions
 
-### Translation System
-- **Choice**: `@nuxtjs/i18n`
-- **Reason**: Seamless integration with Nuxt 3, support for lazy-loading translations, and easy-to-use `$t` functions.
-- **Locale Strategy**: `no_prefix` for the default locale (`el`) to maintain existing URL structures.
-- **Organization**: Translation keys are structured hierarchically (e.g., `settings.firstName`, `common.saveChanges`) for better maintainability.
-
-### Role Localization & Centralization
-- **Choice**: Centralized the role names in the `permissions` store (`permissions.ts`) using the `i18n` system.
-- **Reason**: Role names are used both for UI display (in `EditUser.vue` and `Permissions.vue`) and as logical identifiers (in the permissions matrix). Centralizing them ensures that the display names are consistent across the app and correctly translated, while the logic remains decoupled from the translated strings.
-- **Key Implementation**: The store provides an `allRoles` computed property that maps internal keys (like `admin`, `hr-manager`) to translated names using `t('roles.key')`.
-
-### User Management Separation
-- **Decision**: Separated "Add User" (`POST /api/users`) from "Edit User" (`PUT /api/user-update`).
-- **Reason**: The backend `user_update` requires a non-null `user_id`. Attempting to use the update endpoint for creation resulted in 422/500 errors.
-- **Frontend Strategy**: Overloaded `EditUser.vue` with an `isNewUser` computed check to conditionally show the `password` field and select the correct API endpoint.
+- **ESLint v10 Flat Config**: Migrated from legacy `.eslintrc` to `eslint.config.mjs` to support modern ESLint features and performance improvements.
+- **TypeScript Migration**: Enabled `lang="ts"` across most core components (`app.vue`, `CustomMultiSelect.vue`, etc.) to improve type safety and developer experience.
+- **Shared Type Definitions**: Centralized types in `~/types/index.ts` (e.g., `User`, `Leave`, `Option`, `Department`) to ensure consistency across components and stores.
+- **Component Refactoring**: Migrated legacy Options API components to `<script setup>` for better alignment with Nuxt 3 best practices.
 
 ## Resolved Issues
 
-### Greek Character Encoding
-- **Problem**: Hardcoded Greek strings in `.vue` files were being displayed as gibberish due to encoding mismatches.
-- **Fix**: Migrated all Greek strings to `el.json` translation files. Externalizing the strings ensures consistent encoding (UTF-8) and allows the i18n module to handle the display correctly.
+- **Nuxt $toast Typing**: Workaround for `useNuxtApp().$toast` missing types by using `(useNuxtApp() as any).$toast` or `const { $toast } = useNuxtApp() as any`. This resolved numerous `any` and `unsafe-member-access` errors.
+- **Implicit any in Loops**: Resolved by adding explicit interfaces (`Option`, `Department`) to `.map()` and `.filter()` callbacks.
+- **Legacy Files Cleanup**: Deleted `Calendar_OLD.vue` and related unused components to reduce linting noise.
+- **Vitest Failure**: Fixed an assertion error in `YearlyLeavesFlow.test.ts` where 'John Doe' was expected but not found due to rendering delays or incorrect store state in tests.
 
 ## Context
 
-### Component & Page Migration
-- **Coverage**: 100% of the active `components/` and `pages/` directories have been audited and updated to use i18n.
-- **Backup**: Original files with potentially broken encoding were kept in `intelligence_translations` for reference during extraction.
-- **State Management**: Integrated `i18n` with Pinia stores where necessary (e.g., toast messages for store actions).
-
-### Agent Documentation
-- **File**: `AGENT_DOCUMENTATION.md`
-- **Purpose**: A dense, token-efficient architectural overview for AI agents. It should be the first file an agent reads when entering the project.
-
-### Pinia Stores
-- Stores are accessed through `useCentralStore()` which provides a unified access point to `userStore`, `leavesStore`, etc.
-
-### Form Validation
-- Standardized required field indicators using `<span class="text-[#EA021A]">*</span>` within `<label>` tags. Consistent with `API_REPORT.md` and `API_CALLS.md` validation requirements.
+- **RetryFetch**: Located in `utils/retryFetch.ts`. It wraps `useFetch` with retry logic for robust API communication.
+- **Strict Linting**: The codebase is now at zero errors/warnings (excluding intentionally ignored legacy patterns if any remain). All future commits must pass `npx eslint .`.

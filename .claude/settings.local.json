@@ -33,7 +33,15 @@
       "Bash(__NEW_LINE_0046a585981d0489__ echo:*)",
       "Bash(php artisan:*)",
       "Bash(grep -r hs- /c/Users/User/Desktop/new_intelligence/intelligence --include=*.vue --include=*.ts --include=*.js)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(ls /c/Users/User/Desktop/new_intelligence/intelligence/utils/retryFetch*)",
+      "Bash(find /c/Users/User/Desktop/new_intelligence/intelligence -name retryFetch*)",
+      "Bash(npm install:*)",
+      "Bash(npx vitest:*)",
+      "Bash(node -e \":*)",
+      "Bash(npx eslint:*)",
+      "Bash(grep -v \"^$\")",
+      "Bash(grep -n \"$toast\" stores/centralStore.ts)"
     ]
   }
 }

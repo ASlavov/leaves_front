@@ -1,4 +1,11 @@
-import { d as defineEventHandler, e as useRuntimeConfig, r as readBody, f as createJWT, s as setCookie, h as createError } from '../../../_/nitro.mjs';
+import {
+  d as defineEventHandler,
+  e as useRuntimeConfig,
+  r as readBody,
+  f as createJWT,
+  s as setCookie,
+  h as createError,
+} from '../../../_/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -13,44 +20,41 @@ const login = defineEventHandler(async (event) => {
   const body = await readBody(event);
   try {
     const result = await $fetch(`${config.public.apiBase}${config.public.auth.auth}`, {
-      method: "POST",
+      method: 'POST',
       body: {
         email: body.email,
-        password: body.password
+        password: body.password,
       },
       headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-TOKEN": config.apiSecret
-      }
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': config.apiSecret,
+      },
     });
-    if (typeof result === "string") {
+    if (typeof result === 'string') {
       throw new Error(result);
     } else {
-      const {
-        user_id,
-        token
-      } = result;
+      const { user_id, token } = result;
       const authToken = createJWT(user_id, token);
-      setCookie(event, "auth_token", authToken, {
+      setCookie(event, 'auth_token', authToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
-        maxAge: 60 * 15
+        sameSite: 'strict',
+        maxAge: 60 * 15,
       });
-      setCookie(event, "user_authed", "true", {
+      setCookie(event, 'user_authed', 'true', {
         httpOnly: false,
         secure: true,
-        sameSite: "strict",
-        maxAge: 60 * 15
+        sameSite: 'strict',
+        maxAge: 60 * 15,
       });
-      return { userId: user_id, message: "Authenticated successfully" };
+      return { userId: user_id, message: 'Authenticated successfully' };
     }
     throw new Error(`Authentication failed`);
   } catch (error) {
-    console.error("Authentication error:", error);
+    console.error('Authentication error:', error);
     throw createError({
       statusCode: 401,
-      statusMessage: "Authentication failed"
+      statusMessage: 'Authentication failed',
     });
   }
 });

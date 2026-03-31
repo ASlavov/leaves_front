@@ -1,10 +1,80 @@
-import { ref, computed, hasInjectionContext, getCurrentInstance, inject, toValue, reactive, watch, onServerPrefetch, shallowRef, toRef, nextTick, unref, defineComponent, createElementBlock, provide, cloneVNode, h, Suspense, Fragment, createApp, shallowReactive, onErrorCaptured, createVNode, resolveDynamicComponent, effectScope, isReadonly, isRef, isShallow, isReactive, toRaw, defineAsyncComponent, mergeProps, getCurrentScope, useSSRContext } from 'vue';
-import { x as hasProtocol, y as isScriptProtocol, z as joinURL, w as withQuery, A as sanitizeStatusCode, B as getContext, C as destr, D as klona, E as parse, F as getRequestHeader, G as isEqual, H as hash, s as setCookie, i as getCookie, j as deleteCookie, h as createError$1, $ as $fetch$1, I as createHooks, J as executeAsync, K as toRouteMatcher, L as createRouter$1, M as defu } from '../_/nitro.mjs';
+import {
+  ref,
+  computed,
+  hasInjectionContext,
+  getCurrentInstance,
+  inject,
+  toValue,
+  reactive,
+  watch,
+  onServerPrefetch,
+  shallowRef,
+  toRef,
+  nextTick,
+  unref,
+  defineComponent,
+  createElementBlock,
+  provide,
+  cloneVNode,
+  h,
+  Suspense,
+  Fragment,
+  createApp,
+  shallowReactive,
+  onErrorCaptured,
+  createVNode,
+  resolveDynamicComponent,
+  effectScope,
+  isReadonly,
+  isRef,
+  isShallow,
+  isReactive,
+  toRaw,
+  defineAsyncComponent,
+  mergeProps,
+  getCurrentScope,
+  useSSRContext,
+} from 'vue';
+import {
+  x as hasProtocol,
+  y as isScriptProtocol,
+  z as joinURL,
+  w as withQuery,
+  A as sanitizeStatusCode,
+  B as getContext,
+  C as destr,
+  D as klona,
+  E as parse,
+  F as getRequestHeader,
+  G as isEqual,
+  H as hash,
+  s as setCookie,
+  i as getCookie,
+  j as deleteCookie,
+  h as createError$1,
+  $ as $fetch$1,
+  I as createHooks,
+  J as executeAsync,
+  K as toRouteMatcher,
+  L as createRouter$1,
+  M as defu,
+} from '../_/nitro.mjs';
 import { u as useHead$1, h as headSymbol, b as baseURL } from '../routes/renderer.mjs';
 import { defineStore, createPinia, setActivePinia, shouldHydrate } from 'pinia';
-import { useRouter as useRouter$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
+import {
+  useRouter as useRouter$1,
+  RouterView,
+  createMemoryHistory,
+  createRouter,
+  START_LOCATION,
+} from 'vue-router';
 import { deepPickUnsafe, deepOmitUnsafe } from 'deep-pick-omit';
-import { ssrRenderSuspense, ssrRenderComponent, ssrRenderVNode, ssrRenderAttrs } from 'vue/server-renderer';
+import {
+  ssrRenderSuspense,
+  ssrRenderComponent,
+  ssrRenderVNode,
+  ssrRenderAttrs,
+} from 'vue/server-renderer';
 import { isPlainObject } from '@vue/shared';
 import 'node:http';
 import 'node:https';
@@ -21,12 +91,12 @@ import 'unhead/utils';
 import 'unhead/plugins';
 
 const DEBOUNCE_DEFAULTS = {
-  trailing: true
+  trailing: true,
 };
 function debounce(fn, wait = 25, options = {}) {
   options = { ...DEBOUNCE_DEFAULTS, ...options };
   if (!Number.isFinite(wait)) {
-    throw new TypeError("Expected `wait` to be a finite number");
+    throw new TypeError('Expected `wait` to be a finite number');
   }
   let leadingValue;
   let timeout;
@@ -45,7 +115,7 @@ function debounce(fn, wait = 25, options = {}) {
     });
     return currentPromise;
   };
-  return function(...args) {
+  return function (...args) {
     if (currentPromise) {
       if (options.trailing) {
         trailingArgs = args;
@@ -78,47 +148,47 @@ async function _applyPromised(fn, _this, args) {
 
 if (!globalThis.$fetch) {
   globalThis.$fetch = $fetch$1.create({
-    baseURL: baseURL()
+    baseURL: baseURL(),
   });
 }
-if (!("global" in globalThis)) {
+if (!('global' in globalThis)) {
   globalThis.global = globalThis;
 }
-const nuxtLinkDefaults = { "componentName": "NuxtLink" };
-const asyncDataDefaults = { "value": null, "errorValue": null, "deep": true };
+const nuxtLinkDefaults = { componentName: 'NuxtLink' };
+const asyncDataDefaults = { value: null, errorValue: null, deep: true };
 const fetchDefaults = {};
-const appId = "nuxt-app";
+const appId = 'nuxt-app';
 function getNuxtAppCtx(id = appId) {
   return getContext(id, {
-    asyncContext: false
+    asyncContext: false,
   });
 }
-const NuxtPluginIndicator = "__nuxt_plugin";
+const NuxtPluginIndicator = '__nuxt_plugin';
 function createNuxtApp(options) {
   var _a;
   let hydratingCount = 0;
   const nuxtApp = {
-    _id: options.id || appId || "nuxt-app",
+    _id: options.id || appId || 'nuxt-app',
     _scope: effectScope(),
     provide: void 0,
-    globalName: "nuxt",
+    globalName: 'nuxt',
     versions: {
       get nuxt() {
-        return "3.17.5";
+        return '3.17.5';
       },
       get vue() {
         return nuxtApp.vueApp.version;
-      }
+      },
     },
     payload: shallowReactive({
-      ...((_a = options.ssrContext) == null ? void 0 : _a.payload) || {},
+      ...(((_a = options.ssrContext) == null ? void 0 : _a.payload) || {}),
       data: shallowReactive({}),
       state: reactive({}),
       once: /* @__PURE__ */ new Set(),
-      _errors: shallowReactive({})
+      _errors: shallowReactive({}),
     }),
     static: {
-      data: {}
+      data: {},
     },
     runWithContext(fn) {
       if (nuxtApp._scope.active && !getCurrentScope()) {
@@ -129,8 +199,7 @@ function createNuxtApp(options) {
     isHydrating: false,
     deferHydration() {
       if (!nuxtApp.isHydrating) {
-        return () => {
-        };
+        return () => {};
       }
       hydratingCount++;
       let called = false;
@@ -142,14 +211,14 @@ function createNuxtApp(options) {
         hydratingCount--;
         if (hydratingCount === 0) {
           nuxtApp.isHydrating = false;
-          return nuxtApp.callHook("app:suspense:resolve");
+          return nuxtApp.callHook('app:suspense:resolve');
         }
       };
     },
     _asyncDataPromises: {},
     _asyncData: shallowReactive({}),
     _payloadRevivers: {},
-    ...options
+    ...options,
   };
   {
     nuxtApp.payload.serverRendered = true;
@@ -160,29 +229,30 @@ function createNuxtApp(options) {
     nuxtApp.ssrContext.payload = nuxtApp.payload;
     nuxtApp.ssrContext.config = {
       public: nuxtApp.ssrContext.runtimeConfig.public,
-      app: nuxtApp.ssrContext.runtimeConfig.app
+      app: nuxtApp.ssrContext.runtimeConfig.app,
     };
   }
   nuxtApp.hooks = createHooks();
   nuxtApp.hook = nuxtApp.hooks.hook;
   {
-    const contextCaller = async function(hooks, args) {
+    const contextCaller = async function (hooks, args) {
       for (const hook of hooks) {
         await nuxtApp.runWithContext(() => hook(...args));
       }
     };
-    nuxtApp.hooks.callHook = (name, ...args) => nuxtApp.hooks.callHookWith(contextCaller, name, ...args);
+    nuxtApp.hooks.callHook = (name, ...args) =>
+      nuxtApp.hooks.callHookWith(contextCaller, name, ...args);
   }
   nuxtApp.callHook = nuxtApp.hooks.callHook;
   nuxtApp.provide = (name, value) => {
-    const $name = "$" + name;
+    const $name = '$' + name;
     defineGetter(nuxtApp, $name, value);
     defineGetter(nuxtApp.vueApp.config.globalProperties, $name, value);
   };
-  defineGetter(nuxtApp.vueApp, "$nuxt", nuxtApp);
-  defineGetter(nuxtApp.vueApp.config.globalProperties, "$nuxt", nuxtApp);
+  defineGetter(nuxtApp.vueApp, '$nuxt', nuxtApp);
+  defineGetter(nuxtApp.vueApp.config.globalProperties, '$nuxt', nuxtApp);
   const runtimeConfig = options.ssrContext.runtimeConfig;
-  nuxtApp.provide("config", runtimeConfig);
+  nuxtApp.provide('config', runtimeConfig);
   return nuxtApp;
 }
 function registerPluginHooks(nuxtApp, plugin2) {
@@ -191,9 +261,9 @@ function registerPluginHooks(nuxtApp, plugin2) {
   }
 }
 async function applyPlugin(nuxtApp, plugin2) {
-  if (typeof plugin2 === "function") {
-    const { provide: provide2 } = await nuxtApp.runWithContext(() => plugin2(nuxtApp)) || {};
-    if (provide2 && typeof provide2 === "object") {
+  if (typeof plugin2 === 'function') {
+    const { provide: provide2 } = (await nuxtApp.runWithContext(() => plugin2(nuxtApp))) || {};
+    if (provide2 && typeof provide2 === 'object') {
       for (const key in provide2) {
         nuxtApp.provide(key, provide2[key]);
       }
@@ -209,22 +279,29 @@ async function applyPlugins(nuxtApp, plugins2) {
   let promiseDepth = 0;
   async function executePlugin(plugin2) {
     var _a2;
-    const unresolvedPluginsForThisPlugin = ((_a2 = plugin2.dependsOn) == null ? void 0 : _a2.filter((name) => plugins2.some((p) => p._name === name) && !resolvedPlugins.has(name))) ?? [];
+    const unresolvedPluginsForThisPlugin =
+      ((_a2 = plugin2.dependsOn) == null
+        ? void 0
+        : _a2.filter(
+            (name) => plugins2.some((p) => p._name === name) && !resolvedPlugins.has(name),
+          )) ?? [];
     if (unresolvedPluginsForThisPlugin.length > 0) {
       unresolvedPlugins.push([new Set(unresolvedPluginsForThisPlugin), plugin2]);
     } else {
       const promise = applyPlugin(nuxtApp, plugin2).then(async () => {
         if (plugin2._name) {
           resolvedPlugins.add(plugin2._name);
-          await Promise.all(unresolvedPlugins.map(async ([dependsOn, unexecutedPlugin]) => {
-            if (dependsOn.has(plugin2._name)) {
-              dependsOn.delete(plugin2._name);
-              if (dependsOn.size === 0) {
-                promiseDepth++;
-                await executePlugin(unexecutedPlugin);
+          await Promise.all(
+            unresolvedPlugins.map(async ([dependsOn, unexecutedPlugin]) => {
+              if (dependsOn.has(plugin2._name)) {
+                dependsOn.delete(plugin2._name);
+                if (dependsOn.size === 0) {
+                  promiseDepth++;
+                  await executePlugin(unexecutedPlugin);
+                }
               }
-            }
-          }));
+            }),
+          );
         }
       });
       if (plugin2.parallel) {
@@ -235,13 +312,19 @@ async function applyPlugins(nuxtApp, plugins2) {
     }
   }
   for (const plugin2 of plugins2) {
-    if (((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext) && ((_b = plugin2.env) == null ? void 0 : _b.islands) === false) {
+    if (
+      ((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext) &&
+      ((_b = plugin2.env) == null ? void 0 : _b.islands) === false
+    ) {
       continue;
     }
     registerPluginHooks(nuxtApp, plugin2);
   }
   for (const plugin2 of plugins2) {
-    if (((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext) && ((_d = plugin2.env) == null ? void 0 : _d.islands) === false) {
+    if (
+      ((_c = nuxtApp.ssrContext) == null ? void 0 : _c.islandContext) &&
+      ((_d = plugin2.env) == null ? void 0 : _d.islands) === false
+    ) {
       continue;
     }
     await executePlugin(plugin2);
@@ -258,13 +341,15 @@ async function applyPlugins(nuxtApp, plugins2) {
 }
 // @__NO_SIDE_EFFECTS__
 function defineNuxtPlugin(plugin2) {
-  if (typeof plugin2 === "function") {
+  if (typeof plugin2 === 'function') {
     return plugin2;
   }
   const _name = plugin2._name || plugin2.name;
   delete plugin2.name;
-  return Object.assign(plugin2.setup || (() => {
-  }), plugin2, { [NuxtPluginIndicator]: true, _name });
+  return Object.assign(plugin2.setup || (() => {}), plugin2, {
+    [NuxtPluginIndicator]: true,
+    _name,
+  });
 }
 const definePayloadPlugin = defineNuxtPlugin;
 function callWithNuxt(nuxt, setup, args) {
@@ -287,7 +372,7 @@ function useNuxtApp(id) {
   const nuxtAppInstance = tryUseNuxtApp(id);
   if (!nuxtAppInstance) {
     {
-      throw new Error("[nuxt] instance unavailable");
+      throw new Error('[nuxt] instance unavailable');
     }
   }
   return nuxtAppInstance;
@@ -299,8 +384,8 @@ function useRuntimeConfig(_event) {
 function defineGetter(obj, key, val) {
   Object.defineProperty(obj, key, { get: () => val });
 }
-const LayoutMetaSymbol = Symbol("layout-meta");
-const PageRouteSymbol = Symbol("route");
+const LayoutMetaSymbol = Symbol('layout-meta');
+const PageRouteSymbol = Symbol('route');
 const useRouter = () => {
   var _a;
   return (_a = useNuxtApp()) == null ? void 0 : _a.$router;
@@ -327,15 +412,22 @@ const isProcessingMiddleware = () => {
 };
 const URL_QUOTE_RE = /"/g;
 const navigateTo = (to, options) => {
-  to || (to = "/");
-  const toPath = typeof to === "string" ? to : "path" in to ? resolveRouteObject(to) : useRouter().resolve(to).href;
+  to || (to = '/');
+  const toPath =
+    typeof to === 'string'
+      ? to
+      : 'path' in to
+        ? resolveRouteObject(to)
+        : useRouter().resolve(to).href;
   const isExternalHost = hasProtocol(toPath, { acceptRelative: true });
   const isExternal = (options == null ? void 0 : options.external) || isExternalHost;
   if (isExternal) {
     if (!(options == null ? void 0 : options.external)) {
-      throw new Error("Navigating to an external URL is not allowed by default. Use `navigateTo(url, { external: true })`.");
+      throw new Error(
+        'Navigating to an external URL is not allowed by default. Use `navigateTo(url, { external: true })`.',
+      );
     }
-    const { protocol } = new URL(toPath, "http://localhost");
+    const { protocol } = new URL(toPath, 'http://localhost');
     if (protocol && isScriptProtocol(protocol)) {
       throw new Error(`Cannot navigate to a URL with '${protocol}' protocol.`);
     }
@@ -345,27 +437,35 @@ const navigateTo = (to, options) => {
   const nuxtApp = useNuxtApp();
   {
     if (nuxtApp.ssrContext) {
-      const fullPath = typeof to === "string" || isExternal ? toPath : router.resolve(to).fullPath || "/";
-      const location2 = isExternal ? toPath : joinURL((/* @__PURE__ */ useRuntimeConfig()).app.baseURL, fullPath);
-      const redirect = async function(response) {
-        await nuxtApp.callHook("app:redirected");
-        const encodedLoc = location2.replace(URL_QUOTE_RE, "%22");
+      const fullPath =
+        typeof to === 'string' || isExternal ? toPath : router.resolve(to).fullPath || '/';
+      const location2 = isExternal
+        ? toPath
+        : joinURL(/* @__PURE__ */ useRuntimeConfig().app.baseURL, fullPath);
+      const redirect = async function (response) {
+        await nuxtApp.callHook('app:redirected');
+        const encodedLoc = location2.replace(URL_QUOTE_RE, '%22');
         const encodedHeader = encodeURL(location2, isExternalHost);
         nuxtApp.ssrContext._renderResponse = {
-          statusCode: sanitizeStatusCode((options == null ? void 0 : options.redirectCode) || 302, 302),
+          statusCode: sanitizeStatusCode(
+            (options == null ? void 0 : options.redirectCode) || 302,
+            302,
+          ),
           body: `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=${encodedLoc}"></head></html>`,
-          headers: { location: encodedHeader }
+          headers: { location: encodedHeader },
         };
         return response;
       };
       if (!isExternal && inMiddleware) {
-        router.afterEach((final) => final.fullPath === fullPath ? redirect(false) : void 0);
+        router.afterEach((final) => (final.fullPath === fullPath ? redirect(false) : void 0));
         return to;
       }
-      return redirect(!inMiddleware ? void 0 : (
-        /* abort route navigation */
-        false
-      ));
+      return redirect(
+        !inMiddleware
+          ? void 0
+          : /* abort route navigation */
+            false,
+      );
     }
   }
   if (isExternal) {
@@ -379,58 +479,63 @@ const navigateTo = (to, options) => {
       if (!nuxtApp.isHydrating) {
         return false;
       }
-      return new Promise(() => {
-      });
+      return new Promise(() => {});
     }
     return Promise.resolve();
   }
   return (options == null ? void 0 : options.replace) ? router.replace(to) : router.push(to);
 };
 function resolveRouteObject(to) {
-  return withQuery(to.path || "", to.query || {}) + (to.hash || "");
+  return withQuery(to.path || '', to.query || {}) + (to.hash || '');
 }
 function encodeURL(location2, isExternalHost = false) {
-  const url = new URL(location2, "http://localhost");
+  const url = new URL(location2, 'http://localhost');
   if (!isExternalHost) {
     return url.pathname + url.search + url.hash;
   }
-  if (location2.startsWith("//")) {
-    return url.toString().replace(url.protocol, "");
+  if (location2.startsWith('//')) {
+    return url.toString().replace(url.protocol, '');
   }
   return url.toString();
 }
-const NUXT_ERROR_SIGNATURE = "__nuxt_error";
-const useError = () => toRef(useNuxtApp().payload, "error");
+const NUXT_ERROR_SIGNATURE = '__nuxt_error';
+const useError = () => toRef(useNuxtApp().payload, 'error');
 const showError = (error) => {
   const nuxtError = createError(error);
   try {
     const nuxtApp = useNuxtApp();
     const error2 = useError();
-    if (false) ;
+    if (false);
     error2.value || (error2.value = nuxtError);
   } catch {
     throw nuxtError;
   }
   return nuxtError;
 };
-const isNuxtError = (error) => !!error && typeof error === "object" && NUXT_ERROR_SIGNATURE in error;
+const isNuxtError = (error) =>
+  !!error && typeof error === 'object' && NUXT_ERROR_SIGNATURE in error;
 const createError = (error) => {
   const nuxtError = createError$1(error);
   Object.defineProperty(nuxtError, NUXT_ERROR_SIGNATURE, {
     value: true,
     configurable: false,
-    writable: false
+    writable: false,
   });
   return nuxtError;
 };
 function injectHead(nuxtApp) {
   var _a;
   const nuxt = nuxtApp || tryUseNuxtApp();
-  return ((_a = nuxt == null ? void 0 : nuxt.ssrContext) == null ? void 0 : _a.head) || (nuxt == null ? void 0 : nuxt.runWithContext(() => {
-    if (hasInjectionContext()) {
-      return inject(headSymbol);
-    }
-  }));
+  return (
+    ((_a = nuxt == null ? void 0 : nuxt.ssrContext) == null ? void 0 : _a.head) ||
+    (nuxt == null
+      ? void 0
+      : nuxt.runWithContext(() => {
+          if (hasInjectionContext()) {
+            return inject(headSymbol);
+          }
+        }))
+  );
 }
 function useHead(input, options = {}) {
   const head = injectHead(options.nuxt);
@@ -439,11 +544,11 @@ function useHead(input, options = {}) {
   }
 }
 async function getRouteRules(arg) {
-  const path = typeof arg === "string" ? arg : arg.path;
+  const path = typeof arg === 'string' ? arg : arg.path;
   {
     useNuxtApp().ssrContext._preloadManifest = true;
     const _routeRulesMatcher = toRouteMatcher(
-      createRouter$1({ routes: (/* @__PURE__ */ useRuntimeConfig()).nitro.routeRules })
+      createRouter$1({ routes: /* @__PURE__ */ useRuntimeConfig().nitro.routeRules }),
     );
     return defu({}, ..._routeRulesMatcher.matchAll(path).reverse());
   }
@@ -455,63 +560,68 @@ function definePayloadReducer(name, reduce) {
 }
 const payloadPlugin = definePayloadPlugin(() => {
   definePayloadReducer(
-    "skipHydrate",
+    'skipHydrate',
     // We need to return something truthy to be treated as a match
-    (data) => !shouldHydrate(data) && 1
+    (data) => !shouldHydrate(data) && 1,
   );
 });
 const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:head",
-  enforce: "pre",
+  name: 'nuxt:head',
+  enforce: 'pre',
   setup(nuxtApp) {
     const head = nuxtApp.ssrContext.head;
     nuxtApp.vueApp.use(head);
-  }
+  },
 });
 function toArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 const _routes = [
   {
-    name: "home",
-    path: "/home",
-    component: () => import('./home-C9ukUyfY.mjs')
+    name: 'home',
+    path: '/home',
+    component: () => import('./home-C9ukUyfY.mjs'),
   },
   {
-    name: "calendar",
-    path: "/calendar",
-    component: () => import('./calendar-hHIEONAQ.mjs')
+    name: 'calendar',
+    path: '/calendar',
+    component: () => import('./calendar-hHIEONAQ.mjs'),
   },
   {
-    name: "settings",
-    path: "/settings",
-    component: () => import('./settings-ek0nhANl.mjs')
+    name: 'settings',
+    path: '/settings',
+    component: () => import('./settings-ek0nhANl.mjs'),
   },
   {
-    name: "auth-login",
-    path: "/auth/login",
-    component: () => import('./login-CPmiFCeb.mjs')
+    name: 'auth-login',
+    path: '/auth/login',
+    component: () => import('./login-CPmiFCeb.mjs'),
   },
   {
-    name: "yearly-leaves",
-    path: "/yearly-leaves",
-    component: () => import('./yearly-leaves-DIXsbFk0.mjs')
+    name: 'yearly-leaves',
+    path: '/yearly-leaves',
+    component: () => import('./yearly-leaves-DIXsbFk0.mjs'),
   },
   {
-    name: "auth-forgot-password",
-    path: "/auth/forgot-password",
-    component: () => import('./forgot-password-ChO7P9kL.mjs')
-  }
+    name: 'auth-forgot-password',
+    path: '/auth/forgot-password',
+    component: () => import('./forgot-password-ChO7P9kL.mjs'),
+  },
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
 const ROUTE_KEY_SYMBOLS_RE = /(:\w+)[?+*]/g;
 const ROUTE_KEY_NORMAL_RE = /:\w+/g;
 function generateRouteKey(route) {
-  const source = (route == null ? void 0 : route.meta.key) ?? route.path.replace(ROUTE_KEY_PARENTHESES_RE, "$1").replace(ROUTE_KEY_SYMBOLS_RE, "$1").replace(ROUTE_KEY_NORMAL_RE, (r) => {
-    var _a;
-    return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || "";
-  });
-  return typeof source === "function" ? source(route) : source;
+  const source =
+    (route == null ? void 0 : route.meta.key) ??
+    route.path
+      .replace(ROUTE_KEY_PARENTHESES_RE, '$1')
+      .replace(ROUTE_KEY_SYMBOLS_RE, '$1')
+      .replace(ROUTE_KEY_NORMAL_RE, (r) => {
+        var _a;
+        return ((_a = route.params[r.slice(1)]) == null ? void 0 : _a.toString()) || '';
+      });
+  return typeof source === 'function' ? source(route) : source;
 }
 function isChangingPage(to, from) {
   if (to === from || from === START_LOCATION) {
@@ -520,12 +630,16 @@ function isChangingPage(to, from) {
   if (generateRouteKey(to) !== generateRouteKey(from)) {
     return true;
   }
-  const areComponentsSame = to.matched.every(
-    (comp, index) => {
-      var _a, _b;
-      return comp.components && comp.components.default === ((_b = (_a = from.matched[index]) == null ? void 0 : _a.components) == null ? void 0 : _b.default);
-    }
-  );
+  const areComponentsSame = to.matched.every((comp, index) => {
+    var _a, _b;
+    return (
+      comp.components &&
+      comp.components.default ===
+        ((_b = (_a = from.matched[index]) == null ? void 0 : _a.components) == null
+          ? void 0
+          : _b.default)
+    );
+  });
   if (areComponentsSame) {
     return false;
   }
@@ -535,7 +649,8 @@ const routerOptions0 = {
   scrollBehavior(to, from, savedPosition) {
     var _a;
     const nuxtApp = useNuxtApp();
-    const behavior = ((_a = useRouter().options) == null ? void 0 : _a.scrollBehaviorType) ?? "auto";
+    const behavior =
+      ((_a = useRouter().options) == null ? void 0 : _a.scrollBehaviorType) ?? 'auto';
     if (to.path === from.path) {
       if (from.hash && !to.hash) {
         return { left: 0, top: 0 };
@@ -545,7 +660,10 @@ const routerOptions0 = {
       }
       return false;
     }
-    const routeAllowsScrollToTop = typeof to.meta.scrollToTop === "function" ? to.meta.scrollToTop(to, from) : to.meta.scrollToTop;
+    const routeAllowsScrollToTop =
+      typeof to.meta.scrollToTop === 'function'
+        ? to.meta.scrollToTop(to, from)
+        : to.meta.scrollToTop;
     if (routeAllowsScrollToTop === false) {
       return false;
     }
@@ -553,26 +671,28 @@ const routerOptions0 = {
     if (!position && isChangingPage(to, from)) {
       position = { left: 0, top: 0 };
     }
-    const hookToWait = nuxtApp._runningTransition ? "page:transition:finish" : "page:loading:end";
+    const hookToWait = nuxtApp._runningTransition ? 'page:transition:finish' : 'page:loading:end';
     return new Promise((resolve) => {
       if (from === START_LOCATION) {
-        resolve(_calculatePosition(to, "instant", position));
+        resolve(_calculatePosition(to, 'instant', position));
         return;
       }
       nuxtApp.hooks.hookOnce(hookToWait, () => {
-        requestAnimationFrame(() => resolve(_calculatePosition(to, "instant", position)));
+        requestAnimationFrame(() => resolve(_calculatePosition(to, 'instant', position)));
       });
     });
-  }
+  },
 };
 function _getHashElementScrollMarginTop(selector) {
   try {
     const elem = (void 0).querySelector(selector);
     if (elem) {
-      return (Number.parseFloat(getComputedStyle(elem).scrollMarginTop) || 0) + (Number.parseFloat(getComputedStyle((void 0).documentElement).scrollPaddingTop) || 0);
+      return (
+        (Number.parseFloat(getComputedStyle(elem).scrollMarginTop) || 0) +
+        (Number.parseFloat(getComputedStyle((void 0).documentElement).scrollPaddingTop) || 0)
+      );
     }
-  } catch {
-  }
+  } catch {}
   return 0;
 }
 function _calculatePosition(to, scrollBehaviorType, position) {
@@ -583,14 +703,14 @@ function _calculatePosition(to, scrollBehaviorType, position) {
     return {
       el: to.hash,
       top: _getHashElementScrollMarginTop(to.hash),
-      behavior: scrollBehaviorType
+      behavior: scrollBehaviorType,
     };
   }
   return { left: 0, top: 0, behavior: scrollBehaviorType };
 }
 const routerOptions1 = {
   scrollBehavior(to, from, savedPosition) {
-    if (to.path.startsWith("/settings")) {
+    if (to.path.startsWith('/settings')) {
       return false;
     }
     if (savedPosition) {
@@ -600,17 +720,17 @@ const routerOptions1 = {
     } else {
       return { top: 0 };
     }
-  }
+  },
 };
 const configRouterOptions = {
   hashMode: false,
-  scrollBehaviorType: "auto"
+  scrollBehaviorType: 'auto',
 };
 const hashMode = routerOptions0.hashMode ?? false;
 const routerOptions = {
   ...configRouterOptions,
   ...routerOptions0,
-  ...routerOptions1
+  ...routerOptions1,
 };
 const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
   var _a;
@@ -618,17 +738,21 @@ const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
   if (!((_a = to.meta) == null ? void 0 : _a.validate)) {
     return;
   }
-  const result = ([__temp, __restore] = executeAsync(() => Promise.resolve(to.meta.validate(to))), __temp = await __temp, __restore(), __temp);
+  const result =
+    (([__temp, __restore] = executeAsync(() => Promise.resolve(to.meta.validate(to)))),
+    (__temp = await __temp),
+    __restore(),
+    __temp);
   if (result === true) {
     return;
   }
   const error = createError({
     fatal: false,
-    statusCode: result && result.statusCode || 404,
-    statusMessage: result && result.statusMessage || `Page Not Found: ${to.fullPath}`,
+    statusCode: (result && result.statusCode) || 404,
+    statusMessage: (result && result.statusMessage) || `Page Not Found: ${to.fullPath}`,
     data: {
-      path: to.fullPath
-    }
+      path: to.fullPath,
+    },
   });
   return error;
 });
@@ -642,10 +766,10 @@ function useRequestFetch() {
   return ((_a = useRequestEvent()) == null ? void 0 : _a.$fetch) || globalThis.$fetch;
 }
 const CookieDefaults = {
-  path: "/",
+  path: '/',
   watch: true,
   decode: (val) => destr(decodeURIComponent(val)),
-  encode: (val) => encodeURIComponent(typeof val === "string" ? val : JSON.stringify(val))
+  encode: (val) => encodeURIComponent(typeof val === 'string' ? val : JSON.stringify(val)),
 };
 function useCookie(name, _opts) {
   var _a;
@@ -659,7 +783,11 @@ function useCookie(name, _opts) {
     delay = opts.expires.getTime() - Date.now();
   }
   const hasExpired = delay !== void 0 && delay <= 0;
-  const cookieValue = klona(hasExpired ? void 0 : cookies2[name] ?? ((_a = opts.default) == null ? void 0 : _a.call(opts)));
+  const cookieValue = klona(
+    hasExpired
+      ? void 0
+      : (cookies2[name] ?? ((_a = opts.default) == null ? void 0 : _a.call(opts))),
+  );
   const cookie = ref(cookieValue);
   {
     const nuxtApp = useNuxtApp();
@@ -676,8 +804,8 @@ function useCookie(name, _opts) {
       nuxtApp._cookies[name] = cookie.value;
       writeServerCookie(useRequestEvent(nuxtApp), name, cookie.value, opts);
     };
-    const unhook = nuxtApp.hooks.hookOnce("app:rendered", writeFinalCookieValue);
-    nuxtApp.hooks.hookOnce("app:error", () => {
+    const unhook = nuxtApp.hooks.hookOnce('app:rendered', writeFinalCookieValue);
+    nuxtApp.hooks.hookOnce('app:error', () => {
       unhook();
       return writeFinalCookieValue();
     });
@@ -686,7 +814,7 @@ function useCookie(name, _opts) {
 }
 function readRawCookies(opts = {}) {
   {
-    return parse(getRequestHeader(useRequestEvent(), "cookie") || "", opts);
+    return parse(getRequestHeader(useRequestEvent(), 'cookie') || '', opts);
   }
 }
 function writeServerCookie(event, name, value, opts = {}) {
@@ -700,16 +828,16 @@ function writeServerCookie(event, name, value, opts = {}) {
   }
 }
 const auth_45global = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
-  const publicPaths = ["/auth/login", "/auth/forgot-password"];
+  const publicPaths = ['/auth/login', '/auth/forgot-password'];
   const isPublicPath = publicPaths.includes(to.path);
   const fromPublicPath = publicPaths.includes(from.path);
-  const userAuthed = useCookie("user_authed");
+  const userAuthed = useCookie('user_authed');
   const isAuthenticated = !!userAuthed.value;
   if (isAuthenticated && isPublicPath && !fromPublicPath) {
-    return navigateTo("/home");
+    return navigateTo('/home');
   }
   if (!isAuthenticated && !isPublicPath && !fromPublicPath) {
-    return navigateTo("/auth/login");
+    return navigateTo('/auth/login');
   }
 });
 const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
@@ -717,24 +845,27 @@ const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware(async 
     return;
   }
 });
-const globalMiddleware = [
-  validate,
-  auth_45global,
-  manifest_45route_45rule
-];
+const globalMiddleware = [validate, auth_45global, manifest_45route_45rule];
 const namedMiddleware = {};
 const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:router",
-  enforce: "pre",
+  name: 'nuxt:router',
+  enforce: 'pre',
   async setup(nuxtApp) {
     var _a, _b, _c;
     let __temp, __restore;
-    let routerBase = (/* @__PURE__ */ useRuntimeConfig()).app.baseURL;
-    if (hashMode && !routerBase.includes("#")) {
-      routerBase += "#";
+    let routerBase = /* @__PURE__ */ useRuntimeConfig().app.baseURL;
+    if (hashMode && !routerBase.includes('#')) {
+      routerBase += '#';
     }
-    const history = ((_a = routerOptions.history) == null ? void 0 : _a.call(routerOptions, routerBase)) ?? createMemoryHistory(routerBase);
-    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
+    const history =
+      ((_a = routerOptions.history) == null ? void 0 : _a.call(routerOptions, routerBase)) ??
+      createMemoryHistory(routerBase);
+    const routes = routerOptions.routes
+      ? ((([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes))),
+        (__temp = await __temp),
+        __restore(),
+        __temp) ?? _routes)
+      : _routes;
     let startPosition;
     const router = createRouter({
       ...routerOptions,
@@ -745,35 +876,42 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
         }
         if (routerOptions.scrollBehavior) {
           router.options.scrollBehavior = routerOptions.scrollBehavior;
-          if ("scrollRestoration" in (void 0).history) {
+          if ('scrollRestoration' in (void 0).history) {
             const unsub = router.beforeEach(() => {
               unsub();
-              (void 0).history.scrollRestoration = "manual";
+              (void 0).history.scrollRestoration = 'manual';
             });
           }
           return routerOptions.scrollBehavior(to, START_LOCATION, startPosition || savedPosition);
         }
       },
       history,
-      routes
+      routes,
     });
     nuxtApp.vueApp.use(router);
     const previousRoute = shallowRef(router.currentRoute.value);
     router.afterEach((_to, from) => {
       previousRoute.value = from;
     });
-    Object.defineProperty(nuxtApp.vueApp.config.globalProperties, "previousRoute", {
-      get: () => previousRoute.value
+    Object.defineProperty(nuxtApp.vueApp.config.globalProperties, 'previousRoute', {
+      get: () => previousRoute.value,
     });
     const initialURL = nuxtApp.ssrContext.url;
     const _route = shallowRef(router.currentRoute.value);
     const syncCurrentRoute = () => {
       _route.value = router.currentRoute.value;
     };
-    nuxtApp.hook("page:finish", syncCurrentRoute);
+    nuxtApp.hook('page:finish', syncCurrentRoute);
     router.afterEach((to, from) => {
       var _a2, _b2, _c2, _d;
-      if (((_b2 = (_a2 = to.matched[0]) == null ? void 0 : _a2.components) == null ? void 0 : _b2.default) === ((_d = (_c2 = from.matched[0]) == null ? void 0 : _c2.components) == null ? void 0 : _d.default)) {
+      if (
+        ((_b2 = (_a2 = to.matched[0]) == null ? void 0 : _a2.components) == null
+          ? void 0
+          : _b2.default) ===
+        ((_d = (_c2 = from.matched[0]) == null ? void 0 : _c2.components) == null
+          ? void 0
+          : _d.default)
+      ) {
         syncCurrentRoute();
       }
     });
@@ -781,40 +919,41 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
     for (const key in _route.value) {
       Object.defineProperty(route, key, {
         get: () => _route.value[key],
-        enumerable: true
+        enumerable: true,
       });
     }
     nuxtApp._route = shallowReactive(route);
-    nuxtApp._middleware || (nuxtApp._middleware = {
-      global: [],
-      named: {}
-    });
+    nuxtApp._middleware ||
+      (nuxtApp._middleware = {
+        global: [],
+        named: {},
+      });
     useError();
     if (!((_b = nuxtApp.ssrContext) == null ? void 0 : _b.islandContext)) {
       router.afterEach(async (to, _from, failure) => {
         delete nuxtApp._processingMiddleware;
         if (failure) {
-          await nuxtApp.callHook("page:loading:end");
+          await nuxtApp.callHook('page:loading:end');
         }
         if ((failure == null ? void 0 : failure.type) === 4) {
           return;
         }
         if (to.redirectedFrom && to.fullPath !== initialURL) {
-          await nuxtApp.runWithContext(() => navigateTo(to.fullPath || "/"));
+          await nuxtApp.runWithContext(() => navigateTo(to.fullPath || '/'));
         }
       });
     }
     try {
       if (true) {
-        ;
-        [__temp, __restore] = executeAsync(() => router.push(initialURL)), await __temp, __restore();
-        ;
+        (([__temp, __restore] = executeAsync(() => router.push(initialURL))),
+          await __temp,
+          __restore());
       }
-      ;
-      [__temp, __restore] = executeAsync(() => router.isReady()), await __temp, __restore();
-      ;
+      (([__temp, __restore] = executeAsync(() => router.isReady())), await __temp, __restore());
     } catch (error2) {
-      [__temp, __restore] = executeAsync(() => nuxtApp.runWithContext(() => showError(error2))), await __temp, __restore();
+      (([__temp, __restore] = executeAsync(() => nuxtApp.runWithContext(() => showError(error2)))),
+        await __temp,
+        __restore());
     }
     const resolvedInitialRoute = router.currentRoute.value;
     syncCurrentRoute();
@@ -824,14 +963,17 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
     const initialLayout = nuxtApp.payload.state._layout;
     router.beforeEach(async (to, from) => {
       var _a2, _b2;
-      await nuxtApp.callHook("page:loading:start");
+      await nuxtApp.callHook('page:loading:start');
       to.meta = reactive(to.meta);
       if (nuxtApp.isHydrating && initialLayout && !isReadonly(to.meta.layout)) {
         to.meta.layout = initialLayout;
       }
       nuxtApp._processingMiddleware = true;
       if (!((_a2 = nuxtApp.ssrContext) == null ? void 0 : _a2.islandContext)) {
-        const middlewareEntries = /* @__PURE__ */ new Set([...globalMiddleware, ...nuxtApp._middleware.global]);
+        const middlewareEntries = /* @__PURE__ */ new Set([
+          ...globalMiddleware,
+          ...nuxtApp._middleware.global,
+        ]);
         for (const component of to.matched) {
           const componentMiddleware = component.meta.middleware;
           if (!componentMiddleware) {
@@ -854,7 +996,13 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
           }
         }
         for (const entry2 of middlewareEntries) {
-          const middleware = typeof entry2 === "string" ? nuxtApp._middleware.named[entry2] || await ((_b2 = namedMiddleware[entry2]) == null ? void 0 : _b2.call(namedMiddleware).then((r) => r.default || r)) : entry2;
+          const middleware =
+            typeof entry2 === 'string'
+              ? nuxtApp._middleware.named[entry2] ||
+                (await ((_b2 = namedMiddleware[entry2]) == null
+                  ? void 0
+                  : _b2.call(namedMiddleware).then((r) => r.default || r)))
+              : entry2;
           if (!middleware) {
             throw new Error(`Unknown route middleware: '${entry2}'.`);
           }
@@ -862,10 +1010,12 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
             const result = await nuxtApp.runWithContext(() => middleware(to, from));
             if (true) {
               if (result === false || result instanceof Error) {
-                const error2 = result || createError({
-                  statusCode: 404,
-                  statusMessage: `Page Not Found: ${initialURL}`
-                });
+                const error2 =
+                  result ||
+                  createError({
+                    statusCode: 404,
+                    statusMessage: `Page Not Found: ${initialURL}`,
+                  });
                 await nuxtApp.runWithContext(() => showError(error2));
                 return false;
               }
@@ -894,28 +1044,32 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
     });
     router.onError(async () => {
       delete nuxtApp._processingMiddleware;
-      await nuxtApp.callHook("page:loading:end");
+      await nuxtApp.callHook('page:loading:end');
     });
     router.afterEach(async (to, _from) => {
       if (to.matched.length === 0) {
-        await nuxtApp.runWithContext(() => showError(createError({
-          statusCode: 404,
-          fatal: false,
-          statusMessage: `Page not found: ${to.fullPath}`,
-          data: {
-            path: to.fullPath
-          }
-        })));
+        await nuxtApp.runWithContext(() =>
+          showError(
+            createError({
+              statusCode: 404,
+              fatal: false,
+              statusMessage: `Page not found: ${to.fullPath}`,
+              data: {
+                path: to.fullPath,
+              },
+            }),
+          ),
+        );
       }
     });
-    nuxtApp.hooks.hookOnce("app:created", async () => {
+    nuxtApp.hooks.hookOnce('app:created', async () => {
       try {
-        if ("name" in resolvedInitialRoute) {
+        if ('name' in resolvedInitialRoute) {
           resolvedInitialRoute.name = void 0;
         }
         await router.replace({
           ...resolvedInitialRoute,
-          force: true
+          force: true,
         });
         router.options.scrollBehavior = routerOptions.scrollBehavior;
       } catch (error2) {
@@ -923,36 +1077,50 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
       }
     });
     return { provide: { router } };
-  }
+  },
 });
 const reducers = [
-  ["NuxtError", (data) => isNuxtError(data) && data.toJSON()],
-  ["EmptyShallowRef", (data) => isRef(data) && isShallow(data) && !data.value && (typeof data.value === "bigint" ? "0n" : JSON.stringify(data.value) || "_")],
-  ["EmptyRef", (data) => isRef(data) && !data.value && (typeof data.value === "bigint" ? "0n" : JSON.stringify(data.value) || "_")],
-  ["ShallowRef", (data) => isRef(data) && isShallow(data) && data.value],
-  ["ShallowReactive", (data) => isReactive(data) && isShallow(data) && toRaw(data)],
-  ["Ref", (data) => isRef(data) && data.value],
-  ["Reactive", (data) => isReactive(data) && toRaw(data)]
+  ['NuxtError', (data) => isNuxtError(data) && data.toJSON()],
+  [
+    'EmptyShallowRef',
+    (data) =>
+      isRef(data) &&
+      isShallow(data) &&
+      !data.value &&
+      (typeof data.value === 'bigint' ? '0n' : JSON.stringify(data.value) || '_'),
+  ],
+  [
+    'EmptyRef',
+    (data) =>
+      isRef(data) &&
+      !data.value &&
+      (typeof data.value === 'bigint' ? '0n' : JSON.stringify(data.value) || '_'),
+  ],
+  ['ShallowRef', (data) => isRef(data) && isShallow(data) && data.value],
+  ['ShallowReactive', (data) => isReactive(data) && isShallow(data) && toRaw(data)],
+  ['Ref', (data) => isRef(data) && data.value],
+  ['Reactive', (data) => isReactive(data) && toRaw(data)],
 ];
-const revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:revive-payload:server",
-  setup() {
-    for (const [reducer, fn] of reducers) {
-      definePayloadReducer(reducer, fn);
-    }
-  }
-});
+const revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms =
+  /* @__PURE__ */ defineNuxtPlugin({
+    name: 'nuxt:revive-payload:server',
+    setup() {
+      for (const [reducer, fn] of reducers) {
+        definePayloadReducer(reducer, fn);
+      }
+    },
+  });
 defineComponent({
-  name: "ServerPlaceholder",
+  name: 'ServerPlaceholder',
   render() {
-    return createElementBlock("div");
-  }
+    return createElementBlock('div');
+  },
 });
-const clientOnlySymbol = Symbol.for("nuxt:client-only");
+const clientOnlySymbol = Symbol.for('nuxt:client-only');
 defineComponent({
-  name: "ClientOnly",
+  name: 'ClientOnly',
   inheritAttrs: false,
-  props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
+  props: ['fallback', 'placeholder', 'placeholderTag', 'fallbackTag'],
   setup(props, { slots, attrs }) {
     const mounted = shallowRef(false);
     const vm = getCurrentInstance();
@@ -973,26 +1141,26 @@ defineComponent({
       if (slot) {
         return h(slot);
       }
-      const fallbackStr = props.fallback || props.placeholder || "";
-      const fallbackTag = props.fallbackTag || props.placeholderTag || "span";
+      const fallbackStr = props.fallback || props.placeholder || '';
+      const fallbackTag = props.fallbackTag || props.placeholderTag || 'span';
       return createElementBlock(fallbackTag, attrs, fallbackStr);
     };
-  }
+  },
 });
-const isDefer = (dedupe) => dedupe === "defer" || dedupe === false;
+const isDefer = (dedupe) => dedupe === 'defer' || dedupe === false;
 function useAsyncData(...args) {
   var _a;
-  const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
+  const autoKey = typeof args[args.length - 1] === 'string' ? args.pop() : void 0;
   if (_isAutoKeyNeeded(args[0], args[1])) {
     args.unshift(autoKey);
   }
   let [_key, _handler, options = {}] = args;
   const key = computed(() => toValue(_key));
-  if (typeof key.value !== "string") {
-    throw new TypeError("[nuxt] [useAsyncData] key must be a string.");
+  if (typeof key.value !== 'string') {
+    throw new TypeError('[nuxt] [useAsyncData] key must be a string.');
   }
-  if (typeof _handler !== "function") {
-    throw new TypeError("[nuxt] [useAsyncData] handler must be a function.");
+  if (typeof _handler !== 'function') {
+    throw new TypeError('[nuxt] [useAsyncData] handler must be a function.');
   }
   const nuxtApp = useNuxtApp();
   options.server ?? (options.server = true);
@@ -1001,13 +1169,21 @@ function useAsyncData(...args) {
   options.lazy ?? (options.lazy = false);
   options.immediate ?? (options.immediate = true);
   options.deep ?? (options.deep = asyncDataDefaults.deep);
-  options.dedupe ?? (options.dedupe = "cancel");
-  options._functionName || "useAsyncData";
+  options.dedupe ?? (options.dedupe = 'cancel');
+  options._functionName || 'useAsyncData';
   nuxtApp._asyncData[key.value];
-  const initialFetchOptions = { cause: "initial", dedupe: options.dedupe };
+  const initialFetchOptions = { cause: 'initial', dedupe: options.dedupe };
   if (!((_a = nuxtApp._asyncData[key.value]) == null ? void 0 : _a._init)) {
-    initialFetchOptions.cachedData = options.getCachedData(key.value, nuxtApp, { cause: "initial" });
-    nuxtApp._asyncData[key.value] = createAsyncData(nuxtApp, key.value, _handler, options, initialFetchOptions.cachedData);
+    initialFetchOptions.cachedData = options.getCachedData(key.value, nuxtApp, {
+      cause: 'initial',
+    });
+    nuxtApp._asyncData[key.value] = createAsyncData(
+      nuxtApp,
+      key.value,
+      _handler,
+      options,
+      initialFetchOptions.cachedData,
+    );
   }
   const asyncData = nuxtApp._asyncData[key.value];
   asyncData._deps++;
@@ -1018,7 +1194,7 @@ function useAsyncData(...args) {
     if (getCurrentInstance()) {
       onServerPrefetch(() => promise);
     } else {
-      nuxtApp.hook("app:created", async () => {
+      nuxtApp.hook('app:created', async () => {
         await promise;
       });
     }
@@ -1042,9 +1218,11 @@ function useAsyncData(...args) {
     }),
     refresh: (...args2) => nuxtApp._asyncData[key.value].execute(...args2),
     execute: (...args2) => nuxtApp._asyncData[key.value].execute(...args2),
-    clear: () => clearNuxtDataByKey(nuxtApp, key.value)
+    clear: () => clearNuxtDataByKey(nuxtApp, key.value),
   };
-  const asyncDataPromise = Promise.resolve(nuxtApp._asyncDataPromises[key.value]).then(() => asyncReturn);
+  const asyncDataPromise = Promise.resolve(nuxtApp._asyncDataPromises[key.value]).then(
+    () => asyncReturn,
+  );
   Object.assign(asyncDataPromise, asyncReturn);
   return asyncDataPromise;
 }
@@ -1059,17 +1237,17 @@ function writableComputedRef(getter) {
       if (ref2) {
         ref2.value = value;
       }
-    }
+    },
   });
 }
 function _isAutoKeyNeeded(keyOrFetcher, fetcher) {
-  if (typeof keyOrFetcher === "string") {
+  if (typeof keyOrFetcher === 'string') {
     return false;
   }
-  if (typeof keyOrFetcher === "object" && keyOrFetcher !== null) {
+  if (typeof keyOrFetcher === 'object' && keyOrFetcher !== null) {
     return false;
   }
-  if (typeof keyOrFetcher === "function" && typeof fetcher === "function") {
+  if (typeof keyOrFetcher === 'function' && typeof fetcher === 'function') {
     return false;
   }
   return true;
@@ -1087,7 +1265,7 @@ function clearNuxtDataByKey(nuxtApp, key) {
     {
       nuxtApp._asyncData[key].pending.value = false;
     }
-    nuxtApp._asyncData[key].status.value = "idle";
+    nuxtApp._asyncData[key].status.value = 'idle';
   }
   if (key in nuxtApp._asyncDataPromises) {
     if (nuxtApp._asyncDataPromises[key]) {
@@ -1107,19 +1285,19 @@ function createAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
   var _a;
   (_a = nuxtApp.payload._errors)[key] ?? (_a[key] = asyncDataDefaults.errorValue);
   const hasCustomGetCachedData = options.getCachedData !== getDefaultCachedData;
-  const handler = _handler ;
+  const handler = _handler;
   const _ref = options.deep ? ref : shallowRef;
   const hasCachedData = initialCachedData != null;
-  const unsubRefreshAsyncData = nuxtApp.hook("app:data:refresh", async (keys) => {
+  const unsubRefreshAsyncData = nuxtApp.hook('app:data:refresh', async (keys) => {
     if (!keys || keys.includes(key)) {
-      await asyncData.execute({ cause: "refresh:hook" });
+      await asyncData.execute({ cause: 'refresh:hook' });
     }
   });
   const asyncData = {
     data: _ref(hasCachedData ? initialCachedData : options.default()),
     pending: shallowRef(!hasCachedData),
     error: toRef(nuxtApp.payload._errors, key),
-    status: shallowRef("idle"),
+    status: shallowRef('idle'),
     execute: (opts = {}) => {
       if (nuxtApp._asyncDataPromises[key]) {
         if (isDefer(opts.dedupe ?? options.dedupe)) {
@@ -1127,58 +1305,62 @@ function createAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
         }
         nuxtApp._asyncDataPromises[key].cancelled = true;
       }
-      if (opts.cause === "initial" || nuxtApp.isHydrating) {
-        const cachedData = "cachedData" in opts ? opts.cachedData : options.getCachedData(key, nuxtApp, { cause: opts.cause ?? "refresh:manual" });
+      if (opts.cause === 'initial' || nuxtApp.isHydrating) {
+        const cachedData =
+          'cachedData' in opts
+            ? opts.cachedData
+            : options.getCachedData(key, nuxtApp, { cause: opts.cause ?? 'refresh:manual' });
         if (cachedData != null) {
           nuxtApp.payload.data[key] = asyncData.data.value = cachedData;
           asyncData.error.value = asyncDataDefaults.errorValue;
-          asyncData.status.value = "success";
+          asyncData.status.value = 'success';
           return Promise.resolve(cachedData);
         }
       }
       {
         asyncData.pending.value = true;
       }
-      asyncData.status.value = "pending";
-      const promise = new Promise(
-        (resolve, reject) => {
-          try {
-            resolve(handler(nuxtApp));
-          } catch (err) {
-            reject(err);
+      asyncData.status.value = 'pending';
+      const promise = new Promise((resolve, reject) => {
+        try {
+          resolve(handler(nuxtApp));
+        } catch (err) {
+          reject(err);
+        }
+      })
+        .then(async (_result) => {
+          if (promise.cancelled) {
+            return nuxtApp._asyncDataPromises[key];
           }
-        }
-      ).then(async (_result) => {
-        if (promise.cancelled) {
-          return nuxtApp._asyncDataPromises[key];
-        }
-        let result = _result;
-        if (options.transform) {
-          result = await options.transform(_result);
-        }
-        if (options.pick) {
-          result = pick(result, options.pick);
-        }
-        nuxtApp.payload.data[key] = result;
-        asyncData.data.value = result;
-        asyncData.error.value = asyncDataDefaults.errorValue;
-        asyncData.status.value = "success";
-      }).catch((error) => {
-        if (promise.cancelled) {
-          return nuxtApp._asyncDataPromises[key];
-        }
-        asyncData.error.value = createError(error);
-        asyncData.data.value = unref(options.default());
-        asyncData.status.value = "error";
-      }).finally(() => {
-        if (promise.cancelled) {
-          return;
-        }
-        {
-          asyncData.pending.value = false;
-        }
-        delete nuxtApp._asyncDataPromises[key];
-      });
+          let result = _result;
+          if (options.transform) {
+            result = await options.transform(_result);
+          }
+          if (options.pick) {
+            result = pick(result, options.pick);
+          }
+          nuxtApp.payload.data[key] = result;
+          asyncData.data.value = result;
+          asyncData.error.value = asyncDataDefaults.errorValue;
+          asyncData.status.value = 'success';
+        })
+        .catch((error) => {
+          if (promise.cancelled) {
+            return nuxtApp._asyncDataPromises[key];
+          }
+          asyncData.error.value = createError(error);
+          asyncData.data.value = unref(options.default());
+          asyncData.status.value = 'error';
+        })
+        .finally(() => {
+          if (promise.cancelled) {
+            return;
+          }
+          {
+            asyncData.pending.value = false;
+          }
+          delete nuxtApp._asyncDataPromises[key];
+        });
       nuxtApp._asyncDataPromises[key] = promise;
       return nuxtApp._asyncDataPromises[key];
     },
@@ -1203,7 +1385,7 @@ function createAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
           }
         });
       }
-    }
+    },
   };
   return asyncData;
 }
@@ -1212,22 +1394,22 @@ const getDefaultCachedData = (key, nuxtApp, ctx) => {
   if (nuxtApp.isHydrating) {
     return nuxtApp.payload.data[key];
   }
-  if (ctx.cause !== "refresh:manual" && ctx.cause !== "refresh:hook") {
+  if (ctx.cause !== 'refresh:manual' && ctx.cause !== 'refresh:hook') {
     return nuxtApp.static.data[key];
   }
 };
-const useStateKeyPrefix = "$s";
+const useStateKeyPrefix = '$s';
 function useState(...args) {
-  const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
-  if (typeof args[0] !== "string") {
+  const autoKey = typeof args[args.length - 1] === 'string' ? args.pop() : void 0;
+  if (typeof args[0] !== 'string') {
     args.unshift(autoKey);
   }
   const [_key, init] = args;
-  if (!_key || typeof _key !== "string") {
-    throw new TypeError("[nuxt] [useState] key must be a string: " + _key);
+  if (!_key || typeof _key !== 'string') {
+    throw new TypeError('[nuxt] [useState] key must be a string: ' + _key);
   }
-  if (init !== void 0 && typeof init !== "function") {
-    throw new Error("[nuxt] [useState] init must be a function: " + init);
+  if (init !== void 0 && typeof init !== 'function') {
+    throw new Error('[nuxt] [useState] init must be a function: ' + init);
   }
   const key = useStateKeyPrefix + _key;
   const nuxtApp = useNuxtApp();
@@ -1245,8 +1427,22 @@ function useState(...args) {
 function useFetch(request, arg1, arg2) {
   const [opts = {}, autoKey] = [{}, arg1];
   const _request = computed(() => toValue(request));
-  const key = computed(() => toValue(opts.key) || "$f" + hash([autoKey, typeof _request.value === "string" ? _request.value : "", ...generateOptionSegments(opts)]));
-  if (!opts.baseURL && typeof _request.value === "string" && (_request.value[0] === "/" && _request.value[1] === "/")) {
+  const key = computed(
+    () =>
+      toValue(opts.key) ||
+      '$f' +
+        hash([
+          autoKey,
+          typeof _request.value === 'string' ? _request.value : '',
+          ...generateOptionSegments(opts),
+        ]),
+  );
+  if (
+    !opts.baseURL &&
+    typeof _request.value === 'string' &&
+    _request.value[0] === '/' &&
+    _request.value[1] === '/'
+  ) {
     throw new Error('[nuxt] [useFetch] the request URL must not start with "//".');
   }
   const {
@@ -1265,7 +1461,7 @@ function useFetch(request, arg1, arg2) {
   const _fetchOptions = reactive({
     ...fetchDefaults,
     ...fetchOptions,
-    cache: typeof opts.cache === "boolean" ? void 0 : opts.cache
+    cache: typeof opts.cache === 'boolean' ? void 0 : opts.cache,
   });
   const _asyncDataOptions = {
     server,
@@ -1277,44 +1473,64 @@ function useFetch(request, arg1, arg2) {
     getCachedData,
     deep,
     dedupe,
-    watch: watchSources === false ? [] : [...watchSources || [], _fetchOptions]
+    watch: watchSources === false ? [] : [...(watchSources || []), _fetchOptions],
   };
   if (!immediate) {
-    let setImmediate = function() {
+    let setImmediate = function () {
       _asyncDataOptions.immediate = true;
     };
-    watch(key, setImmediate, { flush: "sync", once: true });
-    watch([...watchSources || [], _fetchOptions], setImmediate, { flush: "sync", once: true });
+    watch(key, setImmediate, { flush: 'sync', once: true });
+    watch([...(watchSources || []), _fetchOptions], setImmediate, { flush: 'sync', once: true });
   }
   let controller;
-  const asyncData = useAsyncData(watchSources === false ? key.value : key, () => {
-    var _a;
-    (_a = controller == null ? void 0 : controller.abort) == null ? void 0 : _a.call(controller, new DOMException("Request aborted as another request to the same endpoint was initiated.", "AbortError"));
-    controller = typeof AbortController !== "undefined" ? new AbortController() : {};
-    const timeoutLength = toValue(opts.timeout);
-    let timeoutId;
-    if (timeoutLength) {
-      timeoutId = setTimeout(() => controller.abort(new DOMException("Request aborted due to timeout.", "AbortError")), timeoutLength);
-      controller.signal.onabort = () => clearTimeout(timeoutId);
-    }
-    let _$fetch = opts.$fetch || globalThis.$fetch;
-    if (!opts.$fetch) {
-      const isLocalFetch = typeof _request.value === "string" && _request.value[0] === "/" && (!toValue(opts.baseURL) || toValue(opts.baseURL)[0] === "/");
-      if (isLocalFetch) {
-        _$fetch = useRequestFetch();
+  const asyncData = useAsyncData(
+    watchSources === false ? key.value : key,
+    () => {
+      var _a;
+      (_a = controller == null ? void 0 : controller.abort) == null
+        ? void 0
+        : _a.call(
+            controller,
+            new DOMException(
+              'Request aborted as another request to the same endpoint was initiated.',
+              'AbortError',
+            ),
+          );
+      controller = typeof AbortController !== 'undefined' ? new AbortController() : {};
+      const timeoutLength = toValue(opts.timeout);
+      let timeoutId;
+      if (timeoutLength) {
+        timeoutId = setTimeout(
+          () => controller.abort(new DOMException('Request aborted due to timeout.', 'AbortError')),
+          timeoutLength,
+        );
+        controller.signal.onabort = () => clearTimeout(timeoutId);
       }
-    }
-    return _$fetch(_request.value, { signal: controller.signal, ..._fetchOptions }).finally(() => {
-      clearTimeout(timeoutId);
-    });
-  }, _asyncDataOptions);
+      let _$fetch = opts.$fetch || globalThis.$fetch;
+      if (!opts.$fetch) {
+        const isLocalFetch =
+          typeof _request.value === 'string' &&
+          _request.value[0] === '/' &&
+          (!toValue(opts.baseURL) || toValue(opts.baseURL)[0] === '/');
+        if (isLocalFetch) {
+          _$fetch = useRequestFetch();
+        }
+      }
+      return _$fetch(_request.value, { signal: controller.signal, ..._fetchOptions }).finally(
+        () => {
+          clearTimeout(timeoutId);
+        },
+      );
+    },
+    _asyncDataOptions,
+  );
   return asyncData;
 }
 function generateOptionSegments(opts) {
   var _a;
   const segments = [
-    ((_a = toValue(opts.method)) == null ? void 0 : _a.toUpperCase()) || "GET",
-    toValue(opts.baseURL)
+    ((_a = toValue(opts.method)) == null ? void 0 : _a.toUpperCase()) || 'GET',
+    toValue(opts.baseURL),
   ];
   for (const _obj of [opts.params || opts.query]) {
     const obj = toValue(_obj);
@@ -1332,7 +1548,13 @@ function generateOptionSegments(opts) {
     if (!value) {
       segments.push(hash(value));
     } else if (value instanceof ArrayBuffer) {
-      segments.push(hash(Object.fromEntries([...new Uint8Array(value).entries()].map(([k, v]) => [k, v.toString()]))));
+      segments.push(
+        hash(
+          Object.fromEntries(
+            [...new Uint8Array(value).entries()].map(([k, v]) => [k, v.toString()]),
+          ),
+        ),
+      );
     } else if (value instanceof FormData) {
       const obj = {};
       for (const entry2 of value.entries()) {
@@ -1346,14 +1568,14 @@ function generateOptionSegments(opts) {
       try {
         segments.push(hash(value));
       } catch {
-        console.warn("[useFetch] Failed to hash body", value);
+        console.warn('[useFetch] Failed to hash body', value);
       }
     }
   }
   return segments;
 }
 const plugin = /* @__PURE__ */ defineNuxtPlugin({
-  name: "pinia",
+  name: 'pinia',
   setup(nuxtApp) {
     const pinia = createPinia();
     nuxtApp.vueApp.use(pinia);
@@ -1363,27 +1585,23 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     }
     return {
       provide: {
-        pinia
-      }
+        pinia,
+      },
     };
-  }
+  },
 });
-const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 = /* @__PURE__ */ defineNuxtPlugin({
-  name: "nuxt:global-components"
-});
-function hydrateStore(store, {
-  storage,
-  serializer,
-  key,
-  debug,
-  pick: pick2,
-  omit,
-  beforeHydrate,
-  afterHydrate
-}, context, runHooks = true) {
+const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 =
+  /* @__PURE__ */ defineNuxtPlugin({
+    name: 'nuxt:global-components',
+  });
+function hydrateStore(
+  store,
+  { storage, serializer, key, debug, pick: pick2, omit, beforeHydrate, afterHydrate },
+  context,
+  runHooks = true,
+) {
   try {
-    if (runHooks)
-      beforeHydrate == null ? void 0 : beforeHydrate(context);
+    if (runHooks) beforeHydrate == null ? void 0 : beforeHydrate(context);
     const fromStorage = storage.getItem(key);
     if (fromStorage) {
       const deserialized = serializer.deserialize(fromStorage);
@@ -1391,39 +1609,31 @@ function hydrateStore(store, {
       const omitted = omit ? deepOmitUnsafe(picked, omit) : picked;
       store.$patch(omitted);
     }
-    if (runHooks)
-      afterHydrate == null ? void 0 : afterHydrate(context);
+    if (runHooks) afterHydrate == null ? void 0 : afterHydrate(context);
   } catch (error) {
-    if (debug)
-      console.error("[pinia-plugin-persistedstate]", error);
+    if (debug) console.error('[pinia-plugin-persistedstate]', error);
   }
 }
-function persistState(state, {
-  storage,
-  serializer,
-  key,
-  debug,
-  pick: pick2,
-  omit
-}) {
+function persistState(state, { storage, serializer, key, debug, pick: pick2, omit }) {
   try {
     const picked = pick2 ? deepPickUnsafe(state, pick2) : state;
     const omitted = omit ? deepOmitUnsafe(picked, omit) : picked;
     const toStorage = serializer.serialize(omitted);
     storage.setItem(key, toStorage);
   } catch (error) {
-    if (debug)
-      console.error("[pinia-plugin-persistedstate]", error);
+    if (debug) console.error('[pinia-plugin-persistedstate]', error);
   }
 }
 function createPersistence(context, optionsParser, auto) {
-  const { pinia, store, options: { persist = auto } } = context;
-  if (!persist)
-    return;
+  const {
+    pinia,
+    store,
+    options: { persist = auto },
+  } = context;
+  if (!persist) return;
   if (!(store.$id in pinia.state.value)) {
-    const originalStore = pinia._s.get(store.$id.replace("__hot:", ""));
-    if (originalStore)
-      void Promise.resolve().then(() => originalStore.$persist());
+    const originalStore = pinia._s.get(store.$id.replace('__hot:', ''));
+    if (originalStore) void Promise.resolve().then(() => originalStore.$persist());
     return;
   }
   const persistenceOptions = Array.isArray(persist) ? persist : persist === true ? [{}] : [persist];
@@ -1440,47 +1650,44 @@ function createPersistence(context, optionsParser, auto) {
   };
   persistences.forEach((p) => {
     hydrateStore(store, p, context);
-    store.$subscribe(
-      (_mutation, state) => persistState(state, p),
-      { detached: true }
-    );
+    store.$subscribe((_mutation, state) => persistState(state, p), { detached: true });
   });
 }
 function cookies(options) {
   return {
-    getItem: (key) => useCookie(
-      key,
-      {
-        ...options ?? (/* @__PURE__ */ useRuntimeConfig()).public.piniaPluginPersistedstate.cookieOptions ?? {},
+    getItem: (key) =>
+      useCookie(key, {
+        ...(options ??
+          /* @__PURE__ */ useRuntimeConfig().public.piniaPluginPersistedstate.cookieOptions ??
+          {}),
         decode: (options == null ? void 0 : options.decode) ?? decodeURIComponent,
-        readonly: true
-      }
-    ).value,
-    setItem: (key, value) => useCookie(
-      key,
-      {
-        ...options ?? (/* @__PURE__ */ useRuntimeConfig()).public.piniaPluginPersistedstate.cookieOptions ?? {},
-        encode: (options == null ? void 0 : options.encode) ?? encodeURIComponent
-      }
-    ).value = value
+        readonly: true,
+      }).value,
+    setItem: (key, value) =>
+      (useCookie(key, {
+        ...(options ??
+          /* @__PURE__ */ useRuntimeConfig().public.piniaPluginPersistedstate.cookieOptions ??
+          {}),
+        encode: (options == null ? void 0 : options.encode) ?? encodeURIComponent,
+      }).value = value),
   };
 }
 function localStorage() {
   return {
     getItem: (key) => null,
-    setItem: (key, value) => null
+    setItem: (key, value) => null,
   };
 }
 function sessionStorage() {
   return {
     getItem: (key) => null,
-    setItem: (key, value) => null
+    setItem: (key, value) => null,
   };
 }
 const storages = {
   cookies,
   localStorage,
-  sessionStorage
+  sessionStorage,
 };
 function piniaPlugin(context) {
   const config = /* @__PURE__ */ useRuntimeConfig();
@@ -1488,51 +1695,65 @@ function piniaPlugin(context) {
   createPersistence(
     context,
     (p) => ({
-      key: options.key ? options.key.replace(/%id/g, p.key ?? context.store.$id) : p.key ?? context.store.$id,
+      key: options.key
+        ? options.key.replace(/%id/g, p.key ?? context.store.$id)
+        : (p.key ?? context.store.$id),
       debug: p.debug ?? options.debug ?? false,
       serializer: p.serializer ?? {
         serialize: (data) => JSON.stringify(data),
-        deserialize: (data) => destr(data)
+        deserialize: (data) => destr(data),
       },
-      storage: p.storage ?? (options.storage ? options.storage === "cookies" ? storages.cookies(options.cookieOptions) : storages[options.storage]() : storages.cookies()),
+      storage:
+        p.storage ??
+        (options.storage
+          ? options.storage === 'cookies'
+            ? storages.cookies(options.cookieOptions)
+            : storages[options.storage]()
+          : storages.cookies()),
       beforeHydrate: p.beforeHydrate,
       afterHydrate: p.afterHydrate,
       pick: p.pick,
-      omit: p.omit
+      omit: p.omit,
     }),
-    options.auto ?? false
+    options.auto ?? false,
   );
 }
 const plugin_jjl2DFTrQxMG7TqNyE_rvcIV8r2uFVLO_Sius2B7lXg = /* @__PURE__ */ defineNuxtPlugin({
-  name: "pinia-plugin-persistedstate",
+  name: 'pinia-plugin-persistedstate',
   setup({ $pinia }) {
     $pinia.use(piniaPlugin);
-  }
+  },
 });
-const preference = "system";
-const plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
-  var _a;
-  const colorMode = ((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext) ? ref({}) : useState("color-mode", () => reactive({
-    preference,
-    value: preference,
-    unknown: true,
-    forced: false
-  })).value;
-  const htmlAttrs = {};
-  {
-    useHead({ htmlAttrs });
-  }
-  useRouter().afterEach((to) => {
-    const forcedColorMode = to.meta.colorMode;
-    if (forcedColorMode && forcedColorMode !== "system") {
-      colorMode.value = htmlAttrs["data-color-mode-forced"] = forcedColorMode;
-      colorMode.forced = true;
-    } else if (forcedColorMode === "system") {
-      console.warn("You cannot force the colorMode to system at the page level.");
+const preference = 'system';
+const plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A = /* @__PURE__ */ defineNuxtPlugin(
+  (nuxtApp) => {
+    var _a;
+    const colorMode = ((_a = nuxtApp.ssrContext) == null ? void 0 : _a.islandContext)
+      ? ref({})
+      : useState('color-mode', () =>
+          reactive({
+            preference,
+            value: preference,
+            unknown: true,
+            forced: false,
+          }),
+        ).value;
+    const htmlAttrs = {};
+    {
+      useHead({ htmlAttrs });
     }
-  });
-  nuxtApp.provide("colorMode", colorMode);
-});
+    useRouter().afterEach((to) => {
+      const forcedColorMode = to.meta.colorMode;
+      if (forcedColorMode && forcedColorMode !== 'system') {
+        colorMode.value = htmlAttrs['data-color-mode-forced'] = forcedColorMode;
+        colorMode.forced = true;
+      } else if (forcedColorMode === 'system') {
+        console.warn('You cannot force the colorMode to system at the page level.');
+      }
+    });
+    nuxtApp.provide('colorMode', colorMode);
+  },
+);
 const plugins = [
   payloadPlugin,
   unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU,
@@ -1541,62 +1762,63 @@ const plugins = [
   plugin,
   components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
   plugin_jjl2DFTrQxMG7TqNyE_rvcIV8r2uFVLO_Sius2B7lXg,
-  plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A
+  plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A,
 ];
-const defineRouteProvider = (name = "RouteProvider") => defineComponent({
-  name,
-  props: {
-    route: {
-      type: Object,
-      required: true
+const defineRouteProvider = (name = 'RouteProvider') =>
+  defineComponent({
+    name,
+    props: {
+      route: {
+        type: Object,
+        required: true,
+      },
+      vnode: Object,
+      vnodeRef: Object,
+      renderKey: String,
+      trackRootNodes: Boolean,
     },
-    vnode: Object,
-    vnodeRef: Object,
-    renderKey: String,
-    trackRootNodes: Boolean
-  },
-  setup(props) {
-    const previousKey = props.renderKey;
-    const previousRoute = props.route;
-    const route = {};
-    for (const key in props.route) {
-      Object.defineProperty(route, key, {
-        get: () => previousKey === props.renderKey ? props.route[key] : previousRoute[key],
-        enumerable: true
-      });
-    }
-    provide(PageRouteSymbol, shallowReactive(route));
-    return () => {
-      if (!props.vnode) {
-        return props.vnode;
+    setup(props) {
+      const previousKey = props.renderKey;
+      const previousRoute = props.route;
+      const route = {};
+      for (const key in props.route) {
+        Object.defineProperty(route, key, {
+          get: () => (previousKey === props.renderKey ? props.route[key] : previousRoute[key]),
+          enumerable: true,
+        });
       }
-      return h(props.vnode, { ref: props.vnodeRef });
-    };
-  }
-});
+      provide(PageRouteSymbol, shallowReactive(route));
+      return () => {
+        if (!props.vnode) {
+          return props.vnode;
+        }
+        return h(props.vnode, { ref: props.vnodeRef });
+      };
+    },
+  });
 const RouteProvider = defineRouteProvider();
 const __nuxt_component_0 = defineComponent({
-  name: "NuxtPage",
+  name: 'NuxtPage',
   inheritAttrs: false,
   props: {
     name: {
-      type: String
+      type: String,
     },
     transition: {
       type: [Boolean, Object],
-      default: void 0
+      default: void 0,
     },
     keepalive: {
       type: [Boolean, Object],
-      default: void 0
+      default: void 0,
     },
     route: {
-      type: Object
+      type: Object,
     },
     pageKey: {
       type: [Function, String],
-      default: null
-    }
+      default: null,
+    },
   },
   setup(props, { attrs, slots, expose }) {
     const nuxtApp = useNuxtApp();
@@ -1606,21 +1828,31 @@ const __nuxt_component_0 = defineComponent({
     inject(LayoutMetaSymbol, null);
     nuxtApp.deferHydration();
     return () => {
-      return h(RouterView, { name: props.name, route: props.route, ...attrs }, {
-        default: (routeProps) => {
-          return h(Suspense, { suspensible: true }, {
-            default() {
-              return h(RouteProvider, {
-                vnode: slots.default ? normalizeSlot(slots.default, routeProps) : routeProps.Component,
-                route: routeProps.route,
-                vnodeRef: pageRef
-              });
-            }
-          });
-        }
-      });
+      return h(
+        RouterView,
+        { name: props.name, route: props.route, ...attrs },
+        {
+          default: (routeProps) => {
+            return h(
+              Suspense,
+              { suspensible: true },
+              {
+                default() {
+                  return h(RouteProvider, {
+                    vnode: slots.default
+                      ? normalizeSlot(slots.default, routeProps)
+                      : routeProps.Component,
+                    route: routeProps.route,
+                    vnodeRef: pageRef,
+                  });
+                },
+              },
+            );
+          },
+        },
+      );
     };
-  }
+  },
 });
 function normalizeSlot(slot, data) {
   const slotContent = slot(data);
@@ -1631,28 +1863,28 @@ async function retryFetch(url, options = {}, retries = 3, delay = 1e3) {
     try {
       const response = await $fetch(url, options);
       if (response && response.statusCode === 403) {
-        console.log("Received statusCode 403 in response data - handling error");
-        useFetch("/api/auth/logout", "$oFCJvC2ay0");
+        console.log('Received statusCode 403 in response data - handling error');
+        useFetch('/api/auth/logout', '$oFCJvC2ay0');
         retries = 0;
         return;
       }
       if (response && response.statusCode === 422) {
-        console.log("Received statusCode 422 in response data - handling error");
+        console.log('Received statusCode 422 in response data - handling error');
         retries = 0;
         return;
       }
       if (response && response.statusCode === 500) {
-        console.log("Received statusCode 500 in response data - handling error");
+        console.log('Received statusCode 500 in response data - handling error');
         retries = 0;
         return;
       }
       return response;
     } catch (error) {
-      if (error.message === "403 Forbidden") {
+      if (error.message === '403 Forbidden') {
         return error;
       }
       if (error.statusCode === 422) {
-        console.log("Received statusCode 422 in response data - handling error");
+        console.log('Received statusCode 422 in response data - handling error');
         retries = 0;
         return error;
       }
@@ -1665,88 +1897,88 @@ async function retryFetch(url, options = {}, retries = 3, delay = 1e3) {
   }
 }
 const getUserProfileComposable = async (userId) => {
-  return retryFetch("/api/user/getProfile", {
-    method: "POST",
+  return retryFetch('/api/user/getProfile', {
+    method: 'POST',
     body: {
-      userId
-    }
+      userId,
+    },
   });
 };
 const getAllUsersComposable = async () => {
-  return retryFetch("/api/user/getAllUsers", {
-    method: "POST"
+  return retryFetch('/api/user/getAllUsers', {
+    method: 'POST',
   });
 };
 const editUserComposable = async (body) => {
-  return retryFetch("/api/user/editUser", {
-    method: "POST",
+  return retryFetch('/api/user/editUser', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const updatePasswordComposable = async (body) => {
-  return retryFetch("/api/user/updatePassword", {
-    method: "POST",
+  return retryFetch('/api/user/updatePassword', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const getUserLeavesComposable = (userId) => {
-  return retryFetch("/api/leaves/getLeavesByUser", {
-    method: "POST",
-    body: { userId }
+  return retryFetch('/api/leaves/getLeavesByUser', {
+    method: 'POST',
+    body: { userId },
   });
 };
 const newLeaveComposable = (body) => {
-  return retryFetch("/api/leaves/newLeave", {
-    method: "POST",
+  return retryFetch('/api/leaves/newLeave', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const cancelLeaveComposable = (body) => {
-  return retryFetch("/api/leaves/processLeave", {
-    method: "POST",
+  return retryFetch('/api/leaves/processLeave', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const adminLeaveActionComposable = (body) => {
-  return retryFetch("/api/leaves/processLeave", {
-    method: "POST",
+  return retryFetch('/api/leaves/processLeave', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const getLeavesTypesComposable = () => {
-  return retryFetch("/api/leaves/getLeavesTypes", {
-    method: "POST"
+  return retryFetch('/api/leaves/getLeavesTypes', {
+    method: 'POST',
   });
 };
 const getLeavesStatusesComposable = () => {
-  return retryFetch("/api/leaves/getLeavesStatuses", {
-    method: "POST"
+  return retryFetch('/api/leaves/getLeavesStatuses', {
+    method: 'POST',
   });
 };
 const getLeavesAvailableDaysComposable = (userId) => {
-  return retryFetch("/api/leaves/getLeavesAvailableDays", {
-    method: "POST",
+  return retryFetch('/api/leaves/getLeavesAvailableDays', {
+    method: 'POST',
     body: {
-      userId
-    }
+      userId,
+    },
   });
 };
 const getAllUserLeavesComposable = () => {
-  return retryFetch("/api/leaves/getAllForAllUsers", {
-    method: "POST"
+  return retryFetch('/api/leaves/getAllForAllUsers', {
+    method: 'POST',
   });
 };
-const useUserStore = defineStore("userStore", () => {
+const useUserStore = defineStore('userStore', () => {
   const userId = ref(null);
   const loading = ref(false);
   const permissions = ref({});
@@ -1772,15 +2004,15 @@ const useUserStore = defineStore("userStore", () => {
         loading.value = true;
         const fullProfile = await getUserProfileComposable(userId.value);
         permissions.value = {
-          "edit_user": true,
-          "delete_user": true,
-          "view_leaves": false,
-          "view_all_users": false,
-          "edit_department": true
+          edit_user: true,
+          delete_user: true,
+          view_leaves: false,
+          view_all_users: false,
+          edit_department: true,
         };
         userInfo.value = fullProfile;
       } catch (err) {
-        setError("Δεν μπορέσαμε να φέρουμε το προφίλ σας");
+        setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
       } finally {
         loading.value = false;
       }
@@ -1789,7 +2021,18 @@ const useUserStore = defineStore("userStore", () => {
   async function loadUserProfileById(userId2) {
     return allUsers.value.find((element) => element.id === userId2) || [];
   }
-  async function editUser(userId2, userName, userEmail, userDepartment, userRole, userPhone, userInternalPhone, userTitle, userTitleDescription, userImage) {
+  async function editUser(
+    userId2,
+    userName,
+    userEmail,
+    userDepartment,
+    userRole,
+    userPhone,
+    userInternalPhone,
+    userTitle,
+    userTitleDescription,
+    userImage,
+  ) {
     try {
       loading.value = true;
       const result = await editUserComposable({
@@ -1802,7 +2045,7 @@ const useUserStore = defineStore("userStore", () => {
         userInternalPhone,
         userTitle,
         userTitleDescription,
-        userImage
+        userImage,
       });
       if (result) {
         if (result.errors) {
@@ -1815,28 +2058,24 @@ const useUserStore = defineStore("userStore", () => {
         }
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να επεξεργαστούμε τον χρήστη");
+      setError('Δεν μπορέσαμε να επεξεργαστούμε τον χρήστη');
     } finally {
       loading.value = false;
     }
   }
   async function updatePassword(data) {
-    const {
-      userId: userId2,
-      oldPass,
-      newPass
-    } = data;
+    const { userId: userId2, oldPass, newPass } = data;
     try {
       loading.value = true;
       const result = await updatePasswordComposable({
         userId: userId2,
         oldPass,
-        newPass
+        newPass,
       });
       if (result) {
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας");
+      setError('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας');
     } finally {
       loading.value = false;
     }
@@ -1847,7 +2086,7 @@ const useUserStore = defineStore("userStore", () => {
         loading.value = true;
         allUsers.value = Object.values(await getAllUsersComposable(userId.value));
       } catch (err) {
-        setError("Δεν μπορέσαμε να φέρουμε το προφίλ σας");
+        setError('Δεν μπορέσαμε να φέρουμε το προφίλ σας');
       } finally {
         loading.value = false;
       }
@@ -1863,7 +2102,7 @@ const useUserStore = defineStore("userStore", () => {
         await getAllUsers();
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να αρχικοποιήσουμε το προφίλ σας");
+      setError('Δεν μπορέσαμε να αρχικοποιήσουμε το προφίλ σας');
     } finally {
       loading.value = false;
     }
@@ -1883,66 +2122,66 @@ const useUserStore = defineStore("userStore", () => {
     error,
     allUsers,
     getAllUsers,
-    updatePassword
+    updatePassword,
   };
 });
 const authUserComposable = async (params) => {
   try {
-    const response = await retryFetch("/api/auth/login", {
-      method: "POST",
+    const response = await retryFetch('/api/auth/login', {
+      method: 'POST',
       body: {
         email: params.email,
-        password: params.password
-      }
+        password: params.password,
+      },
     });
     if (response.userId) {
       return response;
     }
-    throw new Error("Invalid credentials");
+    throw new Error('Invalid credentials');
   } catch (error) {
-    throw new Error("Invalid credentials");
+    throw new Error('Invalid credentials');
   }
 };
 const refreshSessionComposable = async () => {
   try {
-    const result = await retryFetch("/api/auth/refreshSession", {
-      method: "GET"
+    const result = await retryFetch('/api/auth/refreshSession', {
+      method: 'GET',
     });
     return result;
   } catch (error) {
-    throw new Error("Failed to restore session");
+    throw new Error('Failed to restore session');
   }
 };
 const logoutUserComposable = async () => {
   try {
-    const result = await retryFetch("/api/auth/logout", {
-      method: "GET"
+    const result = await retryFetch('/api/auth/logout', {
+      method: 'GET',
     });
     return result;
   } catch (error) {
-    throw new Error("Failed to delete session");
+    throw new Error('Failed to delete session');
   }
 };
 const updateUserPasswordComposable = async (body) => {
   try {
-    return await retryFetch("/api/auth/updatePassword", {
-      method: "POST",
-      body
+    return await retryFetch('/api/auth/updatePassword', {
+      method: 'POST',
+      body,
     });
   } catch (error) {
-    throw new Error("Failed to update password");
+    throw new Error('Failed to update password');
   }
 };
 const meComposable = async () => {
   try {
-    return await retryFetch("/api/me", {
-      method: "POST"
+    return await retryFetch('/api/me', {
+      method: 'POST',
     });
   } catch (error) {
-    throw new Error("Failed to get self data");
+    throw new Error('Failed to get self data');
   }
 };
-const useAuthStore = defineStore("authStore", () => {
+const useAuthStore = defineStore('authStore', () => {
   const loading = ref(false);
   const error = ref(null);
   computed(() => !!token.value);
@@ -1953,10 +2192,10 @@ const useAuthStore = defineStore("authStore", () => {
   async function hasSession() {
     loading.value = true;
     try {
-      const authToken = useCookie("auth_token");
+      const authToken = useCookie('auth_token');
       return !!authToken.value;
     } catch (err) {
-      setError("No session found for user");
+      setError('No session found for user');
     } finally {
       loading.value = false;
     }
@@ -1971,8 +2210,8 @@ const useAuthStore = defineStore("authStore", () => {
       }
       return false;
     } catch (err) {
-      setError("Μη έγκυρος e-mail ή κωδικός");
-      throw new Error("Authentication failed");
+      setError('Μη έγκυρος e-mail ή κωδικός');
+      throw new Error('Authentication failed');
     } finally {
       loading.value = false;
     }
@@ -1984,10 +2223,10 @@ const useAuthStore = defineStore("authStore", () => {
         userStore.setUserId(result.userId);
       } else {
         const router = useRouter$1();
-        await router.push("/auth/login");
+        await router.push('/auth/login');
       }
     } catch (err) {
-      setError("Δεν βρήκαμε υπάρχουσα συνεδρίαση");
+      setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
     }
   }
   async function updatePassword(userId, oldPass, newPass) {
@@ -1995,20 +2234,20 @@ const useAuthStore = defineStore("authStore", () => {
       const result = await updateUserPasswordComposable({
         userId,
         oldPass,
-        newPass
+        newPass,
       });
       if (result) {
         return result;
       }
     } catch (err) {
-      setError("Δεν βρήκαμε υπάρχουσα συνεδρίαση");
+      setError('Δεν βρήκαμε υπάρχουσα συνεδρίαση');
     }
   }
   async function logout() {
     try {
       await logoutUserComposable();
     } catch (err) {
-      setError("Δεν μπορέσαμε να σας αποσυνδέσουμε");
+      setError('Δεν μπορέσαμε να σας αποσυνδέσουμε');
     }
   }
   async function me() {
@@ -2018,18 +2257,27 @@ const useAuthStore = defineStore("authStore", () => {
         userStore.setUserId(response.userId);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τα δεδομένα σας");
+      setError('Δεν μπορέσαμε να φέρουμε τα δεδομένα σας');
     }
   }
-  return { loading, error, authUser: authUserWrapper, me, updatePassword, restoreSession, hasSession, logout };
+  return {
+    loading,
+    error,
+    authUser: authUserWrapper,
+    me,
+    updatePassword,
+    restoreSession,
+    hasSession,
+    logout,
+  };
 });
-const useLeavesStore = defineStore("leavesStore", () => {
+const useLeavesStore = defineStore('leavesStore', () => {
   const leavesData = ref({
     currentUser: {},
     leavesTypes: [],
     leavesStatuses: {},
     leavesAvailableDays: [],
-    allUsers: []
+    allUsers: [],
   });
   const loading = ref(false);
   const error = ref(null);
@@ -2041,7 +2289,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
       leavesTypes: [],
       leavesStatuses: {},
       leavesAvailableDays: [],
-      allUsers: []
+      allUsers: [],
     };
   }
   const setError = (errorMessage) => {
@@ -2054,12 +2302,12 @@ const useLeavesStore = defineStore("leavesStore", () => {
         !Object.keys(leavesData.value.currentUser).length && getAll(userId),
         !leavesData.value.leavesTypes.length && getLeavesTypes(),
         !Object.keys(leavesData.value.leavesStatuses).length && getLeavesStatuses(),
-        !Object.keys(leavesData.value.leavesAvailableDays).length && getLeavesAvailableDays(userId)
+        !Object.keys(leavesData.value.leavesAvailableDays).length && getLeavesAvailableDays(userId),
       ]).then(() => {
         isDataLoaded.value = true;
       });
     } catch (err) {
-      setError("Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας");
+      setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
     }
   }
   async function getAllByUserId(userId) {
@@ -2067,7 +2315,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
       loading.value = true;
       return await getUserLeavesComposable(userId);
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τις άδειες σας");
+      setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
     } finally {
     }
   }
@@ -2079,7 +2327,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         leavesData.value.currentUser = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τις άδειες σας");
+      setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
     } finally {
       loading.value = false;
     }
@@ -2093,7 +2341,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         await getLeavesAvailableDays(userId);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια");
+      setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
     } finally {
       loading.value = false;
     }
@@ -2106,7 +2354,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         leavesData.value.allUsers = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να ακυρώσουμε την άδεια");
+      setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
     } finally {
       loading.value = false;
     }
@@ -2119,7 +2367,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         await getAll(userId);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να ακυρώσουμε την άδεια");
+      setError('Δεν μπορέσαμε να ακυρώσουμε την άδεια');
     } finally {
       loading.value = false;
     }
@@ -2132,7 +2380,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         leavesData.value.leavesTypes = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τους τύπους αδειών");
+      setError('Δεν μπορέσαμε να φέρουμε τους τύπους αδειών');
     } finally {
       loading.value = false;
     }
@@ -2145,7 +2393,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         leavesData.value.leavesStatuses = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τις διαθέσιμες ενέργειες αδειών");
+      setError('Δεν μπορέσαμε να φέρουμε τις διαθέσιμες ενέργειες αδειών');
     } finally {
       loading.value = false;
     }
@@ -2157,7 +2405,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         leavesData.value.leavesAvailableDays = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τις υπολοιπόμενες ήμερες αδειών σας");
+      setError('Δεν μπορέσαμε να φέρουμε τις υπολοιπόμενες ήμερες αδειών σας');
     } finally {
       loading.value = false;
     }
@@ -2170,7 +2418,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         await getAll(userId);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να εγκρύνουμε την άδεια");
+      setError('Δεν μπορέσαμε να εγκρύνουμε την άδεια');
     } finally {
       loading.value = false;
     }
@@ -2183,7 +2431,7 @@ const useLeavesStore = defineStore("leavesStore", () => {
         await getAll(userId);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να απορρίψουμε την άδεια");
+      setError('Δεν μπορέσαμε να απορρίψουμε την άδεια');
     } finally {
       loading.value = false;
     }
@@ -2204,60 +2452,60 @@ const useLeavesStore = defineStore("leavesStore", () => {
     getLeavesStatuses,
     getLeavesAvailableDays,
     approveLeave,
-    declineLeave
+    declineLeave,
   };
 });
 const getEntitledDaysForUserComposable = (userId) => {
-  return retryFetch("/api/entitlement/get", {
-    method: "POST",
+  return retryFetch('/api/entitlement/get', {
+    method: 'POST',
     body: {
-      userId
-    }
+      userId,
+    },
   });
 };
 const addEntitledDaysForUserComposable = (body) => {
-  return retryFetch("/api/entitlement/add", {
-    method: "POST",
+  return retryFetch('/api/entitlement/add', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const addEntitledDaysForMultipleUsersComposable = (body) => {
-  return retryFetch("/api/entitlement/massLeaves", {
-    method: "POST",
+  return retryFetch('/api/entitlement/massLeaves', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const addEntitledRemoteDaysForMultipleUsersComposable = (body) => {
-  return retryFetch("/api/entitlement/massRemote", {
-    method: "POST",
+  return retryFetch('/api/entitlement/massRemote', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const updateEntitledDaysForUserComposable = (body) => {
-  return retryFetch("/api/entitlement/update", {
-    method: "POST",
+  return retryFetch('/api/entitlement/update', {
+    method: 'POST',
     body: {
-      ...body
-    }
+      ...body,
+    },
   });
 };
 const deleteEntitledDaysForUserComposable = (entitlementId) => {
-  return retryFetch("/api/entitlement/delete", {
-    method: "POST",
+  return retryFetch('/api/entitlement/delete', {
+    method: 'POST',
     body: {
-      entitlementId
-    }
+      entitlementId,
+    },
   });
 };
-const useEntitlementStore = defineStore("entitlementStore", () => {
+const useEntitlementStore = defineStore('entitlementStore', () => {
   const entitledDaysData = ref({
-    savedUsers: []
+    savedUsers: [],
   });
   const loading = ref(false);
   const error = ref(null);
@@ -2265,7 +2513,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
   const isDataLoaded = ref(false);
   function reset() {
     entitledDaysData.value = {
-      savedUsers: []
+      savedUsers: [],
     };
   }
   const setError = (errorMessage) => {
@@ -2276,7 +2524,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
     try {
       isDataLoaded.value = true;
     } catch (err) {
-      setError("Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας");
+      setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα αδειών σας');
     }
   }
   async function getEntitledDaysForUser(userId, forceRefresh = false) {
@@ -2295,7 +2543,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
       entitledDaysData.value.savedUsers[userId] = formattedResult;
       return formattedResult;
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τις άδειες σας");
+      setError('Δεν μπορέσαμε να φέρουμε τις άδειες σας');
     } finally {
       loading.value = false;
     }
@@ -2311,7 +2559,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
           entitledDays,
           year,
           startDate,
-          endDate
+          endDate,
         });
       } else {
         if (userIds.length > 1) {
@@ -2321,7 +2569,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
             entitledDays,
             year,
             startDate,
-            endDate
+            endDate,
           });
         } else {
           const userId = userIds[0];
@@ -2331,7 +2579,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
             entitledDays,
             year,
             startDate,
-            endDate
+            endDate,
           });
         }
       }
@@ -2341,13 +2589,20 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
         }
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες");
+      setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια/ες');
       throw err;
     } finally {
       loading.value = false;
     }
   }
-  async function updateEntitledDaysForUser(entitlementId, userId, leaveTypeId, entitledDays, startDate, endDate) {
+  async function updateEntitledDaysForUser(
+    entitlementId,
+    userId,
+    leaveTypeId,
+    entitledDays,
+    startDate,
+    endDate,
+  ) {
     try {
       loading.value = true;
       const year = new Date(startDate).getFullYear();
@@ -2358,13 +2613,13 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
         entitledDays,
         startDate,
         endDate,
-        year
+        year,
       });
       if (result && result.entitlement) {
         await getEntitledDaysForUser(userId, true);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια");
+      setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
     } finally {
       loading.value = false;
     }
@@ -2377,7 +2632,7 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
         await getEntitledDaysForUser(userId, true);
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια");
+      setError('Δεν μπορέσαμε να δημιουργήσουμε νέα άδεια');
     } finally {
       loading.value = false;
     }
@@ -2391,35 +2646,35 @@ const useEntitlementStore = defineStore("entitlementStore", () => {
     addEntitledDays,
     deleteEntitledDaysForUser,
     getEntitledDaysForUser,
-    updateEntitledDaysForUser
+    updateEntitledDaysForUser,
   };
 });
 const getAllDepartmentsComposable = () => {
-  return retryFetch("/api/departments/getAll", {
-    method: "POST"
+  return retryFetch('/api/departments/getAll', {
+    method: 'POST',
   });
 };
 const newDepartmentComposable = (body) => {
-  return retryFetch("/api/departments/newDepartment", {
-    method: "POST",
-    body
+  return retryFetch('/api/departments/newDepartment', {
+    method: 'POST',
+    body,
   });
 };
 const editDepartmentComposable = (body) => {
-  return retryFetch("/api/departments/editDepartment", {
-    method: "POST",
-    body
+  return retryFetch('/api/departments/editDepartment', {
+    method: 'POST',
+    body,
   });
 };
 const deleteDepartmentComposable = (department_id) => {
-  return retryFetch("/api/departments/deleteDepartment", {
-    method: "POST",
+  return retryFetch('/api/departments/deleteDepartment', {
+    method: 'POST',
     body: {
-      department_id
-    }
+      department_id,
+    },
   });
 };
-const useDepartmentsStore = defineStore("departmentsStore", () => {
+const useDepartmentsStore = defineStore('departmentsStore', () => {
   const departmentsData = ref([]);
   const loading = ref(false);
   const error = ref(null);
@@ -2435,7 +2690,7 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
         await getAll();
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να αρηκοποιήσουμε τα γκρουπς");
+      setError('Δεν μπορέσαμε να αρηκοποιήσουμε τα γκρουπς');
     }
   }
   async function getAll() {
@@ -2445,7 +2700,7 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
         departmentsData.value = result;
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να φέρουμε τα γκρουπς");
+      setError('Δεν μπορέσαμε να φέρουμε τα γκρουπς');
     } finally {
       loading.value = false;
     }
@@ -2458,13 +2713,13 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
       const result = await newDepartmentComposable({
         groupName,
         head,
-        members
+        members,
       });
       if (result) {
         await this.getAll();
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να δημιουργήσουμε νέο γκρουπ");
+      setError('Δεν μπορέσαμε να δημιουργήσουμε νέο γκρουπ');
     } finally {
       loading.value = false;
     }
@@ -2475,13 +2730,13 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
         groupId,
         groupName,
         head,
-        members
+        members,
       });
       if (result) {
         await this.getAll();
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να επεξεργαστούμε το γκρουπ που ζητήσατε");
+      setError('Δεν μπορέσαμε να επεξεργαστούμε το γκρουπ που ζητήσατε');
     } finally {
       loading.value = false;
     }
@@ -2493,7 +2748,7 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
         await this.getAll();
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να σβήσουμε το γκρουπ που ζητήσατε");
+      setError('Δεν μπορέσαμε να σβήσουμε το γκρουπ που ζητήσατε');
     } finally {
       loading.value = false;
     }
@@ -2508,38 +2763,39 @@ const useDepartmentsStore = defineStore("departmentsStore", () => {
     deleteDepartment,
     departmentsData,
     loading,
-    error
+    error,
   };
 });
 const getNotificationsComposable = (userId) => {
-  return retryFetch("/api/notifications/getNotifications", {
-    method: "POST",
+  return retryFetch('/api/notifications/getNotifications', {
+    method: 'POST',
     body: {
-      userId
-    }
+      userId,
+    },
   });
 };
 const markNotificationReadComposable = (notificationId) => {
-  return retryFetch("/api/notifications/markedRead", {
-    method: "POST",
+  return retryFetch('/api/notifications/markedRead', {
+    method: 'POST',
     body: {
-      notificationId
-    }
+      notificationId,
+    },
   });
 };
 const markNotificationUnreadComposable = (notificationId) => {
-  return retryFetch("/api/notifications/markedUnread", {
-    method: "POST",
+  return retryFetch('/api/notifications/markedUnread', {
+    method: 'POST',
     body: {
-      notificationId
-    }
+      notificationId,
+    },
   });
 };
-const intervalError = "[nuxt] `setInterval` should not be used on the server. Consider wrapping it with an `onNuxtReady`, `onBeforeMount` or `onMounted` lifecycle hook, or ensure you only call it in the browser by checking `false`.";
+const intervalError =
+  '[nuxt] `setInterval` should not be used on the server. Consider wrapping it with an `onNuxtReady`, `onBeforeMount` or `onMounted` lifecycle hook, or ensure you only call it in the browser by checking `false`.';
 const setInterval = () => {
   console.error(intervalError);
 };
-const useNotificationsStore = defineStore("notificationsStore", () => {
+const useNotificationsStore = defineStore('notificationsStore', () => {
   const notificationsData = ref({});
   const loading = ref(false);
   const error = ref(null);
@@ -2577,7 +2833,9 @@ const useNotificationsStore = defineStore("notificationsStore", () => {
   }
   async function changeNotificationStatus(notificationId) {
     try {
-      const notificationStatus = notificationsData.value.find((notif) => notif.id === notificationId).is_read;
+      const notificationStatus = notificationsData.value.find(
+        (notif) => notif.id === notificationId,
+      ).is_read;
       let result;
       if (notificationStatus) {
         result = await markNotificationUnreadComposable(notificationId);
@@ -2605,43 +2863,54 @@ const useNotificationsStore = defineStore("notificationsStore", () => {
       clearInterval(intervalId);
     }
   }
-  return { notificationsData, loading, error, getNotifications, beginPolling, init, reset, stopPollingNotifications, notificationsActive, changeNotificationStatus };
+  return {
+    notificationsData,
+    loading,
+    error,
+    getNotifications,
+    beginPolling,
+    init,
+    reset,
+    stopPollingNotifications,
+    notificationsActive,
+    changeNotificationStatus,
+  };
 });
-const usePermissionsStore = defineStore("permissionsStore", () => {
+const usePermissionsStore = defineStore('permissionsStore', () => {
   const userStore = useUserStore();
   const permissions = {
     profile_leave_balance: {
-      view: ["admin", "hr-manager", "head", "user"],
-      request_leave: ["hr-manager", "head", "user"],
-      cancel_leave: ["hr-manager", "head", "user"],
-      accept_leave: ["admin", "hr-manager", "head"],
-      decline_leave: ["admin", "hr-manager", "head"]
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      request_leave: ['hr-manager', 'head', 'user'],
+      cancel_leave: ['hr-manager', 'head', 'user'],
+      accept_leave: ['admin', 'hr-manager', 'head'],
+      decline_leave: ['admin', 'hr-manager', 'head'],
     },
     profile_info: {
-      view: ["admin", "hr-manager", "head", "user"],
-      modify: ["admin", "hr-manager", "head", "user"],
-      change_password: ["admin", "hr-manager", "head", "user"]
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin', 'hr-manager', 'head', 'user'],
+      change_password: ['admin', 'hr-manager', 'head', 'user'],
     },
     all_users: {
-      view: ["admin", "hr-manager", "head", "user"],
-      modify: ["admin", "hr-manager"]
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin', 'hr-manager'],
     },
     group: {
-      view: ["admin", "hr-manager", "head", "user"],
-      modify: ["admin", "hr-manager"]
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin', 'hr-manager'],
     },
     entitlement: {
-      view: ["admin", "hr-manager", "head"],
-      modify: ["admin", "hr-manager"]
+      view: ['admin', 'hr-manager', 'head'],
+      modify: ['admin', 'hr-manager'],
     },
     leave_types: {
-      view: ["admin", "hr-manager", "head"],
-      modify: ["admin", "hr-manager"]
+      view: ['admin', 'hr-manager', 'head'],
+      modify: ['admin', 'hr-manager'],
     },
     permissions: {
-      view: ["admin"],
-      modify: ["admin"]
-    }
+      view: ['admin'],
+      modify: ['admin'],
+    },
   };
   const userRoles = computed(() => {
     var _a;
@@ -2652,7 +2921,7 @@ const usePermissionsStore = defineStore("permissionsStore", () => {
     return userRoles.value.includes(roleName);
   };
   const isAdmin = () => {
-    return userStore.userInfo.roles.some((role) => role.name === "admin");
+    return userStore.userInfo.roles.some((role) => role.name === 'admin');
   };
   const can = (category, action) => {
     const categoryPermissions = permissions[category];
@@ -2670,10 +2939,10 @@ const usePermissionsStore = defineStore("permissionsStore", () => {
     can,
     userRoles,
     isAdmin,
-    permissions
+    permissions,
   };
 });
-const useCentralStore = defineStore("centralStore", () => {
+const useCentralStore = defineStore('centralStore', () => {
   const authStore = useAuthStore();
   const userStore = useUserStore();
   const leavesStore = useLeavesStore();
@@ -2683,7 +2952,12 @@ const useCentralStore = defineStore("centralStore", () => {
   const permissionsStore = usePermissionsStore();
   const error = ref(null);
   const loading = computed(
-    () => authStore.loading || userStore.loading || leavesStore.loading || departmentsStore.loading || notificationsStore.loading
+    () =>
+      authStore.loading ||
+      userStore.loading ||
+      leavesStore.loading ||
+      departmentsStore.loading ||
+      notificationsStore.loading,
   );
   const initialized = ref(false);
   const setError = (errorMessage) => {
@@ -2692,25 +2966,21 @@ const useCentralStore = defineStore("centralStore", () => {
   const { $toast } = useNuxtApp();
   async function init() {
     try {
-      console.log("im here");
+      console.log('im here');
       if (userStore.userId) {
-        console.log("userId:", userStore.userId);
-        await Promise.all([
-          userStore.init(),
-          departmentsStore.init(),
-          notificationsStore.init()
-        ]);
+        console.log('userId:', userStore.userId);
+        await Promise.all([userStore.init(), departmentsStore.init(), notificationsStore.init()]);
         await Promise.all([
           userStore.getAllUsers(),
           leavesStore.init(userStore.userId),
-          entitlementStore.init()
+          entitlementStore.init(),
         ]);
         initialized.value = true;
       } else {
-        throw new Error("No user id");
+        throw new Error('No user id');
       }
     } catch (err) {
-      setError("Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας");
+      setError('Δεν μπορέσαμε να αρχικοποιήσουμε τα δεδομένα σας');
       initialized.value = false;
     }
   }
@@ -2731,14 +3001,14 @@ const useCentralStore = defineStore("centralStore", () => {
     get(target, prop) {
       if (prop in target) {
         const value = target[prop];
-        if (typeof value === "function") {
+        if (typeof value === 'function') {
           return value.bind(target);
         } else {
           return value;
         }
       }
       return void 0;
-    }
+    },
   };
   const proxiedAuthStore = new Proxy(authStore, dynamicProxyHandler);
   const proxiedUserStore = new Proxy(userStore, dynamicProxyHandler);
@@ -2759,39 +3029,39 @@ const useCentralStore = defineStore("centralStore", () => {
     departmentsStore: proxiedDepartmentsStore,
     notificationsStore: proxiedNotificationsStore,
     permissionsStore: proxiedPermissionsStore,
-    entitlementStore: proxiedEntitlementStore
+    entitlementStore: proxiedEntitlementStore,
   };
 });
 const _sfc_main$2 = {
-  __name: "app",
+  __name: 'app',
   __ssrInlineRender: true,
   setup(__props) {
     useHead({
       htmlAttrs: {
-        lang: "el"
-      }
+        lang: 'el',
+      },
     });
     const router = useRouter$1();
     const centralStore = useCentralStore();
     const userStore = centralStore.userStore;
     centralStore.leavesStore;
     const authStore = centralStore.authStore;
-    const userAuthed = useCookie("user_authed");
+    const userAuthed = useCookie('user_authed');
     const runInitCode = async () => {
       try {
-        console.log("runInitCode: userAuthed =", userAuthed.value);
+        console.log('runInitCode: userAuthed =', userAuthed.value);
         if (userAuthed.value === true) {
           await authStore.me();
           if (!centralStore.initialized) {
             await centralStore.init();
-            console.log("initialized");
+            console.log('initialized');
           }
         }
       } catch (error) {
-        console.error("runInitCode error:", error);
+        console.error('runInitCode error:', error);
         useNuxtApp().$toast.error(error, {
-          position: "bottom-right",
-          autoClose: 5e3
+          position: 'bottom-right',
+          autoClose: 5e3,
         });
       }
     };
@@ -2801,55 +3071,85 @@ const _sfc_main$2 = {
     });
     return (_ctx, _push, _parent, _attrs) => {
       const _component_NuxtPage = __nuxt_component_0;
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "h-full mt-auto" }, _attrs))}><main class="bg-gray-100">`);
+      _push(
+        `<div${ssrRenderAttrs(mergeProps({ class: 'h-full mt-auto' }, _attrs))}><main class="bg-gray-100">`,
+      );
       _push(ssrRenderComponent(_component_NuxtPage, null, null, _parent));
       _push(`</main></div>`);
     };
-  }
+  },
 };
 const _sfc_setup$2 = _sfc_main$2.setup;
 _sfc_main$2.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("app.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add('app.vue');
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
 const _sfc_main$1 = {
-  __name: "nuxt-error-page",
+  __name: 'nuxt-error-page',
   __ssrInlineRender: true,
   props: {
-    error: Object
+    error: Object,
   },
   setup(__props) {
     const props = __props;
     const _error = props.error;
-    _error.stack ? _error.stack.split("\n").splice(1).map((line) => {
-      const text = line.replace("webpack:/", "").replace(".vue", ".js").trim();
-      return {
-        text,
-        internal: line.includes("node_modules") && !line.includes(".cache") || line.includes("internal") || line.includes("new Promise")
-      };
-    }).map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n") : "";
+    _error.stack
+      ? _error.stack
+          .split('\n')
+          .splice(1)
+          .map((line) => {
+            const text = line.replace('webpack:/', '').replace('.vue', '.js').trim();
+            return {
+              text,
+              internal:
+                (line.includes('node_modules') && !line.includes('.cache')) ||
+                line.includes('internal') ||
+                line.includes('new Promise'),
+            };
+          })
+          .map((i) => `<span class="stack${i.internal ? ' internal' : ''}">${i.text}</span>`)
+          .join('\n')
+      : '';
     const statusCode = Number(_error.statusCode || 500);
     const is404 = statusCode === 404;
-    const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
+    const statusMessage =
+      _error.statusMessage ?? (is404 ? 'Page Not Found' : 'Internal Server Error');
     const description = _error.message || _error.toString();
     const stack = void 0;
     const _Error404 = defineAsyncComponent(() => import('./error-404-DIGSETxS.mjs'));
     const _Error = defineAsyncComponent(() => import('./error-500-Dk92FlK8.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
-      _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
+      _push(
+        ssrRenderComponent(
+          unref(ErrorTemplate),
+          mergeProps(
+            {
+              statusCode: unref(statusCode),
+              statusMessage: unref(statusMessage),
+              description: unref(description),
+              stack: unref(stack),
+            },
+            _attrs,
+          ),
+          null,
+          _parent,
+        ),
+      );
     };
-  }
+  },
 };
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add(
+    'node_modules/nuxt/dist/app/components/nuxt-error-page.vue',
+  );
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
 const _sfc_main = {
-  __name: "nuxt-root",
+  __name: 'nuxt-root',
   __ssrInlineRender: true,
   setup(__props) {
     const IslandRenderer = () => null;
@@ -2858,11 +3158,13 @@ const _sfc_main = {
     nuxtApp.ssrContext.url;
     const SingleRenderer = false;
     provide(PageRouteSymbol, useRoute());
-    nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), "vue:setup");
+    nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), 'vue:setup');
     const error = useError();
     const abortRender = error.value && !nuxtApp.ssrContext.error;
     onErrorCaptured((err, target, info) => {
-      nuxtApp.hooks.callHook("vue:error", err, target, info).catch((hookError) => console.error("[nuxt] Error in `vue:error` hook", hookError));
+      nuxtApp.hooks
+        .callHook('vue:error', err, target, info)
+        .catch((hookError) => console.error('[nuxt] Error in `vue:error` hook', hookError));
       {
         const p = nuxtApp.runWithContext(() => showError(err));
         onServerPrefetch(() => p);
@@ -2878,22 +3180,35 @@ const _sfc_main = {
           } else if (unref(error)) {
             _push(ssrRenderComponent(unref(_sfc_main$1), { error: unref(error) }, null, _parent));
           } else if (unref(islandContext)) {
-            _push(ssrRenderComponent(unref(IslandRenderer), { context: unref(islandContext) }, null, _parent));
+            _push(
+              ssrRenderComponent(
+                unref(IslandRenderer),
+                { context: unref(islandContext) },
+                null,
+                _parent,
+              ),
+            );
           } else if (unref(SingleRenderer)) {
-            ssrRenderVNode(_push, createVNode(resolveDynamicComponent(unref(SingleRenderer)), null, null), _parent);
+            ssrRenderVNode(
+              _push,
+              createVNode(resolveDynamicComponent(unref(SingleRenderer)), null, null),
+              _parent,
+            );
           } else {
             _push(ssrRenderComponent(unref(_sfc_main$2), null, null, _parent));
           }
         },
-        _: 1
+        _: 1,
       });
     };
-  }
+  },
 };
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-root.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add(
+    'node_modules/nuxt/dist/app/components/nuxt-root.vue',
+  );
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
 let entry;
@@ -2904,18 +3219,32 @@ let entry;
     const nuxt = createNuxtApp({ vueApp, ssrContext });
     try {
       await applyPlugins(nuxt, plugins);
-      await nuxt.hooks.callHook("app:created", vueApp);
+      await nuxt.hooks.callHook('app:created', vueApp);
     } catch (error) {
-      await nuxt.hooks.callHook("app:error", error);
+      await nuxt.hooks.callHook('app:error', error);
       (_a = nuxt.payload).error || (_a.error = createError(error));
     }
     if (ssrContext == null ? void 0 : ssrContext._renderResponse) {
-      throw new Error("skipping render");
+      throw new Error('skipping render');
     }
     return vueApp;
   };
 }
 const entry$1 = (ssrContext) => entry(ssrContext);
 
-export { useCentralStore as a, useNuxtApp as b, usePermissionsStore as c, useAuthStore as d, entry$1 as default, useNotificationsStore as e, useRouter as f, useRuntimeConfig as g, hashMode as h, nuxtLinkDefaults as i, navigateTo as n, resolveRouteObject as r, useHead as u };
+export {
+  useCentralStore as a,
+  useNuxtApp as b,
+  usePermissionsStore as c,
+  useAuthStore as d,
+  entry$1 as default,
+  useNotificationsStore as e,
+  useRouter as f,
+  useRuntimeConfig as g,
+  hashMode as h,
+  nuxtLinkDefaults as i,
+  navigateTo as n,
+  resolveRouteObject as r,
+  useHead as u,
+};
 //# sourceMappingURL=server.mjs.map

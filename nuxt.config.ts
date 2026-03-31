@@ -9,9 +9,9 @@ export default defineNuxtConfig({
     '/api/**': {
       cors: true,
       headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
-    }
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
   },
   compatibilityDate: '2024-04-03',
   devtools: {
@@ -21,14 +21,11 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
-  css: [
-    '~/assets/css/main.css',
-    '@schedule-x/theme-default/dist/index.css'
-  ],
+  css: ['~/assets/css/main.css', '@schedule-x/theme-default/dist/index.css'],
 
   plugins: [
     /*"~/plugins/fetchInterceptor.js",*/
-    "~/plugins/vue3-toastify.client.js"
+    '~/plugins/vue3-toastify.client.js',
   ],
   pinia: {
     autoImports: ['defineStore', 'acceptHMRUpdate'],
@@ -36,7 +33,7 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'dark',
     fallback: 'dark',
-    classSuffix: ''
+    classSuffix: '',
   },
   postcss: {
     plugins: {
@@ -50,6 +47,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
+    '@nuxt/eslint',
   ],
   i18n: {
     lazy: true,
@@ -62,17 +60,17 @@ export default defineNuxtConfig({
       {
         code: 'en',
         language: 'en-US',
-        file: 'en.json'
+        file: 'en.json',
       },
       {
         code: 'el',
         language: 'el-GR',
-        file: 'el.json'
-      }
-    ]
+        file: 'el.json',
+      },
+    ],
   },
   imports: {
-    dirs: ['stores'],  // If your stores are in the "stores" folder
+    dirs: ['stores'], // If your stores are in the "stores" folder
   },
 
   runtimeConfig: {
@@ -89,13 +87,13 @@ export default defineNuxtConfig({
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',
-        updatePassword: '/user-update-password'
+        updatePassword: '/user-update-password',
       },
       user: {
         getSingleUser: '/user',
         getAll: '/users',
         edit: '/user-update',
-        updatePassword: '/user-update-password'
+        updatePassword: '/user-update-password',
       },
       entitlement: {
         add: '/entitlement',
@@ -146,6 +144,6 @@ export default defineNuxtConfig({
         updateStatus: '/invitations',
         delete: '/invitations',
       },
-    }
+    },
   },
-})
+});

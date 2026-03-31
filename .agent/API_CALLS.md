@@ -3,6 +3,7 @@
 This document maps the API calls made by the Nuxt frontend to the Laravel backend, including the intermediary Nuxt server-side routes.
 
 ## Overview
+
 The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate with the Laravel backend. Authentication is handled via a secure HTTP-only cookie containing a JWT, which encapsulates the Laravel Sanctu token.
 
 ---
@@ -10,6 +11,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 1. Authentication
 
 ### Login
+
 - **Frontend Path:** `/api/auth/login`
 - **Method:** `POST`
 - **Backend Path:** `/getToken`
@@ -27,7 +29,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
     "message": "Authenticated successfully"
   }
   ```
-  *Sets HTTP-only `auth_token` cookie.*
+  _Sets HTTP-only `auth_token` cookie._
 - **Error Response (401 Unauthorized):**
   ```json
   {
@@ -37,6 +39,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
   ```
 
 ### Refresh Session
+
 - **Frontend Path:** `/api/auth/refreshSession`
 - **Method:** `GET`
 - **Backend Path:** `/generateToken`
@@ -60,6 +63,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 2. User Management
 
 ### Get User Profile
+
 - **Frontend Path:** `/api/user/getProfile`
 - **Method:** `POST`
 - **Backend Path:** `/user/{id}`
@@ -73,12 +77,14 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Error Response (404 Not Found):** `"No User with this id"`
 
 ### Get All Users
+
 - **Frontend Path:** `/api/user/getAllUsers`
 - **Method:** `POST`
 - **Backend Path:** `/users`
 - **Success Response (200 OK):** Array of all user objects.
 
 ### Edit User
+
 - **Frontend Path:** `/api/user/editUser`
 - **Method:** `POST`
 - **Backend Path:** `/user-update`
@@ -97,6 +103,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 3. Leaves
 
 ### Get User Leaves
+
 - **Frontend Path:** `/api/leaves/getLeavesByUser`
 - **Method:** `POST`
 - **Backend Path:** `/user_leaves/{id}`
@@ -104,6 +111,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** Array of leaf requests, including connected users' leaves if applicable.
 
 ### New Leave Request
+
 - **Frontend Path:** `/api/leaves/newLeave`
 - **Method:** `POST`
 - **Backend Path:** `/new_leave`
@@ -117,6 +125,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
   ```
 
 ### Process Leave (Approve/Reject)
+
 - **Frontend Path:** `/api/leaves/processLeave`
 - **Method:** `POST`
 - **Backend Path:** `/processed_leave`
@@ -128,12 +137,14 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 4. Departments
 
 ### Get All Departments
+
 - **Frontend Path:** `/api/departments/getAll`
 - **Method:** `POST`
 - **Backend Path:** `/departments`
 - **Success Response (200 OK):** Array of department objects with `head` and `relatedDepartments`.
 
 ### New Department
+
 - **Frontend Path:** `/api/departments/newDepartment`
 - **Method:** `POST`
 - **Backend Path:** `/create_department`
@@ -148,6 +159,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
   ```
 
 ### Edit Department
+
 - **Frontend Path:** `/api/departments/editDepartment`
 - **Method:** `POST`
 - **Backend Path:** `/edit_department` (Laravel `PUT`)
@@ -167,6 +179,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 5. Entitlements
 
 ### Get Entitled Days
+
 - **Frontend Path:** `/api/entitlement/get`
 - **Method:** `POST`
 - **Backend Path:** `/entitlement_days/{id}`
@@ -174,6 +187,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** Array of entitlement objects for the current month/year.
 
 ### Mass Import Leaves
+
 - **Frontend Path:** `/api/entitlement/massLeaves`
 - **Method:** `POST`
 - **Backend Path:** `/import-mass-leaves`
@@ -185,6 +199,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 6. Notifications
 
 ### Get User Notifications
+
 - **Frontend Path:** `/api/notifications/getNotifications`
 - **Method:** `POST`
 - **Backend Path:** `/user-notifications/{id}`
@@ -192,6 +207,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** Array of notification objects.
 
 ### Mark Read/Unread
+
 - **Frontend Path:** `/api/notifications/markedRead` | `/markedUnread`
 - **Method:** `POST`
 - **Backend Path:** `/notification-marked-read/{id}` | `/notification-marked-unread/{id}`
@@ -203,6 +219,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 7. Public Holidays
 
 ### Get Holidays
+
 - **Frontend Path:** `/api/holidays`
 - **Method:** `GET`
 - **Backend Path:** `/public-holidays`
@@ -210,6 +227,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** Array of `PublicHoliday` objects.
 
 ### Create Holiday
+
 - **Frontend Path:** `/api/holidays`
 - **Method:** `POST`
 - **Backend Path:** `/public-holidays`
@@ -217,6 +235,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (201 Created):** Created `PublicHoliday` object.
 
 ### Update Holiday
+
 - **Frontend Path:** `/api/holidays/:id`
 - **Method:** `PUT`
 - **Backend Path:** `/public-holidays/{id}`
@@ -224,12 +243,14 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** Updated `PublicHoliday` object.
 
 ### Delete Holiday
+
 - **Frontend Path:** `/api/holidays/:id`
 - **Method:** `DELETE`
 - **Backend Path:** `/public-holidays/{id}`
 - **Success Response (200 OK):** `{"message": "Holiday deleted."}`
 
 ### Batch Create Holidays
+
 - **Frontend Path:** `/api/holidays/batch`
 - **Method:** `POST`
 - **Backend Path:** `/public-holidays/batch`
@@ -237,6 +258,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** `{"created": number, "holidays": PublicHoliday[]}`
 
 ### Batch Delete Holidays
+
 - **Frontend Path:** `/api/holidays/batchDelete`
 - **Method:** `DELETE`
 - **Backend Path:** `/public-holidays/batch`
@@ -248,12 +270,14 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 8. Company Settings
 
 ### Get Work Week
+
 - **Frontend Path:** `/api/settings/workWeek`
 - **Method:** `GET`
 - **Backend Path:** `/company-settings/work-week`
 - **Success Response (200 OK):** `{"days": [1,2,3,4,5]}` (0=Sunday … 6=Saturday)
 
 ### Update Work Week
+
 - **Frontend Path:** `/api/settings/workWeek`
 - **Method:** `PUT`
 - **Backend Path:** `/company-settings/work-week`
@@ -265,6 +289,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 ## 9. Calendar Invitations
 
 ### List Invitations
+
 - **Frontend Path:** `/api/invitations`
 - **Method:** `GET`
 - **Backend Path:** `/invitations?user_id={id}`
@@ -272,12 +297,13 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):**
   ```json
   {
-    "sent": [ "...Invitation[] with receiver" ],
-    "received": [ "...Invitation[] with sender" ]
+    "sent": ["...Invitation[] with receiver"],
+    "received": ["...Invitation[] with sender"]
   }
   ```
 
 ### Send Invitation
+
 - **Frontend Path:** `/api/invitations`
 - **Method:** `POST`
 - **Backend Path:** `/new-invitation`
@@ -285,6 +311,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (201 Created):** `{"message": "...", "invitations": Invitation[]}`
 
 ### Update Invitation Status (Accept / Decline)
+
 - **Frontend Path:** `/api/invitations/:id`
 - **Method:** `PATCH`
 - **Backend Path:** `/invitations/{id}/status`
@@ -292,6 +319,7 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Success Response (200 OK):** `{"message": "...", "invitation": Invitation}`
 
 ### Revoke Invitation
+
 - **Frontend Path:** `/api/invitations/:id`
 - **Method:** `DELETE`
 - **Backend Path:** `/invitations/{id}`

@@ -2,33 +2,33 @@ import { defineEventHandler } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    
-    const {requestingUserId, token } = event.context;
+  const config = useRuntimeConfig();
 
-    if (!token) {
-        throw createError({
-            statusCode: 403,
-            statusMessage: 'Not authenticated',
-        });
-    }
+  const { token } = event.context;
 
-    try {
-        // Use the token to make a GET request to the external API
-        const response = await $fetch(`${config.public.apiBase}${config.public.departments.getAll}/`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${token}`, // Use the token in the Authorization header
-            },
-        });
+  if (!token) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Not authenticated',
+    });
+  }
 
-        return response; // Return the response from the external API
-    } catch (error:any) {
-        // Handle errors from the external API
-        console.error('Error fetching departments:', error);
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error fetching departments',
-        });
-    }
+  try {
+    // Use the token to make a GET request to the external API
+    const response = await $fetch(`${config.public.apiBase}${config.public.departments.getAll}/`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+      },
+    });
+
+    return response; // Return the response from the external API
+  } catch (error: any) {
+    // Handle errors from the external API
+    console.error('Error fetching departments:', error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Error fetching departments',
+    });
+  }
 });

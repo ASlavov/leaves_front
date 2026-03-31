@@ -1,4 +1,9 @@
-import { d as defineEventHandler, e as useRuntimeConfig, r as readBody, h as createError } from '../../../_/nitro.mjs';
+import {
+  d as defineEventHandler,
+  e as useRuntimeConfig,
+  r as readBody,
+  h as createError,
+} from '../../../_/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -15,28 +20,29 @@ const _delete = defineEventHandler(async (event) => {
   if (!token) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Not authenticated"
+      statusMessage: 'Not authenticated',
     });
   }
   try {
-    const {
-      entitlementId
-    } = body;
+    const { entitlementId } = body;
     console.log(body);
-    const response = await $fetch(`${config.public.apiBase}${config.public.entitlement.delete}/${entitlementId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`
-        // Use the token in the Authorization header
-      }
-    });
+    const response = await $fetch(
+      `${config.public.apiBase}${config.public.entitlement.delete}/${entitlementId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Use the token in the Authorization header
+        },
+      },
+    );
     console.log(response);
     return response;
   } catch (error) {
-    console.error("Error posting leave:", error);
+    console.error('Error posting leave:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Error posting leaves"
+      statusMessage: 'Error posting leaves',
     });
   }
 });

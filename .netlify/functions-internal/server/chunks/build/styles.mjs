@@ -1,49 +1,89 @@
-const interopDefault = r => r.default || r || [];
+const interopDefault = (r) => r.default || r || [];
 const styles = {
-  "node_modules/nuxt/dist/app/entry.js": () => import('./entry-styles.aPAnvJWZ.mjs').then(interopDefault),
-  "app.vue": () => import('./app-styles.DfZqKd2c.mjs').then(interopDefault),
-  "pages/home.vue": () => import('./home-styles.BlTc6AUK.mjs').then(interopDefault),
-  "pages/calendar.vue": () => import('./calendar-styles.iW7KsGP-.mjs').then(interopDefault),
-  "app.vue?vue&type=style&index=0&lang.css": () => import('./app-styles.uRZT-aZk.mjs').then(interopDefault),
-  "pages/settings.vue": () => import('./settings-styles.DYoVapHh.mjs').then(interopDefault),
-  "pages/home.vue?vue&type=style&index=0&lang.css": () => import('./home-styles.DU0wJJ3o.mjs').then(interopDefault),
-  "pages/yearly-leaves.vue": () => import('./yearly-leaves-styles.Lq5eNmSJ.mjs').then(interopDefault),
-  "pages/calendar.vue?vue&type=style&index=0&lang.css": () => import('./calendar-styles.Cjqgg2x8.mjs').then(interopDefault),
-  "pages/settings.vue?vue&type=style&index=0&lang.css": () => import('./settings-styles.DM_arlbz.mjs').then(interopDefault),
-  "pages/yearly-leaves.vue?vue&type=style&index=0&lang.css": () => import('./yearly-leaves-styles.IOEdsn2I.mjs').then(interopDefault),
-  "node_modules/nuxt/dist/app/components/error-404.vue": () => import('./error-404-styles.CKJK0xyQ.mjs').then(interopDefault),
-  "node_modules/nuxt/dist/app/components/error-500.vue": () => import('./error-500-styles.DH4SuYyS.mjs').then(interopDefault),
-  "components/Leaves/YearlyLeaves.vue": () => import('./YearlyLeaves-styles.VaoTRXrl.mjs').then(interopDefault),
-  "components/Calendar/Calendar.vue": () => import('./Calendar-styles.DllAn24o.mjs').then(interopDefault),
-  "components/SidebarTopbar/Sidebar.vue": () => import('./Sidebar-styles.R0QrEOzQ.mjs').then(interopDefault),
-  "components/Settings/EditUser.vue": () => import('./EditUser-styles.Bz1OP_7l.mjs').then(interopDefault),
-  "components/Settings/GroupsList.vue": () => import('./GroupsList-styles.v2egVoxh.mjs').then(interopDefault),
-  "components/Settings/Security.vue": () => import('./Security-styles.Dx5jtSTZ.mjs').then(interopDefault),
-  "components/Settings/UsersList.vue": () => import('./UsersList-styles.4YY_2A9q.mjs').then(interopDefault),
-  "components/Settings/Permissions.vue": () => import('./Permissions-styles.BOzVnW_o.mjs').then(interopDefault),
-  "components/Settings/EntitlementDays.vue": () => import('./EntitlementDays-styles.C9cDXMYm.mjs').then(interopDefault),
-  "components/Leaves/YearlyLeaves.vue?vue&type=style&index=0&scoped=de86da13&lang.css": () => import('./YearlyLeaves-styles.DXkFCs0s.mjs').then(interopDefault),
-  "node_modules/nuxt/dist/app/components/error-500.vue?vue&type=style&index=0&scoped=4b6f0a29&lang.css": () => import('./error-500-styles.D5zYv3n5.mjs').then(interopDefault),
-  "node_modules/nuxt/dist/app/components/error-404.vue?vue&type=style&index=0&scoped=06403dcb&lang.css": () => import('./error-404-styles.CFLMZFZX.mjs').then(interopDefault),
-  "components/SidebarTopbar/Sidebar.vue?vue&type=style&index=0&lang.css": () => import('./Sidebar-styles.bPpOFsBE.mjs').then(interopDefault),
-  "components/Settings/EditUser.vue?vue&type=style&index=0&scoped=67eba859&lang.css": () => import('./EditUser-styles.uHLll59I.mjs').then(interopDefault),
-  "components/Settings/GroupsList.vue?vue&type=style&index=0&scoped=b786c1b8&lang.css": () => import('./GroupsList-styles.Cqqfb5dx.mjs').then(interopDefault),
-  "components/Settings/UsersList.vue?vue&type=style&index=0&scoped=ffd41644&lang.css": () => import('./UsersList-styles.D2BMdMrL.mjs').then(interopDefault),
-  "components/Settings/Permissions.vue?vue&type=style&index=0&lang.css": () => import('./Permissions-styles.C8ZAzYUF.mjs').then(interopDefault),
-  "components/Calendar/Calendar.vue?vue&type=style&index=0&lang.css": () => import('./Calendar-styles.Dq7Tdsc3.mjs').then(interopDefault),
-  "components/Settings/EntitlementDays.vue?vue&type=style&index=0&scoped=5ee97158&lang.css": () => import('./EntitlementDays-styles.B6nS0Yc4.mjs').then(interopDefault),
-  "components/Settings/Security.vue?vue&type=style&index=0&scoped=bc7273af&lang.css": () => import('./Security-styles.BOyC98Ez.mjs').then(interopDefault),
-  "components/misc/FilterInput.vue": () => import('./FilterInput-styles.B0EWqbRb.mjs').then(interopDefault),
-  "components/SidebarTopbar/Search.vue": () => import('./Search-styles.KZJTRkuZ.mjs').then(interopDefault),
-  "components/SidebarTopbar/ColorModeSwitcher.vue": () => import('./ColorModeSwitcher-styles.CEKJlx55.mjs').then(interopDefault),
-  "components/misc/CustomSelect.vue": () => import('./CustomSelect-styles.DsaCRkih.mjs').then(interopDefault),
-  "components/Settings/EditGroup.vue": () => import('./EditGroup-styles.CPzoOCKD.mjs').then(interopDefault),
-  "components/misc/FilterInput.vue?vue&type=style&index=0&scoped=ace9a981&lang.css": () => import('./FilterInput-styles.DvbnG9fa.mjs').then(interopDefault),
-  "components/Settings/EditEntitlement.vue": () => import('./EditEntitlement-styles.3nTVC1Vf.mjs').then(interopDefault),
-  "components/SidebarTopbar/ColorModeSwitcher.vue?vue&type=style&index=0&scoped=b8e7af12&lang.css": () => import('./ColorModeSwitcher-styles.BLof8aN1.mjs').then(interopDefault),
-  "components/misc/CustomSelect.vue?vue&type=style&index=0&scoped=03af472b&lang.css": () => import('./CustomSelect-styles.37b7NV6d.mjs').then(interopDefault),
-  "components/Settings/EditGroup.vue?vue&type=style&index=0&scoped=cc133653&lang.css": () => import('./EditGroup-styles.DTLT-9Vi.mjs').then(interopDefault),
-  "components/SidebarTopbar/Search.vue?vue&type=style&index=0&lang.css": () => import('./Search-styles.D9f8JXxv.mjs').then(interopDefault)
+  'node_modules/nuxt/dist/app/entry.js': () =>
+    import('./entry-styles.aPAnvJWZ.mjs').then(interopDefault),
+  'app.vue': () => import('./app-styles.DfZqKd2c.mjs').then(interopDefault),
+  'pages/home.vue': () => import('./home-styles.BlTc6AUK.mjs').then(interopDefault),
+  'pages/calendar.vue': () => import('./calendar-styles.iW7KsGP-.mjs').then(interopDefault),
+  'app.vue?vue&type=style&index=0&lang.css': () =>
+    import('./app-styles.uRZT-aZk.mjs').then(interopDefault),
+  'pages/settings.vue': () => import('./settings-styles.DYoVapHh.mjs').then(interopDefault),
+  'pages/home.vue?vue&type=style&index=0&lang.css': () =>
+    import('./home-styles.DU0wJJ3o.mjs').then(interopDefault),
+  'pages/yearly-leaves.vue': () =>
+    import('./yearly-leaves-styles.Lq5eNmSJ.mjs').then(interopDefault),
+  'pages/calendar.vue?vue&type=style&index=0&lang.css': () =>
+    import('./calendar-styles.Cjqgg2x8.mjs').then(interopDefault),
+  'pages/settings.vue?vue&type=style&index=0&lang.css': () =>
+    import('./settings-styles.DM_arlbz.mjs').then(interopDefault),
+  'pages/yearly-leaves.vue?vue&type=style&index=0&lang.css': () =>
+    import('./yearly-leaves-styles.IOEdsn2I.mjs').then(interopDefault),
+  'node_modules/nuxt/dist/app/components/error-404.vue': () =>
+    import('./error-404-styles.CKJK0xyQ.mjs').then(interopDefault),
+  'node_modules/nuxt/dist/app/components/error-500.vue': () =>
+    import('./error-500-styles.DH4SuYyS.mjs').then(interopDefault),
+  'components/Leaves/YearlyLeaves.vue': () =>
+    import('./YearlyLeaves-styles.VaoTRXrl.mjs').then(interopDefault),
+  'components/Calendar/Calendar.vue': () =>
+    import('./Calendar-styles.DllAn24o.mjs').then(interopDefault),
+  'components/SidebarTopbar/Sidebar.vue': () =>
+    import('./Sidebar-styles.R0QrEOzQ.mjs').then(interopDefault),
+  'components/Settings/EditUser.vue': () =>
+    import('./EditUser-styles.Bz1OP_7l.mjs').then(interopDefault),
+  'components/Settings/GroupsList.vue': () =>
+    import('./GroupsList-styles.v2egVoxh.mjs').then(interopDefault),
+  'components/Settings/Security.vue': () =>
+    import('./Security-styles.Dx5jtSTZ.mjs').then(interopDefault),
+  'components/Settings/UsersList.vue': () =>
+    import('./UsersList-styles.4YY_2A9q.mjs').then(interopDefault),
+  'components/Settings/Permissions.vue': () =>
+    import('./Permissions-styles.BOzVnW_o.mjs').then(interopDefault),
+  'components/Settings/EntitlementDays.vue': () =>
+    import('./EntitlementDays-styles.C9cDXMYm.mjs').then(interopDefault),
+  'components/Leaves/YearlyLeaves.vue?vue&type=style&index=0&scoped=de86da13&lang.css': () =>
+    import('./YearlyLeaves-styles.DXkFCs0s.mjs').then(interopDefault),
+  'node_modules/nuxt/dist/app/components/error-500.vue?vue&type=style&index=0&scoped=4b6f0a29&lang.css':
+    () => import('./error-500-styles.D5zYv3n5.mjs').then(interopDefault),
+  'node_modules/nuxt/dist/app/components/error-404.vue?vue&type=style&index=0&scoped=06403dcb&lang.css':
+    () => import('./error-404-styles.CFLMZFZX.mjs').then(interopDefault),
+  'components/SidebarTopbar/Sidebar.vue?vue&type=style&index=0&lang.css': () =>
+    import('./Sidebar-styles.bPpOFsBE.mjs').then(interopDefault),
+  'components/Settings/EditUser.vue?vue&type=style&index=0&scoped=67eba859&lang.css': () =>
+    import('./EditUser-styles.uHLll59I.mjs').then(interopDefault),
+  'components/Settings/GroupsList.vue?vue&type=style&index=0&scoped=b786c1b8&lang.css': () =>
+    import('./GroupsList-styles.Cqqfb5dx.mjs').then(interopDefault),
+  'components/Settings/UsersList.vue?vue&type=style&index=0&scoped=ffd41644&lang.css': () =>
+    import('./UsersList-styles.D2BMdMrL.mjs').then(interopDefault),
+  'components/Settings/Permissions.vue?vue&type=style&index=0&lang.css': () =>
+    import('./Permissions-styles.C8ZAzYUF.mjs').then(interopDefault),
+  'components/Calendar/Calendar.vue?vue&type=style&index=0&lang.css': () =>
+    import('./Calendar-styles.Dq7Tdsc3.mjs').then(interopDefault),
+  'components/Settings/EntitlementDays.vue?vue&type=style&index=0&scoped=5ee97158&lang.css': () =>
+    import('./EntitlementDays-styles.B6nS0Yc4.mjs').then(interopDefault),
+  'components/Settings/Security.vue?vue&type=style&index=0&scoped=bc7273af&lang.css': () =>
+    import('./Security-styles.BOyC98Ez.mjs').then(interopDefault),
+  'components/misc/FilterInput.vue': () =>
+    import('./FilterInput-styles.B0EWqbRb.mjs').then(interopDefault),
+  'components/SidebarTopbar/Search.vue': () =>
+    import('./Search-styles.KZJTRkuZ.mjs').then(interopDefault),
+  'components/SidebarTopbar/ColorModeSwitcher.vue': () =>
+    import('./ColorModeSwitcher-styles.CEKJlx55.mjs').then(interopDefault),
+  'components/misc/CustomSelect.vue': () =>
+    import('./CustomSelect-styles.DsaCRkih.mjs').then(interopDefault),
+  'components/Settings/EditGroup.vue': () =>
+    import('./EditGroup-styles.CPzoOCKD.mjs').then(interopDefault),
+  'components/misc/FilterInput.vue?vue&type=style&index=0&scoped=ace9a981&lang.css': () =>
+    import('./FilterInput-styles.DvbnG9fa.mjs').then(interopDefault),
+  'components/Settings/EditEntitlement.vue': () =>
+    import('./EditEntitlement-styles.3nTVC1Vf.mjs').then(interopDefault),
+  'components/SidebarTopbar/ColorModeSwitcher.vue?vue&type=style&index=0&scoped=b8e7af12&lang.css':
+    () => import('./ColorModeSwitcher-styles.BLof8aN1.mjs').then(interopDefault),
+  'components/misc/CustomSelect.vue?vue&type=style&index=0&scoped=03af472b&lang.css': () =>
+    import('./CustomSelect-styles.37b7NV6d.mjs').then(interopDefault),
+  'components/Settings/EditGroup.vue?vue&type=style&index=0&scoped=cc133653&lang.css': () =>
+    import('./EditGroup-styles.DTLT-9Vi.mjs').then(interopDefault),
+  'components/SidebarTopbar/Search.vue?vue&type=style&index=0&lang.css': () =>
+    import('./Search-styles.D9f8JXxv.mjs').then(interopDefault),
 };
 
 export { styles as default };

@@ -7,8 +7,19 @@
         class="inline-flex items-center gap-x-2 px-4 py-2 rounded-lg bg-red-600 text-white text-sm font-medium hover:bg-red-700 focus:outline-none transition-colors"
         @click="openSendModal"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M5 12h14" />
+          <path d="m12 5 7 7-7 7" />
         </svg>
         {{ $t('invitations.sendNew') }}
       </button>
@@ -18,11 +29,18 @@
       <!-- Sent Invitations -->
       <div class="bg-white rounded-lg shadow border dark:bg-neutral-800 dark:border-neutral-700">
         <div class="px-5 py-4 border-b dark:border-neutral-700">
-          <h3 class="font-semibold text-gray-800 dark:text-gray-100">{{ $t('invitations.sent') }}</h3>
-          <p class="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">{{ $t('invitations.sentDesc') }}</p>
+          <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+            {{ $t('invitations.sent') }}
+          </h3>
+          <p class="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
+            {{ $t('invitations.sentDesc') }}
+          </p>
         </div>
         <div class="divide-y dark:divide-neutral-700">
-          <div v-if="!invitationsStore.sent.length" class="px-5 py-8 text-center text-sm text-gray-400 dark:text-neutral-500">
+          <div
+            v-if="!invitationsStore.sent.length"
+            class="px-5 py-8 text-center text-sm text-gray-400 dark:text-neutral-500"
+          >
             {{ $t('invitations.noSent') }}
           </div>
           <div
@@ -32,10 +50,17 @@
           >
             <SharedUserAvatar :user="inv.receiver" :size="36" />
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{{ inv.receiver?.name || inv.receiver?.email }}</p>
-              <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">{{ inv.receiver?.email }}</p>
+              <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
+                {{ inv.receiver?.name || inv.receiver?.email }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">
+                {{ inv.receiver?.email }}
+              </p>
             </div>
-            <span :class="statusBadgeClass(inv.status)" class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full">
+            <span
+              :class="statusBadgeClass(inv.status)"
+              class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full"
+            >
               {{ $t('invitations.status.' + inv.status) }}
             </span>
             <button
@@ -44,8 +69,19 @@
               :aria-label="$t('invitations.revoke')"
               @click="confirmRevoke(inv)"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
               </svg>
             </button>
           </div>
@@ -55,11 +91,18 @@
       <!-- Received Invitations -->
       <div class="bg-white rounded-lg shadow border dark:bg-neutral-800 dark:border-neutral-700">
         <div class="px-5 py-4 border-b dark:border-neutral-700">
-          <h3 class="font-semibold text-gray-800 dark:text-gray-100">{{ $t('invitations.received') }}</h3>
-          <p class="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">{{ $t('invitations.receivedDesc') }}</p>
+          <h3 class="font-semibold text-gray-800 dark:text-gray-100">
+            {{ $t('invitations.received') }}
+          </h3>
+          <p class="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
+            {{ $t('invitations.receivedDesc') }}
+          </p>
         </div>
         <div class="divide-y dark:divide-neutral-700">
-          <div v-if="!invitationsStore.received.length" class="px-5 py-8 text-center text-sm text-gray-400 dark:text-neutral-500">
+          <div
+            v-if="!invitationsStore.received.length"
+            class="px-5 py-8 text-center text-sm text-gray-400 dark:text-neutral-500"
+          >
             {{ $t('invitations.noReceived') }}
           </div>
           <div
@@ -69,8 +112,12 @@
           >
             <SharedUserAvatar :user="inv.sender" :size="36" />
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{{ inv.sender?.name || inv.sender?.email }}</p>
-              <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">{{ inv.sender?.email }}</p>
+              <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
+                {{ inv.sender?.name || inv.sender?.email }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">
+                {{ inv.sender?.email }}
+              </p>
             </div>
 
             <template v-if="inv.status === 'pending'">
@@ -91,7 +138,11 @@
                 {{ $t('invitations.decline') }}
               </button>
             </template>
-            <span v-else :class="statusBadgeClass(inv.status)" class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full">
+            <span
+              v-else
+              :class="statusBadgeClass(inv.status)"
+              class="shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full"
+            >
               {{ $t('invitations.status.' + inv.status) }}
             </span>
 
@@ -101,8 +152,19 @@
               :aria-label="$t('invitations.revoke')"
               @click="confirmRevoke(inv)"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
               </svg>
             </button>
           </div>
@@ -118,23 +180,58 @@
           class="fixed inset-0 z-[80] bg-black/50 flex items-center justify-center overflow-y-auto"
           @click.self="sendModalOpen = false"
         >
-          <div class="sm:max-w-md w-full m-4 bg-white rounded-xl shadow-lg dark:bg-neutral-800 dark:text-gray-100">
-            <div class="flex items-center justify-between px-5 py-4 border-b dark:border-neutral-700">
-              <h3 class="font-bold text-gray-800 dark:text-white">{{ $t('invitations.sendNew') }}</h3>
-              <button type="button" class="size-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-gray-600 dark:text-neutral-300 focus:outline-none" @click="sendModalOpen = false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          <div
+            class="sm:max-w-md w-full m-4 bg-white rounded-xl shadow-lg dark:bg-neutral-800 dark:text-gray-100"
+          >
+            <div
+              class="flex items-center justify-between px-5 py-4 border-b dark:border-neutral-700"
+            >
+              <h3 class="font-bold text-gray-800 dark:text-white">
+                {{ $t('invitations.sendNew') }}
+              </h3>
+              <button
+                type="button"
+                class="size-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 text-gray-600 dark:text-neutral-300 focus:outline-none"
+                @click="sendModalOpen = false"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
                 </svg>
               </button>
             </div>
 
             <div class="p-5 space-y-4">
-              <p class="text-sm text-gray-600 dark:text-neutral-400">{{ $t('invitations.sendModalDesc') }}</p>
+              <p class="text-sm text-gray-600 dark:text-neutral-400">
+                {{ $t('invitations.sendModalDesc') }}
+              </p>
 
               <!-- Search -->
               <div class="relative">
-                <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                <svg
+                  class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
                 </svg>
                 <input
                   v-model="userSearch"
@@ -145,8 +242,13 @@
               </div>
 
               <!-- User list -->
-              <div class="max-h-60 overflow-y-auto space-y-1 border border-gray-100 rounded-lg dark:border-neutral-700 p-1">
-                <div v-if="!selectableUsers.length" class="py-6 text-center text-sm text-gray-400 dark:text-neutral-500">
+              <div
+                class="max-h-60 overflow-y-auto space-y-1 border border-gray-100 rounded-lg dark:border-neutral-700 p-1"
+              >
+                <div
+                  v-if="!selectableUsers.length"
+                  class="py-6 text-center text-sm text-gray-400 dark:text-neutral-500"
+                >
                   {{ $t('invitations.noUsersToInvite') }}
                 </div>
                 <label
@@ -155,15 +257,19 @@
                   class="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
                 >
                   <input
+                    v-model="selectedUserIds"
                     type="checkbox"
                     :value="user.id"
-                    v-model="selectedUserIds"
                     class="rounded border-gray-300 text-red-600 focus:ring-red-500 dark:border-neutral-600 dark:bg-neutral-700"
                   />
                   <SharedUserAvatar :user="user" :size="32" />
                   <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{{ user.name || user.email }}</p>
-                    <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">{{ user.email }}</p>
+                    <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
+                      {{ user.name || user.email }}
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">
+                      {{ user.email }}
+                    </p>
                   </div>
                 </label>
               </div>
@@ -183,7 +289,9 @@
                   @click="sendInvitations"
                 >
                   {{ sending ? $t('common.sending') : $t('invitations.send') }}
-                  <span v-if="selectedUserIds.length" class="ml-1 text-xs opacity-80">({{ selectedUserIds.length }})</span>
+                  <span v-if="selectedUserIds.length" class="ml-1 text-xs opacity-80"
+                    >({{ selectedUserIds.length }})</span
+                  >
                 </button>
               </div>
             </div>
@@ -200,16 +308,31 @@
           class="fixed inset-0 z-[80] bg-black/50 flex items-center justify-center"
           @click.self="revokeTarget = null"
         >
-          <div class="sm:max-w-sm w-full m-4 bg-white rounded-xl shadow-lg dark:bg-neutral-800 dark:text-gray-100">
+          <div
+            class="sm:max-w-sm w-full m-4 bg-white rounded-xl shadow-lg dark:bg-neutral-800 dark:text-gray-100"
+          >
             <div class="px-5 pt-5 pb-3">
-              <h3 class="font-bold text-gray-800 dark:text-white mb-2">{{ $t('invitations.revokeConfirmTitle') }}</h3>
-              <p class="text-sm text-gray-600 dark:text-neutral-400">{{ $t('invitations.revokeConfirmDesc') }}</p>
+              <h3 class="font-bold text-gray-800 dark:text-white mb-2">
+                {{ $t('invitations.revokeConfirmTitle') }}
+              </h3>
+              <p class="text-sm text-gray-600 dark:text-neutral-400">
+                {{ $t('invitations.revokeConfirmDesc') }}
+              </p>
             </div>
             <div class="flex justify-end gap-2 px-5 pb-5">
-              <button type="button" class="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-neutral-600 dark:text-neutral-300 dark:hover:bg-neutral-700 focus:outline-none" @click="revokeTarget = null">
+              <button
+                type="button"
+                class="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-neutral-600 dark:text-neutral-300 dark:hover:bg-neutral-700 focus:outline-none"
+                @click="revokeTarget = null"
+              >
                 {{ $t('common.cancel') }}
               </button>
-              <button type="button" class="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700 focus:outline-none disabled:opacity-50 transition-colors" :disabled="revoking" @click="doRevoke">
+              <button
+                type="button"
+                class="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700 focus:outline-none disabled:opacity-50 transition-colors"
+                :disabled="revoking"
+                @click="doRevoke"
+              >
                 {{ $t('invitations.revoke') }}
               </button>
             </div>
@@ -250,11 +373,14 @@ const alreadyInvitedIds = computed(() => {
 
 const selectableUsers = computed(() => {
   const search = userSearch.value.trim().toLowerCase();
-  return (userStore.allUsers || []).filter(u => {
+  return (userStore.allUsers || []).filter((u) => {
     if (String(u.id) === String(currentUserId.value)) return false;
     if (alreadyInvitedIds.value.has(String(u.id))) return false;
     if (!search) return true;
-    return (u.name || '').toLowerCase().includes(search) || (u.email || '').toLowerCase().includes(search);
+    return (
+      (u.name || '').toLowerCase().includes(search) ||
+      (u.email || '').toLowerCase().includes(search)
+    );
   });
 });
 
@@ -269,10 +395,16 @@ async function sendInvitations() {
   sending.value = true;
   try {
     await invitationsStore.sendInvitation(currentUserId.value, selectedUserIds.value);
-    useNuxtApp().$toast.success(t('invitations.sendSuccess'), { position: 'bottom-right', autoClose: 4000 });
+    useNuxtApp().$toast.success(t('invitations.sendSuccess'), {
+      position: 'bottom-right',
+      autoClose: 4000,
+    });
     sendModalOpen.value = false;
   } catch {
-    useNuxtApp().$toast.error(t('invitations.sendError'), { position: 'bottom-right', autoClose: 4000 });
+    useNuxtApp().$toast.error(t('invitations.sendError'), {
+      position: 'bottom-right',
+      autoClose: 4000,
+    });
   } finally {
     sending.value = false;
   }
@@ -290,7 +422,10 @@ async function respond(inv, status) {
       { position: 'bottom-right', autoClose: 4000 },
     );
   } catch {
-    useNuxtApp().$toast.error(t('invitations.respondError'), { position: 'bottom-right', autoClose: 4000 });
+    useNuxtApp().$toast.error(t('invitations.respondError'), {
+      position: 'bottom-right',
+      autoClose: 4000,
+    });
   } finally {
     respondingId.value = null;
   }
@@ -309,10 +444,16 @@ async function doRevoke() {
   revoking.value = true;
   try {
     await invitationsStore.revokeInvitation(revokeTarget.value.id);
-    useNuxtApp().$toast.success(t('invitations.revokeSuccess'), { position: 'bottom-right', autoClose: 4000 });
+    useNuxtApp().$toast.success(t('invitations.revokeSuccess'), {
+      position: 'bottom-right',
+      autoClose: 4000,
+    });
     revokeTarget.value = null;
   } catch {
-    useNuxtApp().$toast.error(t('invitations.revokeError'), { position: 'bottom-right', autoClose: 4000 });
+    useNuxtApp().$toast.error(t('invitations.revokeError'), {
+      position: 'bottom-right',
+      autoClose: 4000,
+    });
   } finally {
     revoking.value = false;
   }
@@ -320,7 +461,8 @@ async function doRevoke() {
 
 // --- Helpers ---
 function statusBadgeClass(status) {
-  if (status === 'accepted') return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
+  if (status === 'accepted')
+    return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
   if (status === 'declined') return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
   return 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400';
 }

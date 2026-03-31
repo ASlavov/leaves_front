@@ -14,7 +14,7 @@
       :r="strokeRadius"
       fill="none"
       :stroke="trackColor"
-      :stroke-width="strokeWidth"
+      :stroke-width="calculatedStrokeWidth"
     />
 
     <!-- Filled arc -->
@@ -25,7 +25,7 @@
       :r="strokeRadius"
       fill="none"
       :stroke="color"
-      :stroke-width="strokeWidth"
+      :stroke-width="calculatedStrokeWidth"
       stroke-linecap="round"
       :stroke-dasharray="`${circumference} ${circumference}`"
       :stroke-dashoffset="animatedDashOffset"
@@ -43,7 +43,9 @@
       font-weight="500"
       font-family="Roboto, sans-serif"
       :fill="labelColor"
-    >{{ label }}</text>
+    >
+      {{ label }}
+    </text>
 
     <!-- Value text (remaining_days) -->
     <text
@@ -55,7 +57,9 @@
       font-weight="700"
       font-family="Roboto, sans-serif"
       :fill="valueColor"
-    >{{ value }}</text>
+    >
+      {{ value }}
+    </text>
   </svg>
 </template>
 
@@ -87,27 +91,21 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const center = computed(() => props.size / 2);
-const outerRadius = computed(() => (props.size / 2) - 4);
+const outerRadius = computed(() => props.size / 2 - 4);
 const innerRadius = computed(() => outerRadius.value * 0.8);
 const strokeRadius = computed(() => (outerRadius.value + innerRadius.value) / 2);
-const strokeWidth = computed(() => outerRadius.value - innerRadius.value);
+const calculatedStrokeWidth = computed(() => outerRadius.value - innerRadius.value);
 const circumference = computed(() => 2 * Math.PI * strokeRadius.value);
 
-const labelY = computed(() => center.value - (props.size * 0.071));
-const valueY = computed(() => center.value + (props.size * 0.143));
+const labelY = computed(() => center.value - props.size * 0.071);
+const valueY = computed(() => center.value + props.size * 0.143);
 
-const { $colorMode } = useNuxtApp();
-const isDark = computed(() => ($colorMode as any)?.value === 'dark');
+const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
+const isDark = computed(() => $colorMode.value === 'dark');
 
-const trackColor = computed(() =>
-  isDark.value ? props.trackColorDark : props.trackColorLight
-);
-const labelColor = computed(() =>
-  isDark.value ? '#9CA3AF' : '#000000'
-);
-const valueColor = computed(() =>
-  isDark.value ? '#F3F4F6' : '#000000'
-);
+const trackColor = computed(() => (isDark.value ? props.trackColorDark : props.trackColorLight));
+const labelColor = computed(() => (isDark.value ? '#9CA3AF' : '#000000'));
+const valueColor = computed(() => (isDark.value ? '#F3F4F6' : '#000000'));
 
 const animatedDashOffset = ref(circumference.value);
 
@@ -131,15 +129,19 @@ function animateArc(targetOffset: number, duration: number) {
 }
 
 onMounted(() => {
-  const targetOffset = circumference.value - (Math.min(100, props.percentage) / 100) * circumference.value;
+  const targetOffset =
+    circumference.value - (Math.min(100, props.percentage) / 100) * circumference.value;
   animateArc(targetOffset, props.animationDuration);
 });
 
-watch(() => props.percentage, (newPercentage) => {
-  const targetOffset = circumference.value - (Math.min(100, newPercentage) / 100) * circumference.value;
-  animateArc(targetOffset, props.animationDuration);
-});
+watch(
+  () => props.percentage,
+  (newPercentage) => {
+    const targetOffset =
+      circumference.value - (Math.min(100, newPercentage) / 100) * circumference.value;
+    animateArc(targetOffset, props.animationDuration);
+  },
+);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -5,9 +5,10 @@ Based on a review of the latest WIP state of the `DigitalWise-eu/leaves_frontend
 ## 1. Actual Problems
 
 **State & Architecture:**
+
 - **Pinia State Anti-Patterns:** In `stores/auth.js`, the `setError` method uses a `setTimeout` hack to "force reactivity" by resetting and setting the value. This indicates a deeper issue with how the state is destructured or consumed in components (likely missing `storeToRefs`), breaking native Vue reactivity.
 - **Redundant Component Registrations:** Files like `pages/home.vue` use a mix of `<script setup>` and traditional Options API `<script>` solely to register components manually. Nuxt 3 handles component auto-importing automatically, making this redundant.
-- **Ad-Hoc CORS Rules:** Endpoints like `server/api/auth/login.ts` manually set permissive CORS headers (`setHeader(event, 'Access-Control-Allow-Origin', '*');`) per file. 
+- **Ad-Hoc CORS Rules:** Endpoints like `server/api/auth/login.ts` manually set permissive CORS headers (`setHeader(event, 'Access-Control-Allow-Origin', '*');`) per file.
 
 ## 2. Potential Problems
 
@@ -27,4 +28,4 @@ Based on a review of the latest WIP state of the `DigitalWise-eu/leaves_frontend
 - **Adopt Native Nuxt Fetching (`useFetch`):** Move away from using Pinia to handle the loading/error states of data fetching. Instead, utilize `useFetch` inside components, which handles caching, SSR hydration, loading, and error states natively without manually managing it in global stores.
 - **Sanitize and Standardize Responses:** Ensure uniform API error handling on the Nuxt server layer. Pass errors cleanly through Nuxt's `createError` API to trigger custom, user-friendly 404/500 error pages.
 
-*(Note: Previous critical issues involving hardcoded secrets and an in-memory session store have been successfully addressed in the latest WIP state via `.env` variables and JWT cookies.)*
+_(Note: Previous critical issues involving hardcoded secrets and an in-memory session store have been successfully addressed in the latest WIP state via `.env` variables and JWT cookies.)_

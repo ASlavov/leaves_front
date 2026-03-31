@@ -36,15 +36,16 @@ Most stores use `setError(t(...))` in catch blocks but **don't re-throw**, so co
 
 We distinguish three categories:
 
-| Type | When | User-facing message | HTTP codes |
-|------|------|---------------------|------------|
-| **`user`** | Business rule violation, validation failure — the backend said "no" for a logical reason | Backend's specific message | 400, 409, 422 |
-| **`app`** | Infrastructure failure — something broke unexpectedly | Generic i18n fallback | 500, network errors |
-| **`auth`** | Session expired or missing | Redirect to login (already handled by retryFetch) | 401, 403 |
+| Type       | When                                                                                     | User-facing message                               | HTTP codes          |
+| ---------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------- | ------------------- |
+| **`user`** | Business rule violation, validation failure — the backend said "no" for a logical reason | Backend's specific message                        | 400, 409, 422       |
+| **`app`**  | Infrastructure failure — something broke unexpectedly                                    | Generic i18n fallback                             | 500, network errors |
+| **`auth`** | Session expired or missing                                                               | Redirect to login (already handled by retryFetch) | 401, 403            |
 
 ### Backend error shapes (Laravel)
 
 Laravel uses three patterns:
+
 1. **Single business error:** `{ "error": "You must exhaust..." }` — used for logic/domain rules
 2. **Field validation errors:** `{ "errors": { "field": ["message 1", ...] } }` — used by `Validator::make()`
 3. **Success + body:** `{ "message": "...", "data": {...} }` — 200/201
@@ -83,39 +84,39 @@ import { createError } from 'h3';
  * - 5xx / network:            app errors — generic 500, message hidden from client
  */
 export function proxyError(error: any): never {
-    const status: number = error.response?.status ?? error.statusCode ?? 500;
-    const laravelBody: any = error.data ?? {};
+  const status: number = error.response?.status ?? error.statusCode ?? 500;
+  const laravelBody: any = error.data ?? {};
 
-    // Auth errors — let retryFetch handle logout
-    if (status === 401 || status === 403) {
-        throw createError({ statusCode: status, statusMessage: 'Unauthorized' });
+  // Auth errors — let retryFetch handle logout
+  if (status === 401 || status === 403) {
+    throw createError({ statusCode: status, statusMessage: 'Unauthorized' });
+  }
+
+  // Client / business errors (400, 409, 422)
+  if (status >= 400 && status < 500) {
+    // Normalize Laravel's two error shapes into a single message string
+    let message: string | null = null;
+    if (laravelBody.error) {
+      // { "error": "..." }
+      message = laravelBody.error;
+    } else if (laravelBody.errors && typeof laravelBody.errors === 'object') {
+      // { "errors": { "field": ["msg1", ...] } } — take the first message
+      const first = Object.values(laravelBody.errors)[0];
+      message = Array.isArray(first) ? first[0] : String(first);
     }
-
-    // Client / business errors (400, 409, 422)
-    if (status >= 400 && status < 500) {
-        // Normalize Laravel's two error shapes into a single message string
-        let message: string | null = null;
-        if (laravelBody.error) {
-            // { "error": "..." }
-            message = laravelBody.error;
-        } else if (laravelBody.errors && typeof laravelBody.errors === 'object') {
-            // { "errors": { "field": ["msg1", ...] } } — take the first message
-            const first = Object.values(laravelBody.errors)[0];
-            message = Array.isArray(first) ? first[0] : String(first);
-        }
-        throw createError({
-            statusCode: status,
-            statusMessage: 'User Error',
-            data: { type: 'user', message },
-        });
-    }
-
-    // Server / infrastructure errors
     throw createError({
-        statusCode: 500,
-        statusMessage: 'Internal Server Error',
-        data: { type: 'app', message: null },
+      statusCode: status,
+      statusMessage: 'User Error',
+      data: { type: 'user', message },
     });
+  }
+
+  // Server / infrastructure errors
+  throw createError({
+    statusCode: 500,
+    statusMessage: 'Internal Server Error',
+    data: { type: 'app', message: null },
+  });
 }
 ```
 
@@ -124,6 +125,7 @@ export function proxyError(error: any): never {
 Replace every route's current catch block:
 
 **Before (in every route):**
+
 ```ts
 } catch (error: any) {
     console.error('Error posting leave:', error);
@@ -132,6 +134,7 @@ Replace every route's current catch block:
 ```
 
 **After:**
+
 ```ts
 } catch (error: any) {
     throw proxyError(error);
@@ -139,6 +142,7 @@ Replace every route's current catch block:
 ```
 
 Routes to update:
+
 - `server/api/leaves/newLeave.ts` ← highest priority (dependency check fires here)
 - `server/api/leaves/processLeave.ts`
 - `server/api/leaves/cancelLeave.ts`
@@ -163,6 +167,7 @@ Also remove leftover `console.log(response)` / `console.log(body)` calls scatter
 ## 5. Layer 2: retryFetch (minimal change)
 
 `utils/retryFetch.ts` already re-throws the raw `FetchError` for 4xx. On the client side, `$fetch` throws a `FetchError` where:
+
 - `error.data` = the H3 error response body = `{ statusCode, statusMessage, data: { type, message } }`
 
 So `error.data?.data` = our typed envelope `{ type: 'user'|'app', message: string }`.
@@ -173,8 +178,8 @@ So `error.data?.data` = our typed envelope `{ type: 'user'|'app', message: strin
 
 ```ts
 export interface ApiError {
-    type: 'user' | 'app' | 'auth';
-    message: string | null;
+  type: 'user' | 'app' | 'auth';
+  message: string | null;
 }
 
 /**
@@ -182,19 +187,19 @@ export interface ApiError {
  * Use this in component catch blocks to decide what toast to show.
  */
 export function extractApiError(error: any): ApiError {
-    const status: number = error.response?.status ?? error.statusCode ?? 0;
+  const status: number = error.response?.status ?? error.statusCode ?? 0;
 
-    if (status === 401 || status === 403) {
-        return { type: 'auth', message: null };
-    }
+  if (status === 401 || status === 403) {
+    return { type: 'auth', message: null };
+  }
 
-    // H3 wraps our data under error.data.data
-    const envelope = error.data?.data ?? error.data ?? {};
+  // H3 wraps our data under error.data.data
+  const envelope = error.data?.data ?? error.data ?? {};
 
-    return {
-        type: envelope.type === 'user' ? 'user' : 'app',
-        message: envelope.message ?? null,
-    };
+  return {
+    type: envelope.type === 'user' ? 'user' : 'app',
+    message: envelope.message ?? null,
+  };
 }
 ```
 
@@ -205,6 +210,7 @@ export function extractApiError(error: any): ApiError {
 ### Current problem
 
 Most store actions:
+
 1. Call `setError(t('errors.x.y'))` — sets store error state (not shown anywhere)
 2. Do NOT re-throw — so the component's own `catch` block is never reached
 3. Some actions also directly call `$toast.error()` (mixed responsibility)
@@ -262,12 +268,12 @@ import { extractApiError } from '@/utils/extractApiError';
 
 ### Consistency rule
 
-| Scenario | Toast |
-|----------|-------|
-| Backend sends `{ error: "..." }` 422 | Show backend message verbatim |
+| Scenario                                         | Toast                                               |
+| ------------------------------------------------ | --------------------------------------------------- |
+| Backend sends `{ error: "..." }` 422             | Show backend message verbatim                       |
 | Backend sends `{ errors: { field: [...] } }` 422 | Show first field message (normalized by proxyError) |
-| HTTP 5xx or network failure | Show generic i18n error string |
-| HTTP 401/403 | retryFetch already handles logout, no toast needed |
+| HTTP 5xx or network failure                      | Show generic i18n error string                      |
+| HTTP 401/403                                     | retryFetch already handles logout, no toast needed  |
 
 ### Components to update
 

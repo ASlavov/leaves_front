@@ -1,4 +1,9 @@
-import { d as defineEventHandler, e as useRuntimeConfig, r as readBody, h as createError } from '../../../_/nitro.mjs';
+import {
+  d as defineEventHandler,
+  e as useRuntimeConfig,
+  r as readBody,
+  h as createError,
+} from '../../../_/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -17,17 +22,17 @@ const markedRead = defineEventHandler(async (event) => {
     const res = await fetch(
       `${config.public.apiBase}${config.public.notifications.markedRead}/${notificationId}`,
       {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
-    const contentType = res.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) {
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
       return {
         statusCode: 403,
-        statusMessage: "Session invalid or expired"
+        statusMessage: 'Session invalid or expired',
       };
     }
     const data = await res.json();
@@ -36,14 +41,14 @@ const markedRead = defineEventHandler(async (event) => {
     } else {
       return {
         statusCode: 500,
-        statusMessage: "Something went wrong"
+        statusMessage: 'Something went wrong',
       };
     }
   } catch (error) {
-    console.error("Error fetching notifications:", error);
+    console.error('Error fetching notifications:', error);
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.statusMessage || "Error fetching notifications"
+      statusMessage: error.statusMessage || 'Error fetching notifications',
     });
   }
 });

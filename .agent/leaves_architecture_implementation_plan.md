@@ -8,9 +8,11 @@ The `importMassLeaves` `create()` → `updateOrCreate()` fix is already done and
 ## Phase 1 — Database Migrations (run in order)
 
 ### Migration 1: `depends_on_type_id` on `leaves_types`
+
 ```bash
 php artisan make:migration add_depends_on_type_id_to_leaves_types_table
 ```
+
 ```php
 Schema::table('leaves_types', function (Blueprint $table) {
     $table->unsignedBigInteger('depends_on_type_id')->nullable()->after('name');
@@ -21,9 +23,11 @@ Schema::table('leaves_types', function (Blueprint $table) {
 ```
 
 ### Migration 2: `leave_deductions` pivot table
+
 ```bash
 php artisan make:migration create_leave_deductions_table
 ```
+
 ```php
 Schema::create('leave_deductions', function (Blueprint $table) {
     $table->id();
@@ -50,6 +54,7 @@ php artisan migrate
 ## Phase 2 — Model Updates
 
 ### `app/Models/LeavesType.php`
+
 - The model already has SoftDeletes (confirmed via `deleted_at` column). No change needed there.
 - Add `depends_on_type_id` to `$fillable`.
 - Add self-referential relationships:
@@ -69,6 +74,7 @@ public function dependents(): HasMany
 ```
 
 ### `app/Models/EntitlementDay.php`
+
 - Add a named scope for "active wallets on a given date" — used everywhere that FIFO logic runs:
 
 ```php
@@ -87,6 +93,7 @@ public function deductions(): HasMany
 ```
 
 ### `app/Models/Leave.php`
+
 - Add relationship to deductions:
 
 ```php
@@ -97,9 +104,11 @@ public function deductions(): HasMany
 ```
 
 ### New: `app/Models/LeaveDeduction.php`
+
 ```bash
 php artisan make:model LeaveDeduction
 ```
+
 ```php
 class LeaveDeduction extends Model
 {
@@ -140,13 +149,16 @@ if ($request->boolean('rollover_previous') && $request->filled('rollover_until')
 ```
 
 Also update validation to accept the new optional fields:
+
 ```php
 'rollover_previous' => 'nullable|boolean',
 'rollover_until'    => 'nullable|date|required_if:rollover_previous,true',
 ```
 
 ### Apply the same to `store()` (single-user add/update)
+
 After the `updateOrCreate` call:
+
 ```php
 if ($request->boolean('rollover_previous') && $request->filled('rollover_until')) {
     $previousYear = (int)$request->year - 1;
@@ -167,6 +179,7 @@ if ($request->boolean('rollover_previous') && $request->filled('rollover_until')
 ### Replace the entitlement check in `newLeave()`
 
 The current code does:
+
 ```php
 $entitlement = EntitlementDay::where('user_id', $userId)
     ->where('leave_type_id', $leaveTypeId)
@@ -230,6 +243,7 @@ foreach ($wallets as $wallet) {
 ### Replace the restoration block in `processedLeave()`
 
 The current code:
+
 ```php
 if ($request->status == 'rejected' || $request->status == 'cancelled') {
     $leaveDays = ...;
@@ -242,6 +256,7 @@ if ($request->status == 'rejected' || $request->status == 'cancelled') {
 ```
 
 Replace with:
+
 ```php
 if ($request->status == 'rejected' || $request->status == 'cancelled') {
     foreach ($leave->deductions()->with('entitlement')->get() as $deduction) {
@@ -259,9 +274,11 @@ if ($request->status == 'rejected' || $request->status == 'cancelled') {
 **File:** `app/Http/Controllers/Api/LeaveTypeController.php` (or wherever CRUD lives)
 
 ### `destroy()` — confirm it soft-deletes
+
 The model uses SoftDeletes, so `$leaveType->delete()` already soft-deletes. Verify there is no `forceDelete()` call. If there is, change it to `delete()`.
 
 ### `index()` — add `include_archived` query param
+
 ```php
 public function index(Request $request)
 {
@@ -276,6 +293,7 @@ public function index(Request $request)
 ```
 
 ### New: `restore()` endpoint
+
 ```php
 public function restore($id)
 {
@@ -286,6 +304,7 @@ public function restore($id)
 ```
 
 Register in `routes/api.php`:
+
 ```php
 Route::patch('leave-types/{id}/restore', [LeaveTypeController::class, 'restore']);
 ```
@@ -296,14 +315,14 @@ Route::patch('leave-types/{id}/restore', [LeaveTypeController::class, 'restore']
 
 These are the corresponding UI changes required. Each maps directly to a backend phase above.
 
-| Component | Change |
-|---|---|
-| `EditEntitlement.vue` | Add rollover toggle + `rollover_until` date picker; append `rollover_previous` + `rollover_until` to form payload |
-| `LeavesTypesList.vue` | Rename "Delete" → "Archive"; add "Restore" button for archived types; call `GET /leave-types?include_archived=true` for the admin list |
-| Leave request form | Fetch leave types **without** `include_archived` (default) so archived types don't appear in dropdowns |
-| Leave balance display | Show per-wallet breakdown instead of a single total (iterate `entitlementDaysData[userId]` grouped entries) |
-| `stores/entitlement.ts` | Pass `rollover_previous` and `rollover_until` through `addEntitledDays` function signature → composable → server route |
-| `server/api/entitlement/massLeaves.ts` | Forward the new `rollover_previous` + `rollover_until` fields in the proxy body |
+| Component                              | Change                                                                                                                                 |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `EditEntitlement.vue`                  | Add rollover toggle + `rollover_until` date picker; append `rollover_previous` + `rollover_until` to form payload                      |
+| `LeavesTypesList.vue`                  | Rename "Delete" → "Archive"; add "Restore" button for archived types; call `GET /leave-types?include_archived=true` for the admin list |
+| Leave request form                     | Fetch leave types **without** `include_archived` (default) so archived types don't appear in dropdowns                                 |
+| Leave balance display                  | Show per-wallet breakdown instead of a single total (iterate `entitlementDaysData[userId]` grouped entries)                            |
+| `stores/entitlement.ts`                | Pass `rollover_previous` and `rollover_until` through `addEntitledDays` function signature → composable → server route                 |
+| `server/api/entitlement/massLeaves.ts` | Forward the new `rollover_previous` + `rollover_until` fields in the proxy body                                                        |
 
 ---
 

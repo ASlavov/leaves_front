@@ -3,22 +3,25 @@ import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
-    const config = useRuntimeConfig();
-    const body = await readBody(event);
-    const { token } = event.context;
+  const config = useRuntimeConfig();
+  const body = await readBody(event);
+  const { token } = event.context;
 
-    if (!token) {
-        throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
-    }
+  if (!token) {
+    throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
+  }
 
-    try {
-        const { leaveTypeId } = body;
-        const response = await $fetch(`${config.public.apiBase}${config.public.leaves.deleteLeaveType}/${leaveTypeId}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        return response;
-    } catch (error: any) {
-        throw proxyError(error);
-    }
+  try {
+    const { leaveTypeId } = body;
+    const response = await $fetch(
+      `${config.public.apiBase}${config.public.leaves.deleteLeaveType}/${leaveTypeId}`,
+      {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
+    return response;
+  } catch (error: any) {
+    throw proxyError(error);
+  }
 });

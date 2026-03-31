@@ -1,4 +1,9 @@
-import { d as defineEventHandler, e as useRuntimeConfig, r as readBody, h as createError } from '../../../_/nitro.mjs';
+import {
+  d as defineEventHandler,
+  e as useRuntimeConfig,
+  r as readBody,
+  h as createError,
+} from '../../../_/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -15,40 +20,34 @@ const newLeave = defineEventHandler(async (event) => {
   if (!token) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Not authenticated"
+      statusMessage: 'Not authenticated',
     });
   }
   try {
-    const {
-      userId,
-      leaveTypeId,
-      startDate,
-      endDate,
-      reason
-    } = body;
+    const { userId, leaveTypeId, startDate, endDate, reason } = body;
     console.log(body);
     const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeave}`, {
-      method: "POST",
+      method: 'POST',
       body: {
-        "id": userId,
-        "leave_type_id": leaveTypeId,
-        "start_date": startDate,
-        "end_date": endDate,
-        "reason": reason,
-        "requesting_user_id": requestingUserId
+        id: userId,
+        leave_type_id: leaveTypeId,
+        start_date: startDate,
+        end_date: endDate,
+        reason: reason,
+        requesting_user_id: requestingUserId,
       },
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
         // Use the token in the Authorization header
-      }
+      },
     });
     console.log(response);
     return response;
   } catch (error) {
-    console.error("Error posting leave:", error);
+    console.error('Error posting leave:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: "Error posting leaves"
+      statusMessage: 'Error posting leaves',
     });
   }
 });

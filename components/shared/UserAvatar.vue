@@ -16,26 +16,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { User } from '@/types'
+import { computed } from 'vue';
+import type { User } from '@/types';
 
-const props = withDefaults(defineProps<{
-  user: User | null
-  size?: number
-  textClass?: string
-}>(), {
-  size: 40,
-  textClass: ''
-})
+const props = withDefaults(
+  defineProps<{
+    user: User | null;
+    size?: number;
+    textClass?: string;
+  }>(),
+  {
+    size: 40,
+    textClass: '',
+  },
+);
 
-const src = computed(() => props.user?.profile?.profile_image_base64 ?? null)
+const src = computed(() => props.user?.profile?.profile_image_base64 ?? null);
 
 const initials = computed(() => {
-  if (!props.user?.name) return ''
-  const parts = props.user.name.trim().split(/\s+/)
+  if (!props.user?.name) return '';
+  const parts = props.user.name.trim().split(/\s+/);
   return parts
     .slice(0, 2)
-    .map(p => p.charAt(0).toUpperCase())
-    .join('')
-})
+    .map((p) => p.charAt(0).toUpperCase())
+    .join('');
+});
 </script>

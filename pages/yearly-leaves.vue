@@ -10,17 +10,6 @@
   <!-- End Content -->
 </template>
 <script setup>
-import { computed, onMounted } from 'vue';
-import { useCentralStore } from '@/stores/centralStore';
-
-const centralStore = useCentralStore();
-const userStore = centralStore.userStore;
-const leavesStore = centralStore.leavesStore;
-const authStore = centralStore.authStore;
-
-// Use computed to make reactive
-const userId = computed(() => userStore.userId);
-const leavesData = computed(() => leavesStore.leavesData);
 /*onMounted(async () => {
   try {
     // Restore session first

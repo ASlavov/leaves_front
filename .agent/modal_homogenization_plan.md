@@ -8,14 +8,17 @@ There are two visually distinct "styles" of content that get mounted inside the 
 
 **Style A — "Form card" components** (EditUser, EditGroup, EditEntitlement):
 Each component wraps itself in its own white rounded card:
+
 ```
 bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800
 ```
+
 This means inside the modal shell (`bg-white dark:bg-neutral-700 p-2 rounded-lg`),
 you get **card inside card** — double padding, double background, double border radius.
 
 **Style B — "Flat" components** (NewLeaves, EditLeaveType):
 These use their own card-style wrappers with different conventions:
+
 - `EditLeaveType`: `p-4 bg-white dark:bg-neutral-800 rounded-lg border dark:border-neutral-700 shadow-sm max-w-2xl mx-auto mt-8`
 - `NewLeaves`: `p-6 bg-white dark:bg-neutral-800 rounded-xl border dark:border-neutral-700 shadow-sm max-w-4xl mx-auto mt-6`
 
@@ -25,6 +28,7 @@ inconsistent with Style A components that have no title or cancel button.
 ### Modal Shell Inconsistencies (in the list components)
 
 All 5 modal shells are nearly identical, differing only in:
+
 - Which prop they pass to the inner component (`userId`, `groupId`, `entitlementId`, `leaveTypeId`)
 - `LeavesTypesList` passes no `@saved` listener — the modal never closes on save
 - `LeavesList`'s inner component receives **no props at all**
@@ -57,9 +61,15 @@ since the content components already provide their own padding and backgrounds.
     >
       <div class="bg-white dark:bg-neutral-700 rounded-lg w-full max-w-[900px] relative">
         <!-- Title bar (optional) -->
-        <div v-if="title" class="flex items-center justify-between px-4 pt-4 pb-3 border-b dark:border-neutral-600">
+        <div
+          v-if="title"
+          class="flex items-center justify-between px-4 pt-4 pb-3 border-b dark:border-neutral-600"
+        >
           <h2 class="text-lg font-bold dark:text-gray-100">{{ title }}</h2>
-          <button @click="$emit('update:modelValue', false)" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+          <button
+            @click="$emit('update:modelValue', false)"
+            class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+          >
             <CloseIcon />
           </button>
         </div>
@@ -88,11 +98,19 @@ defineEmits(['update:modelValue']);
 ```
 
 Where `CloseIcon` is the same X SVG currently duplicated in every list component:
+
 ```html
-<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none"
-     stroke="currentColor" class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500">
-  <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="17"
+  height="17"
+  viewBox="0 0 17 17"
+  fill="none"
+  stroke="currentColor"
+  class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500"
+>
+  <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
 ```
 
@@ -123,11 +141,13 @@ action buttons). When false, the existing card wrapper renders as before.
 This preserves the inline `ProfileInfo.vue` usage of `EditUser` unchanged.
 
 **Components to update:**
+
 - `EditUser.vue` — has outer `bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800` wrapper
 - `EditGroup.vue` — same outer wrapper pattern
 - `EditEntitlement.vue` — same outer wrapper pattern
 
 **Components that are modal-only and have their own title/cancel (to be simplified):**
+
 - `EditLeaveType.vue` — see Phase 4 for full revamp
 - `NewLeaves.vue` — remove internal card wrapper, header h2, and Cancel button; these become
   the BaseModal's responsibility (title passed as prop, close handled by BaseModal)
@@ -169,8 +189,13 @@ For each of the 5 list components, replace the inline modal block with BaseModal
 ### Pattern (applies to all)
 
 **Before** (repeated in every list component):
+
 ```html
-<div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" @click.self="closeModal">
+<div
+  v-if="showModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  @click.self="closeModal"
+>
   <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] relative">
     <button @click="closeModal" class="absolute top-3 right-3 ...">...</button>
     <component :is="modalComponent" :userId="selectedUserId" @saved="closeModal" />
@@ -179,6 +204,7 @@ For each of the 5 list components, replace the inline modal block with BaseModal
 ```
 
 **After**:
+
 ```html
 <BaseModal v-model="showModal">
   <component :is="modalComponent" :userId="selectedUserId" asModal @saved="showModal = false" />
@@ -187,13 +213,13 @@ For each of the 5 list components, replace the inline modal block with BaseModal
 
 **Changes per file:**
 
-| File | Current prop passed | `@saved` wired? | Notes |
-|------|--------------------|----|-------|
-| `UsersList.vue` | `:userId="selectedUserId"` | Yes | Add `asModal` prop |
-| `GroupsList.vue` | `:groupId="selectedGroupId"` | Yes | Add `asModal` prop |
-| `EntitlementDays.vue` | `:entitlementId="selectedEntitlementId"` | Yes | Add `asModal` prop |
-| `LeavesTypesList.vue` | `:leaveTypeId="selectedLeaveTypeId"` | **No — bug** | Fix: wire `@saved="showModal = false"` |
-| `LeavesList.vue` | none | No | See note below |
+| File                  | Current prop passed                      | `@saved` wired? | Notes                                  |
+| --------------------- | ---------------------------------------- | --------------- | -------------------------------------- |
+| `UsersList.vue`       | `:userId="selectedUserId"`               | Yes             | Add `asModal` prop                     |
+| `GroupsList.vue`      | `:groupId="selectedGroupId"`             | Yes             | Add `asModal` prop                     |
+| `EntitlementDays.vue` | `:entitlementId="selectedEntitlementId"` | Yes             | Add `asModal` prop                     |
+| `LeavesTypesList.vue` | `:leaveTypeId="selectedLeaveTypeId"`     | **No — bug**    | Fix: wire `@saved="showModal = false"` |
+| `LeavesList.vue`      | none                                     | No              | See note below                         |
 
 **LeavesList fix**: The modal component currently receives no props and no `@saved` handler.
 The inner `NewLeaves` component emits `saved` — wire it: `@saved="showModal = false"`.
@@ -202,6 +228,7 @@ The inner `NewLeaves` component emits `saved` — wire it: `@saved="showModal = 
 `showModal`, `selectedId`, and `modalType`. This function can stay as-is; just also
 use `showModal = false` inline in BaseModal's `@update:modelValue` event or use the
 `closeModal` function as the v-model setter:
+
 ```js
 // In script
 const showModal = ref(false);
@@ -229,7 +256,7 @@ existing `closeModal()`. This way all the cleanup logic stays in one place.
    delete component — and per requirements, deletion should be **removed entirely** since it
    would orphan entitled days and leave history.
 4. Styling divergence: `EditLeaveType` uses `border dark:border-neutral-700 shadow-sm max-w-2xl
-   mx-auto mt-8` inside the modal — the `max-w-2xl mx-auto mt-8` causes misalignment inside
+mx-auto mt-8` inside the modal — the `max-w-2xl mx-auto mt-8` causes misalignment inside
    the already-constrained `max-w-[900px]` modal container.
 
 ### Revamp Plan
@@ -244,6 +271,7 @@ Fix the title to be conditional:
 ```
 
 Change `leaveTypeId` prop to not be required (same pattern as other components):
+
 ```js
 defineProps({
   leaveTypeId: { type: [Number, String, null], required: false },
@@ -264,11 +292,12 @@ Keep the `cancel` emit for defensive compat but stop rendering the button.
 #### 4b — Add `createLeaveType` store action
 
 In `leavesStore`, add:
+
 ```js
 async function createLeaveType(name) {
-    // calls POST /api/new_leave_type via composable
-    await leavesApiComposable.newLeaveType(name);
-    await fetchLeaveTypes(); // refresh
+  // calls POST /api/new_leave_type via composable
+  await leavesApiComposable.newLeaveType(name);
+  await fetchLeaveTypes(); // refresh
 }
 ```
 
@@ -325,20 +354,20 @@ inside their respective list components' modals.
 
 ## Files Touched Summary
 
-| File | Action |
-|------|--------|
-| `components/shared/BaseModal.vue` | **Create** |
-| `components/shared/CloseIcon.vue` | **Create** (optional — can be inline SVG in BaseModal) |
-| `components/Settings/EditUser.vue` | Add `asModal` prop, conditional wrapper class |
-| `components/Settings/EditGroup.vue` | Add `asModal` prop, conditional wrapper class |
-| `components/Settings/EditEntitlement.vue` | Add `asModal` prop, conditional wrapper class |
-| `components/Settings/EditLeaveType.vue` | Remove `required`, add/edit mode, strip card, remove cancel button |
-| `components/Settings/NewLeaves.vue` | Strip outer card, h2 title, cancel button |
-| `components/Settings/UsersList.vue` | Replace inline modal block with `<BaseModal>` |
-| `components/Settings/GroupsList.vue` | Replace inline modal block with `<BaseModal>` |
-| `components/Settings/EntitlementDays.vue` | Replace inline modal block with `<BaseModal>` |
-| `components/Settings/LeavesTypesList.vue` | Replace inline modal block, fix `@saved`, remove delete code |
-| `components/Settings/LeavesList.vue` | Replace inline modal block, wire `@saved` |
-| `stores/leavesStore` (or equivalent) | Add `createLeaveType` action |
+| File                                      | Action                                                             |
+| ----------------------------------------- | ------------------------------------------------------------------ |
+| `components/shared/BaseModal.vue`         | **Create**                                                         |
+| `components/shared/CloseIcon.vue`         | **Create** (optional — can be inline SVG in BaseModal)             |
+| `components/Settings/EditUser.vue`        | Add `asModal` prop, conditional wrapper class                      |
+| `components/Settings/EditGroup.vue`       | Add `asModal` prop, conditional wrapper class                      |
+| `components/Settings/EditEntitlement.vue` | Add `asModal` prop, conditional wrapper class                      |
+| `components/Settings/EditLeaveType.vue`   | Remove `required`, add/edit mode, strip card, remove cancel button |
+| `components/Settings/NewLeaves.vue`       | Strip outer card, h2 title, cancel button                          |
+| `components/Settings/UsersList.vue`       | Replace inline modal block with `<BaseModal>`                      |
+| `components/Settings/GroupsList.vue`      | Replace inline modal block with `<BaseModal>`                      |
+| `components/Settings/EntitlementDays.vue` | Replace inline modal block with `<BaseModal>`                      |
+| `components/Settings/LeavesTypesList.vue` | Replace inline modal block, fix `@saved`, remove delete code       |
+| `components/Settings/LeavesList.vue`      | Replace inline modal block, wire `@saved`                          |
+| `stores/leavesStore` (or equivalent)      | Add `createLeaveType` action                                       |
 
 **Not touched:** `components/Home/ProfileInfo.vue`, `pages/settings.vue`

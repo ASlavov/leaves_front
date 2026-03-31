@@ -9,17 +9,17 @@ import 'node:path';
 import 'node:crypto';
 
 const logout = defineEventHandler(async (event) => {
-  const userAuthed = getCookie(event, "auth_token");
+  const userAuthed = getCookie(event, 'auth_token');
   if (userAuthed) {
-    deleteCookie(event, "auth_token");
-    deleteCookie(event, "user_authed");
+    deleteCookie(event, 'auth_token');
+    deleteCookie(event, 'user_authed');
     return {
       authenticated: false,
-      message: "Logged out"
+      message: 'Logged out',
     };
   }
   return {
-    authenticated: false
+    authenticated: false,
   };
 });
 

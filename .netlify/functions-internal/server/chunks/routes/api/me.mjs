@@ -9,19 +9,16 @@ import 'node:path';
 import 'node:crypto';
 
 const me = defineEventHandler(async (event) => {
-  setHeader(event, "Access-Control-Allow-Origin", "*");
-  const {
-    requestingUserId,
-    token
-  } = event.context;
+  setHeader(event, 'Access-Control-Allow-Origin', '*');
+  const { requestingUserId, token } = event.context;
   if (!requestingUserId || !token) {
     throw createError({
       statusCode: 403,
-      statusMessage: "Not authenticated"
+      statusMessage: 'Not authenticated',
     });
   }
   return {
-    userId: requestingUserId
+    userId: requestingUserId,
   };
 });
 

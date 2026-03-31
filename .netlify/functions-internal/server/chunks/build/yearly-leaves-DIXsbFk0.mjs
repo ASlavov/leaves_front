@@ -22,7 +22,7 @@ import 'deep-pick-omit';
 import '@vue/shared';
 
 const _sfc_main = {
-  __name: "yearly-leaves",
+  __name: 'yearly-leaves',
   __ssrInlineRender: true,
   setup(__props) {
     const centralStore = useCentralStore();
@@ -32,20 +32,24 @@ const _sfc_main = {
     computed(() => userStore.userId);
     computed(() => leavesStore.leavesData);
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_Sidebar = resolveComponent("Sidebar");
-      const _component_YearlyLeaves = resolveComponent("YearlyLeaves", true);
+      const _component_Sidebar = resolveComponent('Sidebar');
+      const _component_YearlyLeaves = resolveComponent('YearlyLeaves', true);
       _push(`<!--[-->`);
       _push(ssrRenderComponent(_component_Sidebar, null, null, _parent));
-      _push(`<div class="w-full lg:ps-64 bg-red min-h-dvh-64 dark:bg-neutral-900"><div class="p-4 sm:p-6 space-y-4 sm:space-y-6">`);
+      _push(
+        `<div class="w-full lg:ps-64 bg-red min-h-dvh-64 dark:bg-neutral-900"><div class="p-4 sm:p-6 space-y-4 sm:space-y-6">`,
+      );
       _push(ssrRenderComponent(_component_YearlyLeaves, null, null, _parent));
       _push(`</div></div><!--]-->`);
     };
-  }
+  },
 };
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/yearly-leaves.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add(
+    'pages/yearly-leaves.vue',
+  );
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
 
