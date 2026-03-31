@@ -1,64 +1,80 @@
 <template>
-  <div class="bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
+  <div
+    :class="
+      asModal
+        ? ''
+        : 'bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100'
+    "
+  >
     <div class="flex-1">
-      <template v-if="loading">
-
-        <!-- Loading Skeletons -->
-        <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
-          <div class="w-12 h-12 bg-gray-200 rounded-full col-span-2 mr-4 animate-pulse"></div>
-          <!-- Info Details Skeleton -->
-          <div class="pt-4 space-y-2 col-span-10 animate-pulse">
-            <p class="h-4 bg-gray-200 rounded w-1/3 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-1/2 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-1/4 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-2/3 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-1/2 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-1/4 animate-pulse dark:bg-neutral-700"></p>
-            <p class="h-4 bg-gray-200 rounded w-1/3 animate-pulse dark:bg-neutral-700"></p>
+      <template v-if="componentLoading">
+        <div class="px-[30px] py-[30px] flex flex-wrap gap-[15px]">
+          <div v-for="i in 3" :key="i" class="w-[300px]">
+            <div
+              class="h-[14px] bg-gray-200 dark:bg-neutral-700 rounded w-1/3 mb-[8px] animate-pulse"
+            ></div>
+            <div class="h-[40px] bg-gray-200 dark:bg-neutral-700 rounded-[8px] animate-pulse"></div>
+          </div>
+          <div class="w-full">
+            <div
+              class="h-[14px] bg-gray-200 dark:bg-neutral-700 rounded w-1/4 mb-[8px] animate-pulse"
+            ></div>
+            <div class="h-[40px] bg-gray-200 dark:bg-neutral-700 rounded-[8px] animate-pulse"></div>
           </div>
         </div>
       </template>
       <template v-else>
-        <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
-          <!-- Avatar -->
-
-          <!-- Info Details -->
-          <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px]">
+        <div
+          :class="
+            asModal ? 'px-[30px] pb-[30px] pt-[10px]' : 'grid grid-cols-12 pt-[30px] max-w-[947px]'
+          "
+        >
+          <div
+            :class="
+              asModal
+                ? 'flex flex-wrap gap-[15px]'
+                : 'grid grid-cols-2 col-span-12 lg:col-span-10 gap-y-[15px] gap-x-[25px]'
+            "
+          >
             <!-- Group Name -->
-            <div class="w-full">
-              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Όνομα Γκρουπ</label>
-              <input v-model="formGroupName" type="text" class="py-3 px-4 block w-full border-gray-200 border rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="Όνομα">
+            <div :class="asModal ? 'w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
+              <label :class="labelClass"
+                >{{ $t('settings.groupName') }} <span class="text-[#EA021A]">*</span></label
+              >
+              <input
+                v-model="formGroupName"
+                type="text"
+                :class="inputClass"
+                :placeholder="$t('settings.groupName')"
+              />
             </div>
-            <!-- Head -->
-            <div class="w-full">
-<!--              <label class="block text-sm font-bold mb-2 text-black dark:text-white">Υπεύθυνος Γκρουπ</label>-->
+            <!-- Group Head -->
+            <div :class="asModal ? 'w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
               <CustomSelect
-                  v-model="formSelectedDepartmentHead"
-                  :options="availableFormUsers"
-                  label="Υπεύθυνος Γκρουπ"
-                  placeholder="Επιλέξτε Υπεύθυνο"
-                  selectId="department-head-select"
+                v-model="formSelectedDepartmentHead"
+                :options="availableFormUsers"
+                :label="$t('settings.groupHead') + ' <span class=\'text-[#EA021A]\'>*</span>'"
+                :placeholder="$t('settings.selectHead')"
+                select-id="department-head-select"
               />
             </div>
-
-            <div class="col-span-2">
-              <!-- Select -->
-              <div class="block text-sm font-bold mb-2 text-black dark:text-white">
-                Χρήστες
-              </div>
+            <!-- Members -->
+            <div :class="asModal ? 'w-full' : 'col-span-2'">
+              <div :class="labelClass">{{ $t('settings.users') }}</div>
               <CustomMultiSelect
-                  v-model="formUsers"
-                  :options="allUsers"
-                  placeholder="Επιλέξτε χρήστες"
+                v-model="formUsers"
+                :options="allUsers"
+                :placeholder="$t('settings.selectUsers')"
               />
-              <!-- End Select -->
             </div>
-
-            <!-- Save Changes Button -->
-            <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
-              <button @click="submitForm"
-                      class="py-3 inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-                Αποθήκευση Αλλαγών
+            <!-- Submit -->
+            <div
+              :class="
+                asModal ? 'w-full pt-[15px]' : 'info-actions pt-10 pb-5 flex gap-4 col-span-2'
+              "
+            >
+              <button :class="submitBtnClass" @click="submitForm">
+                {{ $t('settings.saveChanges') }}
               </button>
             </div>
           </div>
@@ -68,195 +84,134 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, watch, onMounted } from "vue";
-import { useRouter } from 'vue-router';
-import { useCentralStore } from '@/stores/centralStore.js';
+<script setup lang="ts">
+import { ref, computed, watch, type PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
 import CustomMultiSelect from '@/components/misc/CustomMultiSelect.vue';
+import { useFormStyles } from '@/composables/useFormStyles';
+import { extractApiError } from '@/utils/extractApiError';
+import type { User, Department } from '@/types';
 
-const router = useRouter();
+const { t } = useI18n();
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const departmentsStore = centralStore.departmentsStore;
 
-// Loading state
-const loading = computed(() => userStore && userStore.loading);
+const { input: inputClass, label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
+
+const loadingUsers = computed(() => userStore.loading);
+const loadingGroup = ref(false);
+const componentLoading = computed(() => loadingUsers.value || loadingGroup.value);
 
 const props = defineProps({
   groupId: {
-    type: [Number, String],
+    type: [Number, String] as PropType<number | string | undefined>,
     required: false,
+    default: undefined,
+  },
+  entitlementId: {
+    type: [Number, String, null] as PropType<number | string | null>,
+    required: false,
+    default: null,
+  },
+  asModal: {
+    type: Boolean,
+    default: false,
   },
 });
 
+const emit = defineEmits(['close', 'deleted', 'saved']);
 
-// Fetch user data when component is mounted or when userId changes
-onMounted(() => {
-  console.log(centralStore);
-  if (centralStore.initialized) {
-    fetchUserData();
-  } else {
-    // Wait for centralStore to initialize
-    const unwatch = watch(
-        () => centralStore.initialized,
-        (initialized) => {
-          if (initialized) {
-            fetchUserData();
-            unwatch(); // Stop watching after initialization
-          }
-        },
-        { immediate: true }
-    );
-  }
-});
-
-// Watch for changes in userId
-watch(
-    () => props.groupId,
-    () => {
-      if (centralStore.initialized) {
-        fetchUserData();
-      }
-    }
-);
-// Reactive variable to store all users
-const allUsers = ref([]);
-
-const getIconHtml = (user, firstName, lastName) => {
-  const photo = user?.profile?.profile_image || null;
-  if (photo) {
-    // User has a photo
-    return `
-          <div class='w-[25px] h-[25px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-2'>
-            <img class='inline-block size-[25px] rounded-full' src='${photo}' alt='Avatar'>
-          </div>
-        `;
-  } else {
-    // User doesn't have a photo, show initials
-    const firstNameInitial = firstName ? firstName.charAt(0).toUpperCase() : '';
-    const lastNameInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
-    return `
-          <div class='w-[25px] h-[25px] bg-gray-300 rounded-full mr-4 flex items-center justify-center col-span-2'>
-            <span class='text-white text-[11px] font-bold'>
-              ${firstNameInitial}${lastNameInitial}
-            </span>
-          </div>
-        `;
-  }
-}
-// Process users to extract firstName and lastName
-watch(
-    () => userStore.allUsers,
-    (users) => {
-      allUsers.value = users.map(user => {
-        // Extract firstName and lastName from user.name
-        const nameSplit = user.name.trim().split(' ');
-        const firstName = nameSplit.slice(0, -1).join(' ') || nameSplit[0];
-        const lastName = nameSplit.slice(-1).join(' ') || '';
-
-        // Return a new user object with firstName and lastName added
-        return {
-          ...user,
-          firstName,
-          lastName,
-          icon: getIconHtml(user, firstName, lastName),
-        };
-      });
-    },
-    { immediate: true }
-);
-async function fetchUserData() {
-  try {
-    // Fetch the user data for the given userId
-    if(props.groupId) {
-      const dptData = await departmentsStore.loadGroupById(props.groupId);
-      if (dptData) {
-        // Initialize form fields
-        initializeFormFields(dptData);
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-    useNuxtApp().$toast.error('Error fetching user data.', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
-  }
-}
-
-
-// Reactive variables for form fields
 const formGroupName = ref('');
-const formSelectedDepartmentHead = ref('');
-const formUsers = ref([]);
-const formAllUsers = ref([]);
-/*const headCandidates = computed(() => {
-  return [
-      ...formUsers.value,
-  ];
-});*/
+const formSelectedDepartmentHead = ref<string | number | undefined>(undefined);
+const formUsers = ref<(string | number)[]>([]);
 
+const allUsers = computed(() =>
+  userStore.allUsers.map((user: User) => {
+    const name = user.name || '';
+    const nameSplit = name.trim().split(' ');
+    const firstName = nameSplit.slice(0, -1).join(' ') || nameSplit[0] || '';
+    const lastName = nameSplit.slice(-1).join(' ') || '';
+    return { ...user, firstName, lastName };
+  }),
+);
 
+watch(
+  () => props.groupId,
+  async (newGroupId) => {
+    if (newGroupId) {
+      loadingGroup.value = true;
+      try {
+        const dptData = await departmentsStore.loadGroupById(newGroupId);
+        if (dptData) {
+          initializeFormFields(dptData);
+        }
+      } catch {
+        (useNuxtApp() as any).$toast.error(t('leaves.cancelError'), {
+          position: 'bottom-right',
+          autoClose: 5000,
+        });
+      } finally {
+        loadingGroup.value = false;
+      }
+    } else {
+      // Reset form for new group
+      formGroupName.value = '';
+      formUsers.value = [];
+      formSelectedDepartmentHead.value = undefined;
+    }
+  },
+  { immediate: true },
+);
 
-
-function initializeFormFields(dptData) {
+function initializeFormFields(dptData: Department) {
   formGroupName.value = dptData.name;
-  formUsers.value = allUsers.value
-      .filter(user => user?.department_id === dptData.id)
-      .map(user => user.id); // Set to array of IDs
-  formAllUsers.value = allUsers.value;
-  formSelectedDepartmentHead.value = formUsers.value[0];// TODO: dptData?.head || '';
+  formUsers.value = dptData.users?.map((user: { id: string | number }) => user.id) || [];
+  formSelectedDepartmentHead.value = dptData.head || undefined;
 }
 
 const availableFormUsers = computed(() => {
-  if (formUsers.value.length) {
-    return allUsers.value.filter((user) => formUsers.value.includes(user.id));
-  }
-  return [];
+  return allUsers.value.filter((user: User) => formUsers.value.includes(user.id));
 });
 
-// List of departments
-const departments = computed(() => departmentsStore.departmentsData);
-
-
-// Submit form method
 const submitForm = async () => {
+  if (!formGroupName.value || !formSelectedDepartmentHead.value || formUsers.value.length === 0) {
+    (useNuxtApp() as any).$toast.error(t('settings.fillRequiredFields'));
+    return;
+  }
+
   const groupId = props.groupId;
   const groupName = formGroupName.value;
   const head = formSelectedDepartmentHead.value;
   const members = formUsers.value;
 
-  // Uncomment and adjust when ready to submit
   try {
-    /*await departmentsStore.editDepartment(
+    if (!groupId) {
+      await departmentsStore.newDepartment(
+        groupName,
+        head as string | number,
+        members as (string | number)[],
+      );
+    } else {
+      await departmentsStore.editDepartment(
         groupId,
         groupName,
-        head,
-        members
-    );*/
-
-    console.log(
-      "GroupId: ", groupId,
-      "GroupName: ", groupName,
-      "Head ID: ", head,
-      "Members List:", members
-    );
-
-    // Optionally, show a success message or redirect the user
-    useNuxtApp().$toast.success('Το προφίλ του χρήστη ενημερώθηκε επιτυχως!', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
+        head as string | number,
+        members as (string | number)[],
+      );
+    }
+    (useNuxtApp() as any).$toast.success(t('settings.groupUpdated'));
+    emit('saved');
   } catch (error) {
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να αποθηκεύσουμε το προφίλ του χρήστη!', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
+    const { type, message } = extractApiError(error);
+    (useNuxtApp() as any).$toast.error(
+      type === 'user' && message ? message : t('settings.saveGroupError'),
+    );
   }
 };
 </script>
-
 
 <style scoped>
 /* Additional styles if needed */

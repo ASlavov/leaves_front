@@ -1,27 +1,15 @@
 <template>
-    <Sidebar />
-    <!-- Content -->
-    <div class="w-full lg:ps-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
-        <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-            <!-- your content goes here ... -->
-            <Calendar />
-        </div>
+  <SidebarTopbarSidebar />
+  <!-- Content -->
+  <div class="w-full lg:ps-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
+    <div class="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <!-- your content goes here ... -->
+      <Calendar />
     </div>
-    <!-- End Content -->
+  </div>
+  <!-- End Content -->
 </template>
 <script setup>
-import { computed, onMounted } from 'vue';
-import { useCentralStore } from '@/stores/centralStore';
-
-
-const centralStore = useCentralStore();
-const userStore = centralStore.userStore;
-const leavesStore = centralStore.leavesStore;
-const authStore = centralStore.authStore;
-
-// Use computed to make reactive
-const userId = computed(() => userStore.userId);
-const leavesData = computed(() => leavesStore.leavesData);
 /*onMounted(async () => {
   try {
     // Restore session first
@@ -36,16 +24,6 @@ const leavesData = computed(() => leavesStore.leavesData);
     console.error("Error during session restoration or loading leaves:", error);
   }
 });*/
-</script>
-<script>
-import Sidebar from '~/components/SidebarTopbar/Sidebar.vue';
-import Calendar from '@/components/Calendar/Calendar.vue';
-export default {
-    components: {
-        Sidebar,
-        Calendar
-    }
-}
 </script>
 
 <style>
