@@ -169,11 +169,11 @@
     "datesSelected": "{count} ημερομηνία/ες επιλέχθηκε/αν",
     "addHolidaysCount": "Προσθήκη {count} αργία/ών",
     "massAddSuccess": "{count} αργία/ες προστέθηκε/αν επιτυχώς!",
-    "massDeleteSelected": "Διαγραφή επιλεγμένων ({count})",
+    "massDeleteHolidaysSelected": "Διαγραφή επιλεγμένων ({count})",
     "massDeleteHolidays": "Διαγραφή επιλεγμένων αργιών",
     "massDeleteHolidaysConfirm": "Πρόκειται να διαγράψετε {count} αργία/ες. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
     "massDeleteConfirmBtn": "Διαγραφή {count}",
-    "massDeleteSuccess": "{count} αργία/ες διαγράφηκε/αν."
+    "massDeleteHolidaysSuccess": "{count} αργία/ες διαγράφηκε/αν."
   },
   "leaves": {
     "cancelLeave": "Ακύρωση Άδειας",
@@ -271,6 +271,7 @@
     "cancel": "Ακύρωση",
     "sending": "Αποστολή…",
     "irreversibleAction": "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+    "messagePerson": "Μήνυμα",
     "none": "Κανένα"
   },
   "calendar": {

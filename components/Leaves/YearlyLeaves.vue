@@ -130,38 +130,40 @@
           :key="leave.id"
           :class="
             permissionsStore.can('profile_leave_balance', 'accept_leave')
-              ? 'lg:grid-cols-10'
-              : 'lg:grid-cols-8'
+              ? 'xl:grid-cols-10'
+              : 'xl:grid-cols-8'
           "
-          class="grid grid-rows-6 lg:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] lg:gap-y-0 items-center justify-items-start w-full lg:justify-items-stretch border px-[30px] py-[12px] rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
+          class="grid grid-rows-6 xl:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] xl:gap-y-0 items-center justify-items-start w-full xl:justify-items-stretch border px-[30px] py-[12px] rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >
           <!-- Column 1: Date from - Date to on top, leave type on bottom -->
           <div
-            class="lg:col-span-2 lg:gap-x-2 lg:justify-self-start contents lg:grid grid-cols-4 grid-rows-[20px_1fr] justify-start items-center"
+            class="xl:col-span-3 xl:gap-x-2 xl:justify-self-start contents xl:grid grid-cols-[50px,repeat(3,1fr)] grid-rows-[20px_1fr] justify-start items-center"
           >
-            <div class="row-span-6 lg:col-span-1 lg:row-span-2 self-start justify-self-end w-full">
+            <div
+              class="row-span-6 xl:col-span-1 xl:row-span-2 shrink-0 self-start justify-self-end w-full"
+            >
               <img src="https://placehold.co/50x50" alt="Icon" class="rounded-md" />
             </div>
-            <div class="text-sm text-gray-500 lg:col-span-3 lg:row-span-1 whitespace-nowrap">
+            <div class="text-sm text-gray-500 xl:col-span-3 xl:row-span-1 whitespace-nowrap">
               {{ formatDate(leave.start_date) }} - {{ formatDate(leave.end_date) }}
             </div>
-            <div class="font-bold lg:col-span-3 lg:row-span-1">
+            <div class="font-bold xl:col-span-3 xl:row-span-1">
               {{ getLeaveTypeName(leave.leave_type_id) }}
             </div>
           </div>
 
           <!-- Column 2: User's name -->
-          <div class="lg:col-span-2">{{ leave.user.name }}</div>
+          <div class="xl:col-span-2">{{ leave.user.name }}</div>
 
           <!-- Column 3: Leave status -->
-          <div class="lg:col-span-2" :class="leave.class">
+          <div class="xl:col-span-1" :class="leave.class">
             {{ getLeaveStatusLabel(leave.status || 'unknown') }}
           </div>
 
           <!-- Column 4: Reason -->
           <div
             v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-            class="lg:col-span-3 lg:mr-4"
+            class="xl:col-span-3 xl:mr-4"
           >
             <input
               v-if="leave.status === 'pending'"

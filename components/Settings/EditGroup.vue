@@ -9,7 +9,7 @@
     <div class="flex-1">
       <template v-if="componentLoading">
         <div class="px-[30px] py-[30px] flex flex-wrap gap-[15px]">
-          <div v-for="i in 3" :key="i" class="w-[300px]">
+          <div v-for="i in 3" :key="i" class="w-full sm:w-[300px]">
             <div
               class="h-[14px] bg-gray-200 dark:bg-neutral-700 rounded w-1/3 mb-[8px] animate-pulse"
             ></div>
@@ -26,7 +26,9 @@
       <template v-else>
         <div
           :class="
-            asModal ? 'px-[30px] pb-[30px] pt-[10px]' : 'grid grid-cols-12 pt-[30px] max-w-[947px]'
+            asModal
+              ? 'px-4 sm:px-[30px] pb-[30px] pt-[10px]'
+              : 'grid grid-cols-12 pt-[30px] max-w-[947px]'
           "
         >
           <div
@@ -37,7 +39,7 @@
             "
           >
             <!-- Group Name -->
-            <div :class="asModal ? 'w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
+            <div :class="asModal ? 'w-full sm:w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
               <label :class="labelClass"
                 >{{ $t('settings.groupName') }} <span class="text-[#EA021A]">*</span></label
               >
@@ -49,7 +51,7 @@
               />
             </div>
             <!-- Group Head -->
-            <div :class="asModal ? 'w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
+            <div :class="asModal ? 'w-full sm:w-[300px]' : 'w-full col-span-2 sm:col-span-1'">
               <CustomSelect
                 v-model="formSelectedDepartmentHead"
                 :options="availableFormUsers"

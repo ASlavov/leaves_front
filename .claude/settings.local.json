@@ -41,7 +41,9 @@
       "Bash(node -e \":*)",
       "Bash(npx eslint:*)",
       "Bash(grep -v \"^$\")",
-      "Bash(grep -n \"$toast\" stores/centralStore.ts)"
+      "Bash(grep -n \"$toast\" stores/centralStore.ts)",
+      "Bash(ls -d C:UsersUserDesktopnew_intelligenceintelligence/components/*/)",
+      "Bash(node:*)"
     ]
   }
 }

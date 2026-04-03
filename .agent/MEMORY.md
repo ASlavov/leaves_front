@@ -6,6 +6,8 @@
 - **TypeScript Migration**: Enabled `lang="ts"` across most core components (`app.vue`, `CustomMultiSelect.vue`, etc.) to improve type safety and developer experience.
 - **Shared Type Definitions**: Centralized types in `~/types/index.ts` (e.g., `User`, `Leave`, `Option`, `Department`) to ensure consistency across components and stores.
 - **Component Refactoring**: Migrated legacy Options API components to `<script setup>` for better alignment with Nuxt 3 best practices.
+- **Shared Components**: Extracted reusable elements like `SharedLogo` into `components/shared/` to reduce duplication and improve maintainability.
+- **VS Code Alignment**: Created `.vscode/settings.json` to ensure the ESLint extension correctly handles Flat Config and auto-fixes on save.
 
 ## Resolved Issues
 

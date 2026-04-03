@@ -169,11 +169,11 @@
     "datesSelected": "{count} date(s) selected",
     "addHolidaysCount": "Add {count} holiday(s)",
     "massAddSuccess": "{count} holiday(s) added successfully!",
-    "massDeleteSelected": "Delete selected ({count})",
+    "massDeleteHolidaysSelected": "Delete selected ({count})",
     "massDeleteHolidays": "Delete selected holidays",
     "massDeleteHolidaysConfirm": "You are about to delete {count} holiday(s). This cannot be undone.",
     "massDeleteConfirmBtn": "Delete {count}",
-    "massDeleteSuccess": "{count} holiday(s) deleted."
+    "massDeleteHolidaysSuccess": "{count} holiday(s) deleted."
   },
   "leaves": {
     "cancelLeave": "Cancel Leave",
@@ -271,6 +271,7 @@
     "cancel": "Cancel",
     "sending": "Sending…",
     "irreversibleAction": "This action cannot be undone.",
+    "messagePerson": "Message Person",
     "none": "None"
   },
   "calendar": {

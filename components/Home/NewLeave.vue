@@ -15,7 +15,7 @@
     aria-labelledby="hs-scale-animation-modal-label"
     @click.self="closeModal"
   >
-    <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-lg relative">
+    <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-lg mx-4 relative">
       <button
         type="button"
         class="absolute top-2 right-2 size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
