@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event);
 
-  const { requestingUserId, token } = event.context;
+  const { token } = event.context;
   if (!token) {
     throw createError({
       statusCode: 403,
@@ -16,20 +16,17 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { userId, leaveTypeId, startDate, endDate, reason } = body;
-    const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeave}`, {
+    const response = await $fetch(`${config.public.apiBase}/admin-leave`, {
       method: 'POST',
       body: {
-        id: userId,
-        leave_type_id: leaveTypeId,
-        start_date: startDate,
-        end_date: endDate,
-        reason: reason,
-        requesting_user_id: requestingUserId,
-        attachment_base64: body.attachmentBase64 ?? null,
-        attachment_filename: body.attachmentFilename ?? null,
-        start_time: body.startTime ?? null,
-        end_time: body.endTime ?? null,
+        user_id: body.userId,
+        leave_type_id: body.leaveTypeId,
+        start_date: body.startDate,
+        end_date: body.endDate,
+        reason: body.reason,
+        administrative_reason: body.administrativeReason,
+        status: body.status,
+        skip_wallet_deduction: body.skipWalletDeduction,
       },
       headers: {
         Authorization: `Bearer ${token}`, // Use the token in the Authorization header

@@ -342,6 +342,13 @@
                 @click="editUser(user.id)"
                 >{{ $t('settings.editProfile') }}</a
               >
+              <button
+                v-if="permissionsStore.can('all_users', 'modify')"
+                class="flex w-full items-center gap-[15px] px-[15px] py-[10px] text-[14px] text-red-600 hover:bg-[#F5F9FC] dark:hover:bg-neutral-700"
+                @click="showTerminateUser(user.id)"
+              >
+                {{ $t('settings.terminate') }}
+              </button>
               <svg
                 v-if="permissionsStore.can('all_users', 'modify')"
                 class="cursor-pointer"
@@ -393,6 +400,13 @@
       @saved="closeModal"
     />
   </SharedBaseModal>
+
+  <TerminateUserModal
+    v-if="terminateUserId"
+    v-model="terminateUserModalOpen"
+    :user-id="terminateUserId"
+    @terminated="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
@@ -400,6 +414,7 @@ import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
 import EditUser from '@/components/Settings/EditUser.vue';
 import SharedUserAvatar from '@/components/shared/UserAvatar.vue';
+import TerminateUserModal from '@/components/Settings/TerminateUserModal.vue';
 import { useAllUsers } from '@/composables/userApiComposable';
 import type { User } from '~/types';
 
@@ -525,6 +540,14 @@ const editUser = (userId: string | number) => {
   selectedUserId.value = userId;
   modalType.value = 'edit';
   showModal.value = true;
+};
+
+const terminateUserModalOpen = ref(false);
+const terminateUserId = ref<string | number | null>(null);
+
+const showTerminateUser = (userId: string | number) => {
+  terminateUserId.value = userId;
+  terminateUserModalOpen.value = true;
 };
 
 const deleteUser = (userId: string | number) => {

@@ -15,7 +15,13 @@ import {
   restoreLeaveTypeComposable,
 } from '@/composables/leavesApiComposable';
 import { useI18n } from 'vue-i18n';
-import type { LeaveType, User, LeaveStatus, AvailableDaysEntry } from '~/types';
+import type {
+  LeaveType,
+  User,
+  LeaveStatus,
+  AvailableDaysEntry,
+  UpdateLeaveTypePayload,
+} from '~/types';
 
 export const useLeavesStore = defineStore('leavesStore', () => {
   const leavesData = ref<{
@@ -133,10 +139,24 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     startDate: string,
     endDate: string,
     reason: string,
+    startTime?: string,
+    endTime?: string,
+    attachmentBase64?: string,
+    attachmentFilename?: string,
   ) {
     try {
       loading.value = true;
-      const result = await newLeaveComposable({ userId, leaveTypeId, startDate, endDate, reason });
+      const result = await newLeaveComposable({
+        userId,
+        leaveTypeId,
+        startDate,
+        endDate,
+        reason,
+        startTime,
+        endTime,
+        attachmentBase64,
+        attachmentFilename,
+      });
 
       if (result) {
         await getAll(userId);
@@ -244,15 +264,10 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     }
   }
 
-  async function updateLeaveType(
-    id: string | number,
-    name: string,
-    dependsOnTypeId?: string | number | null,
-    allowRollover?: boolean,
-  ) {
+  async function updateLeaveType(payload: UpdateLeaveTypePayload) {
     try {
       loading.value = true;
-      const result = await updateLeaveTypeComposable({ id, name, dependsOnTypeId, allowRollover });
+      const result = await updateLeaveTypeComposable(payload);
       if (result) {
         await getLeavesTypes();
       }
@@ -264,14 +279,10 @@ export const useLeavesStore = defineStore('leavesStore', () => {
     }
   }
 
-  async function createLeaveType(
-    name: string,
-    dependsOnTypeId?: string | number | null,
-    allowRollover?: boolean,
-  ) {
+  async function createLeaveType(payload: Omit<UpdateLeaveTypePayload, 'id'>) {
     try {
       loading.value = true;
-      const result = await newLeaveTypeComposable({ name, dependsOnTypeId, allowRollover });
+      const result = await newLeaveTypeComposable(payload);
       if (result) {
         await getLeavesTypes();
       }

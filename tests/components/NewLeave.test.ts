@@ -89,6 +89,10 @@ describe('NewLeave.vue', () => {
       '2026-04-01',
       '2026-04-05',
       'Test comment',
+      undefined, // startTime (hourly leave — not set)
+      undefined, // endTime
+      undefined, // attachmentBase64
+      undefined, // attachmentFilename
     );
   });
 });

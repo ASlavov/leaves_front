@@ -135,8 +135,15 @@
               </div>
               <!-- Email -->
               <div class="w-full lg:w-[300px]">
-                <label :class="labelClass">Email <span class="text-[#EA021A]">*</span></label>
-                <input v-model="formEmail" type="email" :class="inputClass" placeholder="Email" />
+                <label :class="labelClass"
+                  >{{ $t('common.email') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="formEmail"
+                  type="email"
+                  :class="inputClass"
+                  :placeholder="$t('common.email')"
+                />
               </div>
               <!-- Group -->
               <div v-if="permissionsStore.can('group', 'modify')" class="w-full lg:w-[300px]">
@@ -157,6 +164,28 @@
                   :placeholder="$t('settings.selectRole')"
                   select-id="role-select"
                 />
+              </div>
+              <!-- Hire Date -->
+              <div v-if="canEdit" class="w-full lg:w-[300px]">
+                <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
+                <input v-model="formHireDate" type="date" :class="inputClass" />
+              </div>
+              <!-- Work Schedule -->
+              <div v-if="canEdit && !isNewUser" class="w-full lg:w-full">
+                <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
+                <div class="flex flex-wrap gap-4 mt-[6px]">
+                  <label
+                    v-for="(day, idx) in daysOfWeek"
+                    :key="idx"
+                    class="flex items-center gap-1 text-[14px]"
+                  >
+                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
+                    {{ day.label }}
+                  </label>
+                </div>
+                <p class="text-[12px] text-gray-500 mt-[6px]">
+                  {{ $t('settings.workScheduleNote') }}
+                </p>
               </div>
               <!-- Password (new user only) -->
               <div v-if="isNewUser" class="w-full lg:w-[300px]">
@@ -277,8 +306,15 @@
                 />
               </div>
               <div class="max-w-lg">
-                <label :class="labelClass">Email <span class="text-[#EA021A]">*</span></label>
-                <input v-model="formEmail" type="email" :class="inputClass" placeholder="Email" />
+                <label :class="labelClass"
+                  >{{ $t('common.email') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="formEmail"
+                  type="email"
+                  :class="inputClass"
+                  :placeholder="$t('common.email')"
+                />
               </div>
               <div class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.phone') }}</label>
@@ -316,6 +352,26 @@
                   :placeholder="$t('settings.selectRole')"
                   select-id="role-select"
                 />
+              </div>
+              <div v-if="canEdit" class="max-w-lg">
+                <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
+                <input v-model="formHireDate" type="date" :class="inputClass" />
+              </div>
+              <div v-if="canEdit && !isNewUser" class="max-w-lg lg:col-span-2">
+                <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
+                <div class="flex flex-wrap gap-4 mt-[6px]">
+                  <label
+                    v-for="(day, idx) in daysOfWeek"
+                    :key="idx"
+                    class="flex items-center gap-1 text-[14px]"
+                  >
+                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
+                    {{ day.label }}
+                  </label>
+                </div>
+                <p class="text-[12px] text-gray-500 mt-[6px]">
+                  {{ $t('settings.workScheduleNote') }}
+                </p>
               </div>
               <div class="info-actions pt-10 pb-5 flex gap-4 lg:col-span-2">
                 <button :class="submitBtnClass" @click="submitForm">
@@ -386,6 +442,18 @@ const formInternalPhone = ref('');
 const formTitleDescription = ref('');
 const formPhoto = ref<string | null>(null);
 const formSelectedDepartmentId = ref<string | number>('');
+const formHireDate = ref('');
+const formWorkSchedule = ref<number[]>([]);
+
+const daysOfWeek = [
+  { label: 'Sun', value: 0 },
+  { label: 'Mon', value: 1 },
+  { label: 'Tue', value: 2 },
+  { label: 'Wed', value: 3 },
+  { label: 'Thu', value: 4 },
+  { label: 'Fri', value: 5 },
+  { label: 'Sat', value: 6 },
+];
 
 // Computed properties for avatar initials
 const firstNameInitial = computed(() => formFirstName.value.charAt(0).toUpperCase() || '');
@@ -459,8 +527,8 @@ async function fetchUserData() {
         initializeFormFields(newUserInfo);
       }
     }
-  } catch {
-    $toast.error('Error fetching user data.');
+  } catch (err) {
+    useNuxtApp().$toast.error(t('errors.user.fetchFailed'));
   }
 }
 
@@ -478,6 +546,8 @@ function initializeFormFields(userInfo: User) {
   formTitleDescription.value = userInfo.profile?.title_description || '';
   formSelectedDepartmentId.value = userInfo.department?.id ? String(userInfo.department.id) : '';
   formPhoto.value = userInfo.profile?.profile_image_base64 || null;
+  formHireDate.value = userInfo.hire_date || '';
+  formWorkSchedule.value = userInfo.work_schedule || [];
 }
 
 const submitForm = async () => {
@@ -508,6 +578,7 @@ const submitForm = async () => {
         userTitle,
         userTitleDescription,
         userImage,
+        formHireDate.value || null,
       );
     } else if (props.userId) {
       await userStore.editUser(
@@ -521,6 +592,8 @@ const submitForm = async () => {
         userTitle,
         userTitleDescription,
         userImage,
+        formWorkSchedule.value.length > 0 ? formWorkSchedule.value : null,
+        formHireDate.value || null,
       );
     }
     (useNuxtApp() as any).$toast.success(t('settings.profileUpdated'));

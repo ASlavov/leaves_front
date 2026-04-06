@@ -31,10 +31,18 @@
       >
         <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-          class="text-black dark:text-white col-span-1 font-bold flex items-center gap-2"
+          class="text-black dark:text-white col-span-1 font-bold flex flex-wrap items-center gap-4"
         >
-          {{ $t('leaves.leaveRequests') }}
-          <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
+          <div>
+            {{ $t('leaves.leaveRequests') }}
+            <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
+          </div>
+          <button
+            class="py-1 px-3 text-[13px] bg-[#EA021A] text-white rounded hover:bg-red-700 transition"
+            @click="adminLeaveModalOpen = true"
+          >
+            {{ $t('leaves.admin.recordBtn') }}
+          </button>
         </div>
         <div v-else>
           {{ $t('leaves.yearlyLeaves') }}
@@ -217,6 +225,7 @@
         </div>
       </div>
     </div>
+    <AdminLeaveModal v-model="adminLeaveModalOpen" @saved="refreshLeaves" />
   </div>
 </template>
 
@@ -227,6 +236,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n';
 import { extractApiError } from '@/utils/extractApiError';
 import type { Leave, User, LeaveType, Department } from '@/types';
+import AdminLeaveModal from './AdminLeaveModal.vue';
 import {
   useAllUserLeavesReactive,
   useLeavesTypesReactive,
@@ -234,6 +244,8 @@ import {
 } from '@/composables/leavesApiComposable';
 
 const { t, locale } = useI18n();
+
+const adminLeaveModalOpen = ref(false);
 
 // Setup stores
 const centralStore = useCentralStore();

@@ -16,6 +16,15 @@
 - **Legacy Files Cleanup**: Deleted `Calendar_OLD.vue` and related unused components to reduce linting noise.
 - **Vitest Failure**: Fixed an assertion error in `YearlyLeavesFlow.test.ts` where 'John Doe' was expected but not found due to rendering delays or incorrect store state in tests.
 
+- **Rules Engine Frontend Proxy Pattern**: The frontend was heavily modified to support the new rules engine with `nuxt proxy` routes to shield actual backend endpoints.
+- **Strong Typing for- **Rules Engine Frontend**: Implemented dynamic UI in `NewLeave.vue`, `EditLeaveType.vue`, and `EditUser.vue`.
+- **Administrative Modals**: Created `AdminLeaveModal.vue` and `TerminateUserModal.vue`.
+- **Internationalization (i18n)**: Fully localized all new components. Translation keys implemented in `en.json` and `el.json`.
+- **Type Refactoring**: Modularized `types/index.ts` into feature-specific files (`auth.ts`, `user.ts`, `leave.ts`, etc.) and a central `models.ts` to improve maintainability and resolve circular dependencies. Updated `index.ts` to a barrel file.
+- **Architecture Decision**: Injected `AdminLeaveModal` directly into `YearlyLeaves.vue` to allow admins to record leaves contextually while viewing requests. Removed hardcoded English strings to comply with project standards.
+expected bugs during API calls.
+- **Rules Engine UI Components**: Extended complex components such as `NewLeave.vue` for dynamic behavior depending on hourly configs vs full-day configs, including warnings for wallet overflow scenarios.
+
 ## Context
 
 - **RetryFetch**: Located in `utils/retryFetch.ts`. It wraps `useFetch` with retry logic for robust API communication.

@@ -22,7 +22,7 @@
         aria-label="Close"
         @click="closeModal"
       >
-        <span class="sr-only">Close</span>
+        <span class="sr-only">{{ $t('common.cancel') }}</span>
         <svg
           class="shrink-0 size-4"
           xmlns="http://www.w3.org/2000/svg"
@@ -59,6 +59,26 @@
           <div class="leave-counter-count text-red-600 font-bold text-md text-lg">
             {{ selectedLeave?.remaining_days ?? '0' }}
           </div>
+          <div
+            v-if="selectedLeaveTypeTemplate?.accrual_type === 'pro_rata_monthly' && isFirstYear"
+            class="text-[10px] text-blue-600 dark:text-blue-400 mt-1 leading-tight px-1"
+          >
+            {{ $t('leaves.proRataNote') }}
+          </div>
+        </div>
+        <div
+          v-if="
+            selectedLeaveTypeTemplate?.allow_wallet_overflow &&
+            computedRequestedDays > remainingDays
+          "
+          class="bg-amber-100 text-amber-800 p-2 rounded text-sm mt-3 text-center mx-auto max-w-[400px]"
+        >
+          {{
+            $t('leaves.overflowWarning', {
+              paid: remainingDays,
+              overflow: (computedRequestedDays - remainingDays).toFixed(2),
+            })
+          }}
         </div>
         <div class="new-leave-form py-10">
           <form class="space-y-6" @submit.prevent="submitForm">
@@ -96,7 +116,10 @@
                 <label
                   for="input2"
                   class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-                  >{{ $t('leaves.fromDate') }} <span class="text-[#EA021A]">*</span></label
+                  >{{
+                    selectedLeaveTypeTemplate?.is_hourly ? $t('common.date') : $t('leaves.fromDate')
+                  }}
+                  <span class="text-[#EA021A]">*</span></label
                 >
                 <input
                   ref="datePickerStart"
@@ -106,7 +129,7 @@
                   :placeholder="$t('common.selectDate')"
                 />
               </div>
-              <div>
+              <div v-show="!selectedLeaveTypeTemplate?.is_hourly">
                 <label
                   for="input3"
                   class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
@@ -119,6 +142,47 @@
                   class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
                   :placeholder="$t('common.selectDate')"
                 />
+              </div>
+            </div>
+
+            <!-- Hourly Time Row -->
+            <div
+              v-if="selectedLeaveTypeTemplate?.is_hourly"
+              class="grid grid-cols-1 sm:grid-cols-2 gap-6"
+            >
+              <div>
+                <label class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
+                  >{{ $t('leaves.startTime') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="startTime"
+                  type="time"
+                  class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
+                  >{{ $t('leaves.endTime') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="endTime"
+                  type="time"
+                  class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
+                />
+              </div>
+              <div class="col-span-2 text-sm text-gray-600 dark:text-gray-300 -mt-2">
+                <span v-if="computedRequestedDays > 0">
+                  =
+                  {{
+                    (
+                      computedRequestedDays * (selectedLeaveTypeTemplate.hours_per_day || 8)
+                    ).toFixed(2)
+                  }}
+                  {{ $t('settings.hoursPerDay').toLowerCase() }} ({{
+                    computedRequestedDays.toFixed(2)
+                  }}
+                  {{ $t('leaves.days') }})
+                </span>
               </div>
             </div>
 
@@ -137,6 +201,23 @@
                   :placeholder="$t('leaves.yourComments')"
                 ></textarea>
               </div>
+            </div>
+
+            <!-- Attachment -->
+            <div v-if="isAttachmentRequired">
+              <label class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100">
+                {{ $t('leaves.attachmentRequired') }}
+                <span class="text-[12px] text-gray-500 font-normal">{{
+                  $t('leaves.exceedsThreshold')
+                }}</span>
+                <span class="text-[#EA021A]">*</span>
+              </label>
+              <input
+                type="file"
+                accept=".jpg,.png,.pdf"
+                class="py-2.5 px-4 block w-full border border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:border-neutral-700 dark:text-gray-100"
+                @change="handleAttachmentChange"
+              />
             </div>
 
             <!-- Fourth row: Button and success message -->
@@ -205,7 +286,74 @@ const startDate = ref('');
 const endDate = ref('');
 const comments = ref('');
 
+const startTime = ref('');
+const endTime = ref('');
+const attachmentBase64 = ref('');
+const attachmentFilename = ref('');
+
 const isModalOpen = ref(false);
+
+const selectedLeaveTypeTemplate = computed(() => {
+  return leavesTypes.value.find((lt) => String(lt.id) === String(leaveType.value)) || null;
+});
+
+const isFirstYear = computed(() => {
+  const hireDateStr = userStore.userInfo?.hire_date;
+  if (!hireDateStr) return false;
+  const hireY = new Date(hireDateStr).getFullYear();
+  return hireY === new Date().getFullYear();
+});
+
+const remainingDays = computed(() => {
+  if (!selectedLeave.value) return 0;
+  return typeof selectedLeave.value.remaining_days === 'number'
+    ? selectedLeave.value.remaining_days
+    : parseFloat(selectedLeave.value.remaining_days as unknown as string);
+});
+
+const computedRequestedDays = computed(() => {
+  if (selectedLeaveTypeTemplate.value?.is_hourly) {
+    if (!startTime.value || !endTime.value) return 0;
+    const startParts = startTime.value.split(':');
+    const endParts = endTime.value.split(':');
+    const hours =
+      parseInt(endParts[0]) +
+      parseInt(endParts[1]) / 60 -
+      (parseInt(startParts[0]) + parseInt(startParts[1]) / 60);
+    const hrsPerDay = selectedLeaveTypeTemplate.value.hours_per_day || 8;
+    return hours > 0 ? hours / hrsPerDay : 0;
+  }
+
+  if (!startDate.value || !endDate.value) return 0;
+
+  const current = new Date(startDate.value);
+  const end = new Date(endDate.value);
+  let days = 0;
+  while (current <= end) {
+    if (!isExcludedDay(current)) days++;
+    current.setDate(current.getDate() + 1);
+  }
+  return days;
+});
+
+const isAttachmentRequired = computed(() => {
+  const threshold = selectedLeaveTypeTemplate.value?.attachment_required_after_days;
+  if (!threshold) return false;
+  return computedRequestedDays.value > threshold;
+});
+
+const handleAttachmentChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    attachmentFilename.value = file.name;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      attachmentBase64.value = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
 // Format a JS Date as YYYY-MM-DD using local time (avoids UTC offset issues)
 const toLocalDateStr = (date: Date) => {
@@ -248,12 +396,9 @@ const initializeDatePickers = () => {
   const today = new Date();
 
   // Get the remaining days from the selected leave type
-  const remainingDays = selectedLeave.value
-    ? typeof selectedLeave.value.available_days === 'number'
-      ? selectedLeave.value.available_days
-      : parseFloat(selectedLeave.value.available_days as unknown as string)
-    : 0;
-  const maxDays = Math.max(0, remainingDays - 1);
+  const maxDays = selectedLeaveTypeTemplate.value?.allow_wallet_overflow
+    ? 999
+    : Math.max(0, remainingDays.value - 1);
 
   // Logic for the start date picker
   if (datePickerStart.value) {
@@ -353,11 +498,16 @@ const selectedLeave = computed<AvailableDaysEntry | null>(() => {
 const submitForm = async () => {
   if (!user_id.value) return;
 
+  if (isAttachmentRequired.value && !attachmentBase64.value) {
+    useNuxtApp().$toast.error(t('errors.leaves.attachmentRequired'), { position: 'bottom-right' });
+    return;
+  }
+
   const leaveRequest = {
     id: user_id.value,
     leave_type_id: leaveType.value,
     start_date: startDate.value,
-    end_date: endDate.value,
+    end_date: selectedLeaveTypeTemplate.value?.is_hourly ? startDate.value : endDate.value,
     reason: comments.value,
   };
 
@@ -368,6 +518,10 @@ const submitForm = async () => {
       leaveRequest.start_date,
       leaveRequest.end_date,
       leaveRequest.reason,
+      selectedLeaveTypeTemplate.value?.is_hourly ? startTime.value : undefined,
+      selectedLeaveTypeTemplate.value?.is_hourly ? endTime.value : undefined,
+      isAttachmentRequired.value ? attachmentBase64.value : undefined,
+      isAttachmentRequired.value ? attachmentFilename.value : undefined,
     );
 
     useNuxtApp().$toast.success(t('leaves.submitSuccess'), {

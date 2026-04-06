@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
       userTitle,
       userTitleDescription,
       userImage,
+      hireDate,
     } = body;
 
     const response = await $fetch(`${config.public.apiBase}/users`, {
@@ -34,6 +35,7 @@ export default defineEventHandler(async (event) => {
         job_title: userTitle,
         job_description: userTitleDescription,
         profile_image: userImage,
+        hire_date: hireDate ?? undefined,
       },
       headers: {
         Authorization: `Bearer ${token}`,
