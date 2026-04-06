@@ -16,8 +16,11 @@ export default defineEventHandler(async (event) => {
   //console.log('Requesting with:', body.email, body.password);  // Log the values before making the request
   try {
     // Make a POST request to authenticate the user with the external API
-    console.log(`${config.public.apiBase}${config.public.auth.auth}`);
-    const result = (await $fetch(`${config.public.apiBase}${config.public.auth.auth}`, {
+    const targetUrl = `${config.public.apiBase}${config.public.auth.auth}`;
+    console.log('API Target URL:', targetUrl);
+    console.log('API Secret exists:', !!config.apiSecret);
+
+    const result = (await $fetch(targetUrl, {
       method: 'POST',
       body: {
         email: body.email,
@@ -59,10 +62,19 @@ export default defineEventHandler(async (event) => {
     throw new Error(`Authentication failed`);
   } catch (error: any) {
     // Handle authentication failure
-    console.error('Authentication error:', error);
+    const status = error.response?.status || error.statusCode || 500;
+    const message = error.response?._data?.message || error.message || 'Authentication failed';
+    
+    console.error('Authentication error details:', {
+      status,
+      message,
+      data: error.response?._data,
+      apiBase: config.public.apiBase,
+    });
+
     throw createError({
       statusCode: 401,
-      statusMessage: 'Authentication failed',
+      statusMessage: `Authentication failed: ${message}`,
     });
   }
 });

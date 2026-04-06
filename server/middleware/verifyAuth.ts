@@ -5,13 +5,14 @@ import { setCookie, useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   // Check if the request path starts with `/api/auth`
-  const url = event.node.req.url || '';
+  const url = event.path || '';
 
   if (!url.startsWith('/api')) {
     return;
   }
-  if (url.startsWith('/api/auth')) {
-    // Skip the middleware for this path
+  
+  // Exempt authentication routes from session verification
+  if (url.startsWith('/api/auth') || url === '/api/me') {
     return;
   }
 
@@ -26,10 +27,10 @@ export default defineEventHandler(async (event) => {
       sameSite: 'strict',
       maxAge: 0,
     });
-    return {
+    throw createError({
       statusCode: 403,
       statusMessage: 'Not authenticated',
-    };
+    });
   }
 
   try {
