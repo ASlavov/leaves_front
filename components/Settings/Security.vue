@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100">
+  <div
+    class="bg-white rounded-lg duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100"
+  >
     <div class="flex-1">
       <template v-if="loading">
         <!-- Loading Skeletons -->
@@ -16,82 +18,222 @@
         </div>
       </template>
       <template v-else>
-<!-- TODO: border-rounded to ::before instead -->
-        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px]">Αλλαγή κωδικού</h3>
+        <!-- TODO: border-rounded to ::before instead -->
+        <h3
+          class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px]"
+        >
+          {{ $t('settings.changePassword') }}
+        </h3>
         <div class="grid grid-cols-12 pt-[30px] max-w-[847px]">
           <!-- Info Details -->
           <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px] max-w-[625px]">
             <!-- Form Group -->
             <div class="max-w-[300px] col-span-2">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Υπάρχον κωδικός</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white"
+                >{{ $t('settings.currentPassword') }} <span class="text-[#EA021A]">*</span></label
+              >
               <div class="relative">
                 <input
-                    v-model="currentPassword"
-                    name="current-password" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value>
-                <button @click="togglePassword('current-password')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
-                  <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  v-model="currentPassword"
+                  name="current-password"
+                  type="password"
+                  class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                  placeholder="******"
+                  value
+                />
+                <button
+                  type="button"
+                  class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500"
+                  @click="togglePassword('current-password')"
+                >
+                  <svg
+                    class="shrink-0 size-3.5"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                    <path class="group-[.open]:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                    <path class="group-[.open]:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                    ></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                    ></path>
                     <line class="group-[.open]:hidden" x1="2" x2="22" y1="2" y2="22"></line>
-                    <path class="hidden group-[.open]:block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <path
+                      class="hidden group-[.open]:block"
+                      d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+                    ></path>
                     <circle class="hidden group-[.open]:block" cx="12" cy="12" r="3"></circle>
                   </svg>
                 </button>
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Νέος κωδικός</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white"
+                >{{ $t('settings.newPassword') }} <span class="text-[#EA021A]">*</span></label
+              >
               <div class="relative">
                 <input
-                    v-model="newPassword"
-                    name="new-password" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******" value>
-                <button @click="togglePassword('new-password')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
-                  <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  v-model="newPassword"
+                  name="new-password"
+                  type="password"
+                  class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                  placeholder="******"
+                  value
+                />
+                <button
+                  type="button"
+                  class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500"
+                  @click="togglePassword('new-password')"
+                >
+                  <svg
+                    class="shrink-0 size-3.5"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                    <path class="group-[.open]:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                    <path class="group-[.open]:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                    ></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                    ></path>
                     <line class="group-[.open]:hidden" x1="2" x2="22" y1="2" y2="22"></line>
-                    <path class="hidden group-[.open]:block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <path
+                      class="hidden group-[.open]:block"
+                      d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+                    ></path>
                     <circle class="hidden group-[.open]:block" cx="12" cy="12" r="3"></circle>
                   </svg>
                 </button>
               </div>
             </div>
             <div class="max-w-[300px]">
-              <label class="block font-bold text-black text-sm mb-2 dark:text-white">Επιβεβαίωση νέου κωδικού</label>
+              <label class="block font-bold text-black text-sm mb-2 dark:text-white"
+                >{{ $t('settings.confirmPassword') }} <span class="text-[#EA021A]">*</span></label
+              >
               <div class="relative">
                 <input
-                    v-model="confirmPassword"
-                    name="new-password-confirm" type="password"
-                       class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400" placeholder="******">
-                <button @click="togglePassword('new-password-confirm')" type="button" class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500">
-                  <svg class="shrink-0 size-3.5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  v-model="confirmPassword"
+                  name="new-password-confirm"
+                  type="password"
+                  class="py-3 px-4 block w-full border-gray-200 border pe-10 rounded-lg transition-all hover:border-gray-400 dark:hover:border-neutral-300 text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400"
+                  placeholder="******"
+                />
+                <button
+                  type="button"
+                  class="group absolute inset-y-0 end-0 flex items-center z-20 px-3 cursor-pointer text-gray-400 rounded-e-md focus:outline-none focus:text-blue-600 dark:text-neutral-600 dark:focus:text-blue-500"
+                  @click="togglePassword('new-password-confirm')"
+                >
+                  <svg
+                    class="shrink-0 size-3.5"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <path class="group-[.open]:hidden" d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                    <path class="group-[.open]:hidden" d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                    <path class="group-[.open]:hidden" d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"
+                    ></path>
+                    <path
+                      class="group-[.open]:hidden"
+                      d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"
+                    ></path>
                     <line class="group-[.open]:hidden" x1="2" x2="22" y1="2" y2="22"></line>
-                    <path class="hidden group-[.open]:block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                    <path
+                      class="hidden group-[.open]:block"
+                      d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"
+                    ></path>
                     <circle class="hidden group-[.open]:block" cx="12" cy="12" r="3"></circle>
                   </svg>
                 </button>
+              </div>
+            </div>
+            <!-- Password Requirements Block -->
+            <div class="col-span-2 pt-2">
+              <div class="flex flex-col gap-[6px] items-start relative size-full text-[12px]">
+                <p class="font-bold leading-[normal] relative shrink-0 text-black dark:text-white">
+                  {{ $t('settings.passwordRequirements.title') }}
+                </p>
+                <ul
+                  class="block font-medium leading-[18px] list-disc text-[#808080] dark:text-neutral-400 ml-4"
+                >
+                  <li
+                    :class="{ 'text-green-600 dark:text-green-400': passwordRequirements.length }"
+                  >
+                    {{ $t('settings.passwordRequirements.length') }}
+                  </li>
+                  <li
+                    :class="{
+                      'text-green-600 dark:text-green-400': passwordRequirements.uppercase,
+                    }"
+                  >
+                    {{ $t('settings.passwordRequirements.uppercase') }}
+                  </li>
+                  <li
+                    :class="{
+                      'text-green-600 dark:text-green-400': passwordRequirements.lowercase,
+                    }"
+                  >
+                    {{ $t('settings.passwordRequirements.lowercase') }}
+                  </li>
+                  <li
+                    :class="{ 'text-green-600 dark:text-green-400': passwordRequirements.number }"
+                  >
+                    {{ $t('settings.passwordRequirements.number') }}
+                  </li>
+                  <li
+                    :class="{ 'text-green-600 dark:text-green-400': passwordRequirements.symbol }"
+                  >
+                    {{ $t('settings.passwordRequirements.symbol') }}
+                  </li>
+                </ul>
               </div>
             </div>
             <!-- End Form Group -->
           </div>
         </div>
-        <h3 class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px] mt-[40px]">2ο Επίπεδο Ασφάλειας</h3>
+        <h3
+          class="border-l-4 dark:text-white border-red-500 pl-[20px] ml-[-25px] text-black font-bold text-[18px] mt-[40px]"
+        >
+          {{ $t('settings.twoFactorAuth') }}
+        </h3>
         <div class="">
-          <div class="max-w-[609px] mt-[20px] w-full text-black dark:text-gray-100 text-sm text-[14px] leading-[18px]">Αυξήστε την ασφάλεια του λογαριασμού σας.<br>Με το 2ο επίπεδο ασφάλειας, για να συνδεθείτε στο Control Panel θα συμπληρώνετε το password σας και έναν κωδικό επιβεβαίωσης από την εφαρμογή του κινητού σας τηλεφώνου.</div>
+          <div
+            class="max-w-[609px] mt-[20px] w-full text-black dark:text-gray-100 text-sm text-[14px] leading-[18px]"
+            v-html="$t('settings.twoFactorDesc')"
+          ></div>
         </div>
 
         <!-- Save Changes Button -->
         <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
-          <button @click="submitForm"
-                  class="inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none">
-            Αποθήκευση Αλλαγών
+          <button
+            class="inline-flex justify-center rounded-3xl border border-transparent bg-red-600 py-2 px-4 text-md font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none"
+            @click="submitForm"
+          >
+            {{ $t('common.saveChanges') }}
           </button>
         </div>
       </template>
@@ -100,14 +242,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 import { useCentralStore } from '@/stores/centralStore.js';
+import { useI18n } from 'vue-i18n';
+import { extractApiError } from '@/utils/extractApiError';
 
-const { authStore, userStore } = useCentralStore();
+const { t } = useI18n();
+const { userStore } = useCentralStore();
 
 const togglePassword = (name) => {
   const e = document.querySelector(`input[name="${name}"]`);
-  e.type = (e.type === 'password') ? 'text' : 'password';
+  e.type = e.type === 'password' ? 'text' : 'password';
 
   const btn = e.nextElementSibling;
   if (btn.classList.contains('open')) {
@@ -117,20 +262,45 @@ const togglePassword = (name) => {
   }
 };
 
-
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
+
+// Password requirements validation
+const passwordRequirements = computed(() => {
+  const p = newPassword.value;
+  return {
+    length: p.length >= 8,
+    uppercase: /[A-Z]/.test(p),
+    lowercase: /[a-z]/.test(p),
+    number: /[0-9]/.test(p),
+    symbol: /[^A-Za-z0-9]/.test(p),
+  };
+});
+
+const isPasswordValid = computed(() => {
+  const r = passwordRequirements.value;
+  return r.length && r.uppercase && r.lowercase && r.number && r.symbol;
+});
 
 // Submit form method
 const submitForm = async () => {
   const userId = userStore.userId;
 
+  // Validate password requirements
+  if (!isPasswordValid.value) {
+    useNuxtApp().$toast.error(t('settings.passwordInvalid'), {
+      position: 'bottom-right',
+      autoClose: 5000,
+    });
+    return;
+  }
+
   // Validate that new password and confirm password match
   if (newPassword.value !== confirmPassword.value) {
     // Handle the error, e.g., show an error message
-    useNuxtApp().$toast.error('Ο νέος κωδικός και ο κωδικός επιβεβαίωσης δεν ταιριάζουν!', {
-      position: "bottom-right",
+    useNuxtApp().$toast.error(t('settings.passwordMismatch'), {
+      position: 'bottom-right',
       autoClose: 5000, // Close automatically after 5 seconds
     });
     return;
@@ -147,17 +317,24 @@ const submitForm = async () => {
     // Call the API to update the password
     await userStore.updatePassword(data);
 
-    useNuxtApp().$toast.success('Ο κωδικός σας άλλαξε επιτυχώς!', {
-      position: "bottom-right",
+    useNuxtApp().$toast.success(t('settings.passwordChangeSuccess'), {
+      position: 'bottom-right',
       autoClose: 5000, // Close automatically after 5 seconds
     });
+
+    // Success - Force Logout after a short delay
+    setTimeout(async () => {
+      await logout();
+    }, 2000);
   } catch (error) {
-    // Handle errors, e.g., show an error message
-    console.error('Error updating password:', error);
-    useNuxtApp().$toast.error('Δεν μπορέσαμε να αλλάξουμε τον κωδικό σας!', {
-      position: "bottom-right",
-      autoClose: 5000, // Close automatically after 5 seconds
-    });
+    const { type, message } = extractApiError(error);
+    useNuxtApp().$toast.error(
+      type === 'user' && message ? message : t('settings.passwordChangeError'),
+      {
+        position: 'bottom-right',
+        autoClose: 5000,
+      },
+    );
   }
 };
 

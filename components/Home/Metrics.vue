@@ -1,61 +1,65 @@
 <template>
-    <div :class="{ 'bg-gray-200': loading, 'bg-white': !loading }" class="border rounded-lg hover:shadow-md transition-shadow duration-300 p-[25px] dark:bg-neutral-800 dark:text-gray-100">
-<!--        <div class="flex justify-between gap-4 whitespace-nowrap">-->
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <template v-if="loading">
-                  <div class="border rounded-lg animate-pulse p-4">
-                    <div class="grid grid-cols-2 gap-4">
-                      <div>
-                        <div class="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                        <div>
-                          <span class="h-4 bg-gray-200 rounded w-1/4 block mb-1"></span>
-                        </div>
-                        <div>
-                          <span class="h-4 bg-gray-200 rounded w-1/4 block"></span>
-                        </div>
-                      </div>
-                      <div class="chart-container">
-                        <div class="h-4 bg-gray-200 rounded w-full"></div>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                    <h5 class="text-lg font-semibold mb-[15px]"
-                    :style="`color:${leaveColor}`"
-                    >{{ leave.leave_type_name }}</h5>
-                    <div>
-                        <span class="font-bold">Σύνολο: </span>
-                        <span class="font-light">{{ leave.entitled_days }}</span>
-                    </div>
-                    <div>
-                        <span class="font-bold">Κατοχυρωμένες: </span>
-                        <span class="font-light">{{ usedDays }}</span>
-                    </div>
-                </template>
+  <div
+    :class="{ 'bg-gray-50': loading, 'bg-white': !loading }"
+    class="border border-[#dfeaf2] rounded-[8px] hover:shadow-md transition-shadow duration-300 p-[20px] dark:bg-neutral-800 dark:border-neutral-700 dark:text-gray-100 flex flex-col justify-between h-[120px] min-w-[280px]"
+  >
+    <div class="grid grid-cols-2 gap-2 h-full">
+      <div class="flex flex-col justify-between">
+        <template v-if="loading">
+          <div class="animate-pulse space-y-2">
+            <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+          </div>
+        </template>
+        <template v-else>
+          <h5
+            class="text-[16px] font-bold leading-tight line-clamp-2"
+            :style="{ color: leaveColor }"
+          >
+            {{ leave.leave_type_name }}
+          </h5>
+          <div class="space-y-1">
+            <div class="text-[13px] flex gap-1">
+              <span class="font-bold text-black dark:text-gray-300">{{ $t('common.total') }}</span>
+              <span class="font-semibold text-[#808080] dark:text-gray-400">{{
+                leave.entitled_days
+              }}</span>
             </div>
-            <div class="chart-container max-h-[100px] overflow-visible mt-[-10px]">
-                <template v-if="loading">
-                    <div class="skeleton-chart h-[70px]"></div>
-                </template>
-                <template v-else>
-                    <ClientOnly>
-                        <ApexCharts
-                            ref="mychart"
-                            :options="chartOptions"
-                            :series="chartSeries"
-                            type="radialBar" />
-                    </ClientOnly>
-                </template>
+            <div class="text-[13px] flex gap-1">
+              <span class="font-bold text-black dark:text-gray-300">{{ $t('leaves.used') }}</span>
+              <span class="font-semibold text-[#808080] dark:text-gray-400">{{ usedDays }}</span>
             </div>
-        </div>
+          </div>
+        </template>
+      </div>
+      <div class="chart-container flex items-center justify-end relative h-full overflow-visible">
+        <template v-if="loading">
+          <div
+            class="w-[90px] h-[90px] rounded-full bg-gray-100 animate-pulse dark:bg-neutral-700"
+          ></div>
+        </template>
+        <template v-else>
+          <RadialBarChart
+            :percentage="percentageUsed"
+            :value="leave.remaining_days || 0"
+            :color="leaveColor"
+            :label="chartLabel"
+            :size="90"
+          />
+        </template>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
-import {ref, computed, watch} from 'vue';
-import ApexCharts from 'vue3-apexcharts';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import RadialBarChart from '~/components/Home/RadialBarChart.vue';
+import { getTypeColor } from '@/utils/leaveColors';
+
+const { t } = useI18n();
 
 const props = defineProps({
   leave: {
@@ -67,99 +71,26 @@ const props = defineProps({
     required: true,
   },
 });
-const colorList = [
-  '#F44336',
-  '#9C27B0',
-  '#3F51B5',
-  '#2196F3',
-  '#009688',
-  '#FFC107',
-  '#FF5722',
-  '#795548',
-  '#607D8B',
-  '#4CAF50',
-];
-// Computed property for used days
+
+const leaveColor = computed(() => getTypeColor(props.leave.leave_type_id));
+
 const usedDays = computed(() => {
   const entitledDays = props.leave.entitled_days || 0;
   const remainingDays = props.leave.remaining_days || 0;
-  return entitledDays > 0 ? entitledDays - remainingDays : 0;
+  return Math.max(0, entitledDays - remainingDays);
 });
 
-const leaveColor = computed(() => colorList[props?.leave?.leave_type_id]);
-
-// Computed property for percentage used
 const percentageUsed = computed(() => {
   const entitledDays = props.leave.entitled_days || 0;
-  return entitledDays > 0 ? (usedDays.value / entitledDays) * 100 : 0;
+  if (entitledDays === 0) return 0;
+  return Math.min(100, (usedDays.value / entitledDays) * 100);
 });
-const theme = computed(() => {
-  const {$colorMode} = useNuxtApp();
-  return $colorMode?.value || 'light';
-});
-const mychart = ref(null);
-const modeColor = computed(() => (theme.value === 'dark') ? 'white' : 'black');
-// Computed property for chart options
-const chartOptions = computed(() => ({
-  chart: {
-    type: 'radialBar',
-  },
 
-  grid: {
-    padding: {
-      top: -4, // Reduce top padding
-      bottom: -4, // Reduce bottom padding
-      left: -4,
-      right: -4,
-    },
-  },
-  plotOptions: {
-    radialBar: {
-      offsetY: -10,
-      hollow: {
-        size: '55%',
-      },
-      dataLabels: {
-        enabled: true,
-        name: {
-          show: true,
-          offsetY: -2,
-          fontSize: "12px",
-          fontWeight: '500',
-          color: modeColor.value,
-          formatter: () => 'Υπόλοιπο',
-        },
-        value: {
-          show: true,
-          offsetY: 3,
-          fontSize: "20px",
-          fontWeight: 'bold',
-          color: modeColor.value,
-          formatter: () => props.leave.remaining_days || 0,
-        },
-      },
-    },
-  },
-  colors: [leaveColor.value],
-}));
-/*watch(theme, async() => {
-  console.log('something');
-  if (mychart) {
-    mychart.refresh()
-  }
-}, {immediate: true});*/
-
-
-// Computed property for chart series
-const chartSeries = computed(() => [percentageUsed.value]);
-
-
-
+const chartLabel = computed(() => t('leaves.remaining'));
 </script>
 
-
 <style scoped>
-.chart-container * {
-  font-family: 'Roboto', sans-serif !important;
+.chart-container {
+  width: 100%;
 }
 </style>

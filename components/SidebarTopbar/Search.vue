@@ -5,51 +5,54 @@
       <div class="relative">
         <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3.5">
           <svg
-              class="shrink-0 size-4 text-gray-400 dark:text-white/60"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+            class="shrink-0 size-4 text-gray-400 dark:text-white/60"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.3-4.3"></path>
           </svg>
         </div>
         <textarea
-            class="resize-none py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200 dark:bg-neutral-800 dark:text-gray-100"
-            type="text"
-            rows="1"
-            placeholder="Αναζήτηση χρήστη..."
-            v-model="searchQuery"
-            autocomplete="off"
-            @keydown.enter.prevent
-            @focus="showDropdownVar = true"
+          v-model="searchQuery"
+          class="resize-none py-3 ps-10 pe-4 block w-full border border-gray-100 rounded-lg text-sm focus:outline-gray-200 dark:bg-neutral-800 dark:text-gray-100"
+          type="text"
+          rows="1"
+          :placeholder="$t('common.searchUser')"
+          autocomplete="off"
+          @keydown.enter.prevent
+          @focus="showDropdownVar = true"
         />
       </div>
 
       <!-- SearchBox Dropdown -->
-      <div class="absolute z-50 w-full bg-white border border-gray-200 mt-2" v-show="showDropdown">
+      <div
+        v-show="showDropdown"
+        class="absolute z-50 w-full bg-white border border-gray-200 mt-2 rounded-lg shadow-xl dark:bg-neutral-800 dark:border-neutral-700"
+      >
         <div class="max-h-72 rounded-b-lg overflow-hidden overflow-y-auto">
-          <div v-for="(items, category) in groupedResults" :key="category">
+          <div v-for="(searchItems, category) in groupedResults" :key="category">
             <!-- Category heading -->
             <div
-                class="px-4 py-2 bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200 font-semibold"
+              class="px-4 py-2 bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200 font-semibold text-xs uppercase"
             >
               {{ category }}
             </div>
             <!-- Loop through items in the category -->
             <div
-                v-for="item in items"
-                :key="item.id"
-                class="flex items-center cursor-pointer py-2 px-4 w-full text-sm text-gray-800 hover:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                @click="openModal(item)"
+              v-for="item in searchItems"
+              :key="item.id"
+              class="flex items-center cursor-pointer py-3 px-4 w-full text-sm text-gray-800 hover:bg-gray-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 transition-colors"
+              @click="openModal(item)"
             >
-              <div>{{ item.name }}</div>
+              <div class="font-medium">{{ item.name }}</div>
             </div>
           </div>
         </div>
@@ -59,70 +62,138 @@
 
     <!-- Modal -->
     <div
-        v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-        @click.self="closeModal"
+      v-if="showModal"
+      class="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50"
+      @click.self="closeModal"
     >
-      <div class="bg-white dark:bg-neutral-800 dark:text-white p-6 rounded-lg w-full max-w-md relative">
-        <button @click="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-          <svg class="hover:stroke-gray-500 dark:hover:stroke-gray-100 dark:stroke-gray-500"  xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none" stroke="black">
-            <path d="M1 16L16 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M16 16L1 1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <div
+        class="bg-white dark:bg-neutral-800 dark:text-white p-8 rounded-xl w-full max-w-md relative shadow-2xl border dark:border-neutral-700"
+      >
+        <button
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          @click="closeModal"
+        >
+          <svg
+            class="shrink-0 size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
           </svg>
         </button>
-        <h2 class="text-lg font-bold mb-4">Πληροφορίες χρήστη</h2>
 
-        <!-- User Profile Image -->
-        <!-- <img :src="selectedUser.profile_image || 'default-profile-image.jpg'" :alt="selectedUser?.name"
-              class="rounded-full bg-gray-200 w-24 h-24 mb-4"> -->
+        <h2 class="text-xl font-bold mb-6 border-b pb-4 dark:border-neutral-700">
+          {{ $t('common.userInfo') }}
+        </h2>
 
         <!-- User Info -->
-        <div class="pt-4 space-y-2">
-          <div>
-            <span class="font-bold">Όνομα: </span
-            ><span class="text-gray-500">{{ firstName }}</span>
+        <div class="space-y-4">
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.firstName')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{ firstName }}</span>
           </div>
-          <div>
-            <span class="font-bold">Επώνυμο: </span
-            ><span class="text-gray-500">{{ lastName }}</span>
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.lastName')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{ lastName }}</span>
           </div>
-          <div>
-            <span class="font-bold">Τίτλος: </span
-            ><span class="text-gray-500">{{ selectedUser?.profile?.job_title }}</span>
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.title')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{
+              selectedUser?.profile?.job_title
+            }}</span>
           </div>
-          <div>
-            <span class="font-bold">Email: </span
-            ><span class="text-gray-500">{{ selectedUser?.email }}</span>
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.email')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{
+              selectedUser?.email
+            }}</span>
           </div>
-          <div>
-            <span class="font-bold">Κινητό: </span
-            ><span class="text-gray-500">{{ selectedUser?.profile?.phone }}</span>
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.phone')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{
+              selectedUser?.profile?.phone
+            }}</span>
           </div>
-          <div>
-            <span class="font-bold">Εσωτ. Τηλέφωνο: </span
-            ><span class="text-gray-500">{{ selectedUser?.profile?.internal_phone }}</span>
+          <div class="flex justify-between border-b dark:border-neutral-700 pb-2">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('common.internalPhone')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{
+              selectedUser?.profile?.internal_phone
+            }}</span>
           </div>
-          <div>
-            <span class="font-bold">Γκρουπ: </span
-            ><span class="text-gray-500">{{ selectedUser?.department?.name }}</span>
+          <div class="flex justify-between">
+            <span class="font-bold text-gray-400 dark:text-neutral-500 uppercase text-xs">{{
+              $t('settings.group')
+            }}</span>
+            <span class="text-gray-800 dark:text-gray-100 font-medium">{{
+              selectedUser?.department?.name
+            }}</span>
           </div>
         </div>
 
         <!-- Next / Previous buttons -->
-        <div v-if="hasMultipleUsers" class="mt-4 flex justify-between">
+        <div
+          v-if="hasMultipleUsers"
+          class="mt-8 flex justify-between border-t dark:border-neutral-700 pt-6"
+        >
           <button
-              @click="previousUser"
-              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:bg-neutral-600 dark:hover:bg-neutral-500"
-              :disabled="!hasPrevious"
+            class="flex items-center justify-center size-10 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors dark:bg-neutral-700 dark:hover:bg-neutral-600 disabled:opacity-30"
+            :disabled="!hasPrevious"
+            @click="previousUser"
           >
-            &#8592;
+            <svg
+              class="shrink-0 size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
           </button>
           <button
-              @click="nextUser"
-              class="text-sm bg-gray-200 px-3 py-1 rounded hover:bg-gray-300 dark:bg-neutral-600 dark:hover:bg-neutral-500"
-              :disabled="!hasNext"
+            class="flex items-center justify-center size-10 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors dark:bg-neutral-700 dark:hover:bg-neutral-600 disabled:opacity-30"
+            :disabled="!hasNext"
+            @click="nextUser"
           >
-            &#8594;
+            <svg
+              class="shrink-0 size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
           </button>
         </div>
       </div>
@@ -152,15 +223,17 @@ const items = ref([]);
 
 // Watch allUsers and update items
 watch(
-    allUsers,
-    (newVal) => {
-      items.value = newVal;
-    },
-    { immediate: true }
+  allUsers,
+  (newVal) => {
+    items.value = newVal;
+  },
+  { immediate: true },
 );
 
 // Show dropdown
-const showDropdown = computed(() => showDropdownVar.value);
+const showDropdown = computed(
+  () => showDropdownVar.value && (searchQuery.value !== '' || items.value.length > 0),
+);
 
 // Filtered results based on search query
 const filteredResults = computed(() => {
@@ -168,9 +241,9 @@ const filteredResults = computed(() => {
     return items.value;
   }
   return items.value.filter(
-      (item) =>
-          item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-          item.department.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      item.department?.name?.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
 
@@ -198,6 +271,7 @@ const openModal = (user) => {
   selectedUser.value = user;
   currentIndex.value = filteredResults.value.findIndex((item) => item.id === user.id);
   showModal.value = true;
+  showDropdownVar.value = false;
 };
 
 const closeModal = () => {
@@ -221,12 +295,10 @@ const previousUser = () => {
 
 // Handle clicks outside modal and dropdown
 const handleClickOutside = (event) => {
-  const modal = document.querySelector('.fixed');
   const dropdown = document.querySelector('.absolute.z-50');
-  if (modal && !modal.contains(event.target)) {
-    closeModal();
-  }
-  if (dropdown && !dropdown.contains(event.target)) {
+
+  // Close dropdown if clicking outside it
+  if (dropdown && !dropdown.contains(event.target) && !event.target.closest('textarea')) {
     closeDropdown();
   }
 };
@@ -249,7 +321,15 @@ const firstName = computed(() => selectedUser.value?.name?.split(' ')[0] || '');
 const lastName = computed(() => selectedUser.value?.name?.split(' ').slice(1).join(' ') || '');
 </script>
 
-
-<style>
-/* Add any custom modal styles if necessary */
+<style scoped>
+/* Custom scrollbar for dropdown */
+.absolute.z-50 ::-webkit-scrollbar {
+  width: 6px;
+}
+.absolute.z-50 ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.absolute.z-50 ::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 dark:bg-neutral-700 rounded-full;
+}
 </style>

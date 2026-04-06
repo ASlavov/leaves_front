@@ -1,0 +1,5 @@
+const Calendar_vue_vue_type_style_index_0_lang =
+  '.sx-vue-calendar-wrapper{height:800px;max-height:90vh;width:100%}div:has(>.leave-entry){margin-left:4px}.sx__event-modal__description{white-space:pre-line}.sx__view-container{scrollbar-color:var(--scrollbar-thumb-color) var(--scrollbar-track-color);scrollbar-width:thin}.sx__view-container::-webkit-scrollbar{background-color:var(--scrollbar-track-color);height:8px}.sx__view-container::-webkit-scrollbar-thumb{background-color:var(--scrollbar-thumb-color);border-radius:9999px}.sx__month-grid-day__header-day-name{background:#000;color:#fff;font-size:16px;font-weight:700;line-height:47px;padding-left:10px;width:100%}.sx__month-grid-week:first-child>div{padding-top:0}:root,:root.dark{--custom-event-modal-color:red}.sx__has-icon .sx__event-modal__color-icon{background-color:var(--custom-event-modal-color)!important}';
+
+export { Calendar_vue_vue_type_style_index_0_lang as C };
+//# sourceMappingURL=Calendar-styles-1.mjs-5_0kcarw.mjs.map
