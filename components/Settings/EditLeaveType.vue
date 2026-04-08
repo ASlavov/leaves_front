@@ -129,7 +129,7 @@
               </label>
               <label class="text-[14px] text-gray-700 dark:text-gray-300 flex items-center gap-1">
                 <input v-model="leaveTypeData.accrualType" type="radio" value="pro_rata_monthly" />
-                {{ $t('settings.monthlyPro_Rata') }}
+                {{ $t('settings.monthlyProRata') }}
               </label>
             </div>
             <p class="text-[12px] text-gray-500 mt-[6px]">{{ $t('settings.accrualNote') }}</p>

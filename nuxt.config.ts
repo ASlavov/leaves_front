@@ -73,6 +73,16 @@ export default defineNuxtConfig({
     dirs: ['stores'], // If your stores are in the "stores" folder
   },
 
+  vite: {
+    server: {
+      watch: {
+        usePolling: false,
+        // Prevent Playwright output files from triggering HMR during dev
+        ignored: ['**/playwright-report/**', '**/test-results/**', '**/e2e/.auth/**'],
+      },
+    },
+  },
+
   runtimeConfig: {
     // The private keys which are only available within server-side
     apiSecret: process.env.apiSecret,

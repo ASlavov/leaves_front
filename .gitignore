@@ -26,3 +26,9 @@ logs
 
 intelligence_translations
 intelligence-back
+# Playwright auth state (contains real session cookies)
+e2e/.auth/
+
+# Playwright test results
+playwright-report
+test-results

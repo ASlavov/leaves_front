@@ -325,3 +325,59 @@ The Nuxt project uses a server-side proxy layer (`server/api/**`) to communicate
 - **Backend Path:** `/invitations/{id}`
 - **Notes:** `user_id` injected server-side from `event.context.requestingUserId`; not sent by client.
 - **Success Response (200 OK):** `{"message": "Invitation revoked successfully."}`
+
+---
+
+## 10. Administrative Leave (HR/Admin)
+
+### Record Leave for User
+
+- **Frontend Path:** `/api/leaves/adminLeave`
+- **Method:** `POST`
+- **Backend Path:** `/admin-leave`
+- **Parameters:** `user_id`, `leave_type_id`, `start_date` (YYYY-MM-DD), `end_date` (YYYY-MM-DD), `reason` (optional), `administrative_reason` (optional)
+- **Notes:** Bypasses wallet/entitlement checks. Sets `is_administrative = true` on the leave record. HR and Admin roles only.
+- **Success Response (201 Created):**
+  ```json
+  { "message": "Leave recorded successfully", "leave": { ...leave } }
+  ```
+
+---
+
+## 11. User Termination
+
+### Terminate User
+
+- **Frontend Path:** `/api/user/terminate/:id`
+- **Method:** `POST`
+- **Backend Path:** `/user-terminate/{id}`
+- **Parameters:** `termination_date` (YYYY-MM-DD)
+- **Notes:** Sets `termination_date` on the user and cancels all future pending/approved leaves.
+- **Success Response (200 OK):** `{"message": "User terminated. N future leaves cancelled."}`
+
+---
+
+## 12. Leave Types (Rules Engine)
+
+### Get Leave Types
+
+- **Frontend Path:** `/api/leaves/leavesTypes`
+- **Method:** `GET`
+- **Backend Path:** `/leaves_types`
+- **Success Response (200 OK):** Array of `LeaveType` objects including all rules-engine fields.
+
+### Create Leave Type
+
+- **Frontend Path:** `/api/leaves/newLeaveType`
+- **Method:** `POST`
+- **Backend Path:** `/new_leave_type`
+- **Parameters:** `leave_type_name` (string), plus optional rules-engine fields: `priority_level`, `allow_wallet_overflow`, `overflow_leave_type_id`, `accrual_type` (upfront|pro_rata_monthly), `allow_negative_balance`, `max_negative_balance`, `is_hourly`, `hours_per_day`, `attachment_required_after_days`.
+- **Success Response (201 Created):** Created `LeaveType` object.
+
+### Update Leave Type
+
+- **Frontend Path:** `/api/leaves/updateLeaveType`
+- **Method:** `PUT`
+- **Backend Path:** `/update_leave_type`
+- **Parameters:** `leave_type_id`, `leave_type_name`, plus any rules-engine fields to update.
+- **Success Response (200 OK):** Updated `LeaveType` object.
