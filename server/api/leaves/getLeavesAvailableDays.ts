@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Use the token to make a GET request to the external API
-    const response = await $fetch(
+    const response: any = await $fetch(
       `${config.public.apiBase}${config.public.leaves.getLeavesAvailableDays}/${userId}`,
       {
         method: 'GET',
@@ -27,6 +27,26 @@ export default defineEventHandler(async (event) => {
         },
       },
     );
+
+    if (Array.isArray(response)) {
+      return response.map((entry: any) => ({
+        ...entry,
+        available_days:
+          typeof entry.available_days === 'string'
+            ? parseFloat(entry.available_days)
+            : entry.available_days,
+        remaining_days:
+          typeof entry.remaining_days === 'string'
+            ? parseFloat(entry.remaining_days)
+            : entry.remaining_days,
+        used_days:
+          typeof entry.used_days === 'string' ? parseFloat(entry.used_days) : entry.used_days,
+        entitled_days:
+          typeof entry.entitled_days === 'string'
+            ? parseFloat(entry.entitled_days)
+            : entry.entitled_days,
+      }));
+    }
 
     return response; // Return the response from the external API
   } catch (error: any) {

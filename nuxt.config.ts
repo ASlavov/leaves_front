@@ -27,9 +27,6 @@ export default defineNuxtConfig({
     /*"~/plugins/fetchInterceptor.js",*/
     '~/plugins/vue3-toastify.client.js',
   ],
-  pinia: {
-    autoImports: ['defineStore', 'acceptHMRUpdate'],
-  },
   colorMode: {
     preference: 'dark',
     fallback: 'dark',

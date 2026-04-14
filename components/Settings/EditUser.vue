@@ -373,9 +373,20 @@
                   {{ $t('settings.workScheduleNote') }}
                 </p>
               </div>
-              <div class="info-actions pt-10 pb-5 flex gap-4 lg:col-span-2">
+              <div class="info-actions pt-10 pb-5 flex flex-wrap items-center gap-4 lg:col-span-2">
                 <button :class="submitBtnClass" @click="submitForm">
                   {{ isNewUser ? $t('settings.addUser') : $t('settings.saveChanges') }}
+                </button>
+                <button
+                  v-if="
+                    !isNewUser &&
+                    (Number(props.userId) === Number(centralStore.userStore.userId) ||
+                      !props.userId)
+                  "
+                  class="justify-center inline-flex px-6 py-[15px] border border-gray-300 dark:border-neutral-600 shadow-sm text-sm font-medium rounded-[70px] text-gray-700 bg-white hover:bg-gray-50 focus:outline-none dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700 transition"
+                  @click.prevent="showCustomizer = true"
+                >
+                  {{ $t('dashboard.customize') }}
                 </button>
               </div>
             </div>
@@ -383,6 +394,7 @@
         </template>
       </template>
     </div>
+    <HomeDashboardCustomizer v-if="showCustomizer" @close="showCustomizer = false" />
   </div>
 </template>
 
@@ -391,6 +403,7 @@ import { ref, computed, watch, onMounted, type PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
+import HomeDashboardCustomizer from '~/components/Home/DashboardCustomizer.vue';
 import { useFormStyles } from '@/composables/useFormStyles';
 import { extractApiError } from '@/utils/extractApiError';
 import type { User } from '@/types';
@@ -426,6 +439,8 @@ const formPassword = ref('');
 const canEdit = computed(() => {
   return permissionsStore.can('all_users', 'modify');
 });
+
+const showCustomizer = ref(false);
 
 // File input reference
 const fileInput = ref<HTMLInputElement | null>(null);

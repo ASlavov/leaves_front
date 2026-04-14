@@ -1,6 +1,6 @@
 <template>
   <SharedBaseModal v-model="isOpen">
-    <div class="p-6 bg-white dark:bg-neutral-800 rounded-lg max-w-md w-full">
+    <div class="p-6 bg-white dark:bg-neutral-800 rounded-lg w-full">
       <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">
         {{ $t('leaves.admin.recordTitle') }}
       </h3>
@@ -69,7 +69,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"
           >
             {{ $t('leaves.admin.submitBtn') }}
           </button>

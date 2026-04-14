@@ -10,6 +10,9 @@ import { usePermissionsStore } from '~/stores/permissions'; // Import the notifi
 import { useHolidaysStore } from '~/stores/holidays';
 import { useWorkWeekStore } from '~/stores/workWeek';
 import { useInvitationsStore } from '~/stores/invitations';
+import { useOrgChartStore } from '~/stores/orgChart';
+import { useDocumentsStore } from '~/stores/documents';
+import { useDashboardPreferencesStore } from '~/stores/dashboardPreferences';
 
 export const useCentralStore = defineStore('centralStore', () => {
   const authStore = useAuthStore();
@@ -22,6 +25,9 @@ export const useCentralStore = defineStore('centralStore', () => {
   const holidaysStore = useHolidaysStore();
   const workWeekStore = useWorkWeekStore();
   const invitationsStore = useInvitationsStore();
+  const orgChartStore = useOrgChartStore();
+  const documentsStore = useDocumentsStore();
+  const dashboardPreferencesStore = useDashboardPreferencesStore();
 
   const error = ref<string | null>(null);
   const loading = computed(
@@ -30,6 +36,7 @@ export const useCentralStore = defineStore('centralStore', () => {
       userStore.loading ||
       leavesStore.loading ||
       departmentsStore.loading ||
+      dashboardPreferencesStore.loading ||
       notificationsStore.loading,
   );
   const initialized = ref(false);
@@ -51,6 +58,9 @@ export const useCentralStore = defineStore('centralStore', () => {
           holidaysStore.fetchHolidays(),
           workWeekStore.fetchWorkWeek(),
           invitationsStore.fetchInvitations(),
+          orgChartStore.fetchOrgChart(),
+          documentsStore.fetchDocuments(),
+          dashboardPreferencesStore.fetchPreferences(),
         ]);
 
         initialized.value = true;
@@ -76,6 +86,9 @@ export const useCentralStore = defineStore('centralStore', () => {
       holidaysStore.reset();
       workWeekStore.reset();
       invitationsStore.reset();
+      orgChartStore.reset();
+      documentsStore.reset();
+      dashboardPreferencesStore.reset();
       initialized.value = false;
       await authStore.logout();
     } catch {
@@ -111,6 +124,12 @@ export const useCentralStore = defineStore('centralStore', () => {
   const proxiedHolidaysStore = new Proxy(holidaysStore, dynamicProxyHandler);
   const proxiedWorkWeekStore = new Proxy(workWeekStore, dynamicProxyHandler);
   const proxiedInvitationsStore = new Proxy(invitationsStore, dynamicProxyHandler);
+  const proxiedOrgChartStore = new Proxy(orgChartStore, dynamicProxyHandler);
+  const proxiedDocumentsStore = new Proxy(documentsStore, dynamicProxyHandler);
+  const proxiedDashboardPreferencesStore = new Proxy(
+    dashboardPreferencesStore,
+    dynamicProxyHandler,
+  );
 
   return {
     error,
@@ -128,5 +147,8 @@ export const useCentralStore = defineStore('centralStore', () => {
     holidaysStore: proxiedHolidaysStore,
     workWeekStore: proxiedWorkWeekStore,
     invitationsStore: proxiedInvitationsStore,
+    orgChartStore: proxiedOrgChartStore,
+    documentsStore: proxiedDocumentsStore,
+    dashboardPreferencesStore: proxiedDashboardPreferencesStore,
   };
 });

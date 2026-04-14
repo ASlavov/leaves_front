@@ -15,8 +15,8 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
   const permissions = {
     profile_leave_balance: {
       view: ['admin', 'hr-manager', 'head', 'user'],
-      request_leave: ['hr-manager', 'head', 'user'],
-      cancel_leave: ['hr-manager', 'head', 'user'],
+      request_leave: ['admin', 'hr-manager', 'head', 'user'],
+      cancel_leave: ['admin', 'hr-manager', 'head', 'user'],
       accept_leave: ['admin', 'hr-manager', 'head'],
       decline_leave: ['admin', 'hr-manager', 'head'],
     },
@@ -56,6 +56,14 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
     invitations: {
       view: ['hr-manager', 'head', 'user'],
       modify: ['hr-manager', 'head', 'user'],
+    },
+    org_chart: {
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin'],
+    },
+    company_documents: {
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin', 'hr-manager'],
     },
   };
 

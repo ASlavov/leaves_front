@@ -31,14 +31,14 @@
       >
         <div
           v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-          class="text-black dark:text-white col-span-1 font-bold flex flex-wrap items-center gap-4"
+          class="text-black dark:text-white col-span-1 font-bold flex items-center gap-4"
         >
-          <div>
+          <div class="whitespace-nowrap">
             {{ $t('leaves.leaveRequests') }}
             <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
           </div>
           <button
-            class="py-1 px-3 text-[13px] bg-[#EA021A] text-white rounded hover:bg-red-700 transition"
+            class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[5px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none whitespace-nowrap"
             @click="adminLeaveModalOpen = true"
           >
             {{ $t('leaves.admin.recordBtn') }}

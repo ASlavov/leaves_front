@@ -262,6 +262,20 @@ const permissionCategories = computed<Record<string, PermissionCategory>>(() => 
       modify: { label: t('common.modify') },
     },
   },
+  org_chart: {
+    label: t('permissions.orgChart.label'),
+    actions: {
+      view: { label: t('permissions.orgChart.view') },
+      modify: { label: t('permissions.orgChart.modify') },
+    },
+  },
+  company_documents: {
+    label: t('permissions.companyDocuments.label'),
+    actions: {
+      view: { label: t('permissions.companyDocuments.view') },
+      modify: { label: t('permissions.companyDocuments.modify') },
+    },
+  },
 }));
 
 const hasPermission = (roleKey: string, category: string, action: string) => {

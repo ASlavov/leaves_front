@@ -1,4 +1,22 @@
 {
+  "dashboard": {
+    "customize": "Customize",
+    "customizeTitle": "Customize Dashboard",
+    "tabSections": "Sections",
+    "tabLeaveBalance": "Leave Balance",
+    "sectionLeaveBalance": "Leave Balance",
+    "sectionProfileInfo": "Profile & Group Info",
+    "sectionPendingActions": "Pending Actions",
+    "visible": "Visible",
+    "hidden": "Hidden",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "resetDefaults": "Reset to defaults",
+    "saveSuccess": "Dashboard layout saved.",
+    "saveFailed": "Failed to save preferences.",
+    "fetchFailed": "Failed to load preferences.",
+    "noLeaveTypes": "No leave types to configure."
+  },
   "auth": {
     "login": "Login",
     "email": "Email Address",
@@ -284,6 +302,7 @@
     "type": "Type",
     "from": "From",
     "to": "To",
+    "save": "Save",
     "status": "Status",
     "days": "Days",
     "startDate": "Start Date",
@@ -326,7 +345,9 @@
     "sending": "Sending…",
     "irreversibleAction": "This action cannot be undone.",
     "messagePerson": "Message Person",
-    "none": "None"
+    "none": "None",
+    "orgChart": "Organizational Chart",
+    "documents": "Company Documents"
   },
   "calendar": {
     "allNames": "All names",
@@ -448,6 +469,70 @@
       "pending": "Pending",
       "accepted": "Active",
       "declined": "Declined"
+    }
+  },
+  "orgChart": {
+    "title": "Organizational Chart",
+    "editMode": "Edit Chart",
+    "cancelEdit": "Cancel",
+    "saveChart": "Save Chart",
+    "saveSuccess": "Organizational Chart saved successfully!",
+    "addRoot": "Add Root Person",
+    "unsavedChanges": "You have unsaved changes.",
+    "empty": "No people in the organizational chart. Switch to edit mode to start adding.",
+    "addChild": "Add Subordinate",
+    "addSibling": "Add Peer",
+    "removePerson": "Remove",
+    "removeConfirm": "Are you sure you want to remove this person and all their subordinates?",
+    "pickUser": "Pick Employee",
+    "searchUsers": "Search by name...",
+    "noUsers": "No available employees found."
+  },
+  "documents": {
+    "title": "Company Documents",
+    "companySection": "Company Documents",
+    "personalSection": "Personal Documents",
+    "assignToLabel": "Assign To",
+    "targetAll": "Entire Company",
+    "targetUser": "Specific User",
+    "filterByUser": "Filter by user",
+    "allUsers": "All Users",
+    "emptyCompany": "No company documents have been uploaded yet.",
+    "emptyPersonal": "No personal documents have been assigned to you.",
+    "emptyPersonalUser": "This user doesn't have any personal documents yet.",
+    "upload": "Upload Document",
+    "edit": "Edit",
+    "deleteConfirm": "Are you sure you want to delete this document?",
+    "uploadSuccess": "Document saved successfully!",
+    "download": "Download",
+    "open": "Open",
+    "uploadedBy": "Uploaded By:",
+    "searchPlaceholder": "Search documents...",
+    "filterAll": "All",
+    "filterGoogleDoc": "Google Docs",
+    "filterSharePoint": "SharePoint",
+    "filterFile": "Files",
+    "fileLabel": "File",
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://...",
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "fileSizeWarning": "Max file size is 20MB.",
+    "empty": "No company documents have been uploaded yet.",
+    "typeGoogleDoc": "Google Doc",
+    "typeSharePoint": "SharePoint",
+    "typeFile": "File Upload"
+  },
+  "permissions": {
+    "orgChart": {
+      "label": "Organizational Chart",
+      "view": "View",
+      "modify": "Modify"
+    },
+    "companyDocuments": {
+      "label": "Company Documents",
+      "view": "View",
+      "modify": "Modify"
     }
   }
 }

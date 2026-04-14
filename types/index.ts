@@ -6,3 +6,6 @@ export * from './leave';
 export * from './department';
 export * from './entitlement';
 export * from './administrative';
+export * from './orgChart';
+export * from './document';
+export * from './dashboard';
