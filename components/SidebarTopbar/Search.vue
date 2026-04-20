@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full max-w-[600px] ms-auto">
+  <div class="relative w-full max-w-[600px] md:ml-auto">
     <!-- SearchBox -->
     <div class="relative">
       <div class="relative">
@@ -49,10 +49,29 @@
             <div
               v-for="item in searchItems"
               :key="item.id"
-              class="flex items-center cursor-pointer py-3 px-4 w-full text-sm text-gray-800 hover:bg-gray-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 transition-colors"
+              class="flex items-center justify-between cursor-pointer py-3 px-4 w-full text-sm text-gray-800 hover:bg-gray-50 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 transition-colors"
               @click="openModal(item)"
             >
               <div class="font-medium">{{ item.name }}</div>
+              <button
+                class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#6264A7] hover:bg-[#464775] text-white text-xs font-bold transition-all shadow-sm shrink-0"
+                @click.stop="openTeams(item.email)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>{{ $t('common.messagePerson') }}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -147,6 +166,29 @@
             <span class="text-gray-800 dark:text-gray-100 font-medium">{{
               selectedUser?.department?.name
             }}</span>
+          </div>
+
+          <!-- Teams Message Button -->
+          <div class="pt-4 mt-2 border-t dark:border-neutral-700">
+            <button
+              class="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-[#6264A7] hover:bg-[#464775] text-white font-bold transition-all shadow-md"
+              @click.stop="openTeams(selectedUser?.email)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <span>{{ $t('common.messagePerson') }}</span>
+            </button>
           </div>
         </div>
 
@@ -305,6 +347,13 @@ const handleClickOutside = (event) => {
 
 const closeDropdown = () => {
   showDropdownVar.value = false;
+};
+
+// Open Microsoft Teams chat
+const openTeams = (email) => {
+  if (email) {
+    window.open(`https://teams.microsoft.com/l/chat/0/0?users=${email}`, '_blank');
+  }
 };
 
 // Lifecycle hooks

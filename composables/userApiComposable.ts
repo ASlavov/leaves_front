@@ -6,6 +6,7 @@ import type {
   User,
   UserResponse,
   BaseMessageResponse,
+  DashboardPreferences,
 } from '~/types';
 
 const getUserProfileComposable = (userId: string | number): Promise<User> => {
@@ -53,6 +54,21 @@ export const useAllUsers = () => {
     { method: 'POST' },
     { lazy: true, server: true },
   );
+};
+
+export const getDashboardPreferencesComposable = (): Promise<DashboardPreferences> => {
+  return retryFetch<DashboardPreferences>('/api/user/dashboardPreferences', {
+    method: 'GET',
+  });
+};
+
+export const updateDashboardPreferencesComposable = (
+  body: DashboardPreferences,
+): Promise<DashboardPreferences> => {
+  return retryFetch<DashboardPreferences>('/api/user/dashboardPreferences', {
+    method: 'PUT',
+    body: { ...body },
+  });
 };
 
 export default getUserProfileComposable;

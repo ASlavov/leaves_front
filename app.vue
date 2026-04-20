@@ -1,7 +1,9 @@
 <template>
   <div class="h-full mt-auto">
     <main class="bg-gray-100 dark:bg-neutral-900 transition-colors duration-300">
-      <NuxtPage />
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
     </main>
   </div>
 </template>

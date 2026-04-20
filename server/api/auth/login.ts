@@ -17,8 +17,6 @@ export default defineEventHandler(async (event) => {
   try {
     // Make a POST request to authenticate the user with the external API
     const targetUrl = `${config.public.apiBase}${config.public.auth.auth}`;
-    console.log('API Target URL:', targetUrl);
-    console.log('API Secret exists:', !!config.apiSecret);
 
     const result = (await $fetch(targetUrl, {
       method: 'POST',

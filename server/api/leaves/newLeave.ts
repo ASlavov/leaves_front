@@ -26,6 +26,10 @@ export default defineEventHandler(async (event) => {
         end_date: endDate,
         reason: reason,
         requesting_user_id: requestingUserId,
+        attachment_base64: body.attachmentBase64 ?? null,
+        attachment_filename: body.attachmentFilename ?? null,
+        start_time: body.startTime ?? null,
+        end_time: body.endTime ?? null,
       },
       headers: {
         Authorization: `Bearer ${token}`, // Use the token in the Authorization header

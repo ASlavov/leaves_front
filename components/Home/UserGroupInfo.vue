@@ -4,15 +4,19 @@
       {{ $t('settings.group') }}
     </h3>
     <div
-      class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 p-4 flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100"
+      class="bg-white border rounded-lg hover:shadow-md transition-shadow duration-300 py-[25px] px-[35px] gap-y-[25px] flex-1 flex flex-col dark:bg-neutral-800 dark:text-gray-100"
     >
       <!-- Center Content -->
-      <div class="flex-1 flex items-center justify-center w-full">
+      <div
+        class="flex-1 flex items-start xl:items-center gap-[15px] justify-start xl:justify-center w-full"
+      >
         <template v-if="loading">
           <div class="h-6 bg-gray-200 rounded w-1/2 animate-pulse dark:bg-neutral-700"></div>
         </template>
         <template v-else>
-          <p class="text-[20px] font-bold text-black dark:text-gray-100 text-center leading-tight">
+          <p
+            class="text-[20px] font-bold text-black dark:text-gray-100 text-left xl:text-center leading-tight"
+          >
             {{ departmentName }}
           </p>
         </template>
@@ -21,7 +25,7 @@
       <!-- Actions Footer -->
       <div
         v-if="permissionsStore.can('group', 'modify')"
-        class="flex items-center justify-center gap-[25px] w-full pb-4"
+        class="flex justify-center gap-[25px] w-full 2xl:flex-row flex-col items-start xl:items-center"
       >
         <button
           class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"

@@ -31,7 +31,7 @@ export default async function retryFetch<T = unknown>(
       if (status === 401) {
         console.error('Authentication Error: 401');
         await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
-        
+
         if (import.meta.client) {
           const currentPath = window.location.pathname;
           // Do NOT redirect if we are already on the auth pages or if this is an explicit login attempt

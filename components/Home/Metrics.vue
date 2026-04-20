@@ -77,7 +77,7 @@ const leaveColor = computed(() => getTypeColor(props.leave.leave_type_id));
 const usedDays = computed(() => {
   const entitledDays = props.leave.entitled_days || 0;
   const remainingDays = props.leave.remaining_days || 0;
-  return Math.max(0, entitledDays - remainingDays);
+  return Number(Math.max(0, entitledDays - remainingDays).toFixed(2));
 });
 
 const percentageUsed = computed(() => {

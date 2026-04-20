@@ -1,7 +1,7 @@
 <template>
   <Sidebar />
   <!-- Content -->
-  <div class="w-full lg:pl-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
+  <div class="w-full lg:ps-64 bg-gray-100 dark:bg-neutral-900 min-h-dvh-64 duration-300">
     <h3 class="px-4 pt-9 sm:px-6 font-semibold text-lg dark:text-gray-100">
       {{ $t('settings.title') }}
     </h3>

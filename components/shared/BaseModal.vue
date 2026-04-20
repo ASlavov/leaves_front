@@ -2,12 +2,12 @@
   <Teleport to="body">
     <div
       v-if="modelValue"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      class="fixed inset-0 lg:inset-[0_0_0_259px] 2xl:inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       @click.self="$emit('update:modelValue', false)"
     >
       <div
         :class="[
-          'bg-white dark:bg-neutral-900 rounded-[10px] w-full relative',
+          'bg-white dark:bg-neutral-900 rounded-[10px] w-full mx-4 relative',
           'shadow-[0px_0px_12px_0px_rgba(0,0,0,0.25)] dark:shadow-[0px_0px_12px_0px_rgba(0,0,0,0.6)]',
           maxWidth,
         ]"
