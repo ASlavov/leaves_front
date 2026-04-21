@@ -82,10 +82,11 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // The private keys which are only available within server-side
-    apiSecret: process.env.apiSecret,
-    // JWT Secret Key
-    jwtSecret: process.env.jwtSecret,
-    // Keys within public, will be also exposed to the client-side
+    // These can be overridden by NUXT_API_SECRET and NUXT_JWT_SECRET
+    apiSecret: process.env.NUXT_API_SECRET || process.env.apiSecret || '',
+    jwtSecret: process.env.NUXT_JWT_SECRET || process.env.jwtSecret || 'fallback-secret-change-me',
+    env: process.env.NUXT_ENV || process.env.env || 'production',
+
     public: {
       // Uses local base when apiBaseLocal is defined in .env (local dev), falls back to prod
       apiBase: process.env.apiBaseLocal ?? process.env.apiBaseProd,

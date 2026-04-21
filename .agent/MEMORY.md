@@ -32,6 +32,7 @@
 - **OrgChart Sibling Link Bug**: Clicking `+ Peer` added the peer to the parent's level because the child node emitted `node.parent_id` instead of its own `node.id`, causing the recursive component page listener to look up the parent's parent ID to append the new node. Fixed by emitting `node.id` instead.
 - **OrgChart Flat Save Bug**: The frontend was stripping negative `parent_id`s (from newly drafted nodes) to `null` before sending the `sync` payload, which disconnected newly formed relationships and turned every new node into a root. We now send `id` (even if temporary/negative) and `parent_id` unfiltered so Laravel can reconstruct associations.
 - **Document API Forwarding**: Explicitly added `query: getQuery(event)` to the Nuxt proxy layer on `GET /documents` to ensure trailing GET query string variables (like `target_user_id`) flow successfully down to the Laravel server.
+- **403 on /api/me Fix**: Removed `/api/me` from the exempt list in `server/middleware/verifyAuth.ts`. Previously, the middleware skipped this route, preventing `event.context.requestingUserId` and `token` from being set, which caused the `/api/me` handler to return a 403 "Not authenticated" error even when a valid session existed.
 
 ## Context
 
