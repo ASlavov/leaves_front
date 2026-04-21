@@ -1,10 +1,16 @@
 <template>
   <div class="container">
     <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-12 gap-4">
-      <div class="lg:col-span-3 flex flex-col">
+      <div
+        :class="canRequestLeave ? 'lg:col-span-3' : 'xl:col-span-3'"
+        class="flex flex-col col-span-12"
+      >
         <ProfileInfo />
       </div>
-      <div class="lg:col-span-3 flex flex-col">
+      <div
+        :class="canRequestLeave ? 'lg:col-span-3' : 'xl:col-span-3'"
+        class="flex flex-col col-span-12"
+      >
         <UserGroupInfo />
       </div>
       <div
@@ -33,4 +39,11 @@ import { useCentralStore } from '@/stores/centralStore.js';
 
 const centralStore = useCentralStore();
 const permissionsStore = centralStore.permissionsStore;
+
+const canRequestLeave = computed(() => {
+  return (
+    permissionsStore.can('profile_leave_balance', 'request_leave') ||
+    permissionsStore.can('profile_leave_balance', 'cancel_leave')
+  );
+});
 </script>

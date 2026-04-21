@@ -127,6 +127,7 @@ const { locale } = useI18n();
 const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const departmentsStore = centralStore.departmentsStore;
+const leavesStore = centralStore.leavesStore;
 
 const selectedName = ref(null);
 const selectedDepartment = ref(null);
@@ -354,8 +355,14 @@ onMounted(async () => {
 <style>
 .sx-vue-calendar-wrapper {
   width: 100%;
-  height: 800px;
+  height: 600px;
   max-height: 90vh;
+}
+
+@media (min-width: 768px) {
+  .sx-vue-calendar-wrapper {
+    height: 800px;
+  }
 }
 div:has(> .leave-entry) {
   margin-left: 4px;

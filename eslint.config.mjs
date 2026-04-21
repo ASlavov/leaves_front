@@ -3,7 +3,7 @@ import prettier from 'eslint-plugin-prettier/recommended';
 
 export default withNuxt(
   {
-    ignores: ['tests/**', '.nuxt/**', '.output/**', 'dist/**', 'types/**/*.d.ts'],
+    ignores: ['tests/**', '.nuxt/**', '.output/**', 'dist/**', 'types/**/*.d.ts', 'e2e/**'],
   },
   prettier,
   {

@@ -16,8 +16,9 @@ export default defineEventHandler(async (event) => {
   //console.log('Requesting with:', body.email, body.password);  // Log the values before making the request
   try {
     // Make a POST request to authenticate the user with the external API
-    console.log(`${config.public.apiBase}${config.public.auth.auth}`);
-    const result = (await $fetch(`${config.public.apiBase}${config.public.auth.auth}`, {
+    const targetUrl = `${config.public.apiBase}${config.public.auth.auth}`;
+
+    const result = (await $fetch(targetUrl, {
       method: 'POST',
       body: {
         email: body.email,
@@ -26,6 +27,8 @@ export default defineEventHandler(async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN': config.apiSecret,
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
     })) as FetchResult;
 
@@ -39,7 +42,7 @@ export default defineEventHandler(async (event) => {
 
       // Set a secure, HTTP-only cookie with the JWT
       const isSecure = process.env.NODE_ENV === 'production';
-      const maxAge = process.env.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
+      const maxAge = config.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
 
       setCookie(event, 'auth_token', authToken, {
         httpOnly: true,
@@ -59,10 +62,19 @@ export default defineEventHandler(async (event) => {
     throw new Error(`Authentication failed`);
   } catch (error: any) {
     // Handle authentication failure
-    console.error('Authentication error:', error);
+    const status = error.response?.status || error.statusCode || 500;
+    const message = error.response?._data?.message || error.message || 'Authentication failed';
+
+    console.error('Authentication error details:', {
+      status,
+      message,
+      data: error.response?._data,
+      apiBase: config.public.apiBase,
+    });
+
     throw createError({
       statusCode: 401,
-      statusMessage: 'Authentication failed',
+      statusMessage: `Authentication failed: ${message}`,
     });
   }
 });

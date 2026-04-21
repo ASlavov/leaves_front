@@ -1,4 +1,22 @@
 {
+  "dashboard": {
+    "customize": "Προσαρμογή",
+    "customizeTitle": "Προσαρμογή Ενημερωτικού Πίνακα",
+    "tabSections": "Ενότητες",
+    "tabLeaveBalance": "Υπόλοιπο Αδειών",
+    "sectionLeaveBalance": "Υπόλοιπο Αδειών",
+    "sectionProfileInfo": "Πληροφορίες Προφίλ & Γκρουπ",
+    "sectionPendingActions": "Εκκρεμείς Ενέργειες",
+    "visible": "Ορατό",
+    "hidden": "Κρυφό",
+    "moveUp": "Μετακίνηση πάνω",
+    "moveDown": "Μετακίνηση κάτω",
+    "resetDefaults": "Επαναφορά",
+    "saveSuccess": "Η διάταξη αποθηκεύτηκε.",
+    "saveFailed": "Δεν ήταν δυνατή η αποθήκευση των προτιμήσεων.",
+    "fetchFailed": "Δεν ήταν δυνατή η φόρτωση των προτιμήσεων.",
+    "noLeaveTypes": "Δεν υπάρχουν τύποι αδειών για ρύθμιση."
+  },
   "auth": {
     "login": "Σύνδεση",
     "email": "Email",
@@ -169,11 +187,50 @@
     "datesSelected": "{count} ημερομηνία/ες επιλέχθηκε/αν",
     "addHolidaysCount": "Προσθήκη {count} αργία/ών",
     "massAddSuccess": "{count} αργία/ες προστέθηκε/αν επιτυχώς!",
-    "massDeleteSelected": "Διαγραφή επιλεγμένων ({count})",
+    "massDeleteHolidaysSelected": "Διαγραφή επιλεγμένων ({count})",
     "massDeleteHolidays": "Διαγραφή επιλεγμένων αργιών",
     "massDeleteHolidaysConfirm": "Πρόκειται να διαγράψετε {count} αργία/ες. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
     "massDeleteConfirmBtn": "Διαγραφή {count}",
-    "massDeleteSuccess": "{count} αργία/ες διαγράφηκε/αν."
+    "massDeleteHolidaysSuccess": "{count} αργία/ες διαγράφηκε/αν.",
+    "terminateTitle": "Τερματισμός Εργαζόμενου",
+    "terminateDesc": "Πρόκειται να προσομοιώσετε τον τερματισμό αυτού του εργαζόμενου. Παρακαλώ επιλέξτε την ημερομηνία τερματισμού για να δείτε τον αντίκτυπο.",
+    "terminationDate": "Ημερομηνία Τερματισμού",
+    "previewImpact": "Προεπισκόπηση Αντικτύπου",
+    "terminateReviewTitle": "Έλεγχος Αντικτύπου Τερματισμού",
+    "daysWorkedThisYear": "Ημέρες Εργασίας (Φέτος)",
+    "proratedEntitlements": "Αναλογικά Δικαιώματα",
+    "exceedsProratedBalance": "Υπερβαίνει το αναλογικό υπόλοιπο!",
+    "upcomingLeavesToCancel": "Μελλοντικές Άδειες προς Ακύρωση",
+    "terminateConfirmLabel": "Κατανοώ τις συνέπειες και επιβεβαιώνω τον τερματισμό αυτού του εργαζόμενου. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+    "terminateConfirmBtn": "Επιβεβαίωση Τερματισμού",
+    "terminateSuccess": "Ο εργαζόμενος τερματίστηκε επιτυχώς.",
+    "terminate": "Τερματισμός",
+    "hireDate": "Ημερομηνία Πρόσληψης",
+    "personalWorkSchedule": "Προσωπικό Πρόγραμμα Εργασίας",
+    "workScheduleNote": "Αφήστε κενό για χρήση της προεπιλογής της εταιρείας.",
+    "showAdvancedRules": "Εμφάνιση Προηγμένων Κανόνων",
+    "hideAdvancedRules": "Απόκρυψη Προηγμένων Κανόνων",
+    "priorityOverflow": "Προτεραιότητα & Υπέρβαση",
+    "priorityLevel": "Επίπεδο Προτεραιότητας",
+    "priorityNote": "Μικρότερο = υψηλότερη προτεραιότητα.",
+    "allowWalletOverflow": "Επιτρέπεται η Υπέρβαση Πορτοφολιού",
+    "allowWalletOverflowNote": "Οι χρήστες μπορούν να αιτηθούν περισσότερες ημέρες από το υπόλοιπο.",
+    "overflowLeaveType": "Τύπος Άδειας Υπέρβασης",
+    "selectOverflowType": "Επιλογή τύπου άδειας υπέρβασης",
+    "overflowNote": "Οι επιπλέον ημέρες εκχωρούνται σε αυτόν τον τύπο.",
+    "accrual": "Συγκέντρωση / Αναλογία",
+    "accrualType": "Τύπος Συγκέντρωσης",
+    "upfront": "Προκαταβολικά",
+    "monthlyProRata": "Μηνιαία Αναλογία",
+    "accrualNote": "Αναλογικά για εργαζόμενους πρώτου έτους.",
+    "allowNegativeBalance": "Επιτρέπεται Αρνητικό Υπόλοιπο",
+    "maxNegativeBalance": "Μέγιστο Αρνητικό Υπόλοιπο",
+    "scheduleDocument": "Πρόγραμμα & Έγγραφα",
+    "isHourly": "Ωριαία Άδεια",
+    "isHourlyNote": "Επιλογή χρονικού διαστήματος αντί ημερομηνιακού.",
+    "hoursPerDay": "Ώρες Ανά Ημέρα",
+    "attachmentRequiredAfter": "Απαιτείται Επισύναψη Μετά από (Ημέρες)",
+    "attachmentNote": "π.χ. 3 = απαιτείται πιστοποιητικό για 4+ ημέρες."
   },
   "leaves": {
     "cancelLeave": "Ακύρωση Άδειας",
@@ -215,7 +272,22 @@
     "approveLeave": "Έγκριση άδειας",
     "requestLeave": "Αίτημα άδειας",
     "processedReason": "Σχόλιο υπεύθυνου",
-    "reason": "Σχόλιο αιτούμενου"
+    "reason": "Σχόλιο αιτούμενου",
+    "proRataNote": "(* Αναλογικά: διαθέσιμο υπόλοιπο βάσει μηνιαίας συγκέντρωσης)",
+    "overflowWarning": "Προειδοποίηση: Το αίτημα υπερβαίνει το υπόλοιπο ({paid} πληρωμένες ημέρες + {overflow} ημέρες υπέρβασης).",
+    "startTime": "Ώρα Έναρξης",
+    "endTime": "Ώρα Λήξης",
+    "attachmentRequired": "Απαιτείται Επισύναψη",
+    "exceedsThreshold": "(Υπερβαίνει το όριο)",
+    "admin": {
+      "recordTitle": "Καταχώρηση Διοικητικής Άδειας",
+      "selectEmployee": "Επιλογή Εργαζόμενου",
+      "dateRange": "Ημερομηνιακό Εύρος",
+      "reasonNotes": "Λόγος / Σημειώσεις",
+      "submitBtn": "Καταχώρηση Άδειας",
+      "saveSuccess": "Η διοικητική άδεια καταχωρήθηκε επιτυχώς.",
+      "recordBtn": "Καταχώρηση Διοικ. Άδειας"
+    }
   },
   "common": {
     "delete": "Διαγραφή",
@@ -230,6 +302,7 @@
     "type": "Είδος",
     "from": "Από",
     "to": "Έως",
+    "save": "Αποθήκευση",
     "status": "Κατάσταση",
     "days": "Ημέρες",
     "startDate": "Ημερομηνία Έναρξης",
@@ -271,7 +344,10 @@
     "cancel": "Ακύρωση",
     "sending": "Αποστολή…",
     "irreversibleAction": "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-    "none": "Κανένα"
+    "messagePerson": "Μήνυμα",
+    "none": "Κανένα",
+    "orgChart": "Οργανόγραμμα",
+    "documents": "Έγγραφα Εταιρείας"
   },
   "calendar": {
     "allNames": "Όλα τα ονόματα",
@@ -331,14 +407,19 @@
       "createTypeFailed": "Δεν ήταν δυνατή η δημιουργία νέου τύπου άδειας",
       "updateTypeFailed": "Δεν ήταν δυνατή η ενημέρωση του τύπου άδειας",
       "deleteTypeFailed": "Δεν ήταν δυνατή η αρχειοθέτηση του τύπου άδειας",
-      "restoreTypeFailed": "Δεν ήταν δυνατή η επαναφορά του τύπου άδειας"
+      "restoreTypeFailed": "Δεν ήταν δυνατή η επαναφορά του τύπου άδειας",
+      "adminSaveFailed": "Αποτυχία καταχώρησης διοικητικής άδειας.",
+      "attachmentRequired": "Απαιτείται επισύναψη για τη διάρκεια αυτού του αιτήματος."
     },
     "user": {
       "initFailed": "Δεν ήταν δυνατή η αρχικοποίηση του προφίλ σας",
       "fetchProfileFailed": "Δεν ήταν δυνατή η ανάκτηση του προφίλ σας",
       "fetchUsersFailed": "Δεν ήταν δυνατή η ανάκτηση των χρηστών",
       "editFailed": "Δεν ήταν δυνατή η επεξεργασία του χρήστη",
-      "changePasswordFailed": "Δεν ήταν δυνατή η αλλαγή του κωδικού σας"
+      "changePasswordFailed": "Δεν ήταν δυνατή η αλλαγή του κωδικού σας",
+      "terminatePreviewFailed": "Αποτυχία δημιουργίας προεπισκόπησης τερματισμού.",
+      "terminateFailed": "Αποτυχία τερματισμού εργαζόμενου.",
+      "fetchFailed": "Σφάλμα κατά την ανάκτηση δεδομένων χρήστη."
     },
     "holidays": {
       "fetchFailed": "Δεν ήταν δυνατή η ανάκτηση των επίσημων αργιών",
@@ -388,6 +469,70 @@
       "pending": "Εκκρεμεί",
       "accepted": "Ενεργή",
       "declined": "Απορρίφθηκε"
+    }
+  },
+  "orgChart": {
+    "title": "Οργανόγραμμα",
+    "editMode": "Επεξεργασία",
+    "cancelEdit": "Ακύρωση",
+    "saveChart": "Αποθήκευση",
+    "saveSuccess": "Το οργανόγραμμα αποθηκεύτηκε επιτυχώς!",
+    "addRoot": "Προσθήκη Ατόμου Βάσης",
+    "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές.",
+    "empty": "Δεν υπάρχουν άτομα στο οργανόγραμμα. Μεταβείτε σε λειτουργία επεξεργασίας για να ξεκινήσετε.",
+    "addChild": "Χαμηλότερα",
+    "addSibling": "Ίδια βαθμίδα",
+    "removePerson": "Διαγραφή",
+    "removeConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το άτομο και όλους τους υφισταμένους του;",
+    "pickUser": "Επιλογή Εργαζόμενου",
+    "searchUsers": "Αναζήτηση με όνομα...",
+    "noUsers": "Δεν βρέθηκαν διαθέσιμοι εργαζόμενοι."
+  },
+  "documents": {
+    "title": "Έγγραφα Εταιρείας",
+    "companySection": "Έγγραφα Εταιρείας",
+    "personalSection": "Προσωπικά Έγγραφα",
+    "assignToLabel": "Ανάθεση σε",
+    "targetAll": "Όλη την εταιρεία",
+    "targetUser": "Συγκεκριμένο Χρήστη",
+    "filterByUser": "Φιλτράρισμα ανά χρήστη",
+    "allUsers": "Όλοι οι χρήστες",
+    "emptyCompany": "Δεν έχουν ανέβει έγγραφα εταιρείας ακόμα.",
+    "emptyPersonal": "Δεν σας έχουν ανατεθεί προσωπικά έγγραφα.",
+    "emptyPersonalUser": "Δεν βρέθηκαν προσωπικά έγγραφα για αυτόν τον χρήστη.",
+    "upload": "Ανέβασμα Εγγράφου",
+    "edit": "Επεξεργασία",
+    "deleteConfirm": "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το έγγραφο;",
+    "uploadSuccess": "Το έγγραφο αποθηκεύτηκε επιτυχώς!",
+    "download": "Λήψη",
+    "open": "Άνοιγμα",
+    "uploadedBy": "Ανέβηκε από:",
+    "searchPlaceholder": "Αναζήτηση...",
+    "filterAll": "Όλα",
+    "filterGoogleDoc": "Google Docs",
+    "filterSharePoint": "SharePoint",
+    "filterFile": "Αρχεία",
+    "fileLabel": "Αρχείο",
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://...",
+    "titleLabel": "Τίτλος",
+    "descriptionLabel": "Περιγραφή",
+    "fileSizeWarning": "Μέγιστο μέγεθος αρχείου: 20MB.",
+    "empty": "Δεν έχουν ανέβει έγγραφα εταιρείας ακόμα.",
+    "typeGoogleDoc": "Google Doc",
+    "typeSharePoint": "SharePoint",
+    "typeFile": "Αρχείο"
+  },
+  "permissions": {
+    "orgChart": {
+      "label": "Οργανόγραμμα",
+      "view": "Προβολή",
+      "modify": "Τροποποίηση"
+    },
+    "companyDocuments": {
+      "label": "Έγγραφα Εταιρείας",
+      "view": "Προβολή",
+      "modify": "Τροποποίηση"
     }
   }
 }

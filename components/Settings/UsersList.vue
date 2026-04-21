@@ -29,16 +29,16 @@
         </button>
       </div>
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
+        class="hidden lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
       >
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
+        <div class="sm:col-span-2 md:col-span-4 lg:col-span-2">
           {{ $t('settings.filters') }}
         </div>
 
         <!-- First Name Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
+            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
           >
             <input
               v-model="filters.firstName"
@@ -59,7 +59,7 @@
         <!-- Last Name Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
+            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
           >
             <input
               v-model="filters.lastName"
@@ -80,7 +80,7 @@
         <!-- Title Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
+            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
           >
             <input
               v-model="filters.job_title"
@@ -101,7 +101,7 @@
         <!-- Department Filter -->
         <div class="lg:col-span-2 text-black dark:text-white">
           <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
+            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
           >
             <input
               v-model="filters.department"
@@ -136,9 +136,9 @@
       </div>
 
       <div
-        class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
+        class="hidden lg:grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
       >
-        <div class="col-span-1">
+        <div class="col-span-2 shrink-0">
           {{ $t('settings.sortBy') }}
         </div>
         <!-- First Name Sort Button -->
@@ -314,30 +314,41 @@
           <div
             v-for="user in filteredUsers"
             :key="user.id"
-            class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]"
+            class="grid gap-x-[10px] gap-y-1 grid-cols-[auto_1fr] lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]"
           >
-            <div class="mr-4 flex items-center justify-start col-span-1">
+            <div
+              class="row-span-4 lg:row-span-1 mr-4 flex items-center justify-start self-center col-span-1 lg:col-span-1"
+            >
               <SharedUserAvatar :user="user" :size="50" />
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user.firstName || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user.lastName || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user?.profile?.job_title || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user?.department?.name || '' }}
             </div>
-            <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
+            <div
+              class="col-span-full lg:col-span-3 lg:justify-self-end flex gap-[25px] items-center mt-1 lg:mt-0"
+            >
               <a
                 v-if="permissionsStore.can('all_users', 'modify')"
                 class="cursor-pointer text-[#EA021A] font-bold underline"
                 @click="editUser(user.id)"
                 >{{ $t('settings.editProfile') }}</a
               >
+              <button
+                v-if="permissionsStore.can('all_users', 'modify')"
+                class="flex w-full items-center gap-[15px] px-[15px] py-[10px] text-[14px] text-red-600 hover:bg-[#F5F9FC] dark:hover:bg-neutral-700"
+                @click="showTerminateUser(user.id)"
+              >
+                {{ $t('settings.terminate') }}
+              </button>
               <svg
                 v-if="permissionsStore.can('all_users', 'modify')"
                 class="cursor-pointer"
@@ -358,6 +369,26 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile Filter/Sort Drawer -->
+    <SharedFilterSortDrawer
+      v-model="filters"
+      :filter-fields="[
+        { key: 'firstName', placeholder: $t('settings.firstName') },
+        { key: 'lastName', placeholder: $t('settings.lastName') },
+        { key: 'job_title', placeholder: $t('settings.jobTitle') },
+        { key: 'department', placeholder: $t('settings.group') },
+      ]"
+      :sort-fields="[
+        { key: 'firstName', label: $t('settings.firstName') },
+        { key: 'lastName', label: $t('settings.lastName') },
+        { key: 'job_title', label: $t('settings.jobTitle') },
+        { key: 'department', label: $t('settings.group') },
+      ]"
+      :sort-key="currentSortKey"
+      :sort-asc="sortDirection"
+      @sort="sortBy"
+    />
   </template>
 
   <SharedBaseModal v-model="showModal">
@@ -369,6 +400,13 @@
       @saved="closeModal"
     />
   </SharedBaseModal>
+
+  <TerminateUserModal
+    v-if="terminateUserId"
+    v-model="terminateUserModalOpen"
+    :user-id="terminateUserId"
+    @terminated="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
@@ -376,6 +414,7 @@ import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
 import EditUser from '@/components/Settings/EditUser.vue';
 import SharedUserAvatar from '@/components/shared/UserAvatar.vue';
+import TerminateUserModal from '@/components/Settings/TerminateUserModal.vue';
 import { useAllUsers } from '@/composables/userApiComposable';
 import type { User } from '~/types';
 
@@ -501,6 +540,14 @@ const editUser = (userId: string | number) => {
   selectedUserId.value = userId;
   modalType.value = 'edit';
   showModal.value = true;
+};
+
+const terminateUserModalOpen = ref(false);
+const terminateUserId = ref<string | number | null>(null);
+
+const showTerminateUser = (userId: string | number) => {
+  terminateUserId.value = userId;
+  terminateUserModalOpen.value = true;
 };
 
 const deleteUser = (userId: string | number) => {

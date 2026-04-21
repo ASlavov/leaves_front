@@ -83,14 +83,19 @@ const groupedLeavesData = computed(() => {
       };
     }
 
-    acc[typeId].entitled_days += leave.entitled_days;
-    acc[typeId].remaining_days += leave.remaining_days;
+    acc[typeId].entitled_days = Number(
+      (acc[typeId].entitled_days + leave.entitled_days).toFixed(2),
+    );
+    acc[typeId].remaining_days = Number(
+      (acc[typeId].remaining_days + leave.remaining_days).toFixed(2),
+    );
 
     return acc;
   }, {});
 
   // Convert the object back to an array
-  return Object.values(groupedData).sort((a, b) => a.leave_type_id - b.leave_type_id);
+  const allTypes = Object.values(groupedData);
+  return centralStore.dashboardPreferencesStore.visibleLeaveTypes(allTypes);
 });
 
 // Pass the grouped data to the template

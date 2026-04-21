@@ -4,14 +4,21 @@
   >
     <nav class="px-4 sm:px-6 flex basis-full items-center w-full mx-auto">
       <div
-        class="w-full flex items-center justify-end ms-auto md:justify-between gap-x-1 md:gap-x-3"
+        class="w-full flex flex-col-reverse pb-[15px] md:pb-0 gap-y-[15px] md:flex-row justify-center md:justify-end items-center ms-auto gap-x-1 md:gap-x-3"
       >
         <Search />
-        <div class="flex flex-row items-center justify-end gap-1">
-          <ColorModeSwitcher />
-          <UserNotification />
-          <LanguageSwitcher />
-          <MyAccount />
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center sm:justify-between md:justify-end w-full md:w-auto gap-1"
+        >
+          <SharedLogo container-class="md:hidden flex" />
+          <div
+            class="md:contents flex items-center justify-between max-w-[250px] w-full gap-4 sm:gap-1"
+          >
+            <ColorModeSwitcher />
+            <UserNotification />
+            <LanguageSwitcher />
+            <MyAccount />
+          </div>
         </div>
       </div>
     </nav>
@@ -91,26 +98,14 @@
     :aria-label="$t('common.sidebar')"
   >
     <div class="relative flex flex-col h-full max-h-full">
-      <div class="px-6 pt-4">
-        <a
-          class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80 mb-10"
-          href="/home"
-          aria-label="WHY"
-        >
-          <img
-            :src="`https://whyagency.gr/wp-content/uploads/2023/10/${theme === 'light' ? 'logo_dark' : 'logo'}.png`"
-            width="130"
-            alt="Logo"
-          />
-        </a>
-      </div>
+      <SharedLogo />
       <SidebarMenu @navigate="sidebarOpen = false" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Search from '~/components/SidebarTopbar/Search.vue';
 import MyAccount from '~/components/SidebarTopbar/MyAccount.vue';
@@ -129,11 +124,6 @@ watch(
     sidebarOpen.value = false;
   },
 );
-
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp();
-  return $colorMode?.value || 'light';
-});
 </script>
 
 <style>

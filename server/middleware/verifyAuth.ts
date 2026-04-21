@@ -1,17 +1,18 @@
 // server/middleware/verifySession.ts
 import { defineEventHandler, getCookie, createError } from 'h3';
 import { verifyJWT } from '~/server/utils/auth';
-import { setCookie } from '#imports';
+import { setCookie, useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   // Check if the request path starts with `/api/auth`
-  const url = event.node.req.url || '';
+  const url = event.path || '';
 
   if (!url.startsWith('/api')) {
     return;
   }
+
+  // Exempt authentication routes from session verification
   if (url.startsWith('/api/auth')) {
-    // Skip the middleware for this path
     return;
   }
 
@@ -26,10 +27,10 @@ export default defineEventHandler(async (event) => {
       sameSite: 'strict',
       maxAge: 0,
     });
-    return {
+    throw createError({
       statusCode: 403,
       statusMessage: 'Not authenticated',
-    };
+    });
   }
 
   try {
@@ -45,7 +46,8 @@ export default defineEventHandler(async (event) => {
     event.context.requestingUserId = payload.userId;
     event.context.token = payload.token;
 
-    const maxAge = process.env.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
+    const config = useRuntimeConfig();
+    const maxAge = config.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
 
     setCookie(event, 'user_authed', 'true', {
       httpOnly: false,

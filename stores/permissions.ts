@@ -6,11 +6,17 @@ import type { Role } from '~/types';
 
 export const usePermissionsStore = defineStore('permissionsStore', () => {
   const userStore = useUserStore();
+  /*
+    If you ever decide to add Salary, Performance Reviews, or Personal Documents, 
+    this permission system will immediately become inadequate. 
+    As long as it stays strictly for leaves and public profiles, 
+    you are safe—provided you protect the Admin account from being modified by HR.
+  */
   const permissions = {
     profile_leave_balance: {
       view: ['admin', 'hr-manager', 'head', 'user'],
-      request_leave: ['hr-manager', 'head', 'user'],
-      cancel_leave: ['hr-manager', 'head', 'user'],
+      request_leave: ['admin', 'hr-manager', 'head', 'user'],
+      cancel_leave: ['admin', 'hr-manager', 'head', 'user'],
       accept_leave: ['admin', 'hr-manager', 'head'],
       decline_leave: ['admin', 'hr-manager', 'head'],
     },
@@ -48,8 +54,16 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
       modify: ['admin', 'hr-manager'],
     },
     invitations: {
+      view: ['hr-manager', 'head', 'user'],
+      modify: ['hr-manager', 'head', 'user'],
+    },
+    org_chart: {
       view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin'],
+    },
+    company_documents: {
+      view: ['admin', 'hr-manager', 'head', 'user'],
+      modify: ['admin', 'hr-manager'],
     },
   };
 

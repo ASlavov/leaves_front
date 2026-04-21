@@ -8,6 +8,7 @@ import type {
   AvailableDaysEntry,
   BaseMessageResponse,
   LeaveStatus,
+  UpdateLeaveTypePayload,
 } from '~/types';
 
 export const getUserLeavesComposable = (userId: string | number): Promise<UserLeavesResponse> => {
@@ -65,23 +66,18 @@ export const restoreLeaveTypeComposable = (
   });
 };
 
-export const newLeaveTypeComposable = (body: {
-  name: string;
-  dependsOnTypeId?: string | number | null;
-  allowRollover?: boolean;
-}): Promise<LeaveTypeResponse> => {
+export const newLeaveTypeComposable = (
+  body: Omit<UpdateLeaveTypePayload, 'id'>,
+): Promise<LeaveTypeResponse> => {
   return retryFetch<LeaveTypeResponse>('/api/leaves/newLeaveType', {
     method: 'POST',
     body,
   });
 };
 
-export const updateLeaveTypeComposable = (body: {
-  id: string | number;
-  name: string;
-  dependsOnTypeId?: string | number | null;
-  allowRollover?: boolean;
-}): Promise<LeaveTypeResponse> => {
+export const updateLeaveTypeComposable = (
+  body: UpdateLeaveTypePayload,
+): Promise<LeaveTypeResponse> => {
   return retryFetch<LeaveTypeResponse>('/api/leaves/updateLeaveType', {
     method: 'POST',
     body,

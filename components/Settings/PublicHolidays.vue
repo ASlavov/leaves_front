@@ -49,7 +49,7 @@
           class="inline-flex items-center justify-center py-[15px] px-[20px] rounded-[70px] bg-red-600 text-white text-[14px] font-bold hover:bg-red-700 focus:outline-none ml-auto"
           @click="confirmMassDelete"
         >
-          {{ $t('settings.massDeleteSelected', { count: selectedIds.size }) }}
+          {{ $t('settings.massDeleteHolidaysSelected', { count: selectedIds.size }) }}
         </button>
       </template>
     </div>
@@ -712,7 +712,7 @@ const doMassDelete = async () => {
     const res = await holidaysStore.deleteHolidayBatch(ids);
     selectedIds.value = new Set();
     showMassDeleteConfirm.value = false;
-    $toast.success(t('settings.massDeleteSuccess', { count: res.deleted }));
+    $toast.success(t('settings.massDeleteHolidaysSuccess', { count: res.deleted }));
     await refreshHolidays();
   } catch (error) {
     const { type, message } = extractApiError(error);

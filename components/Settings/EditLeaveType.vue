@@ -58,6 +58,139 @@
         </p>
       </div>
 
+      <!-- Advanced Rules Toggle -->
+      <div class="w-full mt-2">
+        <button
+          type="button"
+          class="text-[#EA021A] hover:underline text-sm font-medium flex items-center gap-1"
+          @click="showAdvancedRules = !showAdvancedRules"
+        >
+          {{
+            showAdvancedRules ? $t('settings.hideAdvancedRules') : $t('settings.showAdvancedRules')
+          }}
+        </button>
+      </div>
+
+      <!-- Advanced Rules Section -->
+      <div
+        v-show="showAdvancedRules"
+        class="w-full bg-gray-50 dark:bg-neutral-800 border dark:border-neutral-700 p-4 rounded space-y-5"
+      >
+        <!-- Priority & Overflow -->
+        <h4 class="font-bold text-[14px] text-gray-800 dark:text-gray-200">
+          {{ $t('settings.priorityOverflow') }}
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[15px]">
+          <div>
+            <label :class="labelClass">{{ $t('settings.priorityLevel') }}</label>
+            <input
+              v-model.number="leaveTypeData.priorityLevel"
+              type="number"
+              min="1"
+              max="100"
+              :class="inputClass"
+            />
+            <p class="text-[12px] text-gray-500 mt-[6px]">{{ $t('settings.priorityNote') }}</p>
+          </div>
+          <div>
+            <label :class="labelClass">{{ $t('settings.allowWalletOverflow') }}</label>
+            <div class="flex items-center gap-2 mt-[6px]">
+              <input v-model="leaveTypeData.allowWalletOverflow" type="checkbox" class="h-4 w-4" />
+              <span class="text-[14px] text-gray-700 dark:text-gray-300">{{
+                $t('settings.allowWalletOverflowNote')
+              }}</span>
+            </div>
+          </div>
+          <div v-if="leaveTypeData.allowWalletOverflow" class="sm:col-span-2">
+            <CustomSelect
+              v-model="leaveTypeData.overflowLeaveTypeId"
+              :options="dependsOnOptions"
+              :label="$t('settings.overflowLeaveType')"
+              :placeholder="$t('settings.selectOverflowType')"
+              select-id="overflow-type-select"
+            />
+            <p class="text-[12px] text-gray-500 mt-[6px]">{{ $t('settings.overflowNote') }}</p>
+          </div>
+        </div>
+
+        <hr class="border-gray-200 dark:border-neutral-700" />
+
+        <!-- Accrual -->
+        <h4 class="font-bold text-[14px] text-gray-800 dark:text-gray-200">
+          {{ $t('settings.accrual') }}
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[15px]">
+          <div>
+            <label :class="labelClass">{{ $t('settings.accrualType') }}</label>
+            <div class="flex items-center gap-4 mt-[6px]">
+              <label class="text-[14px] text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                <input v-model="leaveTypeData.accrualType" type="radio" value="upfront" />
+                {{ $t('settings.upfront') }}
+              </label>
+              <label class="text-[14px] text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                <input v-model="leaveTypeData.accrualType" type="radio" value="pro_rata_monthly" />
+                {{ $t('settings.monthlyProRata') }}
+              </label>
+            </div>
+            <p class="text-[12px] text-gray-500 mt-[6px]">{{ $t('settings.accrualNote') }}</p>
+          </div>
+          <div>
+            <label :class="labelClass">{{ $t('settings.allowNegativeBalance') }}</label>
+            <div class="flex items-center gap-2 mt-[6px]">
+              <input v-model="leaveTypeData.allowNegativeBalance" type="checkbox" class="h-4 w-4" />
+            </div>
+          </div>
+          <div v-if="leaveTypeData.allowNegativeBalance">
+            <label :class="labelClass">{{ $t('settings.maxNegativeBalance') }}</label>
+            <input
+              v-model.number="leaveTypeData.maxNegativeBalance"
+              type="number"
+              min="0"
+              :class="inputClass"
+            />
+          </div>
+        </div>
+
+        <hr class="border-gray-200 dark:border-neutral-700" />
+
+        <!-- Schedule & Document -->
+        <h4 class="font-bold text-[14px] text-gray-800 dark:text-gray-200">
+          {{ $t('settings.scheduleDocument') }}
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[15px]">
+          <div>
+            <label :class="labelClass">{{ $t('settings.isHourly') }}</label>
+            <div class="flex items-center gap-2 mt-[6px]">
+              <input v-model="leaveTypeData.isHourly" type="checkbox" class="h-4 w-4" />
+              <span class="text-[14px] text-gray-700 dark:text-gray-300">{{
+                $t('settings.isHourlyNote')
+              }}</span>
+            </div>
+          </div>
+          <div v-if="leaveTypeData.isHourly">
+            <label :class="labelClass">{{ $t('settings.hoursPerDay') }}</label>
+            <input
+              v-model.number="leaveTypeData.hoursPerDay"
+              type="number"
+              step="0.5"
+              min="0.5"
+              max="24"
+              :class="inputClass"
+            />
+          </div>
+          <div>
+            <label :class="labelClass">{{ $t('settings.attachmentRequiredAfter') }}</label>
+            <input
+              v-model.number="leaveTypeData.attachmentRequiredAfterDays"
+              type="number"
+              min="1"
+              :class="inputClass"
+            />
+            <p class="text-[12px] text-gray-500 mt-[6px]">{{ $t('settings.attachmentNote') }}</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Submit -->
       <div class="w-full pt-[10px]">
         <button :class="submitBtnClass" :disabled="loading" @click="saveLeaveType">
@@ -114,13 +247,37 @@ const loading = computed(() => loadingState.value || fetchingTypes.value);
 
 const { input: inputClass, label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
 
+const showAdvancedRules = ref(false);
+
 interface LeaveTypeForm {
   name: string;
   dependsOnTypeId: string | number;
   allowRollover: boolean;
+  priorityLevel: number;
+  allowWalletOverflow: boolean;
+  overflowLeaveTypeId: string | number;
+  accrualType: 'upfront' | 'pro_rata_monthly';
+  allowNegativeBalance: boolean;
+  maxNegativeBalance: number;
+  isHourly: boolean;
+  hoursPerDay: number;
+  attachmentRequiredAfterDays: number | '';
 }
 
-const leaveTypeData = ref<LeaveTypeForm>({ name: '', dependsOnTypeId: '', allowRollover: true });
+const leaveTypeData = ref<LeaveTypeForm>({
+  name: '',
+  dependsOnTypeId: '',
+  allowRollover: true,
+  priorityLevel: 10,
+  allowWalletOverflow: false,
+  overflowLeaveTypeId: '',
+  accrualType: 'upfront',
+  allowNegativeBalance: false,
+  maxNegativeBalance: 0,
+  isHourly: false,
+  hoursPerDay: 8,
+  attachmentRequiredAfterDays: '',
+});
 
 const dependsOnOptions = computed(() => {
   const types = remoteLeaves.value || leavesStore.leavesData.leavesTypes || [];
@@ -143,10 +300,32 @@ watch(
         leaveTypeData.value.name = type.name;
         leaveTypeData.value.dependsOnTypeId = type.depends_on_type_id ?? '';
         leaveTypeData.value.allowRollover = type.allow_rollover !== false;
+        leaveTypeData.value.priorityLevel = type.priority_level ?? 10;
+        leaveTypeData.value.allowWalletOverflow = type.allow_wallet_overflow ?? false;
+        leaveTypeData.value.overflowLeaveTypeId = type.overflow_leave_type_id ?? '';
+        leaveTypeData.value.accrualType = type.accrual_type ?? 'upfront';
+        leaveTypeData.value.allowNegativeBalance = type.allow_negative_balance ?? false;
+        leaveTypeData.value.maxNegativeBalance = type.max_negative_balance ?? 0;
+        leaveTypeData.value.isHourly = type.is_hourly ?? false;
+        leaveTypeData.value.hoursPerDay = type.hours_per_day ?? 8;
+        leaveTypeData.value.attachmentRequiredAfterDays = type.attachment_required_after_days ?? '';
       }
     } else {
       // Reset for new
-      leaveTypeData.value = { name: '', dependsOnTypeId: '', allowRollover: true };
+      leaveTypeData.value = {
+        name: '',
+        dependsOnTypeId: '',
+        allowRollover: true,
+        priorityLevel: 10,
+        allowWalletOverflow: false,
+        overflowLeaveTypeId: '',
+        accrualType: 'upfront',
+        allowNegativeBalance: false,
+        maxNegativeBalance: 0,
+        isHourly: false,
+        hoursPerDay: 8,
+        attachmentRequiredAfterDays: '',
+      };
     }
   },
   { immediate: true },
@@ -157,21 +336,29 @@ const saveLeaveType = async () => {
 
   loadingState.value = true;
   try {
-    const dependsOnTypeId = leaveTypeData.value.dependsOnTypeId || null;
+    const payload = {
+      name: leaveTypeData.value.name,
+      dependsOnTypeId: leaveTypeData.value.dependsOnTypeId || null,
+      allowRollover: leaveTypeData.value.allowRollover,
+      priorityLevel: leaveTypeData.value.priorityLevel,
+      allowWalletOverflow: leaveTypeData.value.allowWalletOverflow,
+      overflowLeaveTypeId: leaveTypeData.value.overflowLeaveTypeId || null,
+      accrualType: leaveTypeData.value.accrualType,
+      allowNegativeBalance: leaveTypeData.value.allowNegativeBalance,
+      maxNegativeBalance: leaveTypeData.value.maxNegativeBalance,
+      isHourly: leaveTypeData.value.isHourly,
+      hoursPerDay: leaveTypeData.value.hoursPerDay,
+      attachmentRequiredAfterDays: leaveTypeData.value.attachmentRequiredAfterDays || null,
+    };
+
     if (props.leaveTypeId) {
-      await leavesStore.updateLeaveType(
-        props.leaveTypeId,
-        leaveTypeData.value.name,
-        dependsOnTypeId,
-        leaveTypeData.value.allowRollover,
-      );
+      await leavesStore.updateLeaveType({
+        id: props.leaveTypeId,
+        ...payload,
+      });
       (useNuxtApp() as unknown as { $toast: any }).$toast.success(t('settings.leaveUpdated'));
     } else {
-      await leavesStore.createLeaveType(
-        leaveTypeData.value.name,
-        dependsOnTypeId,
-        leaveTypeData.value.allowRollover,
-      );
+      await leavesStore.createLeaveType(payload);
       (useNuxtApp() as unknown as { $toast: any }).$toast.success(t('settings.leaveAdded'));
     }
     emit('saved');

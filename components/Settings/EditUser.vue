@@ -78,10 +78,10 @@
           </div>
 
           <!-- Flex-wrap form grid -->
-          <div class="px-[30px]">
+          <div class="px-4 sm:px-[30px]">
             <div class="flex flex-wrap gap-[15px]">
               <!-- First Name -->
-              <div class="w-[300px]">
+              <div class="w-full lg:w-[300px]">
                 <label :class="labelClass"
                   >{{ $t('settings.firstName') }} <span class="text-[#EA021A]">*</span></label
                 >
@@ -93,7 +93,7 @@
                 />
               </div>
               <!-- Last Name -->
-              <div class="w-[300px]">
+              <div class="w-full lg:w-[300px]">
                 <label :class="labelClass">{{ $t('settings.lastName') }}</label>
                 <input
                   v-model="formLastName"
@@ -103,7 +103,7 @@
                 />
               </div>
               <!-- Title -->
-              <div class="w-[300px]">
+              <div class="w-full lg:w-[300px]">
                 <label :class="labelClass">{{ $t('settings.jobTitle') }}</label>
                 <input
                   v-model="formTitle"
@@ -113,7 +113,7 @@
                 />
               </div>
               <!-- Phone -->
-              <div class="w-[300px]">
+              <div class="w-full lg:w-[300px]">
                 <label :class="labelClass">{{ $t('settings.phone') }}</label>
                 <input
                   v-model="formPhone"
@@ -124,7 +124,7 @@
                 />
               </div>
               <!-- Internal Phone -->
-              <div class="w-[300px]">
+              <div class="w-full lg:w-[300px]">
                 <label :class="labelClass">{{ $t('settings.internalPhone') }}</label>
                 <input
                   v-model="formInternalPhone"
@@ -134,12 +134,19 @@
                 />
               </div>
               <!-- Email -->
-              <div class="w-[300px]">
-                <label :class="labelClass">Email <span class="text-[#EA021A]">*</span></label>
-                <input v-model="formEmail" type="email" :class="inputClass" placeholder="Email" />
+              <div class="w-full lg:w-[300px]">
+                <label :class="labelClass"
+                  >{{ $t('common.email') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="formEmail"
+                  type="email"
+                  :class="inputClass"
+                  :placeholder="$t('common.email')"
+                />
               </div>
               <!-- Group -->
-              <div v-if="permissionsStore.can('group', 'modify')" class="w-[300px]">
+              <div v-if="permissionsStore.can('group', 'modify')" class="w-full lg:w-[300px]">
                 <CustomSelect
                   v-model="formSelectedDepartmentId"
                   :options="departments"
@@ -149,7 +156,7 @@
                 />
               </div>
               <!-- Role -->
-              <div v-if="canEdit" class="w-[300px]">
+              <div v-if="canEdit" class="w-full lg:w-[300px]">
                 <CustomSelect
                   v-model="formRole"
                   :options="roles"
@@ -158,8 +165,30 @@
                   select-id="role-select"
                 />
               </div>
+              <!-- Hire Date -->
+              <div v-if="canEdit" class="w-full lg:w-[300px]">
+                <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
+                <input v-model="formHireDate" type="date" :class="inputClass" />
+              </div>
+              <!-- Work Schedule -->
+              <div v-if="canEdit && !isNewUser" class="w-full lg:w-full">
+                <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
+                <div class="flex flex-wrap gap-4 mt-[6px]">
+                  <label
+                    v-for="(day, idx) in daysOfWeek"
+                    :key="idx"
+                    class="flex items-center gap-1 text-[14px]"
+                  >
+                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
+                    {{ day.label }}
+                  </label>
+                </div>
+                <p class="text-[12px] text-gray-500 mt-[6px]">
+                  {{ $t('settings.workScheduleNote') }}
+                </p>
+              </div>
               <!-- Password (new user only) -->
-              <div v-if="isNewUser" class="w-[300px]">
+              <div v-if="isNewUser" class="w-full lg:w-[300px]">
                 <label :class="labelClass"
                   >{{ $t('settings.password') }} <span class="text-[#EA021A]">*</span></label
                 >
@@ -184,7 +213,7 @@
       <!-- ── INLINE MODE (ProfileInfo) ── -->
       <template v-else>
         <template v-if="loading">
-          <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
+          <div class="flex flex-col sm:grid sm:grid-cols-12 pt-[30px] max-w-[947px]">
             <div class="w-12 h-12 bg-gray-200 rounded-full col-span-2 mr-4 animate-pulse"></div>
             <div class="pt-4 space-y-2 col-span-10 animate-pulse">
               <p class="h-4 bg-gray-200 rounded w-1/3 animate-pulse dark:bg-neutral-700"></p>
@@ -198,10 +227,10 @@
           </div>
         </template>
         <template v-else>
-          <div class="grid grid-cols-12 pt-[30px] max-w-[947px]">
+          <div class="flex flex-col lg:flex-row pt-[30px] gap-[15px] max-w-[947px]">
             <!-- Avatar (inline: left column) -->
             <div
-              class="relative w-[132px] h-[132px] bg-gray-300 dark:bg-neutral-600 rounded-full mr-4 flex items-center justify-center col-span-2"
+              class="relative w-[132px] shrink-0 h-[132px] bg-gray-300 dark:bg-neutral-600 rounded-full mx-auto flex items-center justify-center xl:col-span-2 self-start"
             >
               <img
                 v-if="userPhoto"
@@ -246,8 +275,8 @@
               />
             </div>
             <!-- Info Details -->
-            <div class="grid grid-cols-2 col-span-10 gap-y-[15px] gap-x-[25px]">
-              <div class="max-w-sm">
+            <div class="grid grid-cols-1 w-full lg:grid-cols-2 gap-y-[15px] gap-x-[25px]">
+              <div class="max-w-lg">
                 <label :class="labelClass"
                   >{{ $t('settings.firstName') }} <span class="text-[#EA021A]">*</span></label
                 >
@@ -258,7 +287,7 @@
                   :placeholder="$t('settings.firstName')"
                 />
               </div>
-              <div class="max-w-sm">
+              <div class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.lastName') }}</label>
                 <input
                   v-model="formLastName"
@@ -267,7 +296,7 @@
                   :placeholder="$t('settings.lastName')"
                 />
               </div>
-              <div class="max-w-sm">
+              <div class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.jobTitle') }}</label>
                 <input
                   v-model="formTitle"
@@ -276,11 +305,18 @@
                   :placeholder="$t('settings.jobTitle')"
                 />
               </div>
-              <div class="max-w-sm">
-                <label :class="labelClass">Email <span class="text-[#EA021A]">*</span></label>
-                <input v-model="formEmail" type="email" :class="inputClass" placeholder="Email" />
+              <div class="max-w-lg">
+                <label :class="labelClass"
+                  >{{ $t('common.email') }} <span class="text-[#EA021A]">*</span></label
+                >
+                <input
+                  v-model="formEmail"
+                  type="email"
+                  :class="inputClass"
+                  :placeholder="$t('common.email')"
+                />
               </div>
-              <div class="max-w-sm">
+              <div class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.phone') }}</label>
                 <input
                   v-model="formPhone"
@@ -290,7 +326,7 @@
                   :placeholder="$t('settings.phone')"
                 />
               </div>
-              <div class="max-w-sm">
+              <div class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.internalPhone') }}</label>
                 <input
                   v-model="formInternalPhone"
@@ -299,7 +335,7 @@
                   :placeholder="$t('settings.internalPhone')"
                 />
               </div>
-              <div v-if="permissionsStore.can('group', 'modify')" class="max-w-sm">
+              <div v-if="permissionsStore.can('group', 'modify')" class="max-w-lg">
                 <CustomSelect
                   v-model="formSelectedDepartmentId"
                   :options="departments"
@@ -308,7 +344,7 @@
                   select-id="department-select"
                 />
               </div>
-              <div v-if="canEdit" class="max-w-sm">
+              <div v-if="canEdit" class="max-w-lg">
                 <CustomSelect
                   v-model="formRole"
                   :options="roles"
@@ -317,9 +353,40 @@
                   select-id="role-select"
                 />
               </div>
-              <div class="info-actions pt-10 pb-5 flex gap-4 col-span-2">
+              <div v-if="canEdit" class="max-w-lg">
+                <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
+                <input v-model="formHireDate" type="date" :class="inputClass" />
+              </div>
+              <div v-if="canEdit && !isNewUser" class="max-w-lg lg:col-span-2">
+                <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
+                <div class="flex flex-wrap gap-4 mt-[6px]">
+                  <label
+                    v-for="(day, idx) in daysOfWeek"
+                    :key="idx"
+                    class="flex items-center gap-1 text-[14px]"
+                  >
+                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
+                    {{ day.label }}
+                  </label>
+                </div>
+                <p class="text-[12px] text-gray-500 mt-[6px]">
+                  {{ $t('settings.workScheduleNote') }}
+                </p>
+              </div>
+              <div class="info-actions pt-10 pb-5 flex flex-wrap items-center gap-4 lg:col-span-2">
                 <button :class="submitBtnClass" @click="submitForm">
                   {{ isNewUser ? $t('settings.addUser') : $t('settings.saveChanges') }}
+                </button>
+                <button
+                  v-if="
+                    !isNewUser &&
+                    (Number(props.userId) === Number(centralStore.userStore.userId) ||
+                      !props.userId)
+                  "
+                  class="justify-center inline-flex px-6 py-[15px] border border-gray-300 dark:border-neutral-600 shadow-sm text-sm font-medium rounded-[70px] text-gray-700 bg-white hover:bg-gray-50 focus:outline-none dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700 transition"
+                  @click.prevent="showCustomizer = true"
+                >
+                  {{ $t('dashboard.customize') }}
                 </button>
               </div>
             </div>
@@ -327,6 +394,7 @@
         </template>
       </template>
     </div>
+    <HomeDashboardCustomizer v-if="showCustomizer" @close="showCustomizer = false" />
   </div>
 </template>
 
@@ -335,6 +403,7 @@ import { ref, computed, watch, onMounted, type PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '@/stores/centralStore';
 import CustomSelect from '@/components/misc/CustomSelect.vue';
+import HomeDashboardCustomizer from '~/components/Home/DashboardCustomizer.vue';
 import { useFormStyles } from '@/composables/useFormStyles';
 import { extractApiError } from '@/utils/extractApiError';
 import type { User } from '@/types';
@@ -371,6 +440,8 @@ const canEdit = computed(() => {
   return permissionsStore.can('all_users', 'modify');
 });
 
+const showCustomizer = ref(false);
+
 // File input reference
 const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -386,6 +457,18 @@ const formInternalPhone = ref('');
 const formTitleDescription = ref('');
 const formPhoto = ref<string | null>(null);
 const formSelectedDepartmentId = ref<string | number>('');
+const formHireDate = ref('');
+const formWorkSchedule = ref<number[]>([]);
+
+const daysOfWeek = [
+  { label: 'Sun', value: 0 },
+  { label: 'Mon', value: 1 },
+  { label: 'Tue', value: 2 },
+  { label: 'Wed', value: 3 },
+  { label: 'Thu', value: 4 },
+  { label: 'Fri', value: 5 },
+  { label: 'Sat', value: 6 },
+];
 
 // Computed properties for avatar initials
 const firstNameInitial = computed(() => formFirstName.value.charAt(0).toUpperCase() || '');
@@ -394,7 +477,14 @@ const userPhoto = computed(() => formPhoto.value);
 
 // Lists
 const departments = computed(() => departmentsStore.departmentsData);
-const roles = computed(() => permissionsStore.allRoles);
+const roles = computed(() => {
+  if (permissionsStore.isAdmin()) {
+    return permissionsStore.allRoles;
+  }
+  return permissionsStore.allRoles.filter(
+    (role: Record<string, number | string>) => role.key !== 'admin',
+  );
+});
 
 const triggerFileSelect = () => {
   if (fileInput.value) {
@@ -452,8 +542,8 @@ async function fetchUserData() {
         initializeFormFields(newUserInfo);
       }
     }
-  } catch {
-    $toast.error('Error fetching user data.');
+  } catch (err) {
+    useNuxtApp().$toast.error(t('errors.user.fetchFailed'));
   }
 }
 
@@ -471,6 +561,8 @@ function initializeFormFields(userInfo: User) {
   formTitleDescription.value = userInfo.profile?.title_description || '';
   formSelectedDepartmentId.value = userInfo.department?.id ? String(userInfo.department.id) : '';
   formPhoto.value = userInfo.profile?.profile_image_base64 || null;
+  formHireDate.value = userInfo.hire_date || '';
+  formWorkSchedule.value = userInfo.work_schedule || [];
 }
 
 const submitForm = async () => {
@@ -501,6 +593,7 @@ const submitForm = async () => {
         userTitle,
         userTitleDescription,
         userImage,
+        formHireDate.value || null,
       );
     } else if (props.userId) {
       await userStore.editUser(
@@ -514,6 +607,8 @@ const submitForm = async () => {
         userTitle,
         userTitleDescription,
         userImage,
+        formWorkSchedule.value.length > 0 ? formWorkSchedule.value : null,
+        formHireDate.value || null,
       );
     }
     (useNuxtApp() as any).$toast.success(t('settings.profileUpdated'));

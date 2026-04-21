@@ -75,6 +75,8 @@ export const useUserStore = defineStore('userStore', () => {
     userTitle: string,
     userTitleDescription: string,
     userImage: string | File,
+    workSchedule?: number[] | null,
+    hireDate?: string | null,
   ) {
     try {
       loading.value = true;
@@ -90,6 +92,8 @@ export const useUserStore = defineStore('userStore', () => {
         userTitle,
         userTitleDescription,
         userImage,
+        workSchedule,
+        hireDate,
       });
 
       if (result) {
@@ -144,6 +148,7 @@ export const useUserStore = defineStore('userStore', () => {
     userTitle: string,
     userTitleDescription: string,
     userImage: string,
+    hireDate?: string | null,
   ) {
     try {
       loading.value = true;
@@ -158,6 +163,7 @@ export const useUserStore = defineStore('userStore', () => {
         userTitle,
         userTitleDescription,
         userImage,
+        hireDate,
       });
 
       await getAllUsers();
