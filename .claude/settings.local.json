@@ -48,7 +48,15 @@
       "Bash(find /c/laragon/www/intelligence-back/app/Http/Requests -type f -name *.php)",
       "Bash(find C:UsersUserDesktopnew_intelligenceintelligence -maxdepth 3 -path */node_modules -prune -o -path */.netlify -prune -o -type f -name *.d.ts -o -name types.ts -print)",
       "Bash(find /c/laragon/www/intelligence-back -name \"*.php\" -type f -exec grep -l \"administrative\" {} \\\\;)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebFetch(domain:intl-tel-input.com)",
+      "Bash(npm list *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm view *)",
+      "Bash(php -l intelligence-back/app/Http/Controllers/Api/ReportsController.php)",
+      "Bash(php -l intelligence-back/routes/api.php)",
+      "WebFetch(domain:ekoopmans.github.io)"
     ]
   }
 }

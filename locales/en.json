@@ -204,6 +204,11 @@
     "terminateConfirmLabel": "I understand the consequences and confirm the termination of this employee. This action cannot be undone.",
     "terminateConfirmBtn": "Confirm Termination",
     "terminateSuccess": "Employee terminated successfully.",
+    "deleteUserTitle": "Delete User",
+    "deleteUserDesc": "You are about to permanently delete this user. This action cannot be undone.",
+    "deleteUserConfirmLabel": "I understand the consequences and confirm the deletion of this user.",
+    "deleteUserConfirmBtn": "Confirm Deletion",
+    "deleteUserSuccess": "User deleted successfully.",
     "terminate": "Terminate",
     "hireDate": "Employment Start Date",
     "personalWorkSchedule": "Personal Work Schedule",
@@ -230,7 +235,9 @@
     "isHourlyNote": "Time range picker instead of date range.",
     "hoursPerDay": "Hours Per Day",
     "attachmentRequiredAfter": "Attachment Required After (Days)",
-    "attachmentNote": "e.g. 3 = certificate needed for 4+ days."
+    "attachmentNote": "e.g. 3 = certificate needed for 4+ days.",
+    "autoApproveRequests": "Auto-approve Requests",
+    "autoApproveNote": "Leave requests for this type will be approved automatically if they pass balance checks."
   },
   "leaves": {
     "cancelLeave": "Cancel Leave",
@@ -252,6 +259,7 @@
     "fromDate": "From date",
     "toHuman": "to",
     "submitSuccess": "Leave request submitted successfully!",
+    "submitAutoApproved": "Leave request automatically approved!",
     "submitError": "Error submitting leave request.",
     "errorFetchingUserLeaves": "Could not fetch user leaves!",
     "balance": "Leave Balance",
@@ -289,6 +297,11 @@
       "recordBtn": "Record Admin Leave"
     }
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet"
+  },
   "common": {
     "delete": "Delete",
     "select": "Select",
@@ -298,6 +311,7 @@
     "date": "Date",
     "selectDate": "Select date",
     "search": "Search",
+    "searchCountry": "Search country...",
     "year": "Year",
     "type": "Type",
     "from": "From",
@@ -347,7 +361,10 @@
     "messagePerson": "Message Person",
     "none": "None",
     "orgChart": "Organizational Chart",
-    "documents": "Company Documents"
+    "documents": "Company Documents",
+    "reports": "Reports",
+    "noData": "No data",
+    "deleting": "Deleting..."
   },
   "calendar": {
     "allNames": "All names",
@@ -419,7 +436,8 @@
       "changePasswordFailed": "Could not change your password",
       "terminatePreviewFailed": "Failed to generate termination preview.",
       "terminateFailed": "Failed to terminate employee.",
-      "fetchFailed": "Error fetching user data."
+      "fetchFailed": "Error fetching user data.",
+      "deleteFailed": "Could not delete user."
     },
     "holidays": {
       "fetchFailed": "Could not fetch public holidays",
@@ -438,6 +456,9 @@
       "sendFailed": "Could not send invitation",
       "respondFailed": "Could not update invitation status",
       "revokeFailed": "Could not revoke invitation"
+    },
+    "reports": {
+      "fetchFailed": "Could not load report data"
     }
   },
   "invitations": {
@@ -495,6 +516,11 @@
     "assignToLabel": "Assign To",
     "targetAll": "Entire Company",
     "targetUser": "Specific User",
+    "targetRestricted": "Restricted",
+    "assignToRoles": "Assign Roles",
+    "assignToUsers": "Assign Users",
+    "selectRoles": "Select Roles...",
+    "selectUsers": "Select Users...",
     "filterByUser": "Filter by user",
     "allUsers": "All Users",
     "emptyCompany": "No company documents have been uploaded yet.",
@@ -524,15 +550,59 @@
     "typeFile": "File Upload"
   },
   "permissions": {
+    "recordAdminLeave": "Record administrative leave",
     "orgChart": {
-      "label": "Organizational Chart",
-      "view": "View",
-      "modify": "Modify"
+      "label": "Org Chart",
+      "view": "View Org Chart",
+      "modify": "Modify Org Chart"
     },
     "companyDocuments": {
       "label": "Company Documents",
-      "view": "View",
-      "modify": "Modify"
+      "view": "View Documents",
+      "modify": "Modify Documents"
+    },
+    "reports": {
+      "label": "Reports",
+      "view": "View Reports",
+      "export": "Export Reports"
+    }
+  },
+  "reports": {
+    "year": "Year",
+    "departments": "Departments",
+    "allDepartments": "All departments",
+    "leaveTypes": "Leave types",
+    "allLeaveTypes": "All leave types",
+    "customize": "Customize",
+    "selectWidgets": "Select widgets",
+    "exportPdf": "Export PDF",
+    "widgets": {
+      "leavesByMonth": "Leaves by month",
+      "leavesByDepartment": "Leaves by department",
+      "leaveTypeShare": "Leave type share",
+      "topUsers": "Top users by leave days",
+      "pendingQueue": "Pending approvals",
+      "headcount": "Active headcount",
+      "leaveDays": "Leave days"
+    },
+    "export": {
+      "title": "Leave Balance Report",
+      "subtitle": "Year {year}",
+      "employees": "Employees",
+      "selectEmployees": "Select employees",
+      "leaveTypes": "Leave types",
+      "selectLeaveTypes": "Select leave types",
+      "metrics": "Metrics",
+      "selectMetrics": "Select metrics",
+      "metricsHint": "Pick one or both to show a column per metric per leave type.",
+      "metricRemaining": "Remaining",
+      "metricTaken": "Taken",
+      "employee": "Employee",
+      "generate": "Generate PDF",
+      "generating": "Generating...",
+      "generateFailed": "Failed to generate report",
+      "generatedOn": "Generated on {date}",
+      "noData": "No data for the selected filters"
     }
   }
 }

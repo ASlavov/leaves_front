@@ -79,6 +79,7 @@ export interface LeaveType {
   is_hourly?: boolean;
   hours_per_day?: number;
   attachment_required_after_days?: number | null;
+  auto_approve?: boolean;
   deleted_at?: string | null;
   [key: string]: any;
 }

@@ -9,3 +9,4 @@ export * from './administrative';
 export * from './orgChart';
 export * from './document';
 export * from './dashboard';
+export * from './notifications';

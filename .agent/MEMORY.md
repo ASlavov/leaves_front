@@ -20,6 +20,9 @@
 - **Wallet Overflow**: When a leave exhausts a wallet and `allow_wallet_overflow = true`, the system auto-creates a child leave (linked via `parent_leave_id`) for the overflow segment using the `overflow_leave_type_id` type (typically Unpaid).
 - **Org Chart**: Stored as a flat list with `parent_id` and `position`. Tree generation happens exclusively on the frontend inside `stores/orgChart.ts`.
 - **Company Documents**: Leverages same Base64 payload method as leave attachments for file uploads. Extended to support Personal Documents via explicit `target_type` ('all' or 'user') mapping directly in payload shape without an explicit frontend adapter, reducing complexity.
+- **Role-Based Document Access**: Implemented a many-to-many relationship using pivot tables (`company_document_users` and `company_document_roles`) to share documents with specific users or multiple roles efficiently.
+- **Reporting & Charting**: Centralized report generation in the backend controller (`ReportsController`), producing grouped aggregated statistics (by month, by type, by department) directly from Eloquent. These are surfaced in Vue component widgets using `vue-chartjs`.
+- **UI Consistency Components**: Migrated form controls application-wide to use unified components (`SharedFlatpickrInput`, `SharedWeekdayPills`, `SharedPhoneInput`) to maintain consistent logic and CSS classes for interactions.
 
 ## Resolved Issues
 
@@ -33,6 +36,8 @@
 - **OrgChart Flat Save Bug**: The frontend was stripping negative `parent_id`s (from newly drafted nodes) to `null` before sending the `sync` payload, which disconnected newly formed relationships and turned every new node into a root. We now send `id` (even if temporary/negative) and `parent_id` unfiltered so Laravel can reconstruct associations.
 - **Document API Forwarding**: Explicitly added `query: getQuery(event)` to the Nuxt proxy layer on `GET /documents` to ensure trailing GET query string variables (like `target_user_id`) flow successfully down to the Laravel server.
 - **403 on /api/me Fix**: Removed `/api/me` from the exempt list in `server/middleware/verifyAuth.ts`. Previously, the middleware skipped this route, preventing `event.context.requestingUserId` and `token` from being set, which caused the `/api/me` handler to return a 403 "Not authenticated" error even when a valid session existed.
+- **Phone Input Casting Issue**: `intl-tel-input` expects a union type of all string country identifiers for `initialCountry` (e.g., `'us' | 'gr' | ...`). Casted the reactive prop to `any` statically to suppress the compiler strict check while retaining the dynamic default.
+- **Duplicate JSON Localizations**: Addressed duplicate keys in `el.json` which broke JSON validity (e.g. `uploadedBy`), by ensuring translations correspond correctly to UI without redeclaring elements.
 
 ## Context
 

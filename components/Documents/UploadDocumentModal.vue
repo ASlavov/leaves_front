@@ -73,11 +73,47 @@
       </div>
 
       <!-- Assign To picker -->
-      <CustomSelect
-        v-model="targetSelection"
-        :options="targetOptions"
-        :label="$t('documents.assignToLabel')"
-      />
+      <div class="space-y-2">
+        <label :class="styles.label">{{ $t('documents.assignToLabel') }}</label>
+        <div class="flex gap-4 mb-3">
+          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <input v-model="targetType" type="radio" value="all" />
+            {{ $t('documents.targetAll') }}
+          </label>
+          <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <input v-model="targetType" type="radio" value="restricted" />
+            {{ $t('documents.targetRestricted') }}
+          </label>
+        </div>
+
+        <div
+          v-if="targetType === 'restricted'"
+          class="space-y-4 p-3 bg-gray-50 dark:bg-neutral-800 rounded border border-gray-200 dark:border-neutral-700"
+        >
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{
+              $t('documents.assignToRoles')
+            }}</label>
+            <MiscCustomMultiSelect
+              v-model="targetRoleIds"
+              :options="roleOptions"
+              :placeholder="$t('documents.selectRoles')"
+              select-id="doc-roles"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{
+              $t('documents.assignToUsers')
+            }}</label>
+            <MiscCustomMultiSelect
+              v-model="targetUserIds"
+              :options="userOptions"
+              :placeholder="$t('documents.selectUsers')"
+              select-id="doc-users"
+            />
+          </div>
+        </div>
+      </div>
 
       <!-- Submit -->
       <div class="pt-2 flex justify-end">
@@ -122,7 +158,7 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BaseModal from '~/components/shared/BaseModal.vue';
-import CustomSelect from '~/components/misc/CustomSelect.vue';
+import MiscCustomMultiSelect from '~/components/misc/CustomMultiSelect.vue';
 import { useFormStyles } from '~/composables/useFormStyles';
 import { useCentralStore } from '~/stores/centralStore';
 import type { CompanyDocument, DocumentSourceType } from '~/types';
@@ -152,15 +188,24 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const selectedFile = ref<File | null>(null);
 const fileBase64 = ref('');
 const isSaving = ref(false);
-const targetSelection = ref<string>('all');
+const targetType = ref<'all' | 'restricted'>('all');
+const targetUserIds = ref<number[]>([]);
+const targetRoleIds = ref<number[]>([]);
 
 const usersArray = computed(() => usersStore.allUsers || []);
 
-const targetOptions = computed(() => {
-  return [
-    { id: 'all', name: t('documents.targetAll') },
-    ...usersArray.value.map((u: any) => ({ id: String(u.id), name: u.name })),
-  ];
+const roleOptions = computed(() => {
+  return centralStore.permissionsStore.allRoles.map((r: any) => ({
+    id: r.id,
+    name: r.name,
+  }));
+});
+
+const userOptions = computed(() => {
+  return usersArray.value.map((u: any) => ({
+    id: u.id,
+    name: u.name,
+  }));
 });
 
 const types: { value: DocumentSourceType; labelKey: string }[] = [
@@ -179,8 +224,9 @@ watch(
         title.value = d.title;
         description.value = d.description || '';
         url.value = d.url || '';
-        targetSelection.value =
-          d.target_type === 'user' && d.target_user_id ? String(d.target_user_id) : 'all';
+        targetType.value = d.target_type;
+        targetUserIds.value = d.target_users?.map((u) => u.id) || [];
+        targetRoleIds.value = d.target_roles?.map((r) => r.id) || [];
         selectedFile.value = null;
         fileBase64.value = '';
       } else {
@@ -188,7 +234,9 @@ watch(
         title.value = '';
         description.value = '';
         url.value = '';
-        targetSelection.value = 'all';
+        targetType.value = 'all';
+        targetUserIds.value = [];
+        targetRoleIds.value = [];
         selectedFile.value = null;
         fileBase64.value = '';
       }
@@ -244,8 +292,9 @@ const save = async () => {
       title: title.value,
       description: description.value,
       source_type: sourceType.value,
-      target_type: targetSelection.value === 'all' ? 'all' : 'user',
-      target_user_id: targetSelection.value === 'all' ? null : Number(targetSelection.value),
+      target_type: targetType.value,
+      target_user_ids: targetType.value === 'restricted' ? targetUserIds.value : [],
+      target_role_ids: targetType.value === 'restricted' ? targetRoleIds.value : [],
     };
 
     if (sourceType.value === 'file') {

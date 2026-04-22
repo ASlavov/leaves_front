@@ -6,7 +6,8 @@ import { useLeavesStore } from '~/stores/leaves'; // Import the leaves store
 import { useEntitlementStore } from '~/stores/entitlement'; // Import the leaves store
 import { useDepartmentsStore } from '~/stores/departments'; // Import the departments store
 import { useNotificationsStore } from '~/stores/notifications';
-import { usePermissionsStore } from '~/stores/permissions'; // Import the notifications store
+import { usePermissionsStore } from '@/stores/permissions';
+import { useReportsStore } from '@/stores/reports'; // Import the notifications store
 import { useHolidaysStore } from '~/stores/holidays';
 import { useWorkWeekStore } from '~/stores/workWeek';
 import { useInvitationsStore } from '~/stores/invitations';
@@ -22,6 +23,7 @@ export const useCentralStore = defineStore('centralStore', () => {
   const departmentsStore = useDepartmentsStore();
   const notificationsStore = useNotificationsStore();
   const permissionsStore = usePermissionsStore();
+  const reportsStore = useReportsStore();
   const holidaysStore = useHolidaysStore();
   const workWeekStore = useWorkWeekStore();
   const invitationsStore = useInvitationsStore();
@@ -48,8 +50,8 @@ export const useCentralStore = defineStore('centralStore', () => {
     // we're assuming user is authed
     try {
       if (userStore.userId) {
-        // Run all store initialization in parallel
-        await Promise.all([userStore.init(), departmentsStore.init(), notificationsStore.init()]);
+        // Run fundamental store initializations first
+        await Promise.all([userStore.init(), departmentsStore.init(), notificationsStore.init(), permissionsStore.init()]);
 
         await Promise.all([
           userStore.getAllUsers(),
@@ -77,10 +79,10 @@ export const useCentralStore = defineStore('centralStore', () => {
 
   async function logout() {
     try {
-      notificationsStore.stopPollingNotifications();
       userStore.reset();
       leavesStore.reset();
       departmentsStore.reset();
+      permissionsStore.reset();
       notificationsStore.reset();
       entitlementStore.reset();
       holidaysStore.reset();
@@ -88,6 +90,7 @@ export const useCentralStore = defineStore('centralStore', () => {
       invitationsStore.reset();
       orgChartStore.reset();
       documentsStore.reset();
+      reportsStore.reset();
       dashboardPreferencesStore.reset();
       initialized.value = false;
       await authStore.logout();
@@ -120,6 +123,7 @@ export const useCentralStore = defineStore('centralStore', () => {
   const proxiedDepartmentsStore = new Proxy(departmentsStore, dynamicProxyHandler);
   const proxiedNotificationsStore = new Proxy(notificationsStore, dynamicProxyHandler);
   const proxiedPermissionsStore = new Proxy(permissionsStore, dynamicProxyHandler);
+  const proxiedReportsStore = new Proxy(reportsStore, dynamicProxyHandler);
   const proxiedEntitlementStore = new Proxy(entitlementStore, dynamicProxyHandler);
   const proxiedHolidaysStore = new Proxy(holidaysStore, dynamicProxyHandler);
   const proxiedWorkWeekStore = new Proxy(workWeekStore, dynamicProxyHandler);
@@ -143,6 +147,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     departmentsStore: proxiedDepartmentsStore,
     notificationsStore: proxiedNotificationsStore,
     permissionsStore: proxiedPermissionsStore,
+    reportsStore: proxiedReportsStore,
     entitlementStore: proxiedEntitlementStore,
     holidaysStore: proxiedHolidaysStore,
     workWeekStore: proxiedWorkWeekStore,

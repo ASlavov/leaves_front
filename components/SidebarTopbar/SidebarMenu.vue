@@ -103,6 +103,29 @@
             {{ $t('common.documents') }}
           </NuxtLink>
         </li>
+        <li v-if="permissionsStore.can('reports', 'view')">
+          <NuxtLink
+            class="flex items-center gap-x-3.5 py-2 px-2.5 text-md text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
+            to="/reports"
+            @click="$emit('navigate')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 3v18h18" />
+              <path d="M7 16l4-8 4 4 6-10" />
+            </svg>
+            {{ $t('common.reports') }}
+          </NuxtLink>
+        </li>
         <li>
           <NuxtLink
             class="flex items-center gap-x-3.5 py-2 px-2.5 text-md text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
@@ -138,7 +161,9 @@
 </template>
 
 <script setup>
+import { useCentralStore } from '@/stores/centralStore';
 defineEmits(['navigate']);
+const { permissionsStore } = useCentralStore();
 </script>
 
 <script>

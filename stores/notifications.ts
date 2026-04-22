@@ -1,118 +1,150 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useUserStore } from '~/stores/user';
 import {
   getNotificationsComposable,
   markNotificationReadComposable,
   markNotificationUnreadComposable,
+  markAllNotificationsReadComposable,
 } from '@/composables/notificationsApiComposable';
-import { useI18n } from 'vue-i18n';
-import { useUserStore } from '~/stores/user';
 import type { Notification } from '~/types';
 
 export const useNotificationsStore = defineStore('notificationsStore', () => {
-  const notificationsData = ref<Notification[]>([]);
-  const loading = ref(false);
-  const error = ref<string | null>(null);
-  let notificationsActive = false;
-  let intervalId: ReturnType<typeof setInterval> | null = null;
   const userStore = useUserStore();
   const { t } = useI18n();
 
-  function reset() {
-    notificationsData.value = [];
-  }
+  const notificationsData = ref<Notification[]>([]);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
+  const connected = ref(false);
 
-  const setError = (errorMessage: string | null) => {
-    error.value = errorMessage;
-  };
+  // ─── Computed ────────────────────────────────────────────────────────────────
+
+  const unreadCount = computed(() =>
+    notificationsData.value.filter((n) => !n.is_read).length,
+  );
+
+  const unreadNotifications = computed(() =>
+    notificationsData.value
+      .filter((n) => !n.is_read)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+  );
+
+  const readNotifications = computed(() =>
+    notificationsData.value
+      .filter((n) => n.is_read)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+  );
+
+  // ─── Actions ─────────────────────────────────────────────────────────────────
+
   async function init() {
     try {
-      if (!notificationsData.value.length) {
-        await getNotifications();
-      }
-      notificationsActive = true;
-      beginPolling(); // Assuming polling happens after initial data load
+      await getNotifications();
+      subscribeToChannel();
     } catch (err) {
-      setError(err ? String(err) : t('errors.common.unknownError'));
+      error.value = err ? String(err) : t('errors.common.unknownError');
     }
   }
 
-  async function getNotifications() {
-    try {
-      // Call the composable with the necessary parameters
-      const result = await getNotificationsComposable(userStore.userId as string | number);
+  function subscribeToChannel() {
+    const nuxtApp = useNuxtApp();
+    if (!nuxtApp.$echo) return;
 
+    const userId = userStore.userId;
+
+    nuxtApp.$echo
+      .private(`App.Models.User.${userId}`)
+      .notification((notification: Notification) => {
+        // Prepend new notification
+        notificationsData.value.unshift(notification);
+      });
+
+    const pusherConn = (nuxtApp.$echo as any).connector?.pusher?.connection;
+    if (pusherConn) {
+      pusherConn.bind('connected', () => {
+        connected.value = true;
+        getNotifications();
+      });
+      pusherConn.bind('disconnected', () => {
+        connected.value = false;
+      });
+      pusherConn.bind('connecting', () => {
+        connected.value = false;
+      });
+    }
+  }
+
+  function unsubscribeFromChannel() {
+    const nuxtApp = useNuxtApp();
+    if (!nuxtApp.$echo) return;
+    nuxtApp.$echo.leave(`App.Models.User.${userStore.userId}`);
+  }
+
+  async function getNotifications() {
+    loading.value = true;
+    try {
+      const result = await getNotificationsComposable(userStore.userId as string | number);
       if (result) {
-        // Process the result and store it in notificationsData
         notificationsData.value = result;
       }
     } catch (err) {
-      // Handle errors and set the error state
-      setError(err ? String(err) : t('errors.common.unknownError'));
+      error.value = err ? String(err) : t('errors.common.unknownError');
     } finally {
-      // Ensure loading is set to false and any post-processing is done
       loading.value = false;
     }
   }
 
   async function changeNotificationStatus(notificationId: string | number) {
-    try {
-      // Call the composable with the necessary parameters
-      const notificationStatus = notificationsData.value.find(
-        (notif: Notification) => notif.id === notificationId,
-      )?.is_read;
+    const notification = notificationsData.value.find((n) => n.id === notificationId);
+    if (!notification) return;
 
+    try {
       let result: Notification[];
-      if (notificationStatus) {
+      if (notification.is_read) {
         result = await markNotificationUnreadComposable(notificationId);
       } else {
         result = await markNotificationReadComposable(notificationId);
       }
-
       if (result) {
-        // Process the result and store it in notificationsData
         notificationsData.value = result;
       }
     } catch (err) {
-      // Handle errors and set the error state
-      setError(err ? String(err) : t('errors.common.unknownError'));
-    } finally {
-      // Ensure loading is set to false and any post-processing is done
-      loading.value = false;
+      error.value = err ? String(err) : t('errors.common.unknownError');
     }
   }
 
-  function beginPolling() {
-    if (notificationsActive) {
-      // Set an interval to fetch notifications every 10 seconds
-      intervalId = setInterval(async () => {
-        await getNotifications();
-      }, 10000);
-
-      // Optional: Return a way to stop the polling (clear the interval)
-      return () => {
-        if (intervalId) clearInterval(intervalId);
-      };
+  async function markAllRead() {
+    try {
+      const result = await markAllNotificationsReadComposable();
+      if (result) {
+        notificationsData.value = result;
+      }
+    } catch (err) {
+      error.value = err ? String(err) : t('errors.common.unknownError');
     }
   }
 
-  function stopPollingNotifications() {
-    if (notificationsActive) {
-      notificationsActive = false;
-      if (intervalId) clearInterval(intervalId);
-    }
+  function reset() {
+    unsubscribeFromChannel();
+    notificationsData.value = [];
+    connected.value = false;
+    error.value = null;
   }
 
   return {
     notificationsData,
     loading,
     error,
-    getNotifications,
-    beginPolling,
+    connected,
+    unreadCount,
+    unreadNotifications,
+    readNotifications,
     init,
-    reset,
-    stopPollingNotifications,
-    notificationsActive,
+    getNotifications,
     changeNotificationStatus,
+    markAllRead,
+    reset,
   };
 });

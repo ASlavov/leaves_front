@@ -114,12 +114,10 @@
               </div>
               <!-- Phone -->
               <div class="w-full lg:w-[300px]">
-                <label :class="labelClass">{{ $t('settings.phone') }}</label>
-                <input
+                <SharedPhoneInput
+                  :key="props.userId || 'new'"
                   v-model="formPhone"
-                  pattern="[0-9]{10}"
-                  type="tel"
-                  :class="inputClass"
+                  :label="$t('settings.phone')"
                   :placeholder="$t('settings.phone')"
                 />
               </div>
@@ -168,20 +166,13 @@
               <!-- Hire Date -->
               <div v-if="canEdit" class="w-full lg:w-[300px]">
                 <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
-                <input v-model="formHireDate" type="date" :class="inputClass" />
+                <SharedFlatpickrInput v-model="formHireDate" />
               </div>
               <!-- Work Schedule -->
               <div v-if="canEdit && !isNewUser" class="w-full lg:w-full">
                 <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
-                <div class="flex flex-wrap gap-4 mt-[6px]">
-                  <label
-                    v-for="(day, idx) in daysOfWeek"
-                    :key="idx"
-                    class="flex items-center gap-1 text-[14px]"
-                  >
-                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
-                    {{ day.label }}
-                  </label>
+                <div class="mt-[6px]">
+                  <SharedWeekdayPills v-model="formWorkSchedule" :start-of-week="1" />
                 </div>
                 <p class="text-[12px] text-gray-500 mt-[6px]">
                   {{ $t('settings.workScheduleNote') }}
@@ -317,12 +308,10 @@
                 />
               </div>
               <div class="max-w-lg">
-                <label :class="labelClass">{{ $t('settings.phone') }}</label>
-                <input
+                <SharedPhoneInput
+                  :key="props.userId || 'new'"
                   v-model="formPhone"
-                  pattern="[0-9]{10}"
-                  type="tel"
-                  :class="inputClass"
+                  :label="$t('settings.phone')"
                   :placeholder="$t('settings.phone')"
                 />
               </div>
@@ -355,19 +344,12 @@
               </div>
               <div v-if="canEdit" class="max-w-lg">
                 <label :class="labelClass">{{ $t('settings.hireDate') }}</label>
-                <input v-model="formHireDate" type="date" :class="inputClass" />
+                <SharedFlatpickrInput v-model="formHireDate" />
               </div>
               <div v-if="canEdit && !isNewUser" class="max-w-lg lg:col-span-2">
                 <label :class="labelClass">{{ $t('settings.personalWorkSchedule') }}</label>
-                <div class="flex flex-wrap gap-4 mt-[6px]">
-                  <label
-                    v-for="(day, idx) in daysOfWeek"
-                    :key="idx"
-                    class="flex items-center gap-1 text-[14px]"
-                  >
-                    <input v-model="formWorkSchedule" type="checkbox" :value="day.value" />
-                    {{ day.label }}
-                  </label>
+                <div class="mt-[6px]">
+                  <SharedWeekdayPills v-model="formWorkSchedule" :start-of-week="1" />
                 </div>
                 <p class="text-[12px] text-gray-500 mt-[6px]">
                   {{ $t('settings.workScheduleNote') }}
@@ -459,16 +441,6 @@ const formPhoto = ref<string | null>(null);
 const formSelectedDepartmentId = ref<string | number>('');
 const formHireDate = ref('');
 const formWorkSchedule = ref<number[]>([]);
-
-const daysOfWeek = [
-  { label: 'Sun', value: 0 },
-  { label: 'Mon', value: 1 },
-  { label: 'Tue', value: 2 },
-  { label: 'Wed', value: 3 },
-  { label: 'Thu', value: 4 },
-  { label: 'Fri', value: 5 },
-  { label: 'Sat', value: 6 },
-];
 
 // Computed properties for avatar initials
 const firstNameInitial = computed(() => formFirstName.value.charAt(0).toUpperCase() || '');
@@ -570,7 +542,7 @@ const submitForm = async () => {
   const userEmail = formEmail.value;
   const userDepartment = formSelectedDepartmentId.value;
   const userRole = formRole.value;
-  const userPhone = String(parseInt(formPhone.value) || '');
+  const userPhone = (formPhone.value || '').trim();
   const userInternalPhone = formInternalPhone.value;
   const userTitle = formTitle.value;
   const userTitleDescription = formTitleDescription.value || formTitle.value;

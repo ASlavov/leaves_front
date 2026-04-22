@@ -215,8 +215,8 @@ const props = defineProps({
   },
 });
 
-const formUserIds = ref([]);
-const formLeaveTypeId = ref(null);
+const formUserIds = ref<number[]>([]);
+const formLeaveTypeId = ref<string | number>('');
 const formEntitledDays = ref(0);
 const formStartDate = ref('');
 const formEndDate = ref('');
@@ -225,12 +225,12 @@ const loading = ref(false);
 const rolloverPrevious = ref(false);
 const rolloverUntil = ref('');
 
-const datePickerStart = ref(null);
-const datePickerEnd = ref(null);
-const datePickerRollover = ref(null);
+const datePickerStart = ref<HTMLInputElement | null>(null);
+const datePickerEnd = ref<HTMLInputElement | null>(null);
+const datePickerRollover = ref<HTMLInputElement | null>(null);
 
 const users = computed(() =>
-  userStore.allUsers.map((user) => ({
+  userStore.allUsers.map((user: any) => ({
     id: user.id,
     name: user.name,
     icon: user.profile?.profile_image_base64
@@ -242,12 +242,14 @@ const users = computed(() =>
 
 const leaveTypes = computed(() =>
   leavesStore.leavesData.leavesTypes
-    .filter((type) => !type.deleted_at)
-    .map((type) => ({ id: type.id, name: type.name })),
+    .filter((type: any) => !type.deleted_at)
+    .map((type: any) => ({ id: type.id, name: type.name })),
 );
 
 const selectedLeaveType = computed(() =>
-  leavesStore.leavesData.leavesTypes.find((t) => String(t.id) === String(formLeaveTypeId.value)),
+  leavesStore.leavesData.leavesTypes.find(
+    (t: any) => String(t.id) === String(formLeaveTypeId.value),
+  ),
 );
 
 const leaveTypeAllowsRollover = computed(() => selectedLeaveType.value?.allow_rollover !== false);
@@ -259,17 +261,17 @@ onMounted(async () => {
     const today = new Date();
     const thisYear = new Date('' + today.getFullYear());
 
-    flatpickr(datePickerStart.value, {
+    flatpickr(datePickerStart.value as HTMLInputElement, {
       dateFormat: 'Y-m-d',
       minDate: thisYear,
-      default: today,
+      defaultDate: today,
       onChange: (selectedDates) => {
         if (selectedDates.length) {
           const insideStartDate = new Date(selectedDates[0]);
           formStartDate.value = insideStartDate.toISOString().split('T')[0];
           const minEndDate = new Date(insideStartDate);
           minEndDate.setDate(minEndDate.getDate());
-          flatpickr(datePickerEnd.value, {
+          flatpickr(datePickerEnd.value as HTMLInputElement, {
             dateFormat: 'Y-m-d',
             defaultDate: minEndDate,
             minDate: minEndDate,
@@ -278,17 +280,17 @@ onMounted(async () => {
       },
     });
 
-    flatpickr(datePickerEnd.value, {
+    flatpickr(datePickerEnd.value as HTMLInputElement, {
       dateFormat: 'Y-m-d',
       minDate: thisYear,
     });
   }
 
   if (props.entitlementId) {
-    const allEntitlements = Object.values(entitlementStore.entitledDaysData.savedUsers)
-      .flatMap(Object.values)
-      .flat();
-    const entitlementToEdit = allEntitlements.find((e) => e.id == props.entitlementId);
+    const allEntitlements = Object.values(entitlementStore.entitledDaysData.savedUsers || {})
+      .flatMap((u: any) => Object.values(u))
+      .flat() as any[];
+    const entitlementToEdit = allEntitlements.find((e: any) => e.id == props.entitlementId);
     if (entitlementToEdit) {
       formUserIds.value = [entitlementToEdit.user_id];
       formLeaveTypeId.value = entitlementToEdit.leave_type_id;
@@ -321,7 +323,7 @@ watch(rolloverPrevious, async (val) => {
       ? new Date(formStartDate.value).getFullYear()
       : new Date().getFullYear();
     const defaultDate = `${year}-03-31`;
-    flatpickr(datePickerRollover.value, {
+    flatpickr(datePickerRollover.value as HTMLInputElement, {
       dateFormat: 'Y-m-d',
       defaultDate,
       onChange: (selectedDates) => {
@@ -362,7 +364,7 @@ const submitForm = async () => {
       await entitlementStore.updateEntitledDaysForUser(
         props.entitlementId,
         formUserIds.value[0],
-        parseInt(formLeaveTypeId.value),
+        parseInt(formLeaveTypeId.value.toString()),
         formEntitledDays.value,
         formStartDate.value,
         formEndDate.value,
@@ -375,7 +377,7 @@ const submitForm = async () => {
     } else {
       await entitlementStore.addEntitledDays(
         formUserIds.value,
-        parseInt(formLeaveTypeId.value),
+        parseInt(formLeaveTypeId.value.toString()),
         formEntitledDays.value,
         formStartDate.value,
         formEndDate.value,

@@ -101,13 +101,12 @@ const leavesData = computed(() => leavesStore.leavesData?.currentUser || []);
 const leaveTypes = computed(() => leavesStore.leavesData?.leavesTypes || []);
 
 // Function to get leave type name based on leave_type_id
-const getLeaveTypeName = (leaveTypeId) => {
-  const leaveType = leaveTypes.value.find((type) => type.id === leaveTypeId);
+const getLeaveTypeName = (leaveTypeId: string | number) => {
+  const leaveType = leaveTypes.value.find((type: any) => type.id === leaveTypeId);
   return leaveType ? leaveType.name : t('common.unknown'); // Default to 'Unknown' if not found
 };
 
-const cancelLeave = async (leaveId) => {
-  loading.value = true;
+const cancelLeave = async (leaveId: string | number) => {
   try {
     await leavesStore.cancelLeave(userStore.userId, leaveId, 'cancelled', 'cancelled by requester');
     useNuxtApp().$toast.success(t('leaves.cancelSuccess'), {
@@ -119,8 +118,6 @@ const cancelLeave = async (leaveId) => {
       position: 'bottom-right',
       autoClose: 5000,
     });
-  } finally {
-    loading.value = false;
   }
 };
 

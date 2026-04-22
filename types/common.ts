@@ -1,15 +1,5 @@
-/** Generic { message } envelope returned by most mutating endpoints. */
 export interface BaseMessageResponse {
   message?: string;
-}
-
-export interface Notification {
-  id: number | string;
-  user_id: number | string;
-  message: string;
-  is_read: boolean;
-  created_at?: string;
-  [key: string]: any;
 }
 
 export interface PublicHoliday {

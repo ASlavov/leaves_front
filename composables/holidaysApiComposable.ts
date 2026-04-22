@@ -1,4 +1,5 @@
 import type { PublicHoliday } from '~/types';
+import { computed, isRef, ref, type Ref } from 'vue';
 
 export const getHolidaysComposable = (year?: number) => {
   const query = year ? `?year=${year}` : '';
@@ -48,12 +49,17 @@ export const deleteHolidayBatchComposable = (ids: (number | string)[]) => {
 
 // ─── Reactive Variants ────────────────────────────────────────────────────────
 
-export const useHolidays = (year?: number) => {
-  const query = year ? `?year=${year}` : '';
-  return useApiData<PublicHoliday[]>(
-    `holidays-${year || 'all'}`,
-    `/api/holidays${query}`,
-    { method: 'GET' },
-    { lazy: true, server: true },
+export const useHolidays = (yearInput?: Ref<number | undefined> | number) => {
+  const yearRef = isRef(yearInput) ? yearInput : ref(yearInput);
+
+  const key = computed(() => `holidays-${yearRef.value ?? 'all'}`);
+  const url = computed(() =>
+    yearRef.value ? `/api/holidays?year=${yearRef.value}` : '/api/holidays',
   );
+
+  return useAsyncData<PublicHoliday[]>(key.value, () => $fetch<PublicHoliday[]>(url.value), {
+    lazy: true,
+    server: true,
+    watch: [yearRef],
+  });
 };

@@ -161,6 +161,7 @@ export const useLeavesStore = defineStore('leavesStore', () => {
       if (result) {
         await getAll(userId);
         await getLeavesAvailableDays(userId);
+        return result;
       }
     } catch (err) {
       setError(t('errors.leaves.createFailed'));

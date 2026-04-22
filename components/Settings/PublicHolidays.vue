@@ -166,7 +166,7 @@
             <label :class="labelClass"
               >{{ $t('common.date') }} <span class="text-[#EA021A]">*</span></label
             >
-            <input v-model="form.date" type="date" :class="inputClass" />
+            <SharedFlatpickrInput v-model="form.date" />
           </div>
           <!-- Recurring toggle -->
           <div class="flex items-center gap-[10px] pt-[4px]">
@@ -498,7 +498,7 @@ const {
   data: remoteHolidays,
   pending: holidaysPending,
   refresh: refreshHolidays,
-} = useHolidays(selectedYear.value);
+} = useHolidays(selectedYear);
 
 const loading = computed(() => holidaysPending.value || holidaysStore.loading);
 
@@ -521,11 +521,9 @@ const yearHolidays = computed<PublicHoliday[]>(() =>
 
 const prevYear = () => {
   selectedYear.value--;
-  refreshHolidays();
 };
 const nextYear = () => {
   selectedYear.value++;
-  refreshHolidays();
 };
 
 const formatDate = (dateStr: string) => {

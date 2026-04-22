@@ -45,6 +45,10 @@ export const updatePasswordComposable = (
   });
 };
 
+export const deleteUserComposable = (userId: number | string) => {
+  return retryFetch(`/api/user/delete/${userId}`, { method: 'DELETE' });
+};
+
 // ─── Reactive Variants ────────────────────────────────────────────────────────
 
 export const useAllUsers = () => {

@@ -139,6 +139,12 @@ body {
   background-color: #f1e7d0;
   color: #433422;
 }
+:root.dark {
+  --iti-border-color: #495057;
+  --iti-dropdown-bg: #212529;
+  --iti-icon-color: #dee2e6;
+  --iti-hover-color: #30363d;
+}
 </style>
 
 <style scoped>

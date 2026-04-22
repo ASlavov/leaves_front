@@ -84,30 +84,13 @@
           <form class="space-y-6" @submit.prevent="submitForm">
             <!-- First row: Single input -->
             <div>
-              <label
-                for="input1"
-                class="block text-sm font-medium text-gray-700 py-3 dark:text-gray-100"
-                >{{ $t('leaves.leaveType') }} <span class="text-[#EA021A]">*</span></label
-              >
-              <div class="space-y-3">
-                <select
-                  v-model="leaveType"
-                  class="py-3 px-4 block border w-full border-gray-200 rounded-lg text-sm dark:bg-neutral-800 dark:text-gray-100"
-                >
-                  <option class="dark:bg-neutral-800 dark:text-gray-100" value="">
-                    {{ $t('leaves.selectLeave') }}
-                  </option>
-                  <!-- Loop through leavesData to populate the options -->
-                  <option
-                    v-for="(leave, index) in filteredLeavesTypes"
-                    :key="index"
-                    class="dark:bg-neutral-800 dark:text-gray-100"
-                    :value="leave.leave_type_id"
-                  >
-                    {{ leave.leave_type_name }}
-                  </option>
-                </select>
-              </div>
+              <MiscCustomSelect
+                v-model="leaveType"
+                :options="leaveTypeSelectOptions"
+                :label="$t('leaves.leaveType') + ' <span class=\'text-[#EA021A]\'>*</span>'"
+                :placeholder="$t('leaves.selectLeave')"
+                select-id="new-leave-type"
+              />
             </div>
 
             <!-- Second row: Two inputs in two columns -->
@@ -485,6 +468,13 @@ const filteredLeavesTypes = computed<AvailableDaysEntry[]>(() =>
   leavesData.value.filter((leave) => leavesTypes.value.some((lt) => leave.leave_type_id === lt.id)),
 );
 
+const leaveTypeSelectOptions = computed(() =>
+  (filteredLeavesTypes.value || []).map((lt: any) => ({
+    id: lt.leave_type_id,
+    name: lt.leave_type_name,
+  })),
+);
+
 const selectedLeave = computed<AvailableDaysEntry | null>(() => {
   if (leavesData.value && leaveType.value) {
     return (
@@ -512,7 +502,7 @@ const submitForm = async () => {
   };
 
   try {
-    await leavesStore.newLeave(
+    const result = await leavesStore.newLeave(
       user_id.value,
       leaveRequest.leave_type_id,
       leaveRequest.start_date,
@@ -524,10 +514,15 @@ const submitForm = async () => {
       isAttachmentRequired.value ? attachmentFilename.value : undefined,
     );
 
-    useNuxtApp().$toast.success(t('leaves.submitSuccess'), {
-      position: 'bottom-right',
-      autoClose: 5000,
-    });
+    const isAutoApproved = result?.status === 'approved';
+
+    useNuxtApp().$toast.success(
+      isAutoApproved ? t('leaves.submitAutoApproved') : t('leaves.submitSuccess'), 
+      {
+        position: 'bottom-right',
+        autoClose: 5000,
+      }
+    );
 
     closeModal(); // Close modal on success
   } catch (error) {

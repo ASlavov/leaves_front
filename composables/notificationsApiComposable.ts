@@ -9,8 +9,8 @@ export const getNotificationsComposable = (userId: string | number): Promise<Not
 
 export const markNotificationReadComposable = (
   notificationId: string | number,
-): Promise<BaseMessageResponse> => {
-  return retryFetch<BaseMessageResponse>('/api/notifications/markedRead', {
+): Promise<Notification[]> => {
+  return retryFetch<Notification[]>('/api/notifications/markedRead', {
     method: 'POST',
     body: { notificationId },
   });
@@ -18,9 +18,15 @@ export const markNotificationReadComposable = (
 
 export const markNotificationUnreadComposable = (
   notificationId: string | number,
-): Promise<BaseMessageResponse> => {
-  return retryFetch<BaseMessageResponse>('/api/notifications/markedUnread', {
+): Promise<Notification[]> => {
+  return retryFetch<Notification[]>('/api/notifications/markedUnread', {
     method: 'POST',
     body: { notificationId },
+  });
+};
+
+export const markAllNotificationsReadComposable = (): Promise<Notification[]> => {
+  return retryFetch<Notification[]>('/api/notifications/markAllRead', {
+    method: 'POST',
   });
 };

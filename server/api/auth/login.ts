@@ -1,5 +1,5 @@
-import { defineEventHandler, readBody } from 'h3'; // Use h3 to handle cookies and request bodies
-import { useRuntimeConfig, setCookie } from '#imports'; // Runtime config and setCookie from Nuxt
+import { defineEventHandler, readBody, setCookie } from 'h3'; // Use h3 to handle cookies and request bodies
+import { useRuntimeConfig } from '#imports'; // Runtime config from Nuxt
 import { createJWT } from '~/server/utils/auth';
 
 interface authResponse {

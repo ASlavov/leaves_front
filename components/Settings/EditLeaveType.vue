@@ -149,6 +149,15 @@
               :class="inputClass"
             />
           </div>
+          <div>
+            <label :class="labelClass">{{ $t('settings.autoApproveRequests') }}</label>
+            <div class="flex items-center gap-2 mt-[6px]">
+              <input v-model="leaveTypeData.autoApprove" type="checkbox" class="h-4 w-4" />
+              <span class="text-[14px] text-gray-700 dark:text-gray-300">{{
+                $t('settings.autoApproveNote')
+              }}</span>
+            </div>
+          </div>
         </div>
 
         <hr class="border-gray-200 dark:border-neutral-700" />
@@ -262,6 +271,7 @@ interface LeaveTypeForm {
   isHourly: boolean;
   hoursPerDay: number;
   attachmentRequiredAfterDays: number | '';
+  autoApprove: boolean;
 }
 
 const leaveTypeData = ref<LeaveTypeForm>({
@@ -277,6 +287,7 @@ const leaveTypeData = ref<LeaveTypeForm>({
   isHourly: false,
   hoursPerDay: 8,
   attachmentRequiredAfterDays: '',
+  autoApprove: false,
 });
 
 const dependsOnOptions = computed(() => {
@@ -309,6 +320,7 @@ watch(
         leaveTypeData.value.isHourly = type.is_hourly ?? false;
         leaveTypeData.value.hoursPerDay = type.hours_per_day ?? 8;
         leaveTypeData.value.attachmentRequiredAfterDays = type.attachment_required_after_days ?? '';
+        leaveTypeData.value.autoApprove = type.auto_approve ?? false;
       }
     } else {
       // Reset for new
@@ -325,6 +337,7 @@ watch(
         isHourly: false,
         hoursPerDay: 8,
         attachmentRequiredAfterDays: '',
+        autoApprove: false,
       };
     }
   },
@@ -349,6 +362,7 @@ const saveLeaveType = async () => {
       isHourly: leaveTypeData.value.isHourly,
       hoursPerDay: leaveTypeData.value.hoursPerDay,
       attachmentRequiredAfterDays: leaveTypeData.value.attachmentRequiredAfterDays || null,
+      autoApprove: leaveTypeData.value.autoApprove,
     };
 
     if (props.leaveTypeId) {

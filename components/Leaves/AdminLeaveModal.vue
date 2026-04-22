@@ -1,91 +1,88 @@
 <template>
   <SharedBaseModal v-model="isOpen">
-    <div class="p-6 bg-white dark:bg-neutral-800 rounded-lg w-full">
-      <h3 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-100">
+    <div class="px-[30px] pb-[30px] pt-[10px]">
+      <h3 class="text-[20px] font-bold text-black dark:text-white mb-[16px]">
         {{ $t('leaves.admin.recordTitle') }}
       </h3>
-      <form class="space-y-4" @submit.prevent="submitForm">
+      <form class="space-y-[15px]" @submit.prevent="submitForm">
         <div>
-          <label class="block text-sm font-medium mb-1 dark:text-gray-200"
-            >{{ $t('common.employee') }} <span class="text-red-500">*</span></label
-          >
-          <MiscCustomSelect
-            v-model="payload.userId"
+          <label :class="labelClass">
+            {{ $t('common.employees') }} <span class="text-[#EA021A]">*</span>
+          </label>
+          <MiscCustomMultiSelect
+            v-model="payload.userIds"
             :options="userOptions"
-            :label="$t('leaves.admin.selectEmployee')"
-            :placeholder="$t('leaves.admin.selectEmployee')"
-            select-id="admin-user-select"
+            :placeholder="$t('leaves.admin.selectEmployees')"
           />
         </div>
+
         <div>
-          <label class="block text-sm font-medium mb-1 dark:text-gray-200">{{
-            $t('settings.leaveType')
-          }}</label>
+          <label :class="labelClass">{{ $t('settings.leaveType') }}</label>
           <MiscCustomSelect
             v-model="payload.leaveTypeId"
             :options="leaveTypeOptions"
-            :label="$t('settings.selectLeaveType')"
             :placeholder="$t('settings.selectLeaveType')"
             select-id="admin-leave-select"
           />
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1 dark:text-gray-200"
-            >{{ $t('leaves.admin.dateRange') }} <span class="text-red-500">*</span></label
-          >
-          <div class="flex gap-2">
-            <input
-              v-model="payload.startDate"
-              type="date"
-              class="border p-2 rounded w-full dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-100"
-              required
-            />
-            <input
-              v-model="payload.endDate"
-              type="date"
-              class="border p-2 rounded w-full dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-100"
-              required
-            />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-[15px]">
+          <div>
+            <label :class="labelClass">
+              {{ $t('leaves.fromDate') }} <span class="text-[#EA021A]">*</span>
+            </label>
+            <SharedFlatpickrInput v-model="payload.startDate" />
+          </div>
+          <div>
+            <label :class="labelClass">
+              {{ $t('leaves.toHuman') }} <span class="text-[#EA021A]">*</span>
+            </label>
+            <SharedFlatpickrInput v-model="payload.endDate" :min-date="payload.startDate" />
           </div>
         </div>
+
         <div>
-          <label class="block text-sm font-medium mb-1 dark:text-gray-200"
-            >{{ $t('leaves.admin.reasonNotes') }} <span class="text-red-500">*</span></label
-          >
+          <label :class="labelClass">
+            {{ $t('leaves.admin.reasonNotes') }} <span class="text-[#EA021A]">*</span>
+          </label>
           <textarea
             v-model="payload.administrativeReason"
-            class="border p-2 rounded w-full dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-100"
+            rows="3"
+            class="py-[8px] px-[16px] block w-full border border-[#DFEAF2] rounded-[8px] text-[14px] bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-gray-100"
             required
           ></textarea>
         </div>
-        <div class="flex justify-end gap-2 mt-2">
+
+        <div class="flex justify-end gap-[10px] pt-[8px]">
           <button
             type="button"
-            class="px-4 py-2 text-gray-600 hover:underline dark:text-gray-300"
+            class="inline-flex items-center justify-center py-[10px] px-[20px] rounded-[70px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
             @click="isOpen = false"
           >
             {{ $t('common.cancel') }}
           </button>
-          <button
-            type="submit"
-            :disabled="loading"
-            class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"
-          >
+          <button type="submit" :disabled="loading || !canSubmit" :class="submitBtnClass">
             {{ $t('leaves.admin.submitBtn') }}
+            <span v-if="payload.userIds.length" class="ml-1 text-xs opacity-80">
+              ({{ payload.userIds.length }})
+            </span>
           </button>
         </div>
       </form>
     </div>
   </SharedBaseModal>
 </template>
+
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCentralStore } from '~/stores/centralStore';
 import { useAdminStore } from '~/stores/admin';
-import type { AdminLeavePayload } from '~/types';
+import { useFormStyles } from '@/composables/useFormStyles';
 
 const { t } = useI18n();
+const { $toast } = useNuxtApp() as any;
+const { label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
 
 const props = defineProps({ modelValue: Boolean });
 const emit = defineEmits(['update:modelValue', 'saved']);
@@ -102,37 +99,57 @@ const leavesStore = centralStore.leavesStore;
 
 const loading = computed(() => adminStore.loading);
 
-const payload = ref<AdminLeavePayload>({
-  userId: '',
-  leaveTypeId: '',
+const payload = ref({
+  userIds: [] as (string | number)[],
+  leaveTypeId: '' as string | number,
   startDate: '',
   endDate: '',
   administrativeReason: '',
 });
 
-const userOptions = computed(() => {
-  return (userStore.allUsers || []).map((u: any) => ({ id: u.id, name: u.name }));
-});
+const userOptions = computed(() =>
+  (userStore.allUsers || []).map((u: any) => ({ id: u.id, name: u.name, email: u.email })),
+);
 
-const leaveTypeOptions = computed(() => {
-  return (leavesStore.leavesData?.leavesTypes || []).map((t: any) => ({ id: t.id, name: t.name }));
-});
+const leaveTypeOptions = computed(() =>
+  (leavesStore.leavesData?.leavesTypes || []).map((lt: any) => ({ id: lt.id, name: lt.name })),
+);
+
+const canSubmit = computed(
+  () =>
+    payload.value.userIds.length > 0 &&
+    payload.value.startDate &&
+    payload.value.endDate &&
+    payload.value.administrativeReason.trim(),
+);
 
 const submitForm = async () => {
-  if (
-    !payload.value.userId ||
-    !payload.value.startDate ||
-    !payload.value.endDate ||
-    !payload.value.administrativeReason
-  )
-    return;
-  try {
-    await adminStore.recordAdministrativeLeave(payload.value);
-    useNuxtApp().$toast.success(t('leaves.admin.saveSuccess'));
+  if (!canSubmit.value) return;
+  const results = await Promise.allSettled(
+    payload.value.userIds.map((userId) =>
+      adminStore.recordAdministrativeLeave({
+        userId,
+        leaveTypeId: payload.value.leaveTypeId,
+        startDate: payload.value.startDate,
+        endDate: payload.value.endDate,
+        administrativeReason: payload.value.administrativeReason,
+      }),
+    ),
+  );
+  const fulfilled = results.filter((r) => r.status === 'fulfilled').length;
+  const failed = results.length - fulfilled;
+  if (fulfilled) $toast.success(t('leaves.admin.saveSuccessBulk', { count: fulfilled }));
+  if (failed) $toast.error(t('errors.leaves.adminSaveFailedBulk', { count: failed }));
+  if (fulfilled) {
     emit('saved');
     isOpen.value = false;
-  } catch (error) {
-    useNuxtApp().$toast.error(t('errors.leaves.adminSaveFailed'));
+    payload.value = {
+      userIds: [],
+      leaveTypeId: '',
+      startDate: '',
+      endDate: '',
+      administrativeReason: '',
+    };
   }
 };
 </script>

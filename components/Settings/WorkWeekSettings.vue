@@ -4,24 +4,8 @@
       {{ $t('settings.workWeekDesc') }}
     </p>
 
-    <div class="flex flex-wrap gap-[10px] mb-[30px]">
-      <button
-        v-for="day in allDays"
-        :key="day.value"
-        type="button"
-        :class="[
-          'px-[16px] py-[10px] rounded-[8px] border text-[14px] font-medium transition-colors focus:outline-none select-none',
-          selectedDays.includes(day.value)
-            ? 'bg-[#EA021A] border-[#EA021A] text-white'
-            : 'bg-white dark:bg-neutral-800 border-[#DFEAF2] dark:border-neutral-600 text-gray-700 dark:text-neutral-300',
-          canModify
-            ? 'hover:border-[#EA021A] hover:text-[#EA021A] cursor-pointer'
-            : 'cursor-default opacity-75',
-        ]"
-        @click="canModify && toggleDay(day.value)"
-      >
-        {{ day.label }}
-      </button>
+    <div class="mb-[30px]">
+      <SharedWeekdayPills v-model="selectedDays" :disabled="!canModify" :start-of-week="1" />
     </div>
 
     <div
@@ -79,7 +63,7 @@ const { data: remoteWorkWeek, pending: _workWeekPending, refresh: refreshWorkWee
 
 const loading = ref(false);
 
-const allDays = computed(() => [
+const _allDays = computed(() => [
   { value: 1, label: t('settings.days.monday') },
   { value: 2, label: t('settings.days.tuesday') },
   { value: 3, label: t('settings.days.wednesday') },
@@ -103,7 +87,7 @@ watch(
   { immediate: true },
 );
 
-const toggleDay = (day: number) => {
+const _toggleDay = (day: number) => {
   const idx = selectedDays.value.indexOf(day);
   if (idx === -1) {
     selectedDays.value.push(day);

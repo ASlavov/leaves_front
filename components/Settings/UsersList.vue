@@ -342,28 +342,35 @@
                 @click="editUser(user.id)"
                 >{{ $t('settings.editProfile') }}</a
               >
+
               <button
                 v-if="permissionsStore.can('all_users', 'modify')"
-                class="flex w-full items-center gap-[15px] px-[15px] py-[10px] text-[14px] text-red-600 hover:bg-[#F5F9FC] dark:hover:bg-neutral-700"
+                class="h-[32px] px-[12px] rounded-[6px] text-[13px] font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 focus:outline-none transition-colors"
                 @click="showTerminateUser(user.id)"
               >
                 {{ $t('settings.terminate') }}
               </button>
-              <svg
+
+              <button
                 v-if="permissionsStore.can('all_users', 'modify')"
-                class="cursor-pointer"
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="19"
-                viewBox="0 0 16 19"
-                fill="none"
+                type="button"
+                class="h-[32px] w-[32px] flex items-center justify-center rounded-[6px] text-gray-500 hover:bg-red-50 hover:text-red-600 dark:text-neutral-400 dark:hover:bg-red-900/20 dark:hover:text-red-400 focus:outline-none transition-colors"
+                :aria-label="$t('common.delete')"
                 @click="deleteUser(user.id)"
               >
-                <path
-                  d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z"
-                  :fill="theme === 'light' ? 'black' : 'white'"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="20"
+                  viewBox="0 0 16 19"
+                  fill="none"
+                >
+                  <path
+                    d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.66667C6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
@@ -413,6 +420,7 @@
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
 import EditUser from '@/components/Settings/EditUser.vue';
+import DeleteUserModal from '@/components/Settings/DeleteUserModal.vue';
 import SharedUserAvatar from '@/components/shared/UserAvatar.vue';
 import TerminateUserModal from '@/components/Settings/TerminateUserModal.vue';
 import { useAllUsers } from '@/composables/userApiComposable';
@@ -429,12 +437,6 @@ const selectedUserId = ref<string | number | null>(null);
 
 // Use reactive fetching
 const { data: remoteUsers, pending: usersPending, refresh: refreshUsers } = useAllUsers();
-
-// Compute the current theme
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
-  return $colorMode?.value || 'light';
-});
 
 // Loading state combined
 const loading = computed(() => usersPending.value || centralStore.loading);
@@ -565,7 +567,9 @@ const closeModal = async () => {
 
 // Compute the component to render in the modal
 const modalComponent = computed(() => {
-  return modalType.value === 'edit' ? EditUser : null;
+  if (modalType.value === 'edit') return EditUser;
+  if (modalType.value === 'delete') return DeleteUserModal;
+  return null;
 });
 </script>
 

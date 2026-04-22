@@ -92,6 +92,10 @@ export default defineNuxtConfig({
       apiBase: process.env.apiBaseLocal ?? process.env.apiBaseProd,
       apiBaseLocal: 'http://localhost:8000/api',
       apiBaseProd: 'https://leavesbackend.whyagency.gr/api',
+      reverbAppKey: process.env.NUXT_PUBLIC_REVERB_APP_KEY || '',
+      reverbHost: process.env.NUXT_PUBLIC_REVERB_HOST || 'localhost',
+      reverbPort: parseInt(process.env.NUXT_PUBLIC_REVERB_PORT || '8080'),
+      reverbScheme: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',
@@ -151,6 +155,9 @@ export default defineNuxtConfig({
         create: '/new-invitation',
         updateStatus: '/invitations',
         delete: '/invitations',
+      },
+      reports: {
+        leaveBalances: '/reports/leave-balances',
       },
     },
   },

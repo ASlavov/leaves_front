@@ -1,73 +1,16 @@
 import { defineStore } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useUserStore } from '~/stores/user';
 import type { Role } from '~/types';
+import type { PermissionMatrix, FullPermissionMatrix } from '~/types/permissions';
 
 export const usePermissionsStore = defineStore('permissionsStore', () => {
   const userStore = useUserStore();
-  /*
-    If you ever decide to add Salary, Performance Reviews, or Personal Documents, 
-    this permission system will immediately become inadequate. 
-    As long as it stays strictly for leaves and public profiles, 
-    you are safe—provided you protect the Admin account from being modified by HR.
-  */
-  const permissions = {
-    profile_leave_balance: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      request_leave: ['admin', 'hr-manager', 'head', 'user'],
-      cancel_leave: ['admin', 'hr-manager', 'head', 'user'],
-      accept_leave: ['admin', 'hr-manager', 'head'],
-      decline_leave: ['admin', 'hr-manager', 'head'],
-    },
-    profile_info: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager', 'head', 'user'],
-      change_password: ['admin', 'hr-manager', 'head', 'user'],
-    },
-    all_users: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager'],
-    },
-    group: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager'],
-    },
-    entitlement: {
-      view: ['admin', 'hr-manager', 'head'],
-      modify: ['admin', 'hr-manager'],
-    },
-    leave_types: {
-      view: ['admin', 'hr-manager', 'head'],
-      modify: ['admin', 'hr-manager'],
-    },
-    permissions: {
-      view: ['admin'],
-      modify: ['admin'],
-    },
-    work_week: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager'],
-    },
-    public_holidays: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager'],
-    },
-    invitations: {
-      view: ['hr-manager', 'head', 'user'],
-      modify: ['hr-manager', 'head', 'user'],
-    },
-    org_chart: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin'],
-    },
-    company_documents: {
-      view: ['admin', 'hr-manager', 'head', 'user'],
-      modify: ['admin', 'hr-manager'],
-    },
-  };
-
   const { t } = useI18n();
+
+  const permissionsMatrix = ref<PermissionMatrix>({});
+  const fullMatrix = ref<FullPermissionMatrix>({});
 
   const allRoles = computed(() => [
     { id: 1, key: 'admin', name: t('roles.admin') },
@@ -90,24 +33,58 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
   };
 
   const can = (category: string, action: string) => {
-    const categoryPermissions: Record<string, string[]> =
-      permissions[category as keyof typeof permissions];
-    if (!categoryPermissions) {
-      return false;
-    }
-    const allowedRoles = categoryPermissions[action];
-    if (!allowedRoles) {
-      return false;
-    }
-    return userRoles.value.some((role: string) => allowedRoles.includes(role));
+    return permissionsMatrix.value?.[category]?.[action] ?? false;
   };
 
+  async function init() {
+    try {
+      const data = await $fetch('/api/permissions/me') as { permissions: PermissionMatrix };
+      permissionsMatrix.value = data.permissions;
+    } catch (e) {
+      console.error('Failed to load permissions', e);
+      permissionsMatrix.value = {};
+    }
+  }
+
+  async function fetchFullMatrix() {
+    try {
+      const data = await $fetch('/api/permissions') as { matrix: FullPermissionMatrix };
+      fullMatrix.value = data.matrix;
+    } catch (e) {
+      console.error('Failed to load full matrix', e);
+    }
+  }
+
+  async function updateMatrix(newMatrix: FullPermissionMatrix) {
+    try {
+      await $fetch('/api/permissions', {
+        method: 'PUT',
+        body: { matrix: newMatrix },
+      });
+      await fetchFullMatrix();
+      await init();
+    } catch (e) {
+      console.error('Failed to update matrix', e);
+      throw e;
+    }
+  }
+
+  function reset() {
+    permissionsMatrix.value = {};
+    fullMatrix.value = {};
+  }
+
   return {
-    hasRole,
-    can,
-    userRoles,
-    isAdmin,
-    permissions,
+    permissionsMatrix,
+    fullMatrix,
     allRoles,
+    userRoles,
+    hasRole,
+    isAdmin,
+    can,
+    init,
+    fetchFullMatrix,
+    updateMatrix,
+    reset,
   };
 });

@@ -5,6 +5,7 @@ import getUserProfileComposable, {
   editUserComposable,
   addUserComposable,
   updatePasswordComposable,
+  deleteUserComposable,
 } from '~/composables/userApiComposable';
 import type { User } from '~/types';
 import { useDepartmentsStore } from '~/stores/departments';
@@ -137,6 +138,20 @@ export const useUserStore = defineStore('userStore', () => {
     }
   }
 
+  const deleteUser = async (userId: number | string) => {
+    try {
+      loading.value = true;
+      setError(null);
+      await deleteUserComposable(userId);
+      await getAllUsers();
+    } catch (err) {
+      setError(t('errors.users.deleteFailed'));
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   async function addUser(
     userName: string,
     userEmail: string,
@@ -215,6 +230,7 @@ export const useUserStore = defineStore('userStore', () => {
     userInfo,
     permissions,
     hasPermission,
+    deleteUser,
     editUser,
     setUserId,
     loading,

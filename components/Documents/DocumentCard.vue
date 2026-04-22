@@ -57,8 +57,8 @@
         "
       >
         <span v-if="document.target_type === 'all'">🌐 {{ $t('documents.targetAll') }}</span>
-        <span v-else class="flex items-center gap-1">
-          👤 {{ document.target_user?.name || $t('documents.targetUser') }}
+        <span v-else class="flex flex-wrap items-center gap-1.5 max-w-[200px]">
+          🔒 {{ $t('documents.targetRestricted') }}
         </span>
       </div>
 

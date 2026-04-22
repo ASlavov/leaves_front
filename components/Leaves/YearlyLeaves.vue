@@ -38,6 +38,7 @@
             <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
           </div>
           <button
+            v-if="permissionsStore.can('profile_leave_balance', 'record_admin_leave')"
             class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[5px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none whitespace-nowrap"
             @click="adminLeaveModalOpen = true"
           >
@@ -232,6 +233,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
+import { useRoute } from 'vue-router';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useI18n } from 'vue-i18n';
 import { extractApiError } from '@/utils/extractApiError';
@@ -374,13 +376,34 @@ const leaveTypeOptions = computed(() => {
     .map((type: LeaveType) => ({ id: type.id, name: type.name }));
 });
 
+const route = useRoute();
+
 onMounted(async () => {
   try {
     await refreshLeaves();
+    // Handle deep-linking from notifications
+    if (route.query.userId) {
+      const targetUser = userStore.allUsers.find((u: User) => String(u.id) === String(route.query.userId));
+      if (targetUser) {
+        filters.value.requesterName = targetUser.name;
+      }
+    }
   } catch (error) {
     console.error('Error fetching leaves:', error);
   }
 });
+
+watch(
+  () => route.query.userId,
+  (newUserId) => {
+    if (newUserId) {
+      const targetUser = userStore.allUsers.find((u: User) => String(u.id) === String(newUserId));
+      if (targetUser) {
+        filters.value.requesterName = targetUser.name;
+      }
+    }
+  }
+);
 
 // Filters
 const filters = ref({

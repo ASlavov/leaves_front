@@ -11,11 +11,7 @@
           <label class="block text-sm font-medium mb-1 dark:text-gray-200">{{
             $t('settings.terminationDate')
           }}</label>
-          <input
-            v-model="terminationDate"
-            type="date"
-            class="border p-2 rounded w-full dark:bg-neutral-700 dark:border-neutral-600 dark:text-gray-100"
-          />
+          <SharedFlatpickrInput v-model="terminationDate" :min-date="'today'" />
         </div>
         <div class="flex justify-end gap-2 mt-4">
           <button
