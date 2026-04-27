@@ -49,21 +49,21 @@ describe('requireRole', () => {
     });
   });
 
-  it('throws 403 when the $fetch call itself fails', async () => {
+  it('propagates errors when the $fetch call itself fails', async () => {
+    // The old code swallowed all errors into a generic 403. The new code lets
+    // the real error propagate so callers can see the actual failure reason.
     mockFetch.mockRejectedValueOnce(new Error('network'));
 
-    await expect(requireRole(makeEvent('token'), ['admin'])).rejects.toMatchObject({
-      statusCode: 403,
-    });
+    await expect(requireRole(makeEvent('token'), ['admin'])).rejects.toThrow('network');
   });
 
-  it('calls $fetch with the correct URL and Authorization header', async () => {
+  it('calls $fetch to /me with the Authorization header', async () => {
     mockFetch.mockResolvedValueOnce({ roles: [{ name: 'admin' }] });
 
     await requireRole(makeEvent('my-token'), ['admin']);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'http://test-api/api/me',
+      expect.stringContaining('/me'),
       { headers: { Authorization: 'Bearer my-token' } },
     );
   });

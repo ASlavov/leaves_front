@@ -62,11 +62,11 @@ export default defineEventHandler(async (event) => {
     if (Array.isArray(result)) {
       return result.map(normaliseNotification);
     } else if (result && typeof result === 'object' && result.data && Array.isArray(result.data)) {
-        // Handle paginated response for admin
-        return {
-            ...result,
-            data: result.data.map(normaliseNotification)
-        };
+      // Handle paginated response for admin
+      return {
+        ...result,
+        data: result.data.map(normaliseNotification),
+      };
     } else {
       return {
         statusCode: 500,

@@ -38,7 +38,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
 
   async function init() {
     try {
-      const data = await $fetch('/api/permissions/me') as { permissions: PermissionMatrix };
+      const data = (await $fetch('/api/permissions/me')) as { permissions: PermissionMatrix };
       permissionsMatrix.value = data.permissions;
     } catch (e) {
       console.error('Failed to load permissions', e);
@@ -48,7 +48,7 @@ export const usePermissionsStore = defineStore('permissionsStore', () => {
 
   async function fetchFullMatrix() {
     try {
-      const data = await $fetch('/api/permissions') as { matrix: FullPermissionMatrix };
+      const data = (await $fetch('/api/permissions')) as { matrix: FullPermissionMatrix };
       fullMatrix.value = data.matrix;
     } catch (e) {
       console.error('Failed to load full matrix', e);

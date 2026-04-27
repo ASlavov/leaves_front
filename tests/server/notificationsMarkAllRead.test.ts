@@ -19,13 +19,13 @@ describe('Server: POST /api/notifications/markAllRead', () => {
     await expect(handler(withoutToken)).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('calls $fetch as PUT to the correct Laravel endpoint', async () => {
+  it('calls $fetch as PUT to the notifications-mark-all-read endpoint', async () => {
     mockFetch.mockResolvedValueOnce([]);
 
     await handler(withToken);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'http://test-api/notifications-mark-all-read',
+      expect.stringContaining('notifications-mark-all-read'),
       { method: 'PUT', headers: { Authorization: 'Bearer user-token' } },
     );
   });

@@ -24,34 +24,48 @@ describe('reportsApiComposable', () => {
         expect.stringContaining('/api/reports/summary'),
         { method: 'GET' },
       );
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('year=2026');
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('year=2026'),
+        { method: 'GET' },
+      );
     });
 
     it('appends dept_ids query params for each department', async () => {
       await getReportSummaryComposable(2026, [1, 2, 3]);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('dept_ids=1');
-      expect(url).toContain('dept_ids=2');
-      expect(url).toContain('dept_ids=3');
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('dept_ids=1'), { method: 'GET' });
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('dept_ids=2'), { method: 'GET' });
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('dept_ids=3'), { method: 'GET' });
     });
 
     it('appends leave_type_ids query params for each leave type', async () => {
       await getReportSummaryComposable(2026, [], [10, 20]);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('leave_type_ids=10');
-      expect(url).toContain('leave_type_ids=20');
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('leave_type_ids=10'),
+        { method: 'GET' },
+      );
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('leave_type_ids=20'),
+        { method: 'GET' },
+      );
     });
 
-    it('works with no optional filters (empty arrays)', async () => {
+    it('works with no optional filters — URL has year but no dept or type ids', async () => {
       await getReportSummaryComposable(2025);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('year=2025');
-      expect(url).not.toContain('dept_ids');
-      expect(url).not.toContain('leave_type_ids');
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('year=2025'),
+        { method: 'GET' },
+      );
+      expect(mockFetch).not.toHaveBeenCalledWith(
+        expect.stringContaining('dept_ids'),
+        expect.anything(),
+      );
+      expect(mockFetch).not.toHaveBeenCalledWith(
+        expect.stringContaining('leave_type_ids'),
+        expect.anything(),
+      );
     });
 
     it('returns the result from retryFetch', async () => {
@@ -74,41 +88,48 @@ describe('reportsApiComposable', () => {
         expect.stringContaining('/api/reports/leave-balances'),
         { method: 'GET' },
       );
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('year=2026');
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('year=2026'),
+        { method: 'GET' },
+      );
     });
 
     it('appends user_ids for each user', async () => {
       await getLeaveBalancesComposable(2026, [1, 2]);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('user_ids=1');
-      expect(url).toContain('user_ids=2');
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('user_ids=1'), { method: 'GET' });
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('user_ids=2'), { method: 'GET' });
     });
 
     it('appends leave_type_ids for each leave type', async () => {
       await getLeaveBalancesComposable(2026, [], [5, 6]);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('leave_type_ids=5');
-      expect(url).toContain('leave_type_ids=6');
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('leave_type_ids=5'), { method: 'GET' });
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('leave_type_ids=6'), { method: 'GET' });
     });
 
     it('accepts string user ids (mixed types)', async () => {
       await getLeaveBalancesComposable(2026, ['10', 11]);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('user_ids=10');
-      expect(url).toContain('user_ids=11');
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('user_ids=10'), { method: 'GET' });
+      expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining('user_ids=11'), { method: 'GET' });
     });
 
     it('works with no optional filters', async () => {
       await getLeaveBalancesComposable(2025);
 
-      const url: string = mockFetch.mock.calls[0][0] as string;
-      expect(url).toContain('year=2025');
-      expect(url).not.toContain('user_ids');
-      expect(url).not.toContain('leave_type_ids');
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.stringContaining('year=2025'),
+        { method: 'GET' },
+      );
+      expect(mockFetch).not.toHaveBeenCalledWith(
+        expect.stringContaining('user_ids'),
+        expect.anything(),
+      );
+      expect(mockFetch).not.toHaveBeenCalledWith(
+        expect.stringContaining('leave_type_ids'),
+        expect.anything(),
+      );
     });
 
     it('returns the result from retryFetch', async () => {

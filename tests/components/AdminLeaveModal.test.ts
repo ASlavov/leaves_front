@@ -1,13 +1,36 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { nextTick } from 'vue';
+import { mount, flushPromises } from '@vue/test-utils';
 import AdminLeaveModal from '@/components/Leaves/AdminLeaveModal.vue';
 import { createTestingPinia } from '@pinia/testing';
 import { useAdminStore } from '@/stores/admin';
+
+// AdminLeaveModal has two SharedFlatpickrInput instances (start + end date).
+// Capture each flatpickr onChange so we can trigger date changes from tests.
+const fpCallbacks: Array<(dates: Date[]) => void> = [];
+
+vi.mock('flatpickr', () => ({
+  default: vi.fn().mockImplementation((_el: any, opts: any) => {
+    fpCallbacks.push(opts.onChange);
+    return { destroy: vi.fn(), setDate: vi.fn() };
+  }),
+}));
+vi.mock('flatpickr/dist/flatpickr.min.css', () => ({}));
+
+const setStartDate = async (dateStr: string) => {
+  fpCallbacks[0]?.([new Date(dateStr)]);
+  await nextTick();
+};
+const setEndDate = async (dateStr: string) => {
+  fpCallbacks[1]?.([new Date(dateStr)]);
+  await nextTick();
+};
 
 describe('AdminLeaveModal.vue', () => {
   let pinia: any;
 
   beforeEach(() => {
+    fpCallbacks.length = 0;
     pinia = createTestingPinia({
       createSpy: vi.fn,
       initialState: {
@@ -34,10 +57,7 @@ describe('AdminLeaveModal.vue', () => {
   const mountModal = (modelValue = true) =>
     mount(AdminLeaveModal, {
       props: { modelValue },
-      global: {
-        plugins: [pinia],
-        stubs: { Teleport: true },
-      },
+      global: { plugins: [pinia], stubs: { Teleport: true } },
     });
 
   // ── rendering ──────────────────────────────────────────────────────────────
@@ -47,10 +67,10 @@ describe('AdminLeaveModal.vue', () => {
     expect(wrapper.find('form').exists()).toBe(true);
   });
 
-  it('renders two date inputs for start and end date', () => {
-    const wrapper = mountModal();
-    const dateInputs = wrapper.findAll('input[type="date"]');
-    expect(dateInputs).toHaveLength(2);
+  it('renders two SharedFlatpickrInput date fields', () => {
+    mountModal();
+    // Two FlatpickrInput components mount → two flatpickr instances created
+    expect(fpCallbacks).toHaveLength(2);
   });
 
   it('renders a textarea for administrative reason', () => {
@@ -58,28 +78,24 @@ describe('AdminLeaveModal.vue', () => {
     expect(wrapper.find('textarea').exists()).toBe(true);
   });
 
-  it('renders two CustomSelect components (user + leave type)', () => {
+  it('renders a CustomMultiSelect for user selection and a CustomSelect for leave type', () => {
     const wrapper = mountModal();
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    expect(selects).toHaveLength(2);
+    expect(wrapper.findComponent({ name: 'CustomMultiSelect' }).exists()).toBe(true);
+    expect(wrapper.findComponent({ name: 'CustomSelect' }).exists()).toBe(true);
   });
 
-  it('passes user options from userStore.allUsers to the first CustomSelect', () => {
+  it('passes user options from userStore.allUsers to the CustomMultiSelect', () => {
     const wrapper = mountModal();
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    const options = selects[0].props('options') as { id: number; name: string }[];
-    const names = options.map((o) => o.name);
-    expect(names).toContain('Alice Smith');
-    expect(names).toContain('Bob Jones');
+    const options = wrapper.findComponent({ name: 'CustomMultiSelect' }).props('options') as any[];
+    expect(options.map((o) => o.name)).toContain('Alice Smith');
+    expect(options.map((o) => o.name)).toContain('Bob Jones');
   });
 
-  it('passes leave type options from leavesStore to the second CustomSelect', () => {
+  it('passes leave type options from leavesStore to the CustomSelect', () => {
     const wrapper = mountModal();
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    const options = selects[1].props('options') as { id: number; name: string }[];
-    const names = options.map((o) => o.name);
-    expect(names).toContain('Annual Leave');
-    expect(names).toContain('Sick Leave');
+    const options = wrapper.findComponent({ name: 'CustomSelect' }).props('options') as any[];
+    expect(options.map((o) => o.name)).toContain('Annual Leave');
+    expect(options.map((o) => o.name)).toContain('Sick Leave');
   });
 
   // ── submit guard ───────────────────────────────────────────────────────────
@@ -94,15 +110,10 @@ describe('AdminLeaveModal.vue', () => {
   it('does not call recordAdministrativeLeave when startDate is missing', async () => {
     const adminStore = useAdminStore(pinia);
     const wrapper = mountModal();
-
-    // Set userId via v-model emit on the real CustomSelect component
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    selects[0].vm.$emit('update:modelValue', '3');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.findAll('input[type="date"]')[1].setValue('2026-05-05');
+    wrapper.findComponent({ name: 'CustomMultiSelect' }).vm.$emit('update:modelValue', [3]);
+    await nextTick();
+    await setEndDate('2026-05-05');
     await wrapper.find('textarea').setValue('Back-filling records');
-
     await wrapper.find('form').trigger('submit.prevent');
     expect(adminStore.recordAdministrativeLeave).not.toHaveBeenCalled();
   });
@@ -110,40 +121,39 @@ describe('AdminLeaveModal.vue', () => {
   it('does not call recordAdministrativeLeave when administrativeReason is empty', async () => {
     const adminStore = useAdminStore(pinia);
     const wrapper = mountModal();
-
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    selects[0].vm.$emit('update:modelValue', '3');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.findAll('input[type="date"]')[0].setValue('2026-05-01');
-    await wrapper.findAll('input[type="date"]')[1].setValue('2026-05-05');
+    wrapper.findComponent({ name: 'CustomMultiSelect' }).vm.$emit('update:modelValue', [3]);
+    await nextTick();
+    await setStartDate('2026-05-01');
+    await setEndDate('2026-05-05');
     // textarea left empty
-
     await wrapper.find('form').trigger('submit.prevent');
     expect(adminStore.recordAdministrativeLeave).not.toHaveBeenCalled();
   });
 
   // ── successful submission ─────────────────────────────────────────────────
 
+  // Helper: fill the form using direct state manipulation (bypasses component
+  // event chain) and verify canSubmit is true before submitting.
+  const fillFormAndSubmit = async (wrapper: ReturnType<typeof mountModal>) => {
+    const vm = wrapper.vm as any;
+    vm.payload.userIds = [3];
+    vm.payload.startDate = '2026-05-01';
+    vm.payload.endDate = '2026-05-05';
+    vm.payload.administrativeReason = 'Administrative correction';
+    await nextTick();
+    // Confirm button is now enabled (canSubmit = true)
+    expect(wrapper.find('button[type="submit"]').attributes('disabled')).toBeUndefined();
+    await wrapper.find('form').trigger('submit.prevent');
+    await flushPromises();
+  };
+
   it('calls recordAdministrativeLeave with the correct payload on valid submission', async () => {
     const adminStore = useAdminStore(pinia);
     const wrapper = mountModal();
-
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    selects[0].vm.$emit('update:modelValue', '3');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.findAll('input[type="date"]')[0].setValue('2026-05-01');
-    await wrapper.findAll('input[type="date"]')[1].setValue('2026-05-05');
-    await wrapper.find('textarea').setValue('Administrative correction');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.find('form').trigger('submit.prevent');
-    await wrapper.vm.$nextTick();
-
+    await fillFormAndSubmit(wrapper);
     expect(adminStore.recordAdministrativeLeave).toHaveBeenCalledWith(
       expect.objectContaining({
-        userId: '3',
+        userId: 3,
         startDate: '2026-05-01',
         endDate: '2026-05-05',
         administrativeReason: 'Administrative correction',
@@ -154,21 +164,8 @@ describe('AdminLeaveModal.vue', () => {
   it('emits saved event after successful submission', async () => {
     const adminStore = useAdminStore(pinia);
     (adminStore.recordAdministrativeLeave as any).mockResolvedValue({ message: 'ok' });
-
     const wrapper = mountModal();
-
-    const selects = wrapper.findAllComponents({ name: 'CustomSelect' });
-    selects[0].vm.$emit('update:modelValue', '3');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.findAll('input[type="date"]')[0].setValue('2026-05-01');
-    await wrapper.findAll('input[type="date"]')[1].setValue('2026-05-05');
-    await wrapper.find('textarea').setValue('Administrative correction');
-    await wrapper.vm.$nextTick();
-
-    await wrapper.find('form').trigger('submit.prevent');
-    await wrapper.vm.$nextTick();
-
+    await fillFormAndSubmit(wrapper);
     expect(wrapper.emitted('saved')).toBeTruthy();
   });
 
@@ -183,15 +180,12 @@ describe('AdminLeaveModal.vue', () => {
         adminStore: { loading: true, error: null },
       },
     });
-
     const wrapper = mountModal();
-    const submitBtn = wrapper.find('button[type="submit"]');
-    expect(submitBtn.attributes('disabled')).toBeDefined();
+    expect(wrapper.find('button[type="submit"]').attributes('disabled')).toBeDefined();
   });
 
-  it('submit button is enabled when loading is false', () => {
+  it('submit button is disabled when form is empty (isValid gate)', () => {
     const wrapper = mountModal();
-    const submitBtn = wrapper.find('button[type="submit"]');
-    expect(submitBtn.attributes('disabled')).toBeUndefined();
+    expect(wrapper.find('button[type="submit"]').attributes('disabled')).toBeDefined();
   });
 });

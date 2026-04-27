@@ -1,4 +1,4 @@
-import type { Notification, BaseMessageResponse } from '~/types';
+import type { Notification } from '~/types';
 
 export const getNotificationsComposable = (userId: string | number): Promise<Notification[]> => {
   return retryFetch<Notification[]>('/api/notifications/getNotifications', {

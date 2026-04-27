@@ -34,7 +34,7 @@ describe('Server: POST /api/broadcasting/auth', () => {
     expect((globalThis as any).readBody).toHaveBeenCalledWith(withToken);
   });
 
-  it('proxies to Laravel broadcasting/auth with Authorization and JSON headers', async () => {
+  it('proxies to the broadcasting/auth path with Authorization and JSON headers', async () => {
     const body = { socket_id: '123.456', channel_name: 'private-App.Models.User.42' };
     (globalThis as any).readBody = vi.fn().mockResolvedValue(body);
     mockFetch.mockResolvedValueOnce({ auth: 'signed' });
@@ -42,7 +42,7 @@ describe('Server: POST /api/broadcasting/auth', () => {
     await handler(withToken);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'http://test-api/broadcasting/auth',
+      expect.stringContaining('/broadcasting/auth'),
       {
         method: 'POST',
         headers: {

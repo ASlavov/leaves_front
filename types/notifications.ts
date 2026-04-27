@@ -20,12 +20,12 @@ export interface NotificationMeta {
 }
 
 export interface Notification {
-  id: string;                   // Laravel notification IDs are UUIDs
+  id: string; // Laravel notification IDs are UUIDs
   user_id: number | string;
   type: NotificationType;
   title: string;
   message: string;
-  is_read: boolean;             // always boolean — normalised in BFF
+  is_read: boolean; // always boolean — normalised in BFF
   created_at: string;
   meta: NotificationMeta;
 }

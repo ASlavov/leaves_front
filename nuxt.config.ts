@@ -26,6 +26,7 @@ export default defineNuxtConfig({
   plugins: [
     /*"~/plugins/fetchInterceptor.js",*/
     '~/plugins/vue3-toastify.client.js',
+    '~/plugins/echo.client.ts',
   ],
   colorMode: {
     preference: 'dark',
@@ -94,7 +95,7 @@ export default defineNuxtConfig({
       apiBaseProd: 'https://leavesbackend.whyagency.gr/api',
       reverbAppKey: process.env.NUXT_PUBLIC_REVERB_APP_KEY || '',
       reverbHost: process.env.NUXT_PUBLIC_REVERB_HOST || 'localhost',
-      reverbPort: parseInt(process.env.NUXT_PUBLIC_REVERB_PORT || '8080'),
+      reverbPort: parseInt(process.env.NUXT_PUBLIC_REVERB_PORT || '8081'),
       reverbScheme: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
       auth: {
         auth: '/getToken',

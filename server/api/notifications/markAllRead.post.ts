@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const config = useRuntimeConfig();
 
-  const data = await $fetch<any>(`${config.apiBase}/notifications-mark-all-read`, {
+  const data = await $fetch<any>(`${config.public.apiBase}/notifications-mark-all-read`, {
     method: 'PUT',
     headers: { Authorization: `Bearer ${token}` },
   });

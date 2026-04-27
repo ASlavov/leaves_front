@@ -5,7 +5,7 @@ import Pusher from 'pusher-js';
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
 
-  // @ts-ignore
+  // @ts-expect-error window.Pusher is not defined
   window.Pusher = Pusher;
 
   const echo = new Echo({

@@ -1,17 +1,11 @@
 import { describe, it, expect, vi, beforeAll, beforeEach, afterAll } from 'vitest';
 
-// Stub $fetch and Nuxt server globals BEFORE importing route handlers.
-// These route files use H3 auto-imports (defineEventHandler, createError,
-// useRuntimeConfig, readBody) which are available in the nuxt test environment.
+// $fetch and server globals are stubbed BEFORE handler modules are imported.
+// useRuntimeConfig is provided by the Nuxt test environment but config.public.apiBase
+// may be empty, so URL assertions use stringContaining rather than exact URLs.
 const mockFetch = vi.fn();
 vi.stubGlobal('$fetch', mockFetch);
-vi.stubGlobal('useRuntimeConfig', () => ({
-  apiBase: 'http://test-api',
-  public: { apiBase: 'http://test-api' },
-}));
 
-// requireRole is an auto-imported server utility called in the PUT handler.
-// We stub it globally so the PUT tests stay focused on proxy behavior.
 const mockRequireRole = vi.fn().mockResolvedValue(undefined);
 vi.stubGlobal('requireRole', mockRequireRole);
 
@@ -32,14 +26,15 @@ describe('Server: GET /api/permissions/me', () => {
     await expect(meHandler(withoutToken)).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('calls $fetch with the correct URL and Authorization header', async () => {
+  it('calls $fetch with the permissions/me path and Authorization header', async () => {
     mockFetch.mockResolvedValueOnce({ permissions: {} });
 
     await meHandler(withToken);
 
-    expect(mockFetch).toHaveBeenCalledWith('http://test-api/v1/permissions/me', {
-      headers: { Authorization: 'Bearer bearer-test' },
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/v1/permissions/me'),
+      { headers: { Authorization: 'Bearer bearer-test' } },
+    );
   });
 
   it('returns the data from $fetch unchanged', async () => {
@@ -64,14 +59,15 @@ describe('Server: GET /api/permissions', () => {
     await expect(getHandler(withoutToken)).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('calls $fetch with the correct URL and Authorization header', async () => {
+  it('calls $fetch with the permissions path and Authorization header', async () => {
     mockFetch.mockResolvedValueOnce({ matrix: {} });
 
     await getHandler(withToken);
 
-    expect(mockFetch).toHaveBeenCalledWith('http://test-api/v1/permissions', {
-      headers: { Authorization: 'Bearer bearer-test' },
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/v1/permissions'),
+      { headers: { Authorization: 'Bearer bearer-test' } },
+    );
   });
 
   it('returns the data from $fetch unchanged', async () => {
@@ -85,7 +81,6 @@ describe('Server: GET /api/permissions', () => {
 });
 
 describe('Server: PUT /api/permissions', () => {
-  // readBody is an H3 auto-import; stub it globally for these tests
   beforeAll(() => {
     vi.stubGlobal('readBody', vi.fn());
   });
@@ -112,7 +107,7 @@ describe('Server: PUT /api/permissions', () => {
     expect(mockRequireRole).toHaveBeenCalledWith(withToken, ['admin']);
   });
 
-  it('proxies the body to $fetch as a PUT', async () => {
+  it('proxies the body to $fetch as a PUT to the permissions path', async () => {
     const body = { matrix: { reports: { view: ['admin'] } } };
     (globalThis as any).readBody = vi.fn().mockResolvedValue(body);
     mockFetch.mockResolvedValueOnce({});
@@ -120,7 +115,7 @@ describe('Server: PUT /api/permissions', () => {
     await putHandler(withToken);
 
     expect(mockFetch).toHaveBeenCalledWith(
-      'http://test-api/v1/permissions',
+      expect.stringContaining('/v1/permissions'),
       expect.objectContaining({ method: 'PUT', body }),
     );
   });

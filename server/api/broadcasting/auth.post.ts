@@ -1,20 +1,24 @@
 // server/api/broadcasting/auth.post.ts
+import { readRawBody } from 'h3';
+
 export default defineEventHandler(async (event) => {
   const { token } = event.context;
   if (!token) throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
 
   const config = useRuntimeConfig();
-  const body = await readBody(event);
 
-  // Laravel expects socket_id and channel_name in the body
-  const data = await $fetch<any>(`${config.apiBase}/broadcasting/auth`, {
+  // Echo/Pusher sends auth as application/x-www-form-urlencoded, NOT JSON.
+  // We must forward the raw body with the correct content-type.
+  const rawBody = (await readRawBody(event)) ?? '';
+
+  const data = await $fetch(`${config.public.apiBase}/broadcasting/auth`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
       Accept: 'application/json',
     },
-    body,
+    body: rawBody,
   });
 
   return data;

@@ -383,7 +383,9 @@ onMounted(async () => {
     await refreshLeaves();
     // Handle deep-linking from notifications
     if (route.query.userId) {
-      const targetUser = userStore.allUsers.find((u: User) => String(u.id) === String(route.query.userId));
+      const targetUser = userStore.allUsers.find(
+        (u: User) => String(u.id) === String(route.query.userId),
+      );
       if (targetUser) {
         filters.value.requesterName = targetUser.name;
       }
@@ -402,7 +404,7 @@ watch(
         filters.value.requesterName = targetUser.name;
       }
     }
-  }
+  },
 );
 
 // Filters

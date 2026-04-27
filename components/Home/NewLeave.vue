@@ -517,11 +517,11 @@ const submitForm = async () => {
     const isAutoApproved = result?.status === 'approved';
 
     useNuxtApp().$toast.success(
-      isAutoApproved ? t('leaves.submitAutoApproved') : t('leaves.submitSuccess'), 
+      isAutoApproved ? t('leaves.submitAutoApproved') : t('leaves.submitSuccess'),
       {
         position: 'bottom-right',
         autoClose: 5000,
-      }
+      },
     );
 
     closeModal(); // Close modal on success

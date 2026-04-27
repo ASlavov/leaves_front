@@ -64,9 +64,10 @@ describe('NewLeave.vue', () => {
     // Open modal
     await wrapper.find('button').trigger('click');
 
-    // Set form values
-    const select = wrapper.find('select');
-    await select.setValue('1');
+    // Set form values — leave type is now a CustomSelect (MiscCustomSelect), not a native <select>
+    const customSelect = wrapper.findComponent({ name: 'CustomSelect' });
+    customSelect.vm.$emit('update:modelValue', 1);
+    await wrapper.vm.$nextTick();
 
     // Mock dates (normally set by flatpickr)
     // Since we mocked flatpickr, we need to manually set the refs if we want to test submit

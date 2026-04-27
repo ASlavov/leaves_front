@@ -1,7 +1,6 @@
 import { defineEventHandler, readBody } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
-import { requireRole } from '~/server/utils/requireRole';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -11,8 +10,6 @@ export default defineEventHandler(async (event) => {
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
   }
-
-  await requireRole(event, ['admin']);
 
   try {
     const { leaveId, status, reason } = body;

@@ -51,7 +51,12 @@ export const useCentralStore = defineStore('centralStore', () => {
     try {
       if (userStore.userId) {
         // Run fundamental store initializations first
-        await Promise.all([userStore.init(), departmentsStore.init(), notificationsStore.init(), permissionsStore.init()]);
+        await Promise.all([
+          userStore.init(),
+          departmentsStore.init(),
+          notificationsStore.init(),
+          permissionsStore.init(),
+        ]);
 
         await Promise.all([
           userStore.getAllUsers(),

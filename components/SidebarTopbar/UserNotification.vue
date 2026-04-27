@@ -62,7 +62,11 @@
             v-for="tab in ['unread', 'read']"
             :key="tab"
             class="flex-1 py-3 text-xs font-medium uppercase transition-colors relative"
-            :class="activeTab === tab ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 hover:text-gray-700 dark:text-neutral-400'"
+            :class="
+              activeTab === tab
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-neutral-400'
+            "
             @click="activeTab = tab"
           >
             {{ $t(`common.${tab}`) }}
@@ -76,7 +80,10 @@
 
         <!-- List -->
         <div class="flex-1 overflow-y-auto">
-          <ul v-if="currentNotifications.length > 0" class="divide-y divide-gray-100 dark:divide-neutral-700">
+          <ul
+            v-if="currentNotifications.length > 0"
+            class="divide-y divide-gray-100 dark:divide-neutral-700"
+          >
             <li
               v-for="notification in currentNotifications"
               :key="notification.id"
@@ -94,7 +101,7 @@
                     <component :is="getTypeIcon(notification.type)" class="size-4" />
                   </div>
                 </div>
-                
+
                 <div class="flex-1 min-w-0">
                   <p class="text-xs font-semibold text-gray-900 dark:text-white line-clamp-1">
                     {{ notification.title }}
@@ -108,16 +115,31 @@
                 </div>
 
                 <!-- Unread dot -->
-                <div v-if="!notification.is_read" class="size-2 bg-primary-500 rounded-full absolute top-4 right-4"></div>
+                <div
+                  v-if="!notification.is_read"
+                  class="size-2 bg-primary-500 rounded-full absolute top-4 right-4"
+                ></div>
               </div>
             </li>
           </ul>
-          
+
           <!-- Empty State -->
           <div v-else class="h-full flex flex-col items-center justify-center p-8 text-center">
-            <div class="size-12 rounded-full bg-gray-100 dark:bg-neutral-700 flex items-center justify-center mb-4">
-              <svg class="size-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            <div
+              class="size-12 rounded-full bg-gray-100 dark:bg-neutral-700 flex items-center justify-center mb-4"
+            >
+              <svg
+                class="size-6 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+                />
               </svg>
             </div>
             <p class="text-sm text-gray-500 dark:text-neutral-400">
@@ -134,12 +156,12 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useNotificationsStore } from '~/stores/notifications';
 import { useRouter } from 'vue-router';
-import { 
-  BellIcon, 
-  CheckCircleIcon, 
-  XCircleIcon, 
-  CalendarIcon, 
-  InformationCircleIcon as InfoIcon 
+import {
+  BellIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  CalendarIcon,
+  InformationCircleIcon as InfoIcon,
 } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
@@ -149,10 +171,10 @@ const dropdownContainer = ref(null);
 const activeTab = ref('unread');
 
 const unreadCount = computed(() => notificationsStore.unreadCount);
-const currentNotifications = computed(() => 
-  activeTab.value === 'unread' 
-    ? notificationsStore.unreadNotifications 
-    : notificationsStore.readNotifications
+const currentNotifications = computed(() =>
+  activeTab.value === 'unread'
+    ? notificationsStore.unreadNotifications
+    : notificationsStore.readNotifications,
 );
 
 const toggleNotifications = () => {
@@ -174,8 +196,8 @@ const handleNotificationClick = async (notification) => {
     const userId = notification.meta.requesting_user_id;
     // router.push with query param
     router.push({
-      path: '/leaves',
-      query: { userId: userId }
+      path: '/yearly-leaves',
+      query: { userId: userId },
     });
     showNotifications.value = false;
   }

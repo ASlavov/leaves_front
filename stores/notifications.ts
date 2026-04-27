@@ -18,12 +18,12 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
   const connected = ref(false);
+  // Track whether we are already subscribed to avoid duplicate listeners
+  let _subscribed = false;
 
   // ─── Computed ────────────────────────────────────────────────────────────────
 
-  const unreadCount = computed(() =>
-    notificationsData.value.filter((n) => !n.is_read).length,
-  );
+  const unreadCount = computed(() => notificationsData.value.filter((n) => !n.is_read).length);
 
   const unreadNotifications = computed(() =>
     notificationsData.value
@@ -51,18 +51,35 @@ export const useNotificationsStore = defineStore('notificationsStore', () => {
   function subscribeToChannel() {
     const nuxtApp = useNuxtApp();
     if (!nuxtApp.$echo) return;
+    // Guard: leave and re-subscribe to prevent duplicate listeners if init() is called again
+    if (_subscribed) {
+      nuxtApp.$echo.leave(`App.Models.User.${userStore.userId}`);
+      _subscribed = false;
+    }
 
     const userId = userStore.userId;
 
     nuxtApp.$echo
       .private(`App.Models.User.${userId}`)
       .notification((notification: Notification) => {
-        // Prepend new notification
-        notificationsData.value.unshift(notification);
+        // Prepend new notification only if not already present (dedup by id)
+        const alreadyExists = notificationsData.value.some(
+          (n) => n.id === (notification as any).id,
+        );
+        if (!alreadyExists) {
+          notificationsData.value.unshift(notification);
+        }
       });
+
+    _subscribed = true;
 
     const pusherConn = (nuxtApp.$echo as any).connector?.pusher?.connection;
     if (pusherConn) {
+      // Unbind first to avoid stacking handlers on every re-subscribe
+      pusherConn.unbind('connected');
+      pusherConn.unbind('disconnected');
+      pusherConn.unbind('connecting');
+
       pusherConn.bind('connected', () => {
         connected.value = true;
         getNotifications();
