@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     console.log(body);
-    const response = await $fetch(`${config.public.apiBase}/org-chart`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.orgChart.base}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body,

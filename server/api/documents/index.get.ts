@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch(`${config.public.apiBase}/company-documents`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
       query,

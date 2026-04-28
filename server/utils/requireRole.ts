@@ -8,8 +8,7 @@ export async function requireRole(event: H3Event, allowedRoles: string[]) {
 
   const config = useRuntimeConfig();
 
-  // /me returns the authenticated user's profile including their roles array.
-  const userProfile = await $fetch<any>(`${config.public.apiBase}/me`, {
+  const userProfile = await $fetch<any>(`${config.public.apiBase}${config.public.permissions.me}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       hireDate,
     } = body;
 
-    const response = await $fetch(`${config.public.apiBase}/users`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.user.add}`, {
       method: 'POST',
       body: {
         name: userName,

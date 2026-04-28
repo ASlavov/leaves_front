@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Return the raw response from $fetch to proxy stream/headers correctly
-    const response = await $fetch.raw(`${config.public.apiBase}/company-documents/${id}/download`, {
+    const response = await $fetch.raw(`${config.public.apiBase}${config.public.documents.base}/${id}/download`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
       responseType: 'stream',

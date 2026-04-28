@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch(`${config.public.apiBase}/company-documents`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body,

@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   // Use requireRole here? The plan said we could proxy directly since Laravel checks it.
   // But wait, requireRole is a helper. I will add requireRole once it's created.
 
-  const data = await $fetch(`${config.public.apiBase}/v1/permissions`, {
+  const data = await $fetch(`${config.public.apiBase}${config.public.permissions.base}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

@@ -56,7 +56,8 @@
       "Bash(npm view *)",
       "Bash(php -l intelligence-back/app/Http/Controllers/Api/ReportsController.php)",
       "Bash(php -l intelligence-back/routes/api.php)",
-      "WebFetch(domain:ekoopmans.github.io)"
+      "WebFetch(domain:ekoopmans.github.io)",
+      "Bash(xargs ls *)"
     ]
   }
 }

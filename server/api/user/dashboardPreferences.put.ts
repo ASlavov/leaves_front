@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
       hidden_leave_types: body?.hiddenLeaveTypes,
     };
 
-    const response: any = await $fetch(`${config.public.apiBase}/dashboard-preferences`, {
+    const response: any = await $fetch(`${config.public.apiBase}${config.public.user.dashboardPreferences}`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` },
       body: payload,

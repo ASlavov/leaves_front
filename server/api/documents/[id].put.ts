@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch(`${config.public.apiBase}/company-documents/${id}`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}/${id}`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}` },
       body,

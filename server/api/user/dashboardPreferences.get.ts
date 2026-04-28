@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response: any = await $fetch(`${config.public.apiBase}/dashboard-preferences`, {
+    const response: any = await $fetch(`${config.public.apiBase}${config.public.user.dashboardPreferences}`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
     });

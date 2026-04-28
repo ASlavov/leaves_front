@@ -105,8 +105,11 @@ export default defineNuxtConfig({
       user: {
         getSingleUser: '/user',
         getAll: '/users',
+        add: '/users',
+        delete: '/user',
         edit: '/user-update',
         updatePassword: '/user-update-password',
+        dashboardPreferences: '/dashboard-preferences',
       },
       entitlement: {
         add: '/entitlement',
@@ -122,6 +125,7 @@ export default defineNuxtConfig({
         getAllForAllUsers: '/all_user_leaves',
         newLeave: '/new_leave',
         processLeave: '/processed_leave',
+        cancelLeave: '/processed_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',
@@ -140,6 +144,7 @@ export default defineNuxtConfig({
         getNotifications: '/user-notifications',
         markedRead: '/notification-marked-read',
         markedUnread: '/notification-marked-unread',
+        markAllRead: '/notifications-mark-all-read',
       },
       holidays: {
         getAll: '/public-holidays',
@@ -159,6 +164,21 @@ export default defineNuxtConfig({
       },
       reports: {
         leaveBalances: '/reports/leave-balances',
+        summary: '/reports/summary',
+      },
+      admin: {
+        leave: '/admin/leaves',
+        terminate: '/users',
+      },
+      permissions: {
+        base: '/v1/permissions',
+        me: '/v1/permissions/me',
+      },
+      documents: {
+        base: '/company-documents',
+      },
+      orgChart: {
+        base: '/org-chart',
       },
     },
   },

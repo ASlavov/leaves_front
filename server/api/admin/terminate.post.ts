@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   await requireRole(event, ['admin']);
 
   try {
-    const response = await $fetch(`${config.public.apiBase}/terminate-user/${body.userId}`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.admin.terminate}/${body.userId}/terminate`, {
       method: 'POST',
       body: { termination_date: body.terminationDate },
       headers: {

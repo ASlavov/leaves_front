@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await $fetch(
-      `${config.public.apiBase}/terminate-user/${body.userId}/preview`,
+      `${config.public.apiBase}${config.public.admin.terminate}/${body.userId}/termination-preview`,
       {
         method: 'GET',
         params: { termination_date: body.terminationDate },

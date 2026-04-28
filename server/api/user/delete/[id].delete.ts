@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const { token } = event.context;
   const id = getRouterParam(event, 'id');
 
-  return await $fetch(`${config.public.apiBase}/user/${id}`, {
+  return await $fetch(`${config.public.apiBase}${config.public.user.delete}/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   // Require admin role middleware logic could be placed here if necessary.
   await requireRole(event, ['admin']);
 
-  const data = await $fetch(`${config.public.apiBase}/v1/permissions`, {
+  const data = await $fetch(`${config.public.apiBase}${config.public.permissions.base}`, {
     method: 'PUT',
     headers: { Authorization: `Bearer ${token}` },
     body,

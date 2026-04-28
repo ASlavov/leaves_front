@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   if (!token) throw createError({ statusCode: 403, message: 'Unauthenticated' });
 
-  const data = await $fetch(`${config.public.apiBase}/v1/permissions/me`, {
+  const data = await $fetch(`${config.public.apiBase}${config.public.permissions.me}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 

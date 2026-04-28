@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   await requireRole(event, ['admin']);
 
   try {
-    const response = await $fetch(`${config.public.apiBase}/admin-leave`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.admin.leave}`, {
       method: 'POST',
       body: {
         user_id: body.userId,
