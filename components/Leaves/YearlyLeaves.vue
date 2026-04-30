@@ -137,91 +137,163 @@
         <div
           v-for="leave in filteredLeaves"
           :key="leave.id"
-          :class="
-            permissionsStore.can('profile_leave_balance', 'accept_leave')
-              ? 'xl:grid-cols-10'
-              : 'xl:grid-cols-8'
-          "
-          class="grid grid-rows-6 xl:grid-rows-none grid-cols-[50px,1fr] gap-y-1 gap-x-[20px] xl:gap-y-0 items-center justify-items-start w-full xl:justify-items-stretch border px-[30px] py-[12px] rounded-lg bg-white dark:bg-transparent hover:bg-neutral-200 dark:hover:bg-neutral-700"
+          class="group relative flex flex-wrap items-center bg-white dark:bg-neutral-800 border border-gray-100 dark:border-neutral-700 hover:border-red-100 dark:hover:border-red-900/30 hover:shadow-sm transition-all duration-200 rounded-xl px-5 py-4 gap-x-4 gap-y-3"
         >
-          <!-- Column 1: Date from - Date to on top, leave type on bottom -->
+          <!-- Status bar (left edge) -->
           <div
-            class="xl:col-span-3 xl:gap-x-2 xl:justify-self-start contents xl:grid grid-cols-[50px,repeat(3,1fr)] grid-rows-[20px_1fr] justify-start items-center"
-          >
+            class="absolute left-0 top-4 bottom-4 w-1 rounded-r-full"
+            :class="{
+              'bg-yellow-400': leave.status === 'pending',
+              'bg-emerald-500': leave.status === 'approved',
+              'bg-red-400': leave.status === 'cancelled' || leave.status === 'canceled',
+              'bg-red-600':
+                leave.status === 'rejected' ||
+                leave.status === 'declined' ||
+                leave.status === 'denied',
+            }"
+          ></div>
+
+          <!-- Icon + date + leave type -->
+          <div class="flex items-center gap-3 flex-1 min-w-0">
             <div
-              class="row-span-6 xl:col-span-1 xl:row-span-2 shrink-0 self-start justify-self-end w-full"
+              class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 shadow-sm"
+              :class="{
+                'bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400':
+                  leave.status === 'pending',
+                'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400':
+                  leave.status === 'approved',
+                'bg-red-50 text-red-500 dark:bg-red-500/10 dark:text-red-400':
+                  leave.status !== 'pending' && leave.status !== 'approved',
+              }"
             >
-              <img src="https://placehold.co/50x50" alt="Icon" class="rounded-md" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
             </div>
-            <div class="text-sm text-gray-500 xl:col-span-3 xl:row-span-1 whitespace-nowrap">
-              {{ formatDate(leave.start_date) }} - {{ formatDate(leave.end_date) }}
-            </div>
-            <div class="font-bold xl:col-span-3 xl:row-span-1">
-              {{ getLeaveTypeName(leave.leave_type_id) }}
+            <div class="min-w-0">
+              <p
+                class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-0.5 whitespace-nowrap"
+              >
+                {{ formatDate(leave.start_date) }} — {{ formatDate(leave.end_date) }}
+              </p>
+              <p class="text-sm font-bold text-gray-800 dark:text-gray-100 truncate">
+                {{ getLeaveTypeName(leave.leave_type_id) }}
+              </p>
             </div>
           </div>
 
-          <!-- Column 2: User's name -->
-          <div class="xl:col-span-2">{{ leave.user.name }}</div>
-
-          <!-- Column 3: Leave status -->
-          <div class="xl:col-span-1" :class="leave.class">
-            {{ getLeaveStatusLabel(leave.status || 'unknown') }}
-          </div>
-
-          <!-- Column 4: Reason -->
+          <!-- User avatar + name (admin view) -->
           <div
             v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-            class="xl:col-span-3 xl:mr-4"
+            class="flex items-center gap-2 min-w-[120px]"
           >
-            <input
-              v-if="leave.status === 'pending'"
-              v-model="leaveComments[leave.id]"
-              type="text"
-              class="border-0 w-full border-b border-[#DFEAF2] bg-transparent focus:outline-0"
-              :placeholder="$t('leaves.commentPlaceholder')"
-            />
-            <div
-              v-if="leave.reason || leave.processed_reason"
-              class="text-[#808080] dark:text-gray-300 italic text-sm flex flex-col gap-y-[5px]"
-            >
-              <span v-if="leave?.processed_reason">
-                {{ $t('leaves.processedReason') }}: {{ leave?.processed_reason }}
-              </span>
-              <span v-if="leave?.reason"> {{ $t('leaves.reason') }}: {{ leave?.reason }} </span>
-            </div>
+            <SharedUserAvatar :user="leave.user" :size="28" class="shrink-0" />
+            <span class="text-sm text-gray-600 dark:text-gray-300 truncate">{{
+              leave.user.name
+            }}</span>
           </div>
 
-          <!-- Column 5: Actions -->
-
-          <!-- Approve and Decline Buttons for users with modify permission and pending leaves -->
-          <div
-            v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-            class="flex lg:justify-self-end gap-4 lg:col-span-1"
-          >
-            <button
-              v-if="leave.status === 'pending'"
-              class="py-2 px-4 bg-[#16DBAA26] transition-all dark:bg-green-300 text-green-700 dark:text-green-800 dark:hover:text-green-500 rounded-md hover:bg-green-300 dark:hover:bg-green-100"
-              @click="approveLeave(leave.id, leave.user.id)"
+          <!-- Status badge -->
+          <div class="flex items-center">
+            <span
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold tracking-wide uppercase whitespace-nowrap"
+              :class="{
+                'bg-yellow-50 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400':
+                  leave.status === 'pending',
+                'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400':
+                  leave.status === 'approved',
+                'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400':
+                  leave.status !== 'pending' && leave.status !== 'approved',
+              }"
             >
-              <CheckIcon class="h-5 w-5" />
-            </button>
-            <button
-              v-if="leave.status === 'pending'"
-              class="py-2 px-4 rounded-md transition-all bg-[#FF455F26] hover:bg-red-300 text-[#FF455F] hover:text-red-700 dark:bg-[#FF455F8F] dark:hover:bg-red-200 dark:text-[#FF455F] dark:hover:text-red-700"
-              @click="declineLeave(leave.id, leave.user.id)"
-            >
-              <XMarkIcon class="h-5 w-5" />
-            </button>
+              <span
+                class="w-1.5 h-1.5 rounded-full"
+                :class="{
+                  'bg-yellow-400': leave.status === 'pending',
+                  'bg-emerald-500': leave.status === 'approved',
+                  'bg-red-400': leave.status !== 'pending' && leave.status !== 'approved',
+                }"
+              ></span>
+              {{ getLeaveStatusLabel(leave.status || 'unknown') }}
+            </span>
           </div>
-          <div v-else class="justify-self-end">
-            <!-- Cancel Button for users without modify permission -->
+
+          <!-- Actions: approve/decline (admin) or cancel (user) -->
+          <div class="flex items-center gap-2 ml-auto">
+            <template v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')">
+              <button
+                v-if="leave.status === 'pending'"
+                class="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:hover:bg-emerald-500/20 transition-colors"
+                :title="$t('leaves.approve')"
+                @click="approveLeave(leave.id, leave.user.id)"
+              >
+                <CheckIcon class="h-4 w-4" />
+              </button>
+              <button
+                v-if="leave.status === 'pending'"
+                class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 transition-colors"
+                :title="$t('leaves.decline')"
+                @click="declineLeave(leave.id, leave.user.id)"
+              >
+                <XMarkIcon class="h-4 w-4" />
+              </button>
+            </template>
             <button
-              class="py-2 px-4 border-0 text-black hover:text-neutral-500 underline dark:text-white dark:hover:text-neutral-700"
+              v-else-if="leave.status === 'approved' || leave.status === 'pending'"
+              class="text-sm font-semibold text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors"
               @click="cancelLeave(leave.id)"
             >
               {{ $t('common.cancel') }}
             </button>
+          </div>
+
+          <!-- Comment input (pending, admin) -->
+          <div
+            v-if="
+              permissionsStore.can('profile_leave_balance', 'accept_leave') &&
+              leave.status === 'pending'
+            "
+            class="w-full basis-full"
+          >
+            <input
+              v-model="leaveComments[leave.id]"
+              type="text"
+              class="w-full text-sm bg-gray-50 dark:bg-neutral-700/50 border border-gray-200 dark:border-neutral-600 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-neutral-500 focus:outline-none focus:border-gray-400 dark:focus:border-neutral-500 transition-colors"
+              :placeholder="$t('leaves.commentPlaceholder')"
+            />
+          </div>
+
+          <!-- Comments display -->
+          <div
+            v-if="leave.processed_reason || leave.reason"
+            class="w-full basis-full border-t border-gray-50 dark:border-neutral-700/50 pt-2 flex flex-col gap-1"
+          >
+            <p
+              v-if="leave.processed_reason"
+              class="text-xs text-gray-400 dark:text-neutral-500 italic"
+            >
+              <span class="font-semibold not-italic text-gray-500 dark:text-neutral-400"
+                >{{ $t('leaves.processedReason') }}:</span
+              >
+              {{ leave.processed_reason }}
+            </p>
+            <p v-if="leave.reason" class="text-xs text-gray-400 dark:text-neutral-500 italic">
+              <span class="font-semibold not-italic text-gray-500 dark:text-neutral-400"
+                >{{ $t('leaves.reason') }}:</span
+              >
+              {{ leave.reason }}
+            </p>
           </div>
         </div>
       </div>
@@ -235,6 +307,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
 import { useRoute } from 'vue-router';
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import SharedUserAvatar from '~/components/shared/UserAvatar.vue';
 import { useI18n } from 'vue-i18n';
 import { extractApiError } from '@/utils/extractApiError';
 import type { Leave, User, LeaveType, Department } from '@/types';

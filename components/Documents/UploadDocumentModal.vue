@@ -103,6 +103,17 @@
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{
+              $t('documents.assignToGroups')
+            }}</label>
+            <MiscCustomMultiSelect
+              v-model="targetDepartmentIds"
+              :options="deptOptions"
+              :placeholder="$t('documents.selectGroups')"
+              select-id="doc-depts"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{
               $t('documents.assignToUsers')
             }}</label>
             <MiscCustomMultiSelect
@@ -191,6 +202,7 @@ const isSaving = ref(false);
 const targetType = ref<'all' | 'restricted'>('all');
 const targetUserIds = ref<number[]>([]);
 const targetRoleIds = ref<number[]>([]);
+const targetDepartmentIds = ref<number[]>([]);
 
 const usersArray = computed(() => usersStore.allUsers || []);
 
@@ -208,11 +220,24 @@ const userOptions = computed(() => {
   }));
 });
 
-const types: { value: DocumentSourceType; labelKey: string }[] = [
-  { value: 'google_doc', labelKey: 'documents.typeGoogleDoc' },
-  { value: 'sharepoint', labelKey: 'documents.typeSharePoint' },
-  { value: 'file', labelKey: 'documents.typeFile' },
-];
+const deptOptions = computed(() => {
+  return centralStore.departmentsStore.departmentsData.map((d: any) => ({
+    id: d.id,
+    name: d.name,
+  }));
+});
+
+const types = computed(() => {
+  const allowed = [];
+  const settings = centralStore.settingsStore.documentSources;
+  if (settings?.doc_source_google !== false)
+    allowed.push({ value: 'google_doc', labelKey: 'documents.typeGoogleDoc' });
+  if (settings?.doc_source_sharepoint !== false)
+    allowed.push({ value: 'sharepoint', labelKey: 'documents.typeSharePoint' });
+  if (settings?.doc_source_file !== false)
+    allowed.push({ value: 'file', labelKey: 'documents.typeFile' });
+  return allowed;
+});
 
 watch(
   () => props.modelValue,
@@ -227,22 +252,28 @@ watch(
         targetType.value = d.target_type;
         targetUserIds.value = d.target_users?.map((u) => u.id) || [];
         targetRoleIds.value = d.target_roles?.map((r) => r.id) || [];
+        targetDepartmentIds.value = d.target_departments?.map((dept) => dept.id) || [];
         selectedFile.value = null;
         fileBase64.value = '';
       } else {
-        sourceType.value = 'google_doc';
+        sourceType.value = types.value.length > 0 ? types.value[0].value : 'google_doc';
         title.value = '';
         description.value = '';
         url.value = '';
         targetType.value = 'all';
         targetUserIds.value = [];
         targetRoleIds.value = [];
+        targetDepartmentIds.value = [];
         selectedFile.value = null;
         fileBase64.value = '';
+        if (fileInput.value) fileInput.value.value = '';
       }
 
       if (!usersArray.value.length) {
         usersStore.getAllUsers();
+      }
+      if (!centralStore.departmentsStore.departmentsData.length) {
+        centralStore.departmentsStore.getDepartments();
       }
     }
   },
@@ -253,8 +284,8 @@ const handleFileChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
     const file = target.files[0];
-    // 20mb limit check
-    if (file.size > 20 * 1024 * 1024) {
+    // 30mb limit check
+    if (file.size > 30 * 1024 * 1024) {
       (useNuxtApp() as any).$toast?.error(t('documents.fileSizeWarning'));
       return;
     }
@@ -295,6 +326,7 @@ const save = async () => {
       target_type: targetType.value,
       target_user_ids: targetType.value === 'restricted' ? targetUserIds.value : [],
       target_role_ids: targetType.value === 'restricted' ? targetRoleIds.value : [],
+      target_department_ids: targetType.value === 'restricted' ? targetDepartmentIds.value : [],
     };
 
     if (sourceType.value === 'file') {
@@ -313,6 +345,22 @@ const save = async () => {
       await centralStore.documentsStore.createDocument(payload);
     }
     (useNuxtApp() as any).$toast?.success(t('documents.uploadSuccess'));
+
+    // Explicitly reset form
+    if (!props.documentToEdit) {
+      sourceType.value = types.value.length > 0 ? types.value[0].value : 'google_doc';
+      title.value = '';
+      description.value = '';
+      url.value = '';
+      targetType.value = 'all';
+      targetUserIds.value = [];
+      targetRoleIds.value = [];
+      targetDepartmentIds.value = [];
+      selectedFile.value = null;
+      fileBase64.value = '';
+      if (fileInput.value) fileInput.value.value = '';
+    }
+
     emit('saved');
     isOpen.value = false;
   } catch (e) {

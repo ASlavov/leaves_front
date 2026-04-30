@@ -21,8 +21,10 @@
 - **Org Chart**: Stored as a flat list with `parent_id` and `position`. Tree generation happens exclusively on the frontend inside `stores/orgChart.ts`.
 - **Company Documents**: Leverages same Base64 payload method as leave attachments for file uploads. Extended to support Personal Documents via explicit `target_type` ('all' or 'user') mapping directly in payload shape without an explicit frontend adapter, reducing complexity.
 - **Role-Based Document Access**: Implemented a many-to-many relationship using pivot tables (`company_document_users` and `company_document_roles`) to share documents with specific users or multiple roles efficiently.
-- **Reporting & Charting**: Centralized report generation in the backend controller (`ReportsController`), producing grouped aggregated statistics (by month, by type, by department) directly from Eloquent. These are surfaced in Vue component widgets using `vue-chartjs`.
 - **UI Consistency Components**: Migrated form controls application-wide to use unified components (`SharedFlatpickrInput`, `SharedWeekdayPills`, `SharedPhoneInput`) to maintain consistent logic and CSS classes for interactions.
+- **Reporting & Export System**: Reports now support PDF and CSV generation on the client-side using `html2pdf.js` and CSV Blob generation. Backend `ReportsController` provides aggregated data with user-based filtering.
+- **Dynamic iCal Export**: Implemented public iCal routes with unique per-user tokens (`ical_token`). Calendar apps can subscribe to `api/leaves/ical/{token}` for real-time leave sync.
+- **Department Document Targeting**: Expanded document management to support targeting by Department/Group using a new `company_document_departments` pivot table. Visibility is enforced in `CompanyDocumentController::scopeForUser`.
 
 ## Resolved Issues
 
@@ -38,6 +40,9 @@
 - **403 on /api/me Fix**: Removed `/api/me` from the exempt list in `server/middleware/verifyAuth.ts`. Previously, the middleware skipped this route, preventing `event.context.requestingUserId` and `token` from being set, which caused the `/api/me` handler to return a 403 "Not authenticated" error even when a valid session existed.
 - **Phone Input Casting Issue**: `intl-tel-input` expects a union type of all string country identifiers for `initialCountry` (e.g., `'us' | 'gr' | ...`). Casted the reactive prop to `any` statically to suppress the compiler strict check while retaining the dynamic default.
 - **Duplicate JSON Localizations**: Addressed duplicate keys in `el.json` which broke JSON validity (e.g. `uploadedBy`), by ensuring translations correspond correctly to UI without redeclaring elements.
+- **Report CSV Numeric Formatting**: Ensured CSV export correctly formats decimal values using `.toFixed(2)` and handles localized date strings consistently for Excel compatibility.
+- **Document Modal State Reset**: Fixed a bug in `UploadDocumentModal` where the file input state wasn't resetting properly between uploads, causing the "duplicate file" warning to persist erroneously.
+- **Leave Accrual Projection**: Implemented a popover on balance metrics cards to show estimated monthly accrual (pro-rata) for current-year wallets, providing users with better visibility into future availability.
 
 ## Context
 
@@ -47,6 +52,6 @@
 
 ## Backend existence
 
-- **Folder**: `c:\laragon\www\intelligence-backend`
+- **Folder**: `C:\htdocs\intelligence-back`
 - **Database**: `intelligence`
 - **Server**: `http://localhost:8000`

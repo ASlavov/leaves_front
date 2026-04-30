@@ -13,7 +13,9 @@ import meHandler from '~/server/api/permissions/me.get';
 import getHandler from '~/server/api/permissions/index.get';
 import putHandler from '~/server/api/permissions/index.put';
 
-const withToken = { context: { token: 'bearer-test' } } as any;
+// withToken events include node.req.headers so that getHeader() (h3) does not
+// throw when the handler reads the Cookie header for forwarding.
+const withToken = { context: { token: 'bearer-test' }, node: { req: { headers: {} } } } as any;
 const withoutToken = { context: {} } as any;
 
 describe('Server: GET /api/permissions/me', () => {
@@ -33,7 +35,9 @@ describe('Server: GET /api/permissions/me', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('/v1/permissions/me'),
-      { headers: { Authorization: 'Bearer bearer-test' } },
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: 'Bearer bearer-test' }),
+      }),
     );
   });
 
@@ -66,7 +70,9 @@ describe('Server: GET /api/permissions', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('/v1/permissions'),
-      { headers: { Authorization: 'Bearer bearer-test' } },
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: 'Bearer bearer-test' }),
+      }),
     );
   });
 

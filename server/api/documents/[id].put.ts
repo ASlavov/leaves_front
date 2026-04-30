@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, getRouterParam } from 'h3';
+import { defineEventHandler, readBody, getRouterParam, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const id = getRouterParam(event, 'id');
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
   try {
     const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}/${id}`, {
       method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
       body,
     });
     return response;

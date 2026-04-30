@@ -29,9 +29,17 @@
             :placeholder="$t('reports.allLeaveTypes')"
           />
         </div>
+        <div class="min-w-[240px] flex-1">
+          <label :class="labelClass">{{ $t('common.users') }}</label>
+          <MiscCustomMultiSelect
+            v-model="selectedUserIds"
+            :options="userOptions"
+            :placeholder="$t('settings.allUsers')"
+          />
+        </div>
         <button
           type="button"
-          class="h-[40px] px-[16px] rounded-[8px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
+          class="h-[46px] px-[16px] rounded-[8px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
           @click="customizeOpen = true"
         >
           {{ $t('reports.customize') }}
@@ -39,10 +47,10 @@
         <button
           v-if="permissionsStore.can('reports', 'export')"
           type="button"
-          class="h-[40px] px-[16px] rounded-[8px] bg-[#EA021A] text-white text-[14px] font-bold hover:bg-[#EA021A]/90 focus:outline-none"
+          class="h-[46px] px-[16px] rounded-[8px] bg-[#EA021A] text-white text-[14px] font-bold hover:bg-[#EA021A]/90 focus:outline-none"
           @click="exportModalOpen = true"
         >
-          {{ $t('reports.exportPdf') }}
+          {{ $t('reports.exportReport') }}
         </button>
       </div>
 
@@ -108,13 +116,14 @@ definePageMeta({ middleware: ['auth'] as any }); // if an auth middleware exists
 const { t } = useI18n();
 const { label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
 const centralStore = useCentralStore();
-const { permissionsStore, departmentsStore, leavesStore } = centralStore;
+const { permissionsStore, departmentsStore, leavesStore, userStore } = centralStore;
 const reportsStore = useReportsStore();
 
 const now = new Date();
 const yearStr = ref(String(now.getFullYear()));
 const selectedDeptIds = ref<number[]>([]);
 const selectedTypeIds = ref<number[]>([]);
+const selectedUserIds = ref<number[]>([]);
 const customizeOpen = ref(false);
 const exportModalOpen = ref(false);
 
@@ -129,6 +138,9 @@ const deptOptions = computed(() =>
 );
 const typeOptions = computed(() =>
   (leavesStore.leavesData?.leavesTypes || []).map((lt: any) => ({ id: lt.id, name: lt.name })),
+);
+const userOptions = computed(() =>
+  (userStore.allUsers || []).map((u: any) => ({ id: u.id, name: u.name })),
 );
 
 const widgetDefs = [
@@ -168,12 +180,13 @@ const saveCustomization = () => {
 const fetchData = () => {
   reportsStore.fetchSummary(
     Number(yearStr.value),
-    selectedDeptIds.value.map(Number),
-    selectedTypeIds.value.map(Number),
+    selectedDeptIds.value,
+    selectedTypeIds.value,
+    selectedUserIds.value,
   );
 };
 
-watch([yearStr, selectedDeptIds, selectedTypeIds], fetchData, { immediate: true });
+watch([yearStr, selectedDeptIds, selectedTypeIds, selectedUserIds], fetchData, { immediate: true });
 </script>
 
 <style>

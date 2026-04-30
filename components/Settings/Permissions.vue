@@ -17,7 +17,7 @@
     <div class="hidden md:block overflow-x-auto rounded-lg shadow border dark:border-neutral-700">
       <div class="bg-white min-w-[480px] dark:bg-neutral-800">
         <div
-          class="grid grid-cols-5 bg-gray-100 p-4 font-bold text-sm uppercase dark:bg-neutral-900 border-b dark:border-neutral-700 text-center"
+          class="grid grid-cols-5 bg-gray-100 p-4 font-bold text-sm uppercase dark:bg-neutral-900 border-b dark:border-neutral-700 text-center text-gray-700 dark:text-gray-200"
         >
           <div class="col-span-1 text-left">{{ $t('settings.permissions') }}</div>
           <div v-for="role in roles" :key="role.key" class="col-span-1">{{ role.name }}</div>
@@ -66,7 +66,7 @@
                   :class="
                     hasPermission(role.key, String(categoryKey), String(actionKey))
                       ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400'
-                      : 'bg-red-50 text-red-300 dark:bg-red-900/20 dark:text-red-800'
+                      : 'bg-red-50 text-red-300 dark:bg-red-900/20 dark:text-red-400'
                   "
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@
                   :class="
                     hasPermission(role.key, String(categoryKey), String(actionKey))
                       ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400'
-                      : 'bg-red-50 text-red-300 dark:bg-red-900/20 dark:text-red-800'
+                      : 'bg-red-50 text-red-300 dark:bg-red-900/20 dark:text-red-400'
                   "
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

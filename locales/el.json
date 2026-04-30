@@ -31,11 +31,17 @@
   },
   "settings": {
     "title": "Ρυθμίσεις",
+    "groupPersonal": "Προσωπικά",
+    "groupPeople": "Χρήστες & Πρόσβαση",
+    "groupLeave": "Διαχείριση Αδειών",
+    "groupCompany": "Εταιρεία",
     "editProfile": "Επεξεργασία Προφίλ",
     "permissions": "Δικαιώματα",
     "security": "Ασφάλεια",
     "users": "Χρήστες",
     "groups": "Γκρουπς",
+    "noMembers": "Δεν υπάρχουν μέλη σε αυτό το γκρουπ",
+    "head": "Επικεφαλής",
     "leaveTypes": "Τύποι Αδειών",
     "leaveDays": "Ημέρες Αδειών",
     "invitations": "Κοινοποίηση Ημερολογίου",
@@ -237,7 +243,15 @@
     "attachmentRequiredAfter": "Απαιτείται Επισύναψη Μετά από (Ημέρες)",
     "attachmentNote": "π.χ. 3 = απαιτείται πιστοποιητικό για 4+ ημέρες.",
     "autoApproveRequests": "Αυτόματη Έγκριση Αιτημάτων",
-    "autoApproveNote": "Οι αιτήσεις γι' αυτόν τον τύπο θα εγκρίνονται αυτόματα (αν υπάρχει διαθέσιμο υπόλοιπο)."
+    "autoApproveNote": "Οι αιτήσεις γι' αυτόν τον τύπο θα εγκρίνονται αυτόματα (αν υπάρχει διαθέσιμο υπόλοιπο).",
+    "monthlyAllocationDays": "Μηνιαία Αυτόματη Κατανομή (ημέρες)",
+    "monthlyAllocationDaysPlaceholder": "π.χ. 5",
+    "monthlyAllocationDaysNote": "Εάν οριστεί, αυτές οι ημέρες θα χορηγούνται αυτόματα σε κάθε ενεργό χρήστη την 1η κάθε μήνα. Αφήστε κενό για απενεργοποίηση.",
+    "documentSources": "Πηγές Εγγράφων",
+    "documentSourcesNote": "Επιλέξτε από ποιες πηγές μπορείτε να αντλείτε έγγραφα.",
+    "googleDocNote": "Δυνατότητα επισύναψης Google Docs ως εταιρικά έγγραφα",
+    "sharepointNote": "Δυνατότητα επισύναψης εγγράφων SharePoint",
+    "fileUploadNote": "Επιτρέπει τη φόρτωση αρχείων απευθείας (PDF, DOCX, κ.λπ.)"
   },
   "leaves": {
     "cancelLeave": "Ακύρωση Άδειας",
@@ -262,6 +276,11 @@
     "submitAutoApproved": "Η αίτηση άδειας εγκρίθηκε αυτόματα!",
     "submitError": "Σφάλμα κατά την υποβολή της αίτησης άδειας.",
     "errorFetchingUserLeaves": "Δεν μπορέσαμε να φέρουμε τις άδειες του χρήστη!",
+    "projection": "Πρόβλεψη",
+    "daysRemaining": "ημέρες υπόλοιπο",
+    "booked": "κρατημένες",
+    "available": "διαθέσιμες",
+    "accrualNote": "Εκτιμώμενη μηνιαία συγκέντρωση: +{amount} ημέρες",
     "balance": "Υπόλοιπα άδειας",
     "noAvailableLeaves": "Δεν υπάρχουν διαθέσιμες άδειες",
     "noLeaves": "Δεν υπάρχουν άδειες",
@@ -294,7 +313,8 @@
       "reasonNotes": "Λόγος / Σημειώσεις",
       "submitBtn": "Καταχώρηση Άδειας",
       "saveSuccess": "Η διοικητική άδεια καταχωρήθηκε επιτυχώς.",
-      "recordBtn": "Καταχώρηση Διοικ. Άδειας"
+      "recordBtn": "Καταχώρηση Διοικ. Άδειας",
+      "skipWalletDeduction": "Παράλειψη αφαίρεσης υπολοίπου (χωρίς κατανάλωση ημερών)"
     }
   },
   "notifications": {
@@ -367,7 +387,8 @@
   "calendar": {
     "allNames": "Όλα τα ονόματα",
     "allGroups": "Όλα τα Γκρουπ",
-    "allTypes": "Όλοι οι τύποι"
+    "allTypes": "Όλοι οι τύποι",
+    "eventDetails": "Λεπτομέρειες Αδείας"
   },
   "roles": {
     "admin": "Διαχειριστής",
@@ -541,7 +562,7 @@
     "urlPlaceholder": "https://...",
     "titleLabel": "Τίτλος",
     "descriptionLabel": "Περιγραφή",
-    "fileSizeWarning": "Μέγιστο μέγεθος αρχείου: 20MB.",
+    "fileSizeWarning": "Μέγιστο μέγεθος αρχείου: 30MB.",
     "empty": "Δεν έχουν ανέβει έγγραφα εταιρείας ακόμα.",
     "typeGoogleDoc": "Google Doc",
     "typeSharePoint": "SharePoint",
@@ -573,7 +594,7 @@
     "allLeaveTypes": "Όλοι οι τύποι",
     "customize": "Προσαρμογή",
     "selectWidgets": "Επιλογή γραφημάτων",
-    "exportPdf": "Εξαγωγή PDF",
+    "exportReport": "Εξαγωγή",
     "widgets": {
       "leavesByMonth": "Άδειες ανά μήνα",
       "leavesByDepartment": "Άδειες ανά τμήμα",

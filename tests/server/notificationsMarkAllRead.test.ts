@@ -4,12 +4,15 @@ const mockFetch = vi.fn();
 vi.stubGlobal('$fetch', mockFetch);
 vi.stubGlobal('useRuntimeConfig', () => ({
   apiBase: 'http://test-api',
-  public: { apiBase: 'http://test-api' },
+  public: {
+    apiBase: 'http://test-api',
+    notifications: { markAllRead: '/notifications-mark-all-read' },
+  },
 }));
 
 import handler from '~/server/api/notifications/markAllRead.post';
 
-const withToken = { context: { token: 'user-token' } } as any;
+const withToken = { context: { token: 'user-token' }, node: { req: { headers: {} } } } as any;
 const withoutToken = { context: {} } as any;
 
 describe('Server: POST /api/notifications/markAllRead', () => {
@@ -26,7 +29,10 @@ describe('Server: POST /api/notifications/markAllRead', () => {
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('notifications-mark-all-read'),
-      { method: 'PUT', headers: { Authorization: 'Bearer user-token' } },
+      expect.objectContaining({
+        method: 'PUT',
+        headers: expect.objectContaining({ Authorization: 'Bearer user-token' }),
+      }),
     );
   });
 

@@ -1,8 +1,9 @@
 <template>
-  <div class="org-node flex flex-col items-center">
+  <div class="org-node flex flex-col items-start">
     <!-- Node Box -->
     <div
-      class="relative flex flex-col items-center p-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm min-w-[200px] hover:shadow-md transition-shadow"
+      class="relative flex flex-col items-center p-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm min-w-[200px] hover:shadow-md transition-shadow cursor-pointer"
+      @click="$emit('click-node', node.user?.id)"
     >
       <UserAvatar :user="node.user as any" class="mb-2" />
       <div class="font-bold text-gray-900 dark:text-gray-100 text-sm">
@@ -60,42 +61,19 @@
     </div>
 
     <!-- Children -->
-    <div v-if="node.children && node.children.length > 0" class="flex gap-4 mt-8 relative">
-      <!-- Vertical line dropping from parent down to the horizontal plane -->
+    <div
+      v-if="node.children && node.children.length > 0"
+      class="flex flex-col gap-6 mt-4 relative pl-10 border-l-2 border-gray-300 dark:border-neutral-600 ml-[3rem]"
+    >
       <div
-        class="absolute w-px h-4 bg-gray-300 dark:bg-neutral-600 top-[-2rem] left-1/2 transform -translate-x-1/2"
-      ></div>
-
-      <div
-        v-for="(child, index) in node.children"
+        v-for="child in node.children"
         :key="child.id"
-        class="relative flex flex-col items-center"
+        class="relative flex flex-col items-start"
       >
-        <!-- Vertical connector line to parent plane -->
+        <!-- Horizontal connector line to parent plane -->
         <div
-          class="absolute w-px h-4 bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-1/2 transform -translate-x-1/2"
+          class="absolute h-px w-10 bg-gray-300 dark:bg-neutral-600 top-[2.5rem] left-[-2.5rem]"
         ></div>
-
-        <!-- Horizontal lines resolving perfectly across gap-4 (half gap = 0.5rem) -->
-        <template v-if="node.children.length > 1">
-          <!-- First Child: right to parent connection -->
-          <div
-            v-if="index === 0"
-            class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-1/2 right-[-0.5rem]"
-          ></div>
-
-          <!-- Last Child: left to parent connection -->
-          <div
-            v-else-if="index === node.children.length - 1"
-            class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-[-0.5rem] right-1/2"
-          ></div>
-
-          <!-- Middle Child: span both left and right gaps -->
-          <div
-            v-else
-            class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-[-0.5rem] right-[-0.5rem]"
-          ></div>
-        </template>
 
         <OrgChartNode
           :node="child"
@@ -105,6 +83,7 @@
           @add-sibling="$emit('add-sibling', $event)"
           @remove="$emit('remove', $event)"
           @move="$emit('move', $event)"
+          @click-node="$emit('click-node', $event)"
         />
       </div>
     </div>
@@ -121,7 +100,7 @@ defineProps({
   depth: { type: Number, default: 0 },
 });
 
-defineEmits(['add-child', 'add-sibling', 'remove', 'move']);
+defineEmits(['add-child', 'add-sibling', 'remove', 'move', 'click-node']);
 </script>
 
 <style scoped>

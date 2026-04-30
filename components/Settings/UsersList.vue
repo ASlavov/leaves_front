@@ -28,284 +28,25 @@
           {{ $t('settings.addUser') }}
         </button>
       </div>
-      <div
-        class="hidden lg:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-      >
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-2">
-          {{ $t('settings.filters') }}
-        </div>
-
-        <!-- First Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.firstName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.firstName')"
-            />
-            <button
-              v-if="filters.firstName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.firstName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Last Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.lastName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.lastName')"
-            />
-            <button
-              v-if="filters.lastName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.lastName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Title Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.job_title"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.jobTitle')"
-            />
-            <button
-              v-if="filters.job_title"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.job_title = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Department Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full sm:-ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.department"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.group')"
-            />
-            <button
-              v-if="filters.department"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.department = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-3 lg:justify-self-end items-center">
-          <button
-            v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
-            class="text-red-500 text-sm"
-            @click="
-              filters.firstName = '';
-              filters.lastName = '';
-              filters.job_title = '';
-              filters.department = '';
-            "
-          >
-            &times; {{ $t('settings.clearFilters') }}
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="hidden lg:grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-      >
-        <div class="col-span-2 shrink-0">
-          {{ $t('settings.sortBy') }}
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('firstName')"
-        >
-          {{ $t('settings.firstName') }}
-          <span v-if="currentSortKey === 'firstName'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- Last Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('lastName')"
-        >
-          {{ $t('settings.lastName') }}
-          <span v-if="currentSortKey === 'lastName'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('job_title')"
-        >
-          {{ $t('settings.jobTitle') }}
-          <span v-if="currentSortKey === 'job_title'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('department')"
-        >
-          {{ $t('settings.group') }}
-          <span v-if="currentSortKey === 'department'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-      </div>
+      <SharedSettingsFilterBar
+        v-model="filters"
+        class="hidden lg:block"
+        :filter-fields="[
+          { key: 'firstName', placeholder: $t('settings.firstName') },
+          { key: 'lastName', placeholder: $t('settings.lastName') },
+          { key: 'job_title', placeholder: $t('settings.jobTitle') },
+          { key: 'department', placeholder: $t('settings.group') },
+        ]"
+        :sort-fields="[
+          { key: 'firstName', label: $t('settings.firstName') },
+          { key: 'lastName', label: $t('settings.lastName') },
+          { key: 'job_title', label: $t('settings.jobTitle') },
+          { key: 'department', label: $t('settings.group') },
+        ]"
+        :sort-key="currentSortKey"
+        :sort-asc="sortDirection"
+        @sort="sortBy"
+      />
       <div class="relative -m-4 p-4 mt-0">
         <div
           ref="scrollContainer"
@@ -314,7 +55,7 @@
           <div
             v-for="user in filteredUsers"
             :key="user.id"
-            class="grid gap-x-[10px] gap-y-1 grid-cols-[auto_1fr] lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]"
+            class="grid gap-x-[10px] gap-y-1 grid-cols-[auto_1fr] lg:grid-cols-12 items-center border border-gray-200 dark:border-neutral-700 rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-700/50 text-gray-500 dark:text-neutral-300"
           >
             <div
               class="row-span-4 lg:row-span-1 mr-4 flex items-center justify-start self-center col-span-1 lg:col-span-1"

@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3'; // Import cookie helper from h3
+import { defineEventHandler, readBody, getHeader } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 import { proxyError } from '~/server/utils/proxyError';
 
@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
   /*const sessionId = getCookie(event, 'session_id') || '';
     const { token } = getSession(sessionId);*/
   const { requestingUserId, token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({
@@ -32,7 +33,8 @@ export default defineEventHandler(async (event) => {
           requesting_user_id: requestingUserId,
         },
         headers: {
-          Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+          Authorization: `Bearer ${token}`,
+          Cookie: cookieHeader, // Use the token in the Authorization header
         },
       },
     );

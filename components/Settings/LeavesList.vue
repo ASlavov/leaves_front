@@ -26,112 +26,15 @@
           {{ $t('settings.addNewLeaves') }}
         </button>
       </div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-      >
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          {{ $t('settings.filters') }}
-        </div>
-
-        <!-- First Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.firstName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.firstName')"
-            />
-            <button
-              v-if="filters.firstName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.firstName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Last Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.lastName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.lastName')"
-            />
-            <button
-              v-if="filters.lastName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.lastName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Title Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.job_title"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.jobTitle')"
-            />
-            <button
-              v-if="filters.job_title"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.job_title = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Department Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 transition-all hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.department"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.group')"
-            />
-            <button
-              v-if="filters.department"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.department = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-3 lg:justify-self-end items-center">
-          <button
-            v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
-            class="text-red-500"
-            @click="
-              filters.firstName = '';
-              filters.lastName = '';
-              filters.job_title = '';
-              filters.department = '';
-            "
-          >
-            &times; {{ $t('settings.clearFilters') }}
-          </button>
-        </div>
-      </div>
+      <SharedSettingsFilterBar
+        v-model="filters"
+        :filter-fields="[
+          { key: 'firstName', placeholder: $t('settings.firstName') },
+          { key: 'lastName', placeholder: $t('settings.lastName') },
+          { key: 'job_title', placeholder: $t('settings.jobTitle') },
+          { key: 'department', placeholder: $t('settings.group') },
+        ]"
+      />
 
       <div class="relative -m-4 p-4 mt-0">
         <div
@@ -141,7 +44,7 @@
           <div
             v-for="user in filteredUsers"
             :key="user.id"
-            class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080] cursor-pointer"
+            class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-gray-200 dark:border-neutral-700 rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-700/50 text-gray-500 dark:text-neutral-300 cursor-pointer"
             @click="toggleLeaves(user.id)"
           >
             <div class="mr-4 flex items-center justify-start col-span-1">

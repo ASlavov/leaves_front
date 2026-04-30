@@ -53,6 +53,21 @@
           ></textarea>
         </div>
 
+        <div class="flex items-center gap-2 pt-[4px]">
+          <input
+            id="skip-wallet-toggle"
+            v-model="payload.skipWalletDeduction"
+            type="checkbox"
+            class="h-4 w-4"
+          />
+          <label
+            for="skip-wallet-toggle"
+            class="text-[14px] text-gray-700 dark:text-gray-300 cursor-pointer"
+          >
+            {{ $t('leaves.admin.skipWalletDeduction') }}
+          </label>
+        </div>
+
         <div class="flex justify-end gap-[10px] pt-[8px]">
           <button
             type="button"
@@ -84,13 +99,23 @@ const { t } = useI18n();
 const { $toast } = useNuxtApp() as any;
 const { label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
 
-const props = defineProps({ modelValue: Boolean });
+const props = defineProps({ modelValue: Boolean, initialDate: { type: String, default: '' } });
 const emit = defineEmits(['update:modelValue', 'saved']);
 
 const isOpen = computed({
   get: () => props.modelValue,
   set: (val) => emit('update:modelValue', val),
 });
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val && props.initialDate && !payload.value.startDate) {
+      payload.value.startDate = props.initialDate;
+      payload.value.endDate = props.initialDate;
+    }
+  },
+);
 
 const centralStore = useCentralStore();
 const adminStore = useAdminStore();
@@ -105,6 +130,7 @@ const payload = ref({
   startDate: '',
   endDate: '',
   administrativeReason: '',
+  skipWalletDeduction: false,
 });
 
 const userOptions = computed(() =>
@@ -133,6 +159,7 @@ const submitForm = async () => {
         startDate: payload.value.startDate,
         endDate: payload.value.endDate,
         administrativeReason: payload.value.administrativeReason,
+        skipWalletDeduction: payload.value.skipWalletDeduction,
       }),
     ),
   );
@@ -149,6 +176,7 @@ const submitForm = async () => {
       startDate: '',
       endDate: '',
       administrativeReason: '',
+      skipWalletDeduction: false,
     };
   }
 };

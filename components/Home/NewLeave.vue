@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="!hideButton"
     class="bg-red-600 text-white rounded-full py-2 px-4 hover:bg-red-600 focus:outline-none"
     @click="openModal"
   >
@@ -232,6 +233,11 @@ const { t } = useI18n();
 const datePickerStart = ref<HTMLInputElement | null>(null);
 const datePickerEnd = ref<HTMLInputElement | null>(null);
 
+const props = defineProps({
+  initialDate: { type: String, default: '' },
+  hideButton: { type: Boolean, default: false },
+});
+
 const centralStore = useCentralStore();
 const leavesStore = centralStore.leavesStore;
 const leavesData = computed<AvailableDaysEntry[]>(
@@ -449,11 +455,17 @@ watch(leaveType, (newLeaveType, oldLeaveType) => {
 
 const openModal = () => {
   isModalOpen.value = true;
+  if (props.initialDate) {
+    startDate.value = props.initialDate;
+    endDate.value = props.initialDate;
+  }
   nextTick(() => {
     // Initialize the date pickers only when the modal is first opened
     initializeDatePickers();
   });
 };
+
+defineExpose({ openModal });
 
 const closeModal = () => {
   isModalOpen.value = false;

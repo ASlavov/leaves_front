@@ -1,10 +1,11 @@
-import { defineEventHandler, getRouterParam } from 'h3';
+import { defineEventHandler, getRouterParam, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const id = getRouterParam(event, 'id');
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
   try {
     const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
     });
     return response;
   } catch (error: any) {

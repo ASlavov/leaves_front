@@ -81,6 +81,14 @@
           </svg>
           {{ generating ? $t('reports.export.generating') : $t('reports.export.generate') }}
         </button>
+        <button
+          type="button"
+          :disabled="!canGenerate || generating"
+          class="inline-flex items-center justify-center py-[10px] px-[20px] rounded-[70px] bg-green-600 text-white text-[14px] font-bold hover:bg-green-700 focus:outline-none"
+          @click="generateCsv"
+        >
+          Export CSV
+        </button>
       </div>
     </div>
   </SharedBaseModal>
@@ -199,6 +207,71 @@ const generate = async () => {
   } catch (err) {
     console.error('Report generation failed:', err);
     $toast.error(t('reports.export.generateFailed'));
+  } finally {
+    generating.value = false;
+  }
+};
+
+const generateCsv = async () => {
+  if (!canGenerate.value) return;
+  generating.value = true;
+  try {
+    const response: LeaveBalancesResponse = await getLeaveBalancesComposable(
+      props.year,
+      selectedUserIds.value,
+      selectedLeaveTypeIds.value,
+    );
+
+    if (!response?.rows) {
+      throw new Error('Malformed response');
+    }
+
+    const metrics = selectedMetrics.value.map(String);
+    const userMap = new Map(response.users.map((u) => [String(u.id), u]));
+    const typeMap = new Map(response.leave_types.map((lt) => [String(lt.id), lt]));
+    const rowMap = new Map<string, (typeof response.rows)[number]>();
+    for (const r of response.rows) {
+      rowMap.set(`${r.user_id}:${r.leave_type_id}`, r);
+    }
+
+    const userIds = selectedUserIds.value.map(String).filter((id) => userMap.has(id));
+    const typeIds = selectedLeaveTypeIds.value.map(String).filter((id) => typeMap.has(id));
+
+    // CSV Header
+    let csvContent = 'Employee';
+    for (const tid of typeIds) {
+      const typeName = typeMap.get(tid)!.name;
+      for (const m of metrics) {
+        csvContent += `,"${typeName} (${metricLabel(m)})"`;
+      }
+    }
+    csvContent += '\n';
+
+    // CSV Body
+    for (const uid of userIds) {
+      csvContent += `"${userMap.get(uid)!.name}"`;
+      for (const tid of typeIds) {
+        const row = rowMap.get(`${uid}:${tid}`);
+        const remaining = row ? Number(row.remaining) : 0;
+        const taken = row ? Number(row.taken) : 0;
+        for (const m of metrics) {
+          const value = m === 'remaining' ? remaining : taken;
+          csvContent += `,${fmt(value)}`;
+        }
+      }
+      csvContent += '\n';
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `leave-report-${props.year}-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+
+    isOpen.value = false;
+  } catch (err) {
+    console.error('CSV generation failed:', err);
+    $toast.error('Failed to generate CSV');
   } finally {
     generating.value = false;
   }

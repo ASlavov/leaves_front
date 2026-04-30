@@ -10,13 +10,15 @@ export interface ReportSummary {
 
 export const getReportSummaryComposable = (
   year: number,
-  deptIds: number[] = [],
-  leaveTypeIds: number[] = [],
+  deptIds: (number | string)[] = [],
+  leaveTypeIds: (number | string)[] = [],
+  userIds: (number | string)[] = [],
 ) => {
   const qs = new URLSearchParams();
   qs.set('year', String(year));
   deptIds.forEach((d) => qs.append('dept_ids', String(d)));
   leaveTypeIds.forEach((t) => qs.append('leave_type_ids', String(t)));
+  userIds.forEach((u) => qs.append('user_ids', String(u)));
   return retryFetch<ReportSummary>(`/api/reports/summary?${qs.toString()}`, { method: 'GET' });
 };
 

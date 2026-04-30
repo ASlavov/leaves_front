@@ -51,6 +51,14 @@ export default async function retryFetch<T = unknown>(
         throw error; // Don't retry client errors
       }
 
+      // Never retry non-idempotent methods when the server responded — a 500 on a
+      // POST/PATCH means the request reached the server, so retrying risks duplicates.
+      // Only retry if there is no status (pure network failure).
+      const method = ((options.method as string) || 'GET').toUpperCase();
+      if (['POST', 'PATCH'].includes(method) && status) {
+        throw error;
+      }
+
       // Only retry on network errors or 500s. Rethrow if it's the last attempt.
       if (i === retries - 1) {
         throw error;

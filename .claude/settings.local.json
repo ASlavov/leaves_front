@@ -57,7 +57,10 @@
       "Bash(php -l intelligence-back/app/Http/Controllers/Api/ReportsController.php)",
       "Bash(php -l intelligence-back/routes/api.php)",
       "WebFetch(domain:ekoopmans.github.io)",
-      "Bash(xargs ls *)"
+      "Bash(xargs ls *)",
+      "Bash(echo \"exit: $?\")",
+      "PowerShell(Head 20 *)",
+      "Bash(python3 *)"
     ]
   }
 }

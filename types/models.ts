@@ -33,6 +33,7 @@ export interface User {
   work_schedule?: number[] | null;
   hire_date?: string | null;
   termination_date?: string | null;
+  ical_token?: string;
   leaves?: Leave[];
   [key: string]: any;
 }
@@ -80,6 +81,7 @@ export interface LeaveType {
   hours_per_day?: number;
   attachment_required_after_days?: number | null;
   auto_approve?: boolean;
+  monthly_allocation_days?: number | null;
   deleted_at?: string | null;
   [key: string]: any;
 }

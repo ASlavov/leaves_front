@@ -49,7 +49,7 @@
           <h3 class="text-sm font-semibold dark:text-white">{{ $t('notifications.title') }}</h3>
           <button
             v-if="unreadCount > 0"
-            class="text-[10px] uppercase font-bold text-primary-600 hover:text-primary-700 dark:text-primary-400"
+            class="text-[10px] uppercase font-bold text-red-500 hover:text-red-600 dark:text-red-500"
             @click="markAllAsRead"
           >
             {{ $t('notifications.markAllRead') }}
@@ -64,7 +64,7 @@
             class="flex-1 py-3 text-xs font-medium uppercase transition-colors relative"
             :class="
               activeTab === tab
-                ? 'text-primary-600 dark:text-primary-400'
+                ? 'text-red-500 dark:text-red-500'
                 : 'text-gray-500 hover:text-gray-700 dark:text-neutral-400'
             "
             @click="activeTab = tab"

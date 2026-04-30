@@ -41,7 +41,7 @@
         <LeavesYearlyLeaves
           v-else-if="
             section === 'pending_actions' &&
-            centralStore.permissionsStore.can('profile_leave_balance', 'accept_leave')
+            centralStore.permissionsStore.can('reports', 'view_pending_approvals')
           "
           :is-small-component="true"
           :leaves-number="3"

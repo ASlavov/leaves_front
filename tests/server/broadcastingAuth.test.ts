@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('$fetch', mockFetch);
@@ -6,52 +6,62 @@ vi.stubGlobal('useRuntimeConfig', () => ({
   apiBase: 'http://test-api',
   public: { apiBase: 'http://test-api' },
 }));
-vi.stubGlobal('readBody', vi.fn());
+
+// readRawBody is explicitly imported from h3 in the handler, so vi.stubGlobal
+// cannot intercept it. We must mock the h3 module itself, preserving all other
+// exports (getHeader, createError, defineEventHandler, etc.) via importOriginal.
+// vi.hoisted() is required because vi.mock factories are hoisted above variable
+// declarations — without it, mockReadRawBody would be uninitialized when the
+// factory executes.
+const mockReadRawBody = vi.hoisted(() => vi.fn());
+vi.mock('h3', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('h3')>();
+  return { ...actual, readRawBody: mockReadRawBody };
+});
 
 import handler from '~/server/api/broadcasting/auth.post';
 
-const withToken = { context: { token: 'ws-auth-token' } } as any;
+// withToken includes node.req.headers so that getHeader() does not throw when
+// the handler reads the Cookie header after the auth check passes.
+const withToken = { context: { token: 'ws-auth-token' }, node: { req: { headers: {} } } } as any;
 const withoutToken = { context: {} } as any;
+
+const RAW_BODY = 'socket_id=123.456&channel_name=private-App.Models.User.42';
 
 describe('Server: POST /api/broadcasting/auth', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (globalThis as any).readBody = vi.fn().mockResolvedValue({
-      socket_id: '123.456',
-      channel_name: 'private-App.Models.User.42',
-    });
+    mockReadRawBody.mockResolvedValue(RAW_BODY);
   });
 
   it('throws 403 when token is absent', async () => {
     await expect(handler(withoutToken)).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('reads the request body', async () => {
+  it('reads the raw request body', async () => {
     mockFetch.mockResolvedValueOnce({ auth: 'signed-token' });
 
     await handler(withToken);
 
-    expect((globalThis as any).readBody).toHaveBeenCalledWith(withToken);
+    expect(mockReadRawBody).toHaveBeenCalledWith(withToken);
   });
 
-  it('proxies to the broadcasting/auth path with Authorization and JSON headers', async () => {
-    const body = { socket_id: '123.456', channel_name: 'private-App.Models.User.42' };
-    (globalThis as any).readBody = vi.fn().mockResolvedValue(body);
+  it('proxies to the broadcasting/auth path with correct headers and raw body', async () => {
     mockFetch.mockResolvedValueOnce({ auth: 'signed' });
 
     await handler(withToken);
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.stringContaining('/broadcasting/auth'),
-      {
+      expect.objectContaining({
         method: 'POST',
-        headers: {
+        headers: expect.objectContaining({
           Authorization: 'Bearer ws-auth-token',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
           Accept: 'application/json',
-        },
-        body,
-      },
+        }),
+        body: RAW_BODY,
+      }),
     );
   });
 

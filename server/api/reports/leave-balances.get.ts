@@ -1,9 +1,10 @@
-import { defineEventHandler, getQuery } from 'h3';
+import { defineEventHandler, getQuery, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const q = getQuery(event);
 
   const params = new URLSearchParams();
@@ -24,6 +25,7 @@ export default defineEventHandler(async (event) => {
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader,
         'X-CSRF-TOKEN': config.apiSecret,
       },
     },

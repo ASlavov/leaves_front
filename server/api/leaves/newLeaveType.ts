@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readBody, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const body = await readBody(event);
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -25,6 +26,8 @@ export default defineEventHandler(async (event) => {
       isHourly,
       hoursPerDay,
       attachmentRequiredAfterDays,
+      autoApprove,
+      monthlyAllocationDays,
     } = body;
 
     const response = await $fetch(`${config.public.apiBase}${config.public.leaves.newLeaveType}`, {
@@ -42,8 +45,10 @@ export default defineEventHandler(async (event) => {
         is_hourly: isHourly ?? false,
         hours_per_day: hoursPerDay ?? 8,
         attachment_required_after_days: attachmentRequiredAfterDays ?? null,
+        auto_approve: autoApprove ?? false,
+        monthly_allocation_days: monthlyAllocationDays ?? null,
       },
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
     });
 
     return response;

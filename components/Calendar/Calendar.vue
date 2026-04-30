@@ -72,9 +72,48 @@
           @click="setEventColor(calendarEvent)"
         >
           {{ calendarEvent.title }}
+          <span
+            v-if="calendarEvent.extendedProps.status === 'approved'"
+            class="relative ml-1 text-green-500 text-[10px] font-bold w-[20px] h-[20px] inline-flex items-center justify-center /* The Background Layer */ before:absolute before:inset-0 before:rounded-full before:bg-gray-300 before:mix-blend-multiply"
+            >✓</span
+          >
+          <span
+            v-else-if="calendarEvent.extendedProps.status === 'pending'"
+            class="relative ml-1 text-green-500 text-[10px] font-bold w-[20px] h-[20px] inline-flex items-center justify-center /* The Background Layer */ before:absolute before:inset-0 before:rounded-full before:bg-gray-300 before:mix-blend-multiply"
+            >⌛</span
+          >
         </div>
       </template>
     </ScheduleXCalendar>
+    <CalendarEventModal
+      v-if="selectedEvent"
+      :event="selectedEvent"
+      @close="selectedEvent = null"
+      @refresh="leavesStore.getAllUsers()"
+    />
+    <NewLeave ref="newLeaveRef" :hide-button="true" :initial-date="prefilledStartDate" />
+    <AdminLeaveModal
+      v-model="adminLeaveModalOpen"
+      :initial-date="prefilledStartDate"
+      @saved="leavesStore.getAllUsers()"
+    />
+
+    <BaseModal v-model="showChoiceModal" :title="$t('leaves.newLeaveRequest')">
+      <div class="p-6 flex flex-col gap-4">
+        <button
+          class="py-3 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+          @click="openUserLeave"
+        >
+          {{ $t('leaves.newLeaveRequest') }}
+        </button>
+        <button
+          class="py-3 px-4 border border-gray-300 hover:bg-gray-50 dark:border-neutral-600 dark:hover:bg-neutral-700 rounded-lg font-medium transition-colors dark:text-white"
+          @click="openAdminLeave"
+        >
+          {{ $t('leaves.admin.recordBtn') }}
+        </button>
+      </div>
+    </BaseModal>
   </div>
 
   <div
@@ -104,7 +143,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { ScheduleXCalendar } from '@schedule-x/vue';
 import {
   createCalendar,
@@ -115,9 +154,12 @@ import {
   viewMonthGrid,
 } from '@schedule-x/calendar';
 import { createEventsServicePlugin } from '@schedule-x/events-service';
-import { createEventModalPlugin } from '@schedule-x/event-modal';
 import '@schedule-x/theme-default/dist/index.css';
 import { useCentralStore } from '@/stores/centralStore';
+import CalendarEventModal from './CalendarEventModal.vue';
+import NewLeave from '~/components/Home/NewLeave.vue';
+import AdminLeaveModal from '~/components/Leaves/AdminLeaveModal.vue';
+import BaseModal from '~/components/shared/BaseModal.vue';
 import { format } from 'date-fns';
 import { useI18n } from 'vue-i18n';
 import { getTypeColor } from '@/utils/leaveColors';
@@ -128,10 +170,40 @@ const centralStore = useCentralStore();
 const userStore = centralStore.userStore;
 const departmentsStore = centralStore.departmentsStore;
 const leavesStore = centralStore.leavesStore;
+const permissionsStore = centralStore.permissionsStore;
 
 const selectedName = ref(null);
 const selectedDepartment = ref(null);
 const selectedLeaveType = ref(null);
+const selectedEvent = ref(null);
+
+const prefilledStartDate = ref('');
+const showChoiceModal = ref(false);
+const adminLeaveModalOpen = ref(false);
+const newLeaveRef = ref(null);
+
+const isAdminOrHr = computed(() =>
+  permissionsStore.can('profile_leave_balance', 'record_admin_leave'),
+);
+
+const handleDateClick = (dateString) => {
+  prefilledStartDate.value = dateString;
+  if (isAdminOrHr.value) {
+    showChoiceModal.value = true;
+  } else {
+    if (newLeaveRef.value) newLeaveRef.value.openModal();
+  }
+};
+
+const openUserLeave = () => {
+  showChoiceModal.value = false;
+  if (newLeaveRef.value) newLeaveRef.value.openModal();
+};
+
+const openAdminLeave = () => {
+  showChoiceModal.value = false;
+  adminLeaveModalOpen.value = true;
+};
 
 const displayedLeaveTypes = ref([]);
 // Clear Filters Function
@@ -154,7 +226,7 @@ const nameOptions = computed(() =>
 );
 
 const calendarApp = shallowRef(null);
-const eventsServicePlugin = createEventsServicePlugin();
+let eventsServicePlugin = createEventsServicePlugin();
 
 // Removed local colorList and getTypeColor - now using utils/leaveColors.ts
 
@@ -186,6 +258,7 @@ function setEventColor(calendarEvent) {
   const root = document.documentElement;
 
   root.style.setProperty('--custom-event-modal-color', color);
+  selectedEvent.value = calendarEvent;
 }
 
 const leavesData = computed(() => {
@@ -269,6 +342,7 @@ const events = computed(() => {
           extendedProps: {
             leaveTypeId: leave.leave_type_id || 0,
             status: leave.status || 'unknown',
+            userId: leave.userId,
           },
         };
       })
@@ -288,61 +362,58 @@ const localeComputed = computed(() => {
 });
 
 function initializeCalendar() {
-  if (calendarApp.value) {
-    calendarApp.value.destroy();
-  }
+  eventsServicePlugin = createEventsServicePlugin();
   calendarApp.value = createCalendar({
     selectedDate: format(new Date(), 'yyyy-MM-dd'),
     views: [createViewDay(), createViewWeek(), createViewMonthAgenda(), createViewMonthGrid()],
-    plugins: [eventsServicePlugin, createEventModalPlugin()],
+    plugins: [eventsServicePlugin],
     locale: localeComputed.value,
     defaultView: viewMonthGrid.name,
+    theme: theme.value === 'dark' ? 'dark' : 'light',
     monthGridOptions: {
       nEventsPerDay: 4,
     },
+    callbacks: {
+      onClickDate(dateString) {
+        handleDateClick(dateString);
+      },
+    },
   });
-
-  // Set initial events
   eventsServicePlugin.set(events.value);
-
-  // Update events when they change
-  watch(
-    events,
-    (newEvents) => {
-      console.log('Updating events:', newEvents);
-      if (calendarApp.value) {
-        eventsServicePlugin.set(newEvents || []);
-      }
-    },
-    { immediate: true },
-  );
-
-  // Handle theme changes
-  watch(
-    theme,
-    (newVal) => {
-      if (calendarApp.value) {
-        calendarApp.value.setTheme(newVal === 'dark' ? 'dark' : 'light');
-      }
-    },
-    { immediate: true },
-  );
+  calendarApp.value.setTheme(theme.value === 'dark' ? 'dark' : 'light');
 }
 
-// Watch for locale changes to re-initialize calendar
+// Single events watcher — runs once, always references the current eventsServicePlugin
+watch(events, (newEvents) => {
+  if (calendarApp.value) {
+    eventsServicePlugin.set(newEvents || []);
+  }
+});
+
+// Single theme watcher — runs once
 watch(
-  localeComputed,
-  () => {
+  theme,
+  (newVal) => {
     if (calendarApp.value) {
-      initializeCalendar();
+      calendarApp.value.setTheme(newVal === 'dark' ? 'dark' : 'light');
     }
   },
   { immediate: true },
 );
 
+// Locale change: null calendarApp so v-if unmounts ScheduleXCalendar cleanly,
+// then recreate with a fresh plugin on the next tick
+watch(localeComputed, async () => {
+  if (calendarApp.value) {
+    calendarApp.value.destroy();
+    calendarApp.value = null;
+    await nextTick();
+  }
+  initializeCalendar();
+});
+
 onMounted(async () => {
-  // Wait for data to load
-  await leavesStore.getAllUsers(); // Replace with actual data fetching method
+  await leavesStore.getAllUsers();
   await leavesStore.getLeavesTypes();
   await userStore.getAllUsers();
 
@@ -404,5 +475,8 @@ div:has(> .leave-entry) {
 .sx__has-icon .sx__event-modal__color-icon {
   /*Override their default background color*/
   background-color: var(--custom-event-modal-color) !important;
+}
+.sx__month-grid-day {
+  cursor: pointer;
 }
 </style>

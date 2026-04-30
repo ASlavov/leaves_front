@@ -1,10 +1,11 @@
-import { defineEventHandler } from 'h3'; // Import cookie helper from h3
+import { defineEventHandler, getHeader } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
 
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({
@@ -18,7 +19,8 @@ export default defineEventHandler(async (event) => {
     const response = await $fetch(`${config.public.apiBase}${config.public.departments.getAll}/`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+        Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader, // Use the token in the Authorization header
       },
     });
 

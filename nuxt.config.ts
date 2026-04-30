@@ -155,6 +155,7 @@ export default defineNuxtConfig({
       },
       companySettings: {
         workWeek: '/company-settings/work-week',
+        documentSources: '/company-settings/document-sources',
       },
       invitations: {
         list: '/invitations',

@@ -1,10 +1,11 @@
-import { defineEventHandler, createError, readBody } from 'h3';
+import { defineEventHandler, createError, readBody, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
         user_id_from: body.user_id_from,
         user_id_to: body.user_id_to,
       },
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
     });
   } catch (error: any) {
     throw proxyError(error);

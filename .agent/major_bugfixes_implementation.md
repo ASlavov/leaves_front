@@ -1563,7 +1563,7 @@ Register in `stores/centralStore.ts` — import, initialize, expose as `reportsS
         </div>
         <button
           type="button"
-          class="h-[40px] px-[16px] rounded-[8px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
+          class="h-[46px] px-[16px] rounded-[8px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
           @click="customizeOpen = true"
         >
           {{ $t('reports.customize') }}
@@ -1572,9 +1572,9 @@ Register in `stores/centralStore.ts` — import, initialize, expose as `reportsS
           v-if="permissionsStore.can('reports', 'export')"
           type="button"
           class="h-[40px] px-[16px] rounded-[8px] bg-[#EA021A] text-white text-[14px] font-bold hover:bg-[#EA021A]/90 focus:outline-none"
-          @click="exportPdf"
+          @click="exportReport"
         >
-          {{ $t('reports.exportPdf') }}
+          {{ $t('reports.exportReport') }}
         </button>
       </div>
 
@@ -1698,7 +1698,7 @@ const fetchData = () => {
 
 watch([yearStr, selectedDeptIds, selectedTypeIds], fetchData, { immediate: true });
 
-const exportPdf = async () => {
+const exportReport = async () => {
   if (!reportContainerRef.value) return;
   const html2pdf = (await import('html2pdf.js')).default;
   html2pdf()
@@ -1802,7 +1802,7 @@ Build sibling components with the same shell but different chart types:
   "allLeaveTypes": "All leave types",
   "customize": "Customize",
   "selectWidgets": "Select widgets",
-  "exportPdf": "Export PDF",
+  "exportReport": "Export PDF",
   "widgets": {
     "leavesByMonth": "Leaves by month",
     "leavesByDepartment": "Leaves by department",

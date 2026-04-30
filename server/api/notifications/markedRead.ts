@@ -1,9 +1,10 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readBody, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const body = await readBody(event);
   const { notificationId } = body;
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
+          Cookie: cookieHeader,
         },
       },
     );

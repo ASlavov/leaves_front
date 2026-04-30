@@ -355,6 +355,31 @@
                   {{ $t('settings.workScheduleNote') }}
                 </p>
               </div>
+              <div
+                v-if="formIcalToken"
+                class="max-w-lg lg:col-span-2 mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800"
+              >
+                <h4 class="text-sm font-bold text-blue-900 dark:text-blue-300 mb-2">
+                  Calendar Sync (iCal)
+                </h4>
+                <p class="text-[12px] text-blue-800 dark:text-blue-400 mb-3">
+                  Copy this link to your calendar app (Google Calendar, Outlook, Apple Calendar) to
+                  sync your approved leaves.
+                </p>
+                <div class="flex gap-2">
+                  <input
+                    :value="icalUrl"
+                    readonly
+                    class="flex-1 text-[12px] bg-white dark:bg-neutral-800 border border-blue-200 dark:border-blue-700 rounded px-3 py-2 outline-none"
+                  />
+                  <button
+                    class="px-3 py-2 bg-blue-600 text-white text-[12px] font-bold rounded hover:bg-blue-700 transition"
+                    @click="copyIcalUrl"
+                  >
+                    {{ copied ? 'Copied!' : 'Copy' }}
+                  </button>
+                </div>
+              </div>
               <div class="info-actions pt-10 pb-5 flex flex-wrap items-center gap-4 lg:col-span-2">
                 <button :class="submitBtnClass" @click="submitForm">
                   {{ isNewUser ? $t('settings.addUser') : $t('settings.saveChanges') }}
@@ -441,11 +466,26 @@ const formPhoto = ref<string | null>(null);
 const formSelectedDepartmentId = ref<string | number>('');
 const formHireDate = ref('');
 const formWorkSchedule = ref<number[]>([]);
+const formIcalToken = ref('');
+const copied = ref(false);
 
 // Computed properties for avatar initials
 const firstNameInitial = computed(() => formFirstName.value.charAt(0).toUpperCase() || '');
 const lastNameInitial = computed(() => formLastName.value.charAt(0).toUpperCase() || '');
 const userPhoto = computed(() => formPhoto.value);
+
+const icalUrl = computed(() => {
+  if (!formIcalToken.value) return '';
+  const config = useRuntimeConfig();
+  const base = config.public.apiBase || '';
+  return `${base.replace(/\/$/, '')}/api/leaves/ical/${formIcalToken.value}`;
+});
+
+const copyIcalUrl = () => {
+  navigator.clipboard.writeText(icalUrl.value);
+  copied.value = true;
+  setTimeout(() => (copied.value = false), 2000);
+};
 
 // Lists
 const departments = computed(() => departmentsStore.departmentsData);
@@ -535,6 +575,7 @@ function initializeFormFields(userInfo: User) {
   formPhoto.value = userInfo.profile?.profile_image_base64 || null;
   formHireDate.value = userInfo.hire_date || '';
   formWorkSchedule.value = userInfo.work_schedule || [];
+  formIcalToken.value = userInfo.ical_token || '';
 }
 
 const submitForm = async () => {

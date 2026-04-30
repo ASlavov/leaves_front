@@ -1,9 +1,10 @@
-import { defineEventHandler, getQuery } from 'h3';
+import { defineEventHandler, getQuery, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const query = getQuery(event);
 
   if (!token) {
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
   try {
     const response = await $fetch(`${config.public.apiBase}${config.public.documents.base}`, {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
       query,
     });
     return response;

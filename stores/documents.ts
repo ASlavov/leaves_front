@@ -16,7 +16,9 @@ export const useDocumentsStore = defineStore('documentsStore', () => {
   const { t } = useI18n();
 
   const companyDocuments = computed(() => documents.value.filter((d) => d.target_type === 'all'));
-  const personalDocuments = computed(() => documents.value.filter((d) => d.target_type === 'user'));
+  const personalDocuments = computed(() =>
+    documents.value.filter((d) => d.target_type === 'restricted'),
+  );
 
   const reset = () => {
     documents.value = [];

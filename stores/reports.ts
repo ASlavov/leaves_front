@@ -9,11 +9,16 @@ export const useReportsStore = defineStore('reportsStore', () => {
   const error = ref<string | null>(null);
   const { t } = useI18n();
 
-  const fetchSummary = async (year: number, deptIds: number[] = [], typeIds: number[] = []) => {
+  const fetchSummary = async (
+    year: number,
+    deptIds: (number | string)[] = [],
+    typeIds: (number | string)[] = [],
+    userIds: (number | string)[] = [],
+  ) => {
     loading.value = true;
     error.value = null;
     try {
-      summary.value = await getReportSummaryComposable(year, deptIds, typeIds);
+      summary.value = await getReportSummaryComposable(year, deptIds, typeIds, userIds);
     } catch (err) {
       error.value = t('errors.reports.fetchFailed');
       throw err;

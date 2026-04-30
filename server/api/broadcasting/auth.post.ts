@@ -1,9 +1,10 @@
 // server/api/broadcasting/auth.post.ts
-import { readRawBody } from 'h3';
+import { readRawBody, getHeader } from 'h3';
 
 export default defineEventHandler(async (event) => {
   const { token } = event.context;
   if (!token) throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   const config = useRuntimeConfig();
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
+      Cookie: cookieHeader,
       'Content-Type': 'application/x-www-form-urlencoded',
       Accept: 'application/json',
     },

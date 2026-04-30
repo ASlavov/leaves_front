@@ -8,7 +8,7 @@
     ></label>
     <div class="cursor-pointer" @click="toggleDropdown">
       <div
-        class="h-[40px] py-[8px] px-[16px] flex items-center justify-between w-full border border-[#DFEAF2] rounded-[8px] bg-white text-[14px] transition-all hover:border-gray-400 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-400 dark:hover:border-neutral-400"
+        class="h-[46px] py-[8px] px-[16px] flex items-center justify-between w-full border border-[#DFEAF2] rounded-[8px] bg-white text-[14px] transition-all hover:border-gray-400 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-400 dark:hover:border-neutral-400"
       >
         <div>
           <span v-if="selectedOption" class="font-medium">{{ selectedOption.name }}</span>

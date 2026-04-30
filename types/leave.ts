@@ -62,6 +62,8 @@ export interface UpdateLeaveTypePayload {
   isHourly?: boolean;
   hoursPerDay?: number;
   attachmentRequiredAfterDays?: number | null;
+  autoApprove?: boolean;
+  monthlyAllocationDays?: number | null;
 }
 
 export interface AdminLeavePayload {

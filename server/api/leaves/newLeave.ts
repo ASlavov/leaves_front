@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, readBody, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   const { requestingUserId, token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   if (!token) {
     throw createError({
       statusCode: 403,
@@ -32,7 +33,8 @@ export default defineEventHandler(async (event) => {
         end_time: body.endTime ?? null,
       },
       headers: {
-        Authorization: `Bearer ${token}`, // Use the token in the Authorization header
+        Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader, // Use the token in the Authorization header
       },
     });
     return response;

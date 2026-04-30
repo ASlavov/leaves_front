@@ -14,6 +14,7 @@ import { useInvitationsStore } from '~/stores/invitations';
 import { useOrgChartStore } from '~/stores/orgChart';
 import { useDocumentsStore } from '~/stores/documents';
 import { useDashboardPreferencesStore } from '~/stores/dashboardPreferences';
+import { useSettingsStore } from '~/stores/settings';
 
 export const useCentralStore = defineStore('centralStore', () => {
   const authStore = useAuthStore();
@@ -30,6 +31,7 @@ export const useCentralStore = defineStore('centralStore', () => {
   const orgChartStore = useOrgChartStore();
   const documentsStore = useDocumentsStore();
   const dashboardPreferencesStore = useDashboardPreferencesStore();
+  const settingsStore = useSettingsStore();
 
   const error = ref<string | null>(null);
   const loading = computed(
@@ -68,6 +70,7 @@ export const useCentralStore = defineStore('centralStore', () => {
           orgChartStore.fetchOrgChart(),
           documentsStore.fetchDocuments(),
           dashboardPreferencesStore.fetchPreferences(),
+          settingsStore.fetchDocumentSources(),
         ]);
 
         initialized.value = true;
@@ -97,6 +100,7 @@ export const useCentralStore = defineStore('centralStore', () => {
       documentsStore.reset();
       reportsStore.reset();
       dashboardPreferencesStore.reset();
+      settingsStore.reset();
       initialized.value = false;
       await authStore.logout();
     } catch {
@@ -139,6 +143,7 @@ export const useCentralStore = defineStore('centralStore', () => {
     dashboardPreferencesStore,
     dynamicProxyHandler,
   );
+  const proxiedSettingsStore = new Proxy(settingsStore, dynamicProxyHandler);
 
   return {
     error,
@@ -160,5 +165,6 @@ export const useCentralStore = defineStore('centralStore', () => {
     orgChartStore: proxiedOrgChartStore,
     documentsStore: proxiedDocumentsStore,
     dashboardPreferencesStore: proxiedDashboardPreferencesStore,
+    settingsStore: proxiedSettingsStore,
   };
 });

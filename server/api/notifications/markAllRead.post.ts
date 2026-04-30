@@ -1,14 +1,19 @@
+import { getHeader } from 'h3';
 // server/api/notifications/markAllRead.post.ts
 export default defineEventHandler(async (event) => {
   const { token } = event.context;
   if (!token) throw createError({ statusCode: 403 });
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   const config = useRuntimeConfig();
 
-  const data = await $fetch<any>(`${config.public.apiBase}${config.public.notifications.markAllRead}`, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const data = await $fetch<any>(
+    `${config.public.apiBase}${config.public.notifications.markAllRead}`,
+    {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
+    },
+  );
 
   return data;
 });

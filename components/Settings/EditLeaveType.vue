@@ -158,6 +158,20 @@
               }}</span>
             </div>
           </div>
+          <div class="sm:col-span-2">
+            <label :class="labelClass">{{ $t('settings.monthlyAllocationDays') }}</label>
+            <input
+              v-model.number="leaveTypeData.monthlyAllocationDays"
+              type="number"
+              step="0.5"
+              min="0"
+              :class="inputClass"
+              :placeholder="$t('settings.monthlyAllocationDaysPlaceholder')"
+            />
+            <p class="text-[12px] text-gray-500 mt-[6px]">
+              {{ $t('settings.monthlyAllocationDaysNote') }}
+            </p>
+          </div>
         </div>
 
         <hr class="border-gray-200 dark:border-neutral-700" />
@@ -272,6 +286,7 @@ interface LeaveTypeForm {
   hoursPerDay: number;
   attachmentRequiredAfterDays: number | '';
   autoApprove: boolean;
+  monthlyAllocationDays: number | '';
 }
 
 const leaveTypeData = ref<LeaveTypeForm>({
@@ -288,6 +303,7 @@ const leaveTypeData = ref<LeaveTypeForm>({
   hoursPerDay: 8,
   attachmentRequiredAfterDays: '',
   autoApprove: false,
+  monthlyAllocationDays: '',
 });
 
 const dependsOnOptions = computed(() => {
@@ -321,6 +337,7 @@ watch(
         leaveTypeData.value.hoursPerDay = type.hours_per_day ?? 8;
         leaveTypeData.value.attachmentRequiredAfterDays = type.attachment_required_after_days ?? '';
         leaveTypeData.value.autoApprove = type.auto_approve ?? false;
+        leaveTypeData.value.monthlyAllocationDays = type.monthly_allocation_days ?? '';
       }
     } else {
       // Reset for new
@@ -338,6 +355,7 @@ watch(
         hoursPerDay: 8,
         attachmentRequiredAfterDays: '',
         autoApprove: false,
+        monthlyAllocationDays: '',
       };
     }
   },
@@ -363,6 +381,10 @@ const saveLeaveType = async () => {
       hoursPerDay: leaveTypeData.value.hoursPerDay,
       attachmentRequiredAfterDays: leaveTypeData.value.attachmentRequiredAfterDays || null,
       autoApprove: leaveTypeData.value.autoApprove,
+      monthlyAllocationDays:
+        leaveTypeData.value.monthlyAllocationDays !== ''
+          ? leaveTypeData.value.monthlyAllocationDays
+          : null,
     };
 
     if (props.leaveTypeId) {

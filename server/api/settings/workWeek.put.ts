@@ -1,10 +1,11 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readBody, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const body = await readBody(event);
 
   if (!token) {
@@ -17,7 +18,7 @@ export default defineEventHandler(async (event) => {
       {
         method: 'PUT',
         body: { days: body.days },
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
       },
     );
     return response;

@@ -1,8 +1,9 @@
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, readBody, getHeader } from 'h3';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const token = event.context.token;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
@@ -18,11 +19,14 @@ export default defineEventHandler(async (event) => {
       hidden_leave_types: body?.hiddenLeaveTypes,
     };
 
-    const response: any = await $fetch(`${config.public.apiBase}${config.public.user.dashboardPreferences}`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` },
-      body: payload,
-    });
+    const response: any = await $fetch(
+      `${config.public.apiBase}${config.public.user.dashboardPreferences}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
+        body: payload,
+      },
+    );
 
     return {
       sectionOrder: response?.section_order || body?.sectionOrder,

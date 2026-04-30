@@ -1,10 +1,11 @@
-import { defineEventHandler, getRouterParam, setResponseHeader } from 'h3';
+import { defineEventHandler, getRouterParam, setResponseHeader, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const id = getRouterParam(event, 'id');
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -12,11 +13,14 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Return the raw response from $fetch to proxy stream/headers correctly
-    const response = await $fetch.raw(`${config.public.apiBase}${config.public.documents.base}/${id}/download`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-      responseType: 'stream',
-    });
+    const response = await $fetch.raw(
+      `${config.public.apiBase}${config.public.documents.base}/${id}/download`,
+      {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
+        responseType: 'stream',
+      },
+    );
 
     // Make sure we forward the headers, especially Content-Type and Content-Disposition
     const headers = new Headers(response.headers);

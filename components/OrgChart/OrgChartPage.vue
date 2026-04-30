@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col h-full overflow-x-auto p-4 sm:p-6 lg:p-8">
-    <div class="flex justify-between items-center mb-6 min-w-max">
+    <div
+      class="flex justify-between items-center mb-6 min-w-max sticky top-0 bg-gray-100 dark:bg-neutral-900 z-10 p-4 -m-4"
+    >
       <h3 class="font-semibold text-xl dark:text-gray-100">
         {{ $t('orgChart.title') }}
       </h3>
@@ -44,7 +46,7 @@
       </button>
     </div>
 
-    <div class="flex-grow flex justify-center items-start overflow-visible min-w-max">
+    <div class="flex-grow flex flex-col items-start overflow-visible min-w-max">
       <template v-if="centralStore.orgChartStore.loading && !editMode">
         <div class="animate-pulse space-y-4 flex flex-col items-center">
           <div class="w-48 h-16 bg-gray-200 dark:bg-neutral-700 rounded"></div>
@@ -56,28 +58,8 @@
         </div>
       </template>
 
-      <div v-else-if="localTree.length > 0" class="flex gap-16 relative mt-4">
-        <div v-for="(rootNode, index) in localTree" :key="rootNode.id" class="relative">
-          <template v-if="localTree.length > 1">
-            <div
-              class="absolute w-px h-4 bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-1/2 transform -translate-x-1/2"
-            ></div>
-
-            <!-- Horizontal lines across gap-16 (half gap = 2rem) -->
-            <div
-              v-if="index === 0"
-              class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-1/2 right-[-2rem]"
-            ></div>
-            <div
-              v-else-if="index === localTree.length - 1"
-              class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-[-2rem] right-1/2"
-            ></div>
-            <div
-              v-else
-              class="absolute h-px bg-gray-300 dark:bg-neutral-600 top-[-1rem] left-[-2rem] right-[-2rem]"
-            ></div>
-          </template>
-
+      <div v-else-if="localTree.length > 0" class="flex flex-col gap-8 relative mt-4">
+        <div v-for="rootNode in localTree" :key="rootNode.id" class="relative">
           <OrgChartNode
             :node="rootNode"
             :edit-mode="editMode"
@@ -85,6 +67,7 @@
             @add-sibling="showPicker($event, true)"
             @remove="removeNode"
             @move="moveNode"
+            @click-node="openUserProfile"
           />
         </div>
       </div>
@@ -100,6 +83,13 @@
       :exclude-user-ids="placedUserIds"
       @select="onUserPicked"
     />
+
+    <!-- User Info Modal -->
+    <SharedUserInfoModal
+      v-if="profileModalOpen && selectedUser"
+      :user="selectedUser"
+      @close="profileModalOpen = false"
+    />
   </div>
 </template>
 
@@ -108,6 +98,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import OrgChartNode from './OrgChartNode.vue';
 import OrgChartUserPicker from './OrgChartUserPicker.vue';
+import SharedUserInfoModal from '~/components/shared/UserInfoModal.vue';
 import { useCentralStore } from '~/stores/centralStore';
 import type { OrgChartNode as FlatNode } from '~/types';
 
@@ -118,6 +109,15 @@ const permissionsStore = centralStore.permissionsStore;
 const editMode = ref(false);
 const pickerOpen = ref(false);
 const pendingParentId = ref<number | null>(null);
+
+const profileModalOpen = ref(false);
+const selectedUser = ref<any>(null);
+
+const openUserProfile = (userId: number | undefined) => {
+  if (editMode.value || !userId) return;
+  selectedUser.value = centralStore.userStore.allUsers?.find((u: any) => u.id === userId) ?? null;
+  if (selectedUser.value) profileModalOpen.value = true;
+};
 
 // Local working copy of flat nodes
 const localNodes = ref<FlatNode[]>([]);

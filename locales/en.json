@@ -31,11 +31,17 @@
   },
   "settings": {
     "title": "Settings",
+    "groupPersonal": "Personal",
+    "groupPeople": "People & Access",
+    "groupLeave": "Leave Management",
+    "groupCompany": "Company",
     "editProfile": "Edit Profile",
     "permissions": "Permissions",
     "security": "Security",
     "users": "Users",
     "groups": "Groups",
+    "noMembers": "No members in this group",
+    "head": "Head",
     "leaveTypes": "Leave Types",
     "leaveDays": "Leave Days",
     "invitations": "Calendar Sharing",
@@ -237,7 +243,15 @@
     "attachmentRequiredAfter": "Attachment Required After (Days)",
     "attachmentNote": "e.g. 3 = certificate needed for 4+ days.",
     "autoApproveRequests": "Auto-approve Requests",
-    "autoApproveNote": "Leave requests for this type will be approved automatically if they pass balance checks."
+    "autoApproveNote": "Leave requests for this type will be approved automatically if they pass balance checks.",
+    "monthlyAllocationDays": "Monthly Auto-allocation (days)",
+    "monthlyAllocationDaysPlaceholder": "e.g. 5",
+    "monthlyAllocationDaysNote": "If set, this many days will be automatically granted to every active user on the 1st of each month. Leave blank to disable.",
+    "documentSources": "Document Sources",
+    "documentSourcesNote": "Select sources from which to retrieve documents.",
+    "googleDocNote": "Allow linking Google Docs as company documents",
+    "sharepointNote": "Allow linking SharePoint documents",
+    "fileUploadNote": "Allow direct file uploads (PDF, DOCX, etc.)"
   },
   "leaves": {
     "cancelLeave": "Cancel Leave",
@@ -262,6 +276,11 @@
     "submitAutoApproved": "Leave request automatically approved!",
     "submitError": "Error submitting leave request.",
     "errorFetchingUserLeaves": "Could not fetch user leaves!",
+    "projection": "Projection",
+    "daysRemaining": "days remaining",
+    "booked": "booked",
+    "available": "available",
+    "accrualNote": "Estimated monthly accrual: +{amount} days",
     "balance": "Leave Balance",
     "noAvailableLeaves": "No leaves available",
     "noLeaves": "No leaves found",
@@ -294,7 +313,8 @@
       "reasonNotes": "Reason / Notes",
       "submitBtn": "Record Leave",
       "saveSuccess": "Administrative leave recorded successfully.",
-      "recordBtn": "Record Admin Leave"
+      "recordBtn": "Record Admin Leave",
+      "skipWalletDeduction": "Skip balance deduction (do not consume leave days)"
     }
   },
   "notifications": {
@@ -369,7 +389,8 @@
   "calendar": {
     "allNames": "All names",
     "allGroups": "All groups",
-    "allTypes": "All types"
+    "allTypes": "All types",
+    "eventDetails": "Leave Details"
   },
   "roles": {
     "admin": "Administrator",
@@ -543,7 +564,7 @@
     "urlPlaceholder": "https://...",
     "titleLabel": "Title",
     "descriptionLabel": "Description",
-    "fileSizeWarning": "Max file size is 20MB.",
+    "fileSizeWarning": "Max file size is 30MB.",
     "empty": "No company documents have been uploaded yet.",
     "typeGoogleDoc": "Google Doc",
     "typeSharePoint": "SharePoint",
@@ -575,7 +596,7 @@
     "allLeaveTypes": "All leave types",
     "customize": "Customize",
     "selectWidgets": "Select widgets",
-    "exportPdf": "Export PDF",
+    "exportReport": "Export",
     "widgets": {
       "leavesByMonth": "Leaves by month",
       "leavesByDepartment": "Leaves by department",
