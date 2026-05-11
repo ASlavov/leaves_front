@@ -2,6 +2,15 @@ import { defineVitestConfig } from '@nuxt/test-utils/config';
 
 export default defineVitestConfig({
   test: {
+    // 1. Explicitly exclude the Playwright folder
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      './tests/e2e/**',
+      '**/*.spec.ts', // If you use .spec.ts for Playwright and .test.ts for Vitest
+    ],
     globals: true,
     environment: 'nuxt',
     environmentOptions: {

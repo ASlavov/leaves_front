@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, readBody, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const body = await readBody(event);
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   try {
     const {
@@ -19,9 +20,10 @@ export default defineEventHandler(async (event) => {
       userTitle,
       userTitleDescription,
       userImage,
+      hireDate,
     } = body;
 
-    const response = await $fetch(`${config.public.apiBase}/users`, {
+    const response = await $fetch(`${config.public.apiBase}${config.public.user.add}`, {
       method: 'POST',
       body: {
         name: userName,
@@ -34,9 +36,11 @@ export default defineEventHandler(async (event) => {
         job_title: userTitle,
         job_description: userTitleDescription,
         profile_image: userImage,
+        hire_date: hireDate ?? undefined,
       },
       headers: {
         Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader,
       },
     });
 

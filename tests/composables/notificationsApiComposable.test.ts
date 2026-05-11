@@ -5,6 +5,7 @@ import {
   getNotificationsComposable,
   markNotificationReadComposable,
   markNotificationUnreadComposable,
+  markAllNotificationsReadComposable,
 } from '~/composables/notificationsApiComposable';
 
 vi.mock('~/utils/retryFetch', () => ({ default: vi.fn() }));
@@ -48,5 +49,19 @@ describe('notificationsApiComposable', () => {
       method: 'POST',
       body: { userId: '3' },
     });
+  });
+
+  it('markAllNotificationsReadComposable — POST to markAllRead with no body', async () => {
+    await markAllNotificationsReadComposable();
+    expect(mockFetch).toHaveBeenCalledWith('/api/notifications/markAllRead', {
+      method: 'POST',
+    });
+  });
+
+  it('markAllNotificationsReadComposable — returns result from retryFetch', async () => {
+    const updated = [{ id: '1', is_read: true }];
+    mockFetch.mockResolvedValueOnce(updated as any);
+    const result = await markAllNotificationsReadComposable();
+    expect(result).toEqual(updated);
   });
 });

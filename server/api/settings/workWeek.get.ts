@@ -1,10 +1,11 @@
-import { defineEventHandler, createError } from 'h3';
+import { defineEventHandler, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
       `${config.public.apiBase}${config.public.companySettings.workWeek}`,
       {
         method: 'GET',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
       },
     );
     return response;

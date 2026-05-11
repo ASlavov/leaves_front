@@ -1,10 +1,11 @@
-import { defineEventHandler } from 'h3'; // Import cookie helper from h3
+import { defineEventHandler, getHeader } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
 
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
 
   if (!token) {
     throw createError({
@@ -22,6 +23,7 @@ export default defineEventHandler(async (event) => {
       query: includeArchived ? { include_archived: 1 } : {},
       headers: {
         Authorization: `Bearer ${token}`,
+        Cookie: cookieHeader,
       },
     });
 

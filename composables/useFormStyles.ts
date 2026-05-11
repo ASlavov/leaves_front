@@ -13,6 +13,15 @@ export const useFormStyles = () => ({
     'dark:placeholder-neutral-400 dark:hover:border-neutral-400',
   ].join(' '),
 
+  telephone: [
+    'block w-full bg-transparent',
+    'text-[14px] text-black placeholder-[#808080]',
+    'transition-all',
+    'focus:outline-none',
+    'dark:text-gray-100',
+    'dark:placeholder-neutral-400',
+  ].join(' '),
+
   label: 'block text-[14px] font-bold mb-[8px] text-black dark:text-gray-100',
 
   submitBtn: [

@@ -26,7 +26,7 @@
           <SharedUserAvatar :user="userStore.userInfo" :size="90" />
         </div>
         <!-- Info Details -->
-        <div class="pt-[15px] space-y-2 text-[14px] leading-[16px]">
+        <div class="pt-[15px] space-y-2 text-[14px] leading-[16px] flex flex-col">
           <p>
             <span class="font-bold">{{ $t('settings.firstName') }}: </span
             ><span class="text-[#808080] dark:text-gray-300">{{ firstName }}</span>
@@ -58,7 +58,9 @@
         </div>
       </template>
     </div>
-    <div class="info-actions pt-[30px] flex gap-[25px]">
+    <div
+      class="info-actions pt-[30px] flex gap-[25px] 2xl:flex-row flex-col items-start xl:items-center"
+    >
       <button
         v-if="permissionsStore.can('profile_info', 'modify')"
         class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"
@@ -68,7 +70,7 @@
       </button>
       <button
         v-if="permissionsStore.can('profile_info', 'change_password')"
-        class="font-bold text-black dark:text-white mx-auto shrink-0 text-[14px] underline hover:text-[#EA021A] hover:dark:text-[#EA021A] transition-colors"
+        class="font-bold text-black dark:text-white shrink-0 text-[14px] underline hover:text-[#EA021A] hover:dark:text-[#EA021A] transition-colors"
         @click="redirectPassChange"
       >
         {{ $t('settings.changePassword') }}
@@ -79,7 +81,7 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
       @click.self="closeModal"
     >
-      <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] relative">
+      <div class="bg-white dark:bg-neutral-700 p-2 rounded-lg w-full max-w-[900px] mx-4 relative">
         <button
           class="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
           @click="closeModal"

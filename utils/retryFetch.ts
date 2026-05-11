@@ -31,8 +31,13 @@ export default async function retryFetch<T = unknown>(
       if (status === 401) {
         console.error('Authentication Error: 401');
         await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+
         if (import.meta.client) {
-          window.location.href = '/auth/login';
+          const currentPath = window.location.pathname;
+          // Do NOT redirect if we are already on the auth pages or if this is an explicit login attempt
+          if (!currentPath.includes('/auth/login') && !url.includes('/api/auth/login')) {
+            window.location.href = '/auth/login';
+          }
         }
         throw error; // Immediately break and throw the error back to the caller
       }
@@ -44,6 +49,14 @@ export default async function retryFetch<T = unknown>(
 
       if (status === 400 || status === 422) {
         throw error; // Don't retry client errors
+      }
+
+      // Never retry non-idempotent methods when the server responded — a 500 on a
+      // POST/PATCH means the request reached the server, so retrying risks duplicates.
+      // Only retry if there is no status (pure network failure).
+      const method = ((options.method as string) || 'GET').toUpperCase();
+      if (['POST', 'PATCH'].includes(method) && status) {
+        throw error;
       }
 
       // Only retry on network errors or 500s. Rethrow if it's the last attempt.

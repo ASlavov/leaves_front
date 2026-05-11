@@ -1,0 +1,45 @@
+export type DocumentSourceType = 'google_doc' | 'sharepoint' | 'file';
+export type DocumentTargetType = 'all' | 'restricted';
+
+export interface DocumentTargetUser {
+  id: number;
+  name: string;
+  email?: string;
+  profile_image_base64?: string | null;
+}
+
+export interface DocumentTargetRole {
+  id: number;
+  name: string;
+}
+
+export interface CompanyDocument {
+  id: number;
+  title: string;
+  description: string | null;
+  source_type: DocumentSourceType;
+  url: string | null;
+  original_filename: string | null;
+  mime_type: string | null;
+  file_size: number | null;
+  uploaded_by: number;
+  uploader?: DocumentTargetUser;
+  target_type: DocumentTargetType;
+  target_users?: DocumentTargetUser[];
+  target_roles?: DocumentTargetRole[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateDocumentPayload {
+  title: string;
+  description?: string;
+  source_type: DocumentSourceType;
+  url?: string;
+  file_base64?: string;
+  original_filename?: string;
+  mime_type?: string;
+  target_type: DocumentTargetType;
+  target_user_ids?: number[];
+  target_role_ids?: number[];
+}

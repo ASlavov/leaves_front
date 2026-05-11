@@ -4,6 +4,65 @@ This file tracks all changes made by the AI agent during the architectural stabi
 
 ---
 
+## 19. Legalities — Full Rules Engine Implementation
+
+### Problem
+
+Leave rules existed only as a business specification (`legalities.md`) but had no backend enforcement or frontend UI. All 9 rule generalities were unimplemented: priority overrides, wallet overflow auto-splitting, retroactive holiday refunds, per-user work schedules, hourly leaves, pro-rata accrual, negative balance, termination with leave cleanup, and document/attachment requirements. HR had no way to record leaves on behalf of employees (Administrative Action).
+
+### Implementation Rationale
+
+A **Rules Engine** at the `LeavesType` level (new columns governing per-type behavior), a **Per-User Schedule** override at the `User` level, a **PublicHolidayService** for retroactive refunds (both single and batch), an **Administrative Leave** pathway for HR+, and a **DateSplitter** utility for splitting ranges at cut-points. All new columns follow existing conventions (0=Sun day numbering, `CompanySetting::get()` access, base64 file uploads, frontend proxy pattern).
+
+### Code Changes
+
+**Backend — Migrations (6):**
+- `leaves_types`: Added `priority_level`, `allow_wallet_overflow`, `overflow_leave_type_id` (FK→self), `accrual_type` (enum: upfront/pro_rata_monthly), `allow_negative_balance`, `max_negative_balance`, `is_hourly`, `hours_per_day`, `attachment_required_after_days`.
+- `users`: Added `work_schedule` (JSON, nullable — overrides company setting), `hire_date`, `termination_date`.
+- `leaves`: Added `is_administrative`, `administrative_reason`, `total_hours`, `start_time`, `end_time`, `attachment_base64`, `attachment_filename`, `parent_leave_id` (FK→self for overflow children).
+- `leave_deductions`: Changed `days_deducted` from integer to `decimal(8,2)`.
+- `entitlement_days`: Changed `entitled_days` and `remaining_days` from integer to `decimal(8,2)`.
+- Created `holiday_adjustments` table (tracks retroactive holiday refunds/charges per leave).
+
+**Backend — Models:**
+- **`LeavesType.php`**: Added all rules-engine columns to `$fillable` + `$casts`. New `overflowType()` BelongsTo relationship.
+- **`User.php`**: Added `work_schedule` (cast: array), `hire_date`, `termination_date` to fillable/casts.
+- **`Leave.php`**: Added new columns to `$fillable`/`$casts`. New `childLeaves()` HasMany + `parentLeave()` BelongsTo relationships.
+- **`EntitlementDay.php`**: Added `scopeActivePeriodOnDate()` for negative-balance queries (no `remaining_days > 0` filter).
+- **`HolidayAdjustment.php`**: New model for the `holiday_adjustments` table.
+
+**Backend — Services & Utilities:**
+- **`WorkingDaysHelper`**: Extended with `?int $userId` param — uses user's `work_schedule` if set, falls back to company setting. Added `findEndDateForWorkingDays()` and `findNextWorkingDay()` helpers. All methods return `float` for hourly support.
+- **`PublicHolidayService`**: New service for retroactive holiday refunds. Handles both single and batch holiday creation — scans affected approved leaves, adjusts deductions, credits wallets back, records in `holiday_adjustments`.
+- **`DateSplitter`**: New utility for splitting a leave date range at a cut-point (used for wallet overflow — splits a leave into a paid segment and unpaid overflow segment).
+
+**Backend — Controllers:**
+- **`LeavesController::newLeave()`**: Extended with full rules-engine pipeline: priority override (highest-priority type checked first), hourly calculation, attachment validation, per-user schedule, negative balance, wallet overflow (auto-creates child leave for overflow segment), pro-rata accrual check.
+- **`LeavesController::adminLeave()`**: New endpoint for HR/admin to record leaves on behalf of any user, bypassing wallet checks (sets `is_administrative = true`).
+- **`LeavesTypeController`**: CRUD now includes all rules-engine fields.
+- **`UserController`**: `update()` now accepts `work_schedule`, `hire_date`, `termination_date`. New `terminate()` endpoint cancels all future pending/approved leaves.
+- **`PublicHolidaysController`**: `store()` and `storeBatch()` now dispatch `PublicHolidayService` for retroactive refunds.
+
+**Backend — routes/api.php:** Added `POST /admin-leave`, `POST /user-terminate/{id}`, updated leave type CRUD signatures.
+
+**Frontend:**
+- **`types/index.ts`**: Extended `LeaveType` with all rules-engine fields. Extended `Leave` with administrative/hourly/attachment fields. Extended `User` with `work_schedule`, `hire_date`, `termination_date`. Added `AdminLeavePayload` interface.
+- **`server/api/leaves/adminLeave.ts`**: New Nuxt proxy route for the admin leave endpoint.
+- **`server/api/user/terminate.ts`**: New Nuxt proxy route for user termination.
+- **`composables/leavesApiComposable.ts`**: Added `adminLeaveComposable`.
+- **`composables/userApiComposable.ts`**: Added `terminateUserComposable`.
+- **`stores/leaves.ts`**: Added `adminLeave` action.
+- **`stores/user.ts`**: Added `terminateUser` action.
+- **`components/Home/NewLeave.vue`**: Extended for hourly leave UI (time pickers, hour count), attachment upload (base64), wallet overflow warning banner.
+- **`components/Settings/EditLeaveType.vue`**: Extended with all rules-engine fields — priority slider, overflow type selector, accrual type toggle, negative balance input, hourly toggle + hours-per-day input, attachment threshold.
+- **`components/Settings/EditUser.vue`**: Added `work_schedule` day-picker (inherits from company default), `hire_date`, `termination_date` fields.
+- **`components/Leaves/AdminLeaveModal.vue`**: New component — HR records a leave for any user. User selector, leave type, date range, reason, administrative_reason.
+- **`components/Settings/TerminateUserModal.vue`**: New component — confirm termination date, warns about future leaves that will be cancelled.
+- **`pages/yearly-leaves.vue`**: Added "Record Leave" button (admin/HR only) that opens `AdminLeaveModal`.
+- **`locales/en.json` + `locales/el.json`**: Full key tree for all new rules-engine UI strings, hourly leave, attachment, overflow warnings, admin leave, termination.
+
+---
+
 ## 18. Store Error Reporting Consistency
 
 ### Problem

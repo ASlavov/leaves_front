@@ -26,10 +26,8 @@ export default defineNuxtConfig({
   plugins: [
     /*"~/plugins/fetchInterceptor.js",*/
     '~/plugins/vue3-toastify.client.js',
+    '~/plugins/echo.client.ts',
   ],
-  pinia: {
-    autoImports: ['defineStore', 'acceptHMRUpdate'],
-  },
   colorMode: {
     preference: 'dark',
     fallback: 'dark',
@@ -73,17 +71,32 @@ export default defineNuxtConfig({
     dirs: ['stores'], // If your stores are in the "stores" folder
   },
 
+  vite: {
+    server: {
+      watch: {
+        usePolling: false,
+        // Prevent Playwright output files from triggering HMR during dev
+        ignored: ['**/playwright-report/**', '**/test-results/**', '**/e2e/.auth/**'],
+      },
+    },
+  },
+
   runtimeConfig: {
     // The private keys which are only available within server-side
-    apiSecret: process.env.apiSecret,
-    // JWT Secret Key
-    jwtSecret: process.env.jwtSecret,
-    // Keys within public, will be also exposed to the client-side
+    // These can be overridden by NUXT_API_SECRET and NUXT_JWT_SECRET
+    apiSecret: process.env.NUXT_API_SECRET || process.env.apiSecret || '',
+    jwtSecret: process.env.NUXT_JWT_SECRET || process.env.jwtSecret || 'fallback-secret-change-me',
+    env: process.env.NUXT_ENV || process.env.env || 'production',
+
     public: {
       // Uses local base when apiBaseLocal is defined in .env (local dev), falls back to prod
       apiBase: process.env.apiBaseLocal ?? process.env.apiBaseProd,
       apiBaseLocal: 'http://localhost:8000/api',
       apiBaseProd: 'https://leavesbackend.whyagency.gr/api',
+      reverbAppKey: process.env.NUXT_PUBLIC_REVERB_APP_KEY || '',
+      reverbHost: process.env.NUXT_PUBLIC_REVERB_HOST || 'localhost',
+      reverbPort: parseInt(process.env.NUXT_PUBLIC_REVERB_PORT || '8081'),
+      reverbScheme: process.env.NUXT_PUBLIC_REVERB_SCHEME || 'http',
       auth: {
         auth: '/getToken',
         tokenRefresh: '/generateToken',
@@ -92,8 +105,11 @@ export default defineNuxtConfig({
       user: {
         getSingleUser: '/user',
         getAll: '/users',
+        add: '/users',
+        delete: '/user',
         edit: '/user-update',
         updatePassword: '/user-update-password',
+        dashboardPreferences: '/dashboard-preferences',
       },
       entitlement: {
         add: '/entitlement',
@@ -109,6 +125,7 @@ export default defineNuxtConfig({
         getAllForAllUsers: '/all_user_leaves',
         newLeave: '/new_leave',
         processLeave: '/processed_leave',
+        cancelLeave: '/processed_leave',
         getLeaveTypes: '/leaves_types',
         getLeavesStatuses: '/leave_action',
         getLeavesAvailableDays: '/entitlement_days',
@@ -127,6 +144,7 @@ export default defineNuxtConfig({
         getNotifications: '/user-notifications',
         markedRead: '/notification-marked-read',
         markedUnread: '/notification-marked-unread',
+        markAllRead: '/notifications-mark-all-read',
       },
       holidays: {
         getAll: '/public-holidays',
@@ -137,12 +155,31 @@ export default defineNuxtConfig({
       },
       companySettings: {
         workWeek: '/company-settings/work-week',
+        documentSources: '/company-settings/document-sources',
       },
       invitations: {
         list: '/invitations',
         create: '/new-invitation',
         updateStatus: '/invitations',
         delete: '/invitations',
+      },
+      reports: {
+        leaveBalances: '/reports/leave-balances',
+        summary: '/reports/summary',
+      },
+      admin: {
+        leave: '/admin/leaves',
+        terminate: '/users',
+      },
+      permissions: {
+        base: '/v1/permissions',
+        me: '/v1/permissions/me',
+      },
+      documents: {
+        base: '/company-documents',
+      },
+      orgChart: {
+        base: '/org-chart',
       },
     },
   },

@@ -1,10 +1,11 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readBody, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 import { proxyError } from '~/server/utils/proxyError';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const body = await readBody(event);
 
   if (!token) {
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
     const response = await $fetch(`${config.public.apiBase}${config.public.holidays.create}`, {
       method: 'POST',
       body: { date: body.date, name: body.name, is_recurring: body.is_recurring ?? true },
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
     });
     return response;
   } catch (error: any) {

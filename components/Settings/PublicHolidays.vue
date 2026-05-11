@@ -49,7 +49,7 @@
           class="inline-flex items-center justify-center py-[15px] px-[20px] rounded-[70px] bg-red-600 text-white text-[14px] font-bold hover:bg-red-700 focus:outline-none ml-auto"
           @click="confirmMassDelete"
         >
-          {{ $t('settings.massDeleteSelected', { count: selectedIds.size }) }}
+          {{ $t('settings.massDeleteHolidaysSelected', { count: selectedIds.size }) }}
         </button>
       </template>
     </div>
@@ -166,7 +166,7 @@
             <label :class="labelClass"
               >{{ $t('common.date') }} <span class="text-[#EA021A]">*</span></label
             >
-            <input v-model="form.date" type="date" :class="inputClass" />
+            <SharedFlatpickrInput v-model="form.date" />
           </div>
           <!-- Recurring toggle -->
           <div class="flex items-center gap-[10px] pt-[4px]">
@@ -498,7 +498,7 @@ const {
   data: remoteHolidays,
   pending: holidaysPending,
   refresh: refreshHolidays,
-} = useHolidays(selectedYear.value);
+} = useHolidays(selectedYear);
 
 const loading = computed(() => holidaysPending.value || holidaysStore.loading);
 
@@ -521,11 +521,9 @@ const yearHolidays = computed<PublicHoliday[]>(() =>
 
 const prevYear = () => {
   selectedYear.value--;
-  refreshHolidays();
 };
 const nextYear = () => {
   selectedYear.value++;
-  refreshHolidays();
 };
 
 const formatDate = (dateStr: string) => {
@@ -712,7 +710,7 @@ const doMassDelete = async () => {
     const res = await holidaysStore.deleteHolidayBatch(ids);
     selectedIds.value = new Set();
     showMassDeleteConfirm.value = false;
-    $toast.success(t('settings.massDeleteSuccess', { count: res.deleted }));
+    $toast.success(t('settings.massDeleteHolidaysSuccess', { count: res.deleted }));
     await refreshHolidays();
   } catch (error) {
     const { type, message } = extractApiError(error);

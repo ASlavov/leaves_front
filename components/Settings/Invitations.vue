@@ -48,13 +48,13 @@
             :key="inv.id"
             class="flex items-center gap-3 px-5 py-3"
           >
-            <SharedUserAvatar :user="inv.receiver" :size="36" />
+            <SharedUserAvatar :user="resolveUser(inv, 'receiver')" :size="36" />
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
-                {{ inv.receiver?.name || inv.receiver?.email }}
+                {{ resolveUser(inv, 'receiver')?.name || resolveUser(inv, 'receiver')?.email }}
               </p>
               <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">
-                {{ inv.receiver?.email }}
+                {{ resolveUser(inv, 'receiver')?.email }}
               </p>
             </div>
             <span
@@ -110,13 +110,13 @@
             :key="inv.id"
             class="flex items-center gap-3 px-5 py-3"
           >
-            <SharedUserAvatar :user="inv.sender" :size="36" />
+            <SharedUserAvatar :user="resolveUser(inv, 'sender')" :size="36" />
             <div class="flex-1 min-w-0">
               <p class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
-                {{ inv.sender?.name || inv.sender?.email }}
+                {{ resolveUser(inv, 'sender')?.name || resolveUser(inv, 'sender')?.email }}
               </p>
               <p class="text-xs text-gray-500 dark:text-neutral-400 truncate">
-                {{ inv.sender?.email }}
+                {{ resolveUser(inv, 'sender')?.email }}
               </p>
             </div>
 
@@ -352,6 +352,13 @@ const { t } = useI18n();
 const centralStore = useCentralStore();
 const invitationsStore = centralStore.invitationsStore;
 const userStore = centralStore.userStore;
+
+const resolveUser = (inv, side /* 'sender' | 'receiver' */) => {
+  const relation = inv?.[side];
+  if (relation && (relation.name || relation.email)) return relation;
+  const id = side === 'sender' ? inv?.user_id_from : inv?.user_id_to;
+  return (userStore.allUsers || []).find((u) => String(u.id) === String(id)) || null;
+};
 
 const currentUserId = computed(() => userStore.userId);
 

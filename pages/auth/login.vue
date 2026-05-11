@@ -115,10 +115,9 @@
   middleware: 'redirect-if-authenticated',  // Apply the middleware to this page
 });*/
 
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import { useNotificationsStore } from '@/stores/notifications';
 import { useCentralStore } from '@/stores/centralStore';
 import { useNuxtApp } from '#imports';
 
@@ -129,7 +128,6 @@ const rememberMe = ref(false); // "Remember Me" does nothing
 const router = useRouter();
 const loading = ref(false);
 const authStore = useAuthStore();
-const notificationsStore = useNotificationsStore();
 const centralStore = useCentralStore();
 
 const togglePassword = (name) => {
@@ -173,7 +171,6 @@ const login = async (event) => {
   }
 };
 onMounted(() => {
-  notificationsStore.stopPollingNotifications();
   centralStore.initialized = false;
   watch(
     () => authStore.error, // Watch the error state in the store

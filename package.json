@@ -12,6 +12,8 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
+    "test:e2e": "nuxt build && playwright test",
+    "test:e2e:ui": "nuxt build && playwright test --ui",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -19,7 +21,7 @@
   },
   "lint-staged": {
     "*.{js,ts,vue}": [
-      "eslint",
+      "eslint --no-warn-ignored",
       "prettier",
       "vitest related --run --passWithNoTests"
     ]
@@ -38,11 +40,15 @@
     "chart.js": "^4.4.4",
     "date-fns": "^4.1.0",
     "flatpickr": "^4.6.13",
+    "html2pdf.js": "^0.14.0",
+    "intl-tel-input": "^27.1.2",
     "jsonwebtoken": "^9.0.2",
+    "laravel-echo": "^2.3.4",
     "nuxt": "^3.13.0",
     "pinia": "^3.0.0",
     "pinia-plugin-persistedstate": "^4.3.0",
     "preact": "^10.24.2",
+    "pusher-js": "^8.5.0",
     "vue": "latest",
     "vue-chartjs": "^5.3.1",
     "vue3-toastify": "^0.2.3"

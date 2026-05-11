@@ -1,6 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import YearlyLeaves from '@/components/Leaves/YearlyLeaves.vue';
+
+// YearlyLeaves now uses useRoute() for the deep-link userId query param.
+// Provide a stub router so the component doesn't throw on mount.
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal<any>();
+  return {
+    ...actual,
+    useRoute: vi.fn(() => ({ query: {}, params: {} })),
+    useRouter: vi.fn(() => ({ push: vi.fn() })),
+  };
+});
 import { createTestingPinia } from '@pinia/testing';
 import { useLeavesStore } from '@/stores/leaves';
 import { usePermissionsStore } from '@/stores/permissions';

@@ -28,284 +28,25 @@
           {{ $t('settings.addUser') }}
         </button>
       </div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-      >
-        <div class="sm:col-span-2 md:col-span-4 lg:col-span-1">
-          {{ $t('settings.filters') }}
-        </div>
-
-        <!-- First Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.firstName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.firstName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.firstName')"
-            />
-            <button
-              v-if="filters.firstName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.firstName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Last Name Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.lastName"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.lastName ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.lastName')"
-            />
-            <button
-              v-if="filters.lastName"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.lastName = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Title Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.job_title"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.job_title ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.jobTitle')"
-            />
-            <button
-              v-if="filters.job_title"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.job_title = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <!-- Department Filter -->
-        <div class="lg:col-span-2 text-black dark:text-white">
-          <div
-            class="max-w-full -ml-4 inline-flex group border border-gray-200 rounded-lg transition-all focus-within:border-gray-400 hover:border-gray-400 dark:border-neutral-700 dark:hover:border-neutral-500 dark:focus-within:border-neutral-500"
-          >
-            <input
-              v-model="filters.department"
-              :class="`py-3 px-4 text-[16px] w-full bg-transparent border-none outline-0 ${filters.department ? '' : 'rounded-r-lg'} rounded-l-lg text-sm focus:outline-none dark:bg-neutral-900 dark:text-neutral-400`"
-              type="text"
-              :placeholder="$t('settings.group')"
-            />
-            <button
-              v-if="filters.department"
-              class="px-3 py-3 text-[13px] bg-white border-l border-gray-200 rounded-r-lg text-red-500 hover:bg-gray-100 transition-all dark:hover:bg-neutral-700 focus:outline-none dark:bg-neutral-900 dark:border-neutral-700"
-              @click="filters.department = ''"
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:col-span-3 lg:justify-self-end items-center">
-          <button
-            v-if="filters.firstName || filters.lastName || filters.job_title || filters.department"
-            class="text-red-500 text-sm"
-            @click="
-              filters.firstName = '';
-              filters.lastName = '';
-              filters.job_title = '';
-              filters.department = '';
-            "
-          >
-            &times; {{ $t('settings.clearFilters') }}
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="grid grid-cols-2 lg:grid-cols-12 items-center pl-[20px] pr-[50px] py-[10px] gap-[10px] font-bold"
-      >
-        <div class="col-span-1">
-          {{ $t('settings.sortBy') }}
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('firstName')"
-        >
-          {{ $t('settings.firstName') }}
-          <span v-if="currentSortKey === 'firstName'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- Last Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('lastName')"
-        >
-          {{ $t('settings.lastName') }}
-          <span v-if="currentSortKey === 'lastName'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('job_title')"
-        >
-          {{ $t('settings.jobTitle') }}
-          <span v-if="currentSortKey === 'job_title'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-        <!-- First Name Sort Button -->
-        <div
-          class="cursor-pointer col-span-2 text-black dark:text-white flex items-center"
-          @click="sortBy('department')"
-        >
-          {{ $t('settings.group') }}
-          <span v-if="currentSortKey === 'department'" class="ml-1">
-            <svg
-              v-if="sortDirection"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Up Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 15l7-7 7 7"
-              />
-            </svg>
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <!-- Down Arrow -->
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
-        </div>
-      </div>
+      <SharedSettingsFilterBar
+        v-model="filters"
+        class="hidden lg:block"
+        :filter-fields="[
+          { key: 'firstName', placeholder: $t('settings.firstName') },
+          { key: 'lastName', placeholder: $t('settings.lastName') },
+          { key: 'job_title', placeholder: $t('settings.jobTitle') },
+          { key: 'department', placeholder: $t('settings.group') },
+        ]"
+        :sort-fields="[
+          { key: 'firstName', label: $t('settings.firstName') },
+          { key: 'lastName', label: $t('settings.lastName') },
+          { key: 'job_title', label: $t('settings.jobTitle') },
+          { key: 'department', label: $t('settings.group') },
+        ]"
+        :sort-key="currentSortKey"
+        :sort-asc="sortDirection"
+        @sort="sortBy"
+      />
       <div class="relative -m-4 p-4 mt-0">
         <div
           ref="scrollContainer"
@@ -314,50 +55,88 @@
           <div
             v-for="user in filteredUsers"
             :key="user.id"
-            class="grid gap-[10px] grid-cols-2 lg:grid-cols-12 items-center border border-[#DFEAF2] rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-600 text-[#808080]"
+            class="grid gap-x-[10px] gap-y-1 grid-cols-[auto_1fr] lg:grid-cols-12 items-center border border-gray-200 dark:border-neutral-700 rounded-lg pl-[20px] pr-[30px] py-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-700/50 text-gray-500 dark:text-neutral-300"
           >
-            <div class="mr-4 flex items-center justify-start col-span-1">
+            <div
+              class="row-span-4 lg:row-span-1 mr-4 flex items-center justify-start self-center col-span-1 lg:col-span-1"
+            >
               <SharedUserAvatar :user="user" :size="50" />
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user.firstName || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user.lastName || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user?.profile?.job_title || '' }}
             </div>
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               {{ user?.department?.name || '' }}
             </div>
-            <div class="col-span-3 justify-self-end flex gap-[25px] items-center">
+            <div
+              class="col-span-full lg:col-span-3 lg:justify-self-end flex gap-[25px] items-center mt-1 lg:mt-0"
+            >
               <a
                 v-if="permissionsStore.can('all_users', 'modify')"
                 class="cursor-pointer text-[#EA021A] font-bold underline"
                 @click="editUser(user.id)"
                 >{{ $t('settings.editProfile') }}</a
               >
-              <svg
+
+              <button
                 v-if="permissionsStore.can('all_users', 'modify')"
-                class="cursor-pointer"
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="19"
-                viewBox="0 0 16 19"
-                fill="none"
+                class="h-[32px] px-[12px] rounded-[6px] text-[13px] font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 focus:outline-none transition-colors"
+                @click="showTerminateUser(user.id)"
+              >
+                {{ $t('settings.terminate') }}
+              </button>
+
+              <button
+                v-if="permissionsStore.can('all_users', 'modify')"
+                type="button"
+                class="h-[32px] w-[32px] flex items-center justify-center rounded-[6px] text-gray-500 hover:bg-red-50 hover:text-red-600 dark:text-neutral-400 dark:hover:bg-red-900/20 dark:hover:text-red-400 focus:outline-none transition-colors"
+                :aria-label="$t('common.delete')"
                 @click="deleteUser(user.id)"
               >
-                <path
-                  d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z"
-                  :fill="theme === 'light' ? 'black' : 'white'"
-                />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="20"
+                  viewBox="0 0 16 19"
+                  fill="none"
+                >
+                  <path
+                    d="M13.4104 14.3631L14.1604 14.3698L13.4104 14.3631ZM1 3.58333C0.585786 3.58333 0.25 3.91912 0.25 4.33333C0.25 4.74755 0.585786 5.08333 1 5.08333V3.58333ZM14.3333 5.08333C14.7475 5.08333 15.0833 4.74755 15.0833 4.33333C15.0833 3.91912 14.7475 3.58333 14.3333 3.58333V5.08333ZM6.75 7.66667C6.75 7.25245 6.41421 6.91667 6 6.91667C5.58579 6.91667 5.25 7.25245 5.25 7.66667H6.75ZM5.25 14.3333C5.25 14.7475 5.58579 15.0833 6 15.0833C6.41421 15.0833 6.75 14.7475 6.75 14.3333H5.25ZM10.0833 7.66667C10.0833 7.25245 9.74755 6.91667 9.33333 6.91667C8.91912 6.91667 8.58333 7.25245 8.58333 7.66667H10.0833ZM8.58333 14.3333C8.58333 14.7475 8.91912 15.0833 9.33333 15.0833C9.74755 15.0833 10.0833 14.7475 10.0833 14.3333H8.58333ZM12.75 4.32664L12.6605 14.3564L14.1604 14.3698L14.25 4.34003L12.75 4.32664ZM10.0772 16.9167H5.16667V18.4167H10.0772V16.9167ZM1.08333 4.33333V14.3333H2.58333V4.33333H1.08333ZM1 5.08333H1.83333V3.58333H1V5.08333ZM1.83333 5.08333H4.33333V3.58333H1.83333V5.08333ZM4.33333 5.08333H11V3.58333H4.33333V5.08333ZM11 5.08333H13.5V3.58333H11V5.08333ZM13.5 5.08333H14.3333V3.58333H13.5V5.08333ZM5.08333 3.96296C5.08333 2.82138 6.15445 1.75 7.66667 1.75V0.25C5.49699 0.25 3.58333 1.83175 3.58333 3.96296H5.08333ZM7.66667 1.75C9.17889 1.75 10.25 2.82138 10.25 3.96296H11.75C11.75 1.83174 9.83634 0.25 7.66667 0.25V1.75ZM3.58333 3.96296V4.33333H5.08333V3.96296H3.58333ZM10.25 3.96296V4.33333H11.75V3.96296H10.25ZM5.16667 16.9167C3.73993 16.9167 2.58333 15.7601 2.58333 14.3333H1.08333C1.08333 16.5885 2.9115 18.4167 5.16667 18.4167V16.9167ZM12.6605 14.3564C12.6478 15.7741 11.495 16.9167 10.0772 16.9167V18.4167C12.3182 18.4167 14.1404 16.6106 14.1604 14.3698L12.6605 14.3564ZM5.25 7.66667V14.3333H6.75V7.66667H5.25ZM8.58333 7.66667V14.3333H10.0833V7.66667H8.58333Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Mobile Filter/Sort Drawer -->
+    <SharedFilterSortDrawer
+      v-model="filters"
+      :filter-fields="[
+        { key: 'firstName', placeholder: $t('settings.firstName') },
+        { key: 'lastName', placeholder: $t('settings.lastName') },
+        { key: 'job_title', placeholder: $t('settings.jobTitle') },
+        { key: 'department', placeholder: $t('settings.group') },
+      ]"
+      :sort-fields="[
+        { key: 'firstName', label: $t('settings.firstName') },
+        { key: 'lastName', label: $t('settings.lastName') },
+        { key: 'job_title', label: $t('settings.jobTitle') },
+        { key: 'department', label: $t('settings.group') },
+      ]"
+      :sort-key="currentSortKey"
+      :sort-asc="sortDirection"
+      @sort="sortBy"
+    />
   </template>
 
   <SharedBaseModal v-model="showModal">
@@ -369,13 +148,22 @@
       @saved="closeModal"
     />
   </SharedBaseModal>
+
+  <TerminateUserModal
+    v-if="terminateUserId"
+    v-model="terminateUserModalOpen"
+    :user-id="terminateUserId"
+    @terminated="closeModal"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useCentralStore } from '~/stores/centralStore';
 import EditUser from '@/components/Settings/EditUser.vue';
+import DeleteUserModal from '@/components/Settings/DeleteUserModal.vue';
 import SharedUserAvatar from '@/components/shared/UserAvatar.vue';
+import TerminateUserModal from '@/components/Settings/TerminateUserModal.vue';
 import { useAllUsers } from '@/composables/userApiComposable';
 import type { User } from '~/types';
 
@@ -390,12 +178,6 @@ const selectedUserId = ref<string | number | null>(null);
 
 // Use reactive fetching
 const { data: remoteUsers, pending: usersPending, refresh: refreshUsers } = useAllUsers();
-
-// Compute the current theme
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
-  return $colorMode?.value || 'light';
-});
 
 // Loading state combined
 const loading = computed(() => usersPending.value || centralStore.loading);
@@ -503,6 +285,14 @@ const editUser = (userId: string | number) => {
   showModal.value = true;
 };
 
+const terminateUserModalOpen = ref(false);
+const terminateUserId = ref<string | number | null>(null);
+
+const showTerminateUser = (userId: string | number) => {
+  terminateUserId.value = userId;
+  terminateUserModalOpen.value = true;
+};
+
 const deleteUser = (userId: string | number) => {
   selectedUserId.value = userId;
   modalType.value = 'delete';
@@ -518,7 +308,9 @@ const closeModal = async () => {
 
 // Compute the component to render in the modal
 const modalComponent = computed(() => {
-  return modalType.value === 'edit' ? EditUser : null;
+  if (modalType.value === 'edit') return EditUser;
+  if (modalType.value === 'delete') return DeleteUserModal;
+  return null;
 });
 </script>
 

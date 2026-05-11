@@ -1,9 +1,10 @@
-import { defineEventHandler, readBody, createError } from 'h3';
+import { defineEventHandler, readBody, createError, getHeader } from 'h3';
 import { useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const { token } = event.context;
+  const cookieHeader = getHeader(event, 'cookie') ?? '';
   const body = await readBody(event);
   const { notificationId } = body;
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
+          Cookie: cookieHeader,
         },
       },
     );
@@ -31,10 +33,24 @@ export default defineEventHandler(async (event) => {
     }
 
     // Parse the JSON response
-    const data = await res.json();
+    const result = await res.json();
 
-    if (data) {
-      return data;
+    const normaliseNotification = (raw: Record<string, any>) => {
+      const payload = raw.data && typeof raw.data === 'object' ? raw.data : raw;
+      return {
+        id: raw.id,
+        user_id: raw.user_id ?? raw.notifiable_id,
+        type: payload.type ?? 'unknown',
+        title: payload.title ?? '',
+        message: payload.message ?? payload.type ?? '',
+        meta: payload.meta ?? {},
+        is_read: typeof raw.is_read === 'boolean' ? raw.is_read : raw.is_read === 1,
+        created_at: raw.created_at ?? '',
+      };
+    };
+
+    if (Array.isArray(result)) {
+      return result.map(normaliseNotification);
     } else {
       return {
         statusCode: 500,

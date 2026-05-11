@@ -149,10 +149,30 @@ This report documents the required and optional fields for each API endpoint fou
   - **Required:** None
 - **POST `/api/new_leave_type`**
   - **Required:** `leave_type_name`
+  - **Optional (rules engine):** `priority_level` (int, default 10), `allow_wallet_overflow` (bool), `overflow_leave_type_id` (int, exists:leaves_types), `accrual_type` (upfront|pro_rata_monthly), `allow_negative_balance` (bool), `max_negative_balance` (int), `is_hourly` (bool), `hours_per_day` (decimal, default 8.00), `attachment_required_after_days` (int, nullable)
 - **PUT `/api/update_leave_type`**
   - **Required:** `leave_type_id`, `leave_type_name`
+  - **Optional (rules engine):** Same optional fields as POST above.
 - **DELETE `/api/delete_leave_type`**
   - **Required:** `leave_type_id` (sent in request body or query, route is DELETE)
+
+---
+
+## LeavesController (extended)
+
+- **POST `/api/admin-leave`** (adminLeave)
+  - **Required:** `user_id` (exists:users), `leave_type_id` (exists:leaves_types), `start_date` (date), `end_date` (date)
+  - **Optional:** `reason` (string), `administrative_reason` (string)
+  - **Auth:** Admin or HR-Manager role only. Bypasses wallet/entitlement checks. Sets `is_administrative = true`.
+
+---
+
+## UserController (extended)
+
+- **POST `/api/user-terminate/{id}`** (terminate)
+  - **Path Param:** `id` (user)
+  - **Required:** `termination_date` (date)
+  - **Note:** Sets `termination_date` on user, cancels all future pending/approved leaves.
 
 ---
 

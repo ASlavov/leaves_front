@@ -110,7 +110,7 @@ describe('EntitlementDays.vue', () => {
     await wrapper.vm.$nextTick();
 
     const nameCells = wrapper
-      .findAll('.col-span-2')
+      .findAll('.lg\\:col-span-2.col-span-1')
       .filter((w) => w.text().includes('Alice') || w.text().includes('Bob'));
 
     expect(nameCells.some((w) => w.text().includes('Alice'))).toBe(true);
