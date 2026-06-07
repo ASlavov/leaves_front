@@ -9,21 +9,8 @@
   </div>
   <!-- End Content -->
 </template>
-<script setup>
-/*onMounted(async () => {
-  try {
-    // Restore session first
-    await authStore.restoreSession();
-
-    // If session restoration is successful, load leaves
-    if (userId.value) { // Ensure userId is available after restoring session
-      await leavesStore.getAll(userId.value);
-      await userStore.loadUserProfile();
-    }
-  } catch (error) {
-    console.error("Error during session restoration or loading leaves:", error);
-  }
-});*/
+<script setup lang="ts">
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 </script>
 
 <style>

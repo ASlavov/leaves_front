@@ -217,6 +217,10 @@
     "deleteUserSuccess": "User deleted successfully.",
     "terminate": "Terminate",
     "hireDate": "Employment Start Date",
+    "deleteUserWarning": "You are about to permanently delete this user and all their associated data. This action cannot be undone.",
+    "typeNameToConfirm": "Type the name '{name}' to confirm:",
+    "userDeletedSuccess": "User deleted successfully.",
+    "userDeletedError": "Could not delete user.",
     "personalWorkSchedule": "Personal Work Schedule",
     "workScheduleNote": "Leave blank to use company default.",
     "showAdvancedRules": "Show Advanced Rules",
@@ -251,7 +255,13 @@
     "documentSourcesNote": "Select sources from which to retrieve documents.",
     "googleDocNote": "Allow linking Google Docs as company documents",
     "sharepointNote": "Allow linking SharePoint documents",
-    "fileUploadNote": "Allow direct file uploads (PDF, DOCX, etc.)"
+    "fileUploadNote": "Allow direct file uploads (PDF, DOCX, etc.)",
+    "changePhoto": "Change photo",
+    "removePhoto": "Remove photo",
+    "deleteGroupTitle": "Delete Group",
+    "deleteGroupConfirm": "Are you sure you want to delete the group \"{name}\"?",
+    "groupDeleted": "Group deleted successfully!",
+    "deleteGroupError": "Could not delete the group!"
   },
   "leaves": {
     "cancelLeave": "Cancel Leave",
@@ -309,10 +319,12 @@
     "admin": {
       "recordTitle": "Record Administrative Leave",
       "selectEmployee": "Select Employee",
+      "selectEmployees": "Select employees",
       "dateRange": "Date Range",
       "reasonNotes": "Reason / Notes",
       "submitBtn": "Record Leave",
       "saveSuccess": "Administrative leave recorded successfully.",
+      "saveSuccessBulk": "Administrative leave recorded successfully for {count} employee(s).",
       "recordBtn": "Record Admin Leave",
       "skipWalletDeduction": "Skip balance deduction (do not consume leave days)"
     }
@@ -447,6 +459,7 @@
       "deleteTypeFailed": "Could not archive leave type",
       "restoreTypeFailed": "Could not restore leave type",
       "adminSaveFailed": "Failed to record administrative leave.",
+      "adminSaveFailedBulk": "{count} recording(s) failed.",
       "attachmentRequired": "Attachment is required for this request duration."
     },
     "user": {

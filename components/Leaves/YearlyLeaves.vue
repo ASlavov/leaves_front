@@ -27,31 +27,34 @@
       :class="{ 'mt-[45px]': props.isSmallComponent }"
     >
       <div
-        class="flex flex-col col-span-2 gap-2 lg:gap-0 lg:grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-4"
+        class="flex flex-col col-span-2 gap-3"
       >
-        <div
-          v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
-          class="text-black dark:text-white col-span-1 font-bold flex items-center gap-4"
-        >
-          <div class="whitespace-nowrap">
-            {{ $t('leaves.leaveRequests') }}
-            <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
-          </div>
-          <button
-            v-if="permissionsStore.can('profile_leave_balance', 'record_admin_leave')"
-            class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[5px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none whitespace-nowrap"
-            @click="adminLeaveModalOpen = true"
+        <!-- Top row: Title + Record Button -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div
+            v-if="permissionsStore.can('profile_leave_balance', 'accept_leave')"
+            class="text-black dark:text-white font-bold flex items-center gap-4 flex-wrap"
           >
-            {{ $t('leaves.admin.recordBtn') }}
-          </button>
-        </div>
-        <div v-else>
-          {{ $t('leaves.yearlyLeaves') }}
+            <div class="whitespace-nowrap">
+              {{ $t('leaves.leaveRequests') }}
+              <span class="text-[#EA021A]">({{ filteredLeaves.length }})</span>
+            </div>
+            <button
+              v-if="permissionsStore.can('profile_leave_balance', 'record_admin_leave')"
+              class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[5px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none whitespace-nowrap"
+              @click="adminLeaveModalOpen = true"
+            >
+              {{ $t('leaves.admin.recordBtn') }}
+            </button>
+          </div>
+          <div v-else>
+            {{ $t('leaves.yearlyLeaves') }}
+          </div>
         </div>
         <!-- Filters Section -->
         <div
           v-if="!props.isSmallComponent"
-          class="ml-4 grid col-span-3 grid-cols-1 gap-2 lg:gap-4 w-full items-end lg:justify-self-end lg:self-end"
+          class="grid grid-cols-1 gap-2 lg:gap-4 w-full items-end"
           :class="
             permissionsStore.can('profile_leave_balance', 'accept_leave')
               ? 'sm:grid-cols-5'
@@ -114,7 +117,7 @@
             select-id="year-select"
           />
         </div>
-        <div v-else class="justify-self-end self-end w-full col-span-3">
+        <div v-else class="w-full">
           <NuxtLink
             to="/yearly-leaves"
             class="text-right text-[#EA021A] dark:text-[#FF021A] underline block"
