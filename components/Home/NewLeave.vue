@@ -129,6 +129,36 @@
               </div>
             </div>
 
+            <!-- Overlap notice -->
+            <div
+              v-if="overlappingLeaves.length"
+              class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm dark:bg-blue-900/20 dark:border-blue-700"
+            >
+              <p class="font-medium text-blue-800 dark:text-blue-300 mb-2">
+                {{ $t('leaves.overlapNotice') }}
+              </p>
+              <ul class="space-y-1.5">
+                <li
+                  v-for="leave in overlappingLeaves"
+                  :key="leave.id"
+                  class="flex items-center gap-2 text-blue-700 dark:text-blue-400"
+                >
+                  <span class="flex-1 font-medium">{{ leave.leave_type_name }}</span>
+                  <span class="text-xs">{{ leave.start_date }} – {{ leave.end_date }}</span>
+                  <span
+                    class="text-xs px-1.5 py-0.5 rounded-full shrink-0"
+                    :class="
+                      leave.status === 'approved'
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                    "
+                  >
+                    {{ $t(`leaves.${leave.status}`) }}
+                  </span>
+                </li>
+              </ul>
+            </div>
+
             <!-- Hourly Time Row -->
             <div
               v-if="selectedLeaveTypeTemplate?.is_hourly"
@@ -323,6 +353,30 @@ const computedRequestedDays = computed(() => {
     current.setDate(current.getDate() + 1);
   }
   return days;
+});
+
+const overlappingLeaves = computed(() => {
+  const s = startDate.value;
+  const e = selectedLeaveTypeTemplate.value?.is_hourly ? startDate.value : endDate.value;
+  if (!s || !e) return [];
+
+  const userLeaves = Array.isArray(leavesStore.leavesData?.currentUser)
+    ? (leavesStore.leavesData.currentUser as any[]).filter(
+        (l) => l && typeof l === 'object' && 'id' in l && 'status' in l,
+      )
+    : [];
+
+  return userLeaves
+    .filter(
+      (l) =>
+        (l.status === 'pending' || l.status === 'approved') && l.start_date <= e && l.end_date >= s,
+    )
+    .map((l) => ({
+      ...l,
+      leave_type_name:
+        leavesTypes.value.find((lt) => String(lt.id) === String(l.leave_type_id))?.name ??
+        String(l.leave_type_id),
+    }));
 });
 
 const isAttachmentRequired = computed(() => {

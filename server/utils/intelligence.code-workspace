@@ -4,7 +4,7 @@
 			"path": "../.."
 		},
 		{
-			"path": "../../../../../../../laragon/www/intelligence-back"
+			"path": "../../../../../../../htdocs/intelligence-back"
 		}
 	],
 	"settings": {}

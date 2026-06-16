@@ -26,9 +26,7 @@
       class="grid grid-cols-2 text-black gap-y-2 dark:text-white"
       :class="{ 'mt-[45px]': props.isSmallComponent }"
     >
-      <div
-        class="flex flex-col col-span-2 gap-3"
-      >
+      <div class="flex flex-col lg:flex-row col-span-2 gap-3 justify-between">
         <!-- Top row: Title + Record Button -->
         <div class="flex flex-wrap items-center gap-3">
           <div
@@ -117,12 +115,27 @@
             select-id="year-select"
           />
         </div>
-        <div v-else class="w-full">
+        <div v-else class="">
           <NuxtLink
             to="/yearly-leaves"
-            class="text-right text-[#EA021A] dark:text-[#FF021A] underline block"
+            class="text-xs font-semibold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors flex items-center gap-1"
           >
             {{ $t('leaves.allRequests') }}
+            <svg
+              data-v-b143e14f=""
+              class="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                data-v-b143e14f=""
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m9 18 6-6-6-6"
+              ></path>
+            </svg>
           </NuxtLink>
         </div>
       </div>

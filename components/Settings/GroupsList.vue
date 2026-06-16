@@ -221,11 +221,11 @@ const {
 } = useAllDepartments();
 const { data: remoteUsers, pending: usersPending } = useAllUsers();
 
-// Compute the current theme
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
-  return $colorMode?.value || 'light';
-});
+// No unused vars
+// const theme = computed(() => {
+//   const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
+//   return $colorMode?.value || 'light';
+// });
 
 // Loading state combined
 const loading = computed(

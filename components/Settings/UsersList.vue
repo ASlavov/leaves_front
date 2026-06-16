@@ -49,7 +49,9 @@
       />
       <div class="relative -m-4 p-4 mt-0">
         <!-- Column header row (desktop only) -->
-        <div class="hidden lg:grid lg:grid-cols-12 items-center gap-x-[10px] px-[20px] pr-[30px] pb-[8px] text-[12px] font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wide">
+        <div
+          class="hidden lg:grid lg:grid-cols-12 items-center gap-x-[10px] px-[20px] pr-[30px] pb-[8px] text-[12px] font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wide"
+        >
           <div class="col-span-1"></div>
           <div class="col-span-2">{{ $t('settings.firstName') }}</div>
           <div class="col-span-2">{{ $t('settings.lastName') }}</div>

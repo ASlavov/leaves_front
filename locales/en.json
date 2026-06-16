@@ -312,6 +312,7 @@
     "reason": "Requester's comment",
     "proRataNote": "(* Pro-rata: available balance based on monthly accrual)",
     "overflowWarning": "Warning: Request exceeds balance ({paid} paid days + {overflow} overflow days).",
+    "overlapNotice": "You already have leave(s) in this period:",
     "startTime": "Start Time",
     "endTime": "End Time",
     "attachmentRequired": "Attachment Required",

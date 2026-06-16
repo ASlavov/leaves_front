@@ -151,7 +151,7 @@ const groupedResults = computed(() => {
 });
 
 // Check if there are multiple users
-const hasMultipleUsers = computed(() => filteredResults.value.length > 1);
+// const hasMultipleUsers = computed(() => filteredResults.value.length > 1);
 
 // Check for next and previous users
 const hasNext = computed(() => currentIndex.value < filteredResults.value.length - 1);

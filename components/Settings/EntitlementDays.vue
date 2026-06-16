@@ -213,10 +213,11 @@ const allUsers = ref<LocalUser[]>([]);
 const toggledUsers = ref<Record<string, boolean>>({});
 const scrollContainer = ref<HTMLElement | null>(null);
 
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
-  return $colorMode?.value || 'light';
-});
+// No unused vars
+// const theme = computed(() => {
+//   const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
+//   return $colorMode?.value || 'light';
+// });
 
 watch(
   () => userStore.allUsers as User[],
