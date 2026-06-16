@@ -1,15 +1,11 @@
 <template>
   <div>
-    <div v-if="leavesData.message" class="text-center text-gray-500 font-semibold">
-      <div class="flex items-center justify-center h-64">
-        <div class="text-center text-gray-500 font-semibold">
-          {{ $t('leaves.noLeaves') }}
-        </div>
-      </div>
-    </div>
-    <div v-else>
+    <div class="flex justify-between items-center">
+      <h3 class="py-4 font-bold text-[16px] text-[#212121] dark:text-gray-100">
+        {{ $t('leaves.yearlyLeaves') }}
+      </h3>
       <!-- Header: View All link -->
-      <div class="flex justify-end mb-3">
+      <div class="flex justify-end">
         <NuxtLink
           to="/yearly-leaves"
           class="text-xs font-semibold text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors flex items-center gap-1"
@@ -26,29 +22,36 @@
           </svg>
         </NuxtLink>
       </div>
-
-      <!-- Skeleton Loader: Show when loading is true -->
-      <div v-if="loading" class="space-y-4">
-        <div
-          v-for="index in skeletonCount"
-          :key="index"
-          class="flex items-center bg-gray-200 border border-gray-300 hover:shadow-md transition-shadow duration-300 rounded-md p-4 space-x-4 mb-4 animate-pulse dark:bg-neutral-800 dark:text-gray-100"
-        >
-          <!-- Simulating the layout for the skeleton loader -->
-          <div class="flex-shrink-0 bg-gray-300 h-6 w-6 rounded-full"></div>
-          <div class="flex-1">
-            <div class="h-4 bg-gray-300 rounded mb-2"></div>
-            <div class="h-4 bg-gray-300 rounded"></div>
-          </div>
-          <div class="flex-1 text-center">
-            <div class="h-4 bg-gray-300 rounded"></div>
-          </div>
-          <div class="flex-1 text-right">
-            <div class="h-4 bg-gray-300 rounded"></div>
-          </div>
+    </div>
+    <!-- Skeleton Loader: Show when loading is true -->
+    <div v-if="loading" class="space-y-4">
+      <div
+        v-for="index in skeletonCount"
+        :key="index"
+        class="flex items-center bg-gray-200 border border-gray-300 hover:shadow-md transition-shadow duration-300 rounded-md p-4 space-x-4 mb-4 animate-pulse dark:bg-neutral-800 dark:text-gray-100"
+      >
+        <!-- Simulating the layout for the skeleton loader -->
+        <div class="flex-shrink-0 bg-gray-300 h-6 w-6 rounded-full"></div>
+        <div class="flex-1">
+          <div class="h-4 bg-gray-300 rounded mb-2"></div>
+          <div class="h-4 bg-gray-300 rounded"></div>
+        </div>
+        <div class="flex-1 text-center">
+          <div class="h-4 bg-gray-300 rounded"></div>
+        </div>
+        <div class="flex-1 text-right">
+          <div class="h-4 bg-gray-300 rounded"></div>
         </div>
       </div>
-
+    </div>
+    <div v-if="leavesData.message" class="text-center text-gray-500 font-semibold">
+      <div class="flex items-center justify-center h-64">
+        <div class="text-center text-gray-500 font-semibold">
+          {{ $t('leaves.noLeaves') }}
+        </div>
+      </div>
+    </div>
+    <div v-else>
       <!-- Actual Content: Show when loading is false -->
       <div v-if="!loading">
         <!-- Actual Content: Show when loading is false -->

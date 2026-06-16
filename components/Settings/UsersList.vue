@@ -48,6 +48,17 @@
         @sort="sortBy"
       />
       <div class="relative -m-4 p-4 mt-0">
+        <!-- Column header row (desktop only) -->
+        <div
+          class="hidden lg:grid lg:grid-cols-12 items-center gap-x-[10px] px-[20px] pr-[30px] pb-[8px] text-[12px] font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wide"
+        >
+          <div class="col-span-1"></div>
+          <div class="col-span-2">{{ $t('settings.firstName') }}</div>
+          <div class="col-span-2">{{ $t('settings.lastName') }}</div>
+          <div class="col-span-2">{{ $t('settings.jobTitle') }}</div>
+          <div class="col-span-2">{{ $t('settings.group') }}</div>
+          <div class="col-span-3 lg:justify-self-end">{{ $t('common.edit') }}</div>
+        </div>
         <div
           ref="scrollContainer"
           class="overflow-auto max-h-[50vh] grid gap-[10px] pr-[15px] -mr-[5px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
@@ -79,14 +90,14 @@
             >
               <a
                 v-if="permissionsStore.can('all_users', 'modify')"
-                class="cursor-pointer text-[#EA021A] font-bold underline"
+                class="cursor-pointer text-[#EA021A] font-bold underline whitespace-nowrap"
                 @click="editUser(user.id)"
                 >{{ $t('settings.editProfile') }}</a
               >
 
               <button
                 v-if="permissionsStore.can('all_users', 'modify')"
-                class="h-[32px] px-[12px] rounded-[6px] text-[13px] font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 focus:outline-none transition-colors"
+                class="h-[32px] px-[12px] rounded-[6px] text-[13px] font-medium text-amber-700 hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-900/20 focus:outline-none transition-colors whitespace-nowrap"
                 @click="showTerminateUser(user.id)"
               >
                 {{ $t('settings.terminate') }}

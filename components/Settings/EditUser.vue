@@ -43,8 +43,10 @@
               <span v-else class="text-white font-bold text-lg">
                 {{ firstNameInitial }}{{ lastNameInitial }}
               </span>
+              <!-- Edit photo button -->
               <button
                 class="absolute bottom-0 right-0 w-[25px] h-[25px] bg-[#EA021A] rounded-full flex items-center justify-center"
+                :title="$t('settings.changePhoto')"
                 @click="triggerFileSelect"
               >
                 <svg
@@ -65,6 +67,28 @@
                       <rect width="15" height="15" fill="white" />
                     </clipPath>
                   </defs>
+                </svg>
+              </button>
+              <!-- Remove photo button (shown only when a photo is set) -->
+              <button
+                v-if="userPhoto"
+                class="absolute top-0 left-0 w-[25px] h-[25px] bg-gray-600 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                :title="$t('settings.removePhoto')"
+                @click="removePhoto"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
                 </svg>
               </button>
               <input
@@ -233,8 +257,10 @@
               <span v-else class="text-white font-bold">
                 {{ firstNameInitial }}{{ lastNameInitial }}
               </span>
+              <!-- Edit photo button -->
               <button
                 class="absolute bottom-1 right-1 transform bg-[#EA021A] rounded-full p-2"
+                :title="$t('settings.changePhoto')"
                 @click="triggerFileSelect"
               >
                 <svg
@@ -255,6 +281,28 @@
                       <rect width="15" height="15" fill="white" />
                     </clipPath>
                   </defs>
+                </svg>
+              </button>
+              <!-- Remove photo button (shown only when a photo is set) -->
+              <button
+                v-if="userPhoto"
+                class="absolute top-1 left-1 w-[28px] h-[28px] bg-gray-600 hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors"
+                :title="$t('settings.removePhoto')"
+                @click="removePhoto"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
                 </svg>
               </button>
               <input
@@ -504,6 +552,15 @@ const triggerFileSelect = () => {
   }
 };
 
+const removePhoto = () => {
+  formPhoto.value = null;
+  // Send empty string with a remove marker — the server route will pass null to backend
+  formImage.value = 'data:remove';
+  if (fileInput.value) {
+    fileInput.value.value = '';
+  }
+};
+
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -559,6 +616,15 @@ async function fetchUserData() {
   }
 }
 
+function formatHireDate(rawDate: string | null | undefined): string {
+  if (!rawDate) return '';
+  // Parse the ISO date safely in local time (YYYY-MM-DD)
+  const parts = rawDate.split('T')[0].split('-');
+  if (parts.length !== 3) return rawDate;
+  // Return YYYY-MM-DD so flatpickr can parse it correctly
+  return `${parts[0]}-${parts[1]}-${parts[2]}`;
+}
+
 function initializeFormFields(userInfo: User) {
   const userName = userInfo.name || '';
   const nameParts = userName.trim().split(' ');
@@ -573,7 +639,7 @@ function initializeFormFields(userInfo: User) {
   formTitleDescription.value = userInfo.profile?.title_description || '';
   formSelectedDepartmentId.value = userInfo.department?.id ? String(userInfo.department.id) : '';
   formPhoto.value = userInfo.profile?.profile_image_base64 || null;
-  formHireDate.value = userInfo.hire_date || '';
+  formHireDate.value = formatHireDate(userInfo.hire_date);
   formWorkSchedule.value = userInfo.work_schedule || [];
   formIcalToken.value = userInfo.ical_token || '';
 }
@@ -623,6 +689,9 @@ const submitForm = async () => {
         formWorkSchedule.value.length > 0 ? formWorkSchedule.value : null,
         formHireDate.value || null,
       );
+      // Real-time update: re-fetch and re-initialize form fields so changes
+      // are reflected immediately without a full page refresh.
+      await fetchUserData();
     }
     (useNuxtApp() as any).$toast.success(t('settings.profileUpdated'));
     emit('saved');

@@ -134,14 +134,55 @@
   </template>
 
   <SharedBaseModal v-model="showModal">
-    <!-- Conditionally render EditUser or DeleteUser component -->
+    <!-- Conditionally render EditGroup component for edit mode -->
     <component
       :is="modalComponent"
+      v-if="modalType === 'edit'"
       :group-id="bridgedGroupId"
       :as-modal="true"
       @saved="closeModal"
     />
   </SharedBaseModal>
+
+  <!-- Delete Group Confirmation Modal -->
+  <Teleport to="body">
+    <div
+      v-if="showDeleteConfirm"
+      class="fixed inset-0 z-[90] bg-black/50 flex items-center justify-center"
+      @click.self="showDeleteConfirm = false"
+    >
+      <div class="sm:max-w-sm w-full m-4 bg-white dark:bg-neutral-800 rounded-xl shadow-lg">
+        <div class="px-6 pt-6 pb-4">
+          <h3 class="text-[18px] font-bold text-black dark:text-white mb-2">
+            {{ $t('settings.deleteGroupTitle') }}
+          </h3>
+          <p class="text-[14px] text-gray-600 dark:text-neutral-400 mb-4">
+            {{ $t('settings.deleteGroupConfirm', { name: deleteTargetGroupName }) }}
+          </p>
+          <p class="text-[12px] text-amber-600 dark:text-amber-400">
+            {{ $t('common.irreversibleAction') }}
+          </p>
+        </div>
+        <div class="flex justify-end gap-[10px] px-6 pb-6">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center py-[10px] px-[20px] rounded-[70px] border border-[#DFEAF2] dark:border-neutral-600 text-[14px] font-bold text-gray-700 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-700 focus:outline-none"
+            @click="showDeleteConfirm = false"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+          <button
+            type="button"
+            :disabled="deleting"
+            class="inline-flex items-center justify-center py-[10px] px-[20px] rounded-[70px] bg-red-600 text-white text-[14px] font-bold hover:bg-red-700 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="confirmDeleteGroup"
+          >
+            {{ deleting ? $t('common.loading') : $t('common.delete') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -155,6 +196,8 @@ import { useAllUsers } from '@/composables/userApiComposable';
 import type { User, Department } from '~/types';
 
 const centralStore = useCentralStore();
+const { $toast } = useNuxtApp() as any;
+const { t } = useI18n();
 const userStore = centralStore.userStore;
 const departmentsStore = centralStore.departmentsStore;
 const permissionsStore = centralStore.permissionsStore;
@@ -164,6 +207,12 @@ const showModal = ref(false);
 const modalType = ref<'edit' | 'delete' | ''>('');
 const selectedGroupId = ref<string | number | null>(null);
 
+// Delete confirmation state
+const showDeleteConfirm = ref(false);
+const deleting = ref(false);
+const deleteTargetGroupId = ref<string | number | null>(null);
+const deleteTargetGroupName = ref('');
+
 // Use reactive fetching
 const {
   data: remoteDepartments,
@@ -172,11 +221,11 @@ const {
 } = useAllDepartments();
 const { data: remoteUsers, pending: usersPending } = useAllUsers();
 
-// Compute the current theme
-const theme = computed(() => {
-  const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
-  return $colorMode?.value || 'light';
-});
+// No unused vars
+// const theme = computed(() => {
+//   const { $colorMode } = useNuxtApp() as unknown as { $colorMode: { value: string } };
+//   return $colorMode?.value || 'light';
+// });
 
 // Loading state combined
 const loading = computed(
@@ -326,9 +375,30 @@ const editGroup = (groupId: string | number) => {
 };
 
 const deleteGroup = (groupId: string | number) => {
-  selectedGroupId.value = groupId;
-  modalType.value = 'delete';
-  showModal.value = true;
+  // Show proper confirmation dialog instead of broken BaseModal with null component
+  const group = (remoteDepartments.value || departmentsStore.departmentsData || []).find(
+    (d: Department) => d.id === groupId,
+  );
+  deleteTargetGroupId.value = groupId;
+  deleteTargetGroupName.value = group?.name || String(groupId);
+  showDeleteConfirm.value = true;
+};
+
+const confirmDeleteGroup = async () => {
+  if (!deleteTargetGroupId.value) return;
+  deleting.value = true;
+  try {
+    await departmentsStore.deleteDepartment(deleteTargetGroupId.value);
+    $toast.success(t('settings.groupDeleted'));
+    showDeleteConfirm.value = false;
+    deleteTargetGroupId.value = null;
+    deleteTargetGroupName.value = '';
+    await refreshDepartments();
+  } catch {
+    $toast.error(t('settings.deleteGroupError'));
+  } finally {
+    deleting.value = false;
+  }
 };
 
 const closeModal = async () => {

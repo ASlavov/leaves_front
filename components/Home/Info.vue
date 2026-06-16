@@ -20,9 +20,6 @@
         "
         class="lg:col-span-6 flex flex-col"
       >
-        <h3 class="py-4 font-bold text-[16px] text-[#212121] dark:text-gray-100">
-          {{ $t('leaves.yearlyLeaves') }}
-        </h3>
         <div class="flex-1 space-y-3 max-h-[392px] h-full overflow-y-auto">
           <LeavesYearInfo />
         </div>

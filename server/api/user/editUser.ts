@@ -40,7 +40,12 @@ export default defineEventHandler(async (event) => {
         internal_phone: userInternalPhone,
         job_title: userTitle,
         job_description: userTitleDescription,
-        profile_image: userImage,
+        // 'data:remove' = explicit photo removal → send null; '' = no change → omit
+        ...(userImage === 'data:remove'
+          ? { profile_image: null }
+          : userImage
+            ? { profile_image: userImage }
+            : {}),
         work_schedule: workSchedule ?? undefined,
         hire_date: hireDate ?? undefined,
       },

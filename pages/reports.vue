@@ -111,7 +111,7 @@ import PendingQueue from '@/components/Reports/PendingQueue.vue';
 import Headcount from '@/components/Reports/Headcount.vue';
 import ExportReportModal from '@/components/Reports/ExportReportModal.vue';
 
-definePageMeta({ middleware: ['auth'] as any }); // if an auth middleware exists
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 
 const { t } = useI18n();
 const { label: labelClass, submitBtn: submitBtnClass } = useFormStyles();
