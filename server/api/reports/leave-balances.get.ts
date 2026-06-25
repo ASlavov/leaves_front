@@ -20,14 +20,22 @@ export default defineEventHandler(async (event) => {
       : [];
   typeIds.forEach((t) => params.append('leave_type_ids[]', String(t)));
 
-  return await $fetch(
-    `${config.public.apiBase}${config.public.reports.leaveBalances}?${params.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Cookie: cookieHeader,
-        'X-CSRF-TOKEN': config.apiSecret,
+  try {
+    return await $fetch(
+      `${config.public.apiBase}${config.public.reports.leaveBalances}?${params.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Cookie: cookieHeader,
+          'X-CSRF-TOKEN': config.apiSecret,
+        },
       },
-    },
-  );
+    );
+  } catch (error: any) {
+    const status = error?.response?.status ?? error?.status ?? 500;
+    throw createError({
+      statusCode: status,
+      statusMessage: error?.data?.message ?? error?.message ?? 'Failed to fetch leave balances',
+    });
+  }
 });

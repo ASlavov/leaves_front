@@ -1,15 +1,15 @@
 <template>
-  <div class="org-node flex flex-col items-start">
+  <div class="org-node flex flex-col items-center">
     <!-- Node Box -->
     <div
-      class="relative flex flex-col items-center p-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm min-w-[200px] hover:shadow-md transition-shadow cursor-pointer"
+      class="relative flex flex-col items-center p-3 border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 rounded-lg shadow-sm min-w-[180px] max-w-[220px] hover:shadow-md transition-shadow cursor-pointer"
       @click="$emit('click-node', node.user?.id)"
     >
       <UserAvatar :user="node.user as any" class="mb-2" />
-      <div class="font-bold text-gray-900 dark:text-gray-100 text-sm">
+      <div class="font-bold text-gray-900 dark:text-gray-100 text-sm text-center truncate w-full">
         {{ node.user?.name || 'Unknown' }}
       </div>
-      <div class="text-xs text-gray-500 dark:text-gray-400">
+      <div class="text-xs text-gray-500 dark:text-gray-400 text-center truncate w-full">
         {{ node.user?.job_title || 'Employee' }}
       </div>
 
@@ -60,31 +60,42 @@
       </div>
     </div>
 
-    <!-- Children -->
+    <!-- Children: top-down horizontal layout -->
     <div
       v-if="node.children && node.children.length > 0"
-      class="flex flex-col gap-6 mt-4 relative pl-10 border-l-2 border-gray-300 dark:border-neutral-600 ml-[3rem]"
+      class="flex flex-col items-center mt-0"
     >
-      <div
-        v-for="child in node.children"
-        :key="child.id"
-        class="relative flex flex-col items-start"
-      >
-        <!-- Horizontal connector line to parent plane -->
+      <!-- Vertical stem from parent box down to horizontal bar -->
+      <div class="w-px h-8 bg-gray-300 dark:bg-neutral-600"></div>
+
+      <!-- Horizontal bar + children row -->
+      <div class="relative flex flex-row gap-8 items-start justify-center">
+        <!-- Horizontal connecting line spanning all children -->
         <div
-          class="absolute h-px w-10 bg-gray-300 dark:bg-neutral-600 top-[2.5rem] left-[-2.5rem]"
+          v-if="node.children.length > 1"
+          class="absolute top-0 left-[calc(50%/var(--child-count,1)+0.5rem)] right-[calc(50%/var(--child-count,1)+0.5rem)] h-px bg-gray-300 dark:bg-neutral-600 -translate-x-0"
+          style="left: 1.5rem; right: 1.5rem;"
         ></div>
 
-        <OrgChartNode
-          :node="child"
-          :edit-mode="editMode"
-          :depth="depth + 1"
-          @add-child="$emit('add-child', $event)"
-          @add-sibling="$emit('add-sibling', $event)"
-          @remove="$emit('remove', $event)"
-          @move="$emit('move', $event)"
-          @click-node="$emit('click-node', $event)"
-        />
+        <div
+          v-for="child in node.children"
+          :key="child.id"
+          class="flex flex-col items-center"
+        >
+          <!-- Vertical drop from bar to child -->
+          <div class="w-px h-8 bg-gray-300 dark:bg-neutral-600"></div>
+
+          <OrgChartNode
+            :node="child"
+            :edit-mode="editMode"
+            :depth="depth + 1"
+            @add-child="$emit('add-child', $event)"
+            @add-sibling="$emit('add-sibling', $event)"
+            @remove="$emit('remove', $event)"
+            @move="$emit('move', $event)"
+            @click-node="$emit('click-node', $event)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -104,5 +115,7 @@ defineEmits(['add-child', 'add-sibling', 'remove', 'move', 'click-node']);
 </script>
 
 <style scoped>
-/* Stylings handled dynamically with Vue inline nodes for proper layout intersection. */
+.org-node {
+  position: relative;
+}
 </style>

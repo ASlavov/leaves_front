@@ -127,7 +127,7 @@
       </div>
 
       <!-- Submit -->
-      <div class="pt-2 flex justify-end">
+      <div class="pt-2 pb-4 flex justify-end">
         <button
           type="submit"
           :disabled="isSaving"

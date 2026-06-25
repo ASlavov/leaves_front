@@ -12,17 +12,15 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Return the raw response from $fetch to proxy stream/headers correctly
     const response = await $fetch.raw(
       `${config.public.apiBase}${config.public.documents.base}/${id}/download`,
       {
         method: 'GET',
         headers: { Authorization: `Bearer ${token}`, Cookie: cookieHeader },
-        responseType: 'stream',
+        responseType: 'arrayBuffer',
       },
     );
 
-    // Make sure we forward the headers, especially Content-Type and Content-Disposition
     const headers = new Headers(response.headers);
     if (headers.has('content-type')) {
       setResponseHeader(event, 'content-type', headers.get('content-type')!);
@@ -34,6 +32,6 @@ export default defineEventHandler(async (event) => {
     return response._data;
   } catch (error: any) {
     console.error('Error downloading document:', error);
-    throw createError({ statusCode: 500, statusMessage: 'Error downloading document' });
+    throw createError({ statusCode: error?.status ?? 500, statusMessage: error?.data?.error ?? 'Error downloading document' });
   }
 });

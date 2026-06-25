@@ -14,7 +14,7 @@ import { useI18n } from 'vue-i18n';
 export const useAuthStore = defineStore('authStore', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
-  const isAuthenticated = computed(() => !!useCookie('auth_token').value);
+  const isAuthenticated = computed(() => useCookie('user_authed').value === 'true');
   const userStore = useUserStore();
   const { t } = useI18n();
 
@@ -26,9 +26,7 @@ export const useAuthStore = defineStore('authStore', () => {
     loading.value = true;
 
     try {
-      const authToken = useCookie('auth_token');
-      // Check for the existence of the cookie
-      return !!authToken.value;
+      return useCookie('user_authed').value === 'true';
     } catch (err) {
       setError(t('errors.auth.noSession'));
     } finally {

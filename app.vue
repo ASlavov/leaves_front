@@ -38,11 +38,18 @@ const runInitCode = async () => {
       console.log('runInitCode: Initialization complete');
     }
   } catch (error: unknown) {
-    console.error('runInitCode error:', error); // Debug
-    $toast.error('An error occurred during initialization', {
-      position: 'bottom-right',
-      autoClose: 5000,
-    });
+    console.error('runInitCode error:', error);
+    const status = (error as any)?.status ?? (error as any)?.statusCode;
+    if (status === 403 || status === 401) {
+      // Session expired — clear auth cookie and go to login
+      userAuthed.value = undefined;
+      await router.push('/auth/login');
+    } else {
+      $toast.error('An error occurred during initialization', {
+        position: 'bottom-right',
+        autoClose: 5000,
+      });
+    }
   }
 };
 

@@ -41,6 +41,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    'nuxt-auth-utils',
     '@pinia/nuxt',
     '@nuxtjs/color-mode',
     'pinia-plugin-persistedstate/nuxt',
@@ -72,6 +73,12 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    ssr: {
+      noExternal: ['@schedule-x/vue'],
+    },
+    optimizeDeps: {
+      include: ['@schedule-x/vue'],
+    },
     server: {
       watch: {
         usePolling: false,
@@ -85,7 +92,6 @@ export default defineNuxtConfig({
     // The private keys which are only available within server-side
     // These can be overridden by NUXT_API_SECRET and NUXT_JWT_SECRET
     apiSecret: process.env.NUXT_API_SECRET || process.env.apiSecret || '',
-    jwtSecret: process.env.NUXT_JWT_SECRET || process.env.jwtSecret || 'fallback-secret-change-me',
     env: process.env.NUXT_ENV || process.env.env || 'production',
 
     public: {

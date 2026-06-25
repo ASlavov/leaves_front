@@ -1,15 +1,15 @@
 import { defineEventHandler, readBody, getHeader } from 'h3'; // Import cookie helper from h3
 import { useRuntimeConfig } from '#imports'; // Runtime config to access the base API URLs
 import { proxyError } from '~/server/utils/proxyError';
-import { requireRole } from '~/server/utils/requireRole';
-
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const body = await readBody(event);
   const { requestingUserId, token } = event.context;
   const cookieHeader = getHeader(event, 'cookie') ?? '';
 
-  await requireRole(event, ['admin', 'hr-manager']);
+  if (!token) {
+    throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
+  }
 
   try {
     const {

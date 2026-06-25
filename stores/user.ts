@@ -98,7 +98,7 @@ export const useUserStore = defineStore('userStore', () => {
       });
 
       if (result) {
-        if (targetUserId === userId.value) {
+        if (String(targetUserId) === String(userId.value)) {
           await loadUserProfile();
         } else {
           await getAllUsers();

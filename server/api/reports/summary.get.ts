@@ -21,14 +21,22 @@ export default defineEventHandler(async (event) => {
   toArray(q.leave_type_ids).forEach((t) => params.append('leave_type_ids[]', t));
   toArray(q.user_ids).forEach((u) => params.append('user_ids[]', u));
 
-  return await $fetch(
-    `${config.public.apiBase}${config.public.reports.summary}?${params.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Cookie: cookieHeader,
-        'X-CSRF-TOKEN': config.apiSecret,
+  try {
+    return await $fetch(
+      `${config.public.apiBase}${config.public.reports.summary}?${params.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Cookie: cookieHeader,
+          'X-CSRF-TOKEN': config.apiSecret,
+        },
       },
-    },
-  );
+    );
+  } catch (error: any) {
+    const status = error?.response?.status ?? error?.status ?? 500;
+    throw createError({
+      statusCode: status,
+      statusMessage: error?.data?.message ?? error?.message ?? 'Failed to fetch report summary',
+    });
+  }
 });

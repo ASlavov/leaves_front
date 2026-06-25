@@ -124,9 +124,23 @@ const formatBytes = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-const handleAction = () => {
+const handleAction = async () => {
   if (props.document.source_type === 'file') {
-    window.location.href = getDocumentDownloadUrl(props.document.id);
+    try {
+      const blob = await $fetch<Blob>(getDocumentDownloadUrl(props.document.id), {
+        responseType: 'blob',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (props.document as any).original_filename || props.document.title || 'document';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Download failed', e);
+    }
   } else if (props.document.url) {
     window.open(props.document.url, '_blank', 'noopener,noreferrer');
   }

@@ -82,9 +82,9 @@
             <SharedUserAvatar :user="user" :size="36" class="shrink-0" />
             <div class="min-w-0 flex-1">
               <p
-                class="text-sm font-medium text-gray-800 dark:text-gray-100 truncate flex items-center gap-1.5"
+                class="text-sm font-medium text-gray-800 dark:text-gray-100 flex items-center gap-1.5 min-w-0"
               >
-                {{ user.name }}
+                <span class="truncate min-w-0">{{ user.name }}</span>
                 <span
                   v-if="isHead(user)"
                   class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400 shrink-0"
