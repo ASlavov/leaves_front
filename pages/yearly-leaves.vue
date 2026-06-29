@@ -10,6 +10,7 @@
   <!-- End Content -->
 </template>
 <script setup>
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 /*onMounted(async () => {
   try {
     // Restore session first

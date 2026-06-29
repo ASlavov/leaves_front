@@ -53,6 +53,7 @@
   <HomeDashboardCustomizer v-if="showCustomizer" @close="showCustomizer = false" />
 </template>
 <script setup>
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 import { ref } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 import HomeDashboardCustomizer from '~/components/Home/DashboardCustomizer.vue';

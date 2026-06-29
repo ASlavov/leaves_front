@@ -73,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 import { ref, computed, watch, onMounted, h, type Component } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore';

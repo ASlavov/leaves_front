@@ -8,6 +8,7 @@
 </template>
 
 <script setup>
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue';
 import OrgChartPage from '~/components/OrgChart/OrgChartPage.vue';
 </script>
