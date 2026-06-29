@@ -58,9 +58,7 @@
         </div>
       </template>
     </div>
-    <div
-      class="info-actions pt-[30px] flex flex-wrap gap-[12px] items-center"
-    >
+    <div class="info-actions pt-[30px] flex flex-wrap gap-[12px] items-center">
       <button
         v-if="permissionsStore.can('profile_info', 'modify')"
         class="inline-flex justify-center rounded-[70px] border shrink-0 border-transparent bg-[#EA021A] py-[15px] px-[20px] text-[14px] font-medium text-white shadow-sm hover:bg-[#EA021A]/80 focus:outline-none"

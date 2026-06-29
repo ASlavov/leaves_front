@@ -52,14 +52,14 @@
   <!-- End Content -->
   <HomeDashboardCustomizer v-if="showCustomizer" @close="showCustomizer = false" />
 </template>
-<script setup>
-definePageMeta({ middleware: ['auth'] as any, ssr: false });
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useCentralStore } from '@/stores/centralStore';
 import HomeDashboardCustomizer from '~/components/Home/DashboardCustomizer.vue';
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 
 const centralStore = useCentralStore();
-const showCustomizer = ref(false);
+const showCustomizer = ref<boolean>(false);
 /*onMounted(async () => {
   try {
     // Restore session first

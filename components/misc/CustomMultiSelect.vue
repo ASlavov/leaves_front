@@ -51,62 +51,62 @@
       </div>
     </div>
     <Teleport to="body">
-    <div
-      v-if="isOpen"
-      ref="teleportedDropdown"
-      class="fixed z-[300] max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-neutral-900 dark:border-neutral-700 overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
-      :style="dropdownStyle"
-    >
       <div
-        v-if="hasOptions"
-        class="flex px-4 py-2 border-b border-gray-200 dark:border-neutral-700"
+        v-if="isOpen"
+        ref="teleportedDropdown"
+        class="fixed z-[300] max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-neutral-900 dark:border-neutral-700 overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+        :style="dropdownStyle"
       >
-        <button
-          v-if="!isAllSelected"
-          class="w-full text-left font-bold text-[11px] text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-600"
-          @click="selectAllOptions"
+        <div
+          v-if="hasOptions"
+          class="flex px-4 py-2 border-b border-gray-200 dark:border-neutral-700"
         >
-          {{ $t('common.selectAll') }}
-        </button>
-        <button
-          v-if="selectedOptions.length > 0"
-          class="w-full text-right font-bold text-[11px] text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
-          @click="deselectAllOptions"
-        >
-          {{ $t('common.deleteAll') }}
-        </button>
-      </div>
+          <button
+            v-if="!isAllSelected"
+            class="w-full text-left font-bold text-[11px] text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-600"
+            @click="selectAllOptions"
+          >
+            {{ $t('common.selectAll') }}
+          </button>
+          <button
+            v-if="selectedOptions.length > 0"
+            class="w-full text-right font-bold text-[11px] text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600"
+            @click="deselectAllOptions"
+          >
+            {{ $t('common.deleteAll') }}
+          </button>
+        </div>
 
-      <div
-        v-for="option in filteredOptions"
-        :key="option.id"
-        class="flex items-center py-2.5 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-50 rounded-lg focus:outline-none focus:bg-gray-50 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800 transition-colors"
-        @click="selectOption(option)"
-      >
-        <div v-if="option.icon" class="size-8 me-2" v-html="option.icon"></div>
-        <div>
-          <div class="text-sm font-semibold text-gray-800 dark:text-neutral-200">
-            {{ option.name }}
+        <div
+          v-for="option in filteredOptions"
+          :key="option.id"
+          class="flex items-center py-2.5 px-4 w-full text-sm text-gray-800 cursor-pointer hover:bg-gray-50 rounded-lg focus:outline-none focus:bg-gray-50 dark:hover:bg-neutral-800 dark:text-neutral-200 dark:focus:bg-neutral-800 transition-colors"
+          @click="selectOption(option)"
+        >
+          <div v-if="option.icon" class="size-8 me-2" v-html="option.icon"></div>
+          <div>
+            <div class="text-sm font-semibold text-gray-800 dark:text-neutral-200">
+              {{ option.name }}
+            </div>
+            <div v-if="option.description" class="text-xs text-gray-500 dark:text-neutral-500">
+              {{ option.description }}
+            </div>
           </div>
-          <div v-if="option.description" class="text-xs text-gray-500 dark:text-neutral-500">
-            {{ option.description }}
+          <div class="ms-auto">
+            <span v-if="isSelected(option)">
+              <svg
+                class="shrink-0 size-4 fill-blue-600 text-blue-600"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.736 3.97a.733.733 0 011.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 01-1.065.02L3.217 8.384a.757.757 0 010-1.06.733.733 0 011.047 0l3.052 3.093 5.4-6.425a.247.247 0 01.02-.022Z"
+                />
+              </svg>
+            </span>
           </div>
-        </div>
-        <div class="ms-auto">
-          <span v-if="isSelected(option)">
-            <svg
-              class="shrink-0 size-4 fill-blue-600 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M12.736 3.97a.733.733 0 011.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 01-1.065.02L3.217 8.384a.757.757 0 010-1.06.733.733 0 011.047 0l3.052 3.093 5.4-6.425a.247.247 0 01.02-.022Z"
-              />
-            </svg>
-          </span>
         </div>
       </div>
-    </div>
     </Teleport>
   </div>
 </template>

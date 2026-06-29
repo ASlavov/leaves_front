@@ -61,10 +61,7 @@
     </div>
 
     <!-- Children: top-down horizontal layout -->
-    <div
-      v-if="node.children && node.children.length > 0"
-      class="flex flex-col items-center mt-0"
-    >
+    <div v-if="node.children && node.children.length > 0" class="flex flex-col items-center mt-0">
       <!-- Vertical stem from parent box down to horizontal bar -->
       <div class="w-px h-8 bg-gray-300 dark:bg-neutral-600"></div>
 
@@ -74,14 +71,10 @@
         <div
           v-if="node.children.length > 1"
           class="absolute top-0 left-[calc(50%/var(--child-count,1)+0.5rem)] right-[calc(50%/var(--child-count,1)+0.5rem)] h-px bg-gray-300 dark:bg-neutral-600 -translate-x-0"
-          style="left: 1.5rem; right: 1.5rem;"
+          style="left: 1.5rem; right: 1.5rem"
         ></div>
 
-        <div
-          v-for="child in node.children"
-          :key="child.id"
-          class="flex flex-col items-center"
-        >
+        <div v-for="child in node.children" :key="child.id" class="flex flex-col items-center">
           <!-- Vertical drop from bar to child -->
           <div class="w-px h-8 bg-gray-300 dark:bg-neutral-600"></div>
 

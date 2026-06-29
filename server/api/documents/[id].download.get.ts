@@ -32,6 +32,9 @@ export default defineEventHandler(async (event) => {
     return response._data;
   } catch (error: any) {
     console.error('Error downloading document:', error);
-    throw createError({ statusCode: error?.status ?? 500, statusMessage: error?.data?.error ?? 'Error downloading document' });
+    throw createError({
+      statusCode: error?.status ?? 500,
+      statusMessage: error?.data?.error ?? 'Error downloading document',
+    });
   }
 });

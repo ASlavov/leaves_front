@@ -14,8 +14,8 @@
   </div>
 </template>
 
-<script setup>
-definePageMeta({ middleware: ['auth'] as any, ssr: false });
+<script setup lang="ts">
 import Sidebar from '~/components/SidebarTopbar/Sidebar.vue';
 import DocumentsList from '~/components/Documents/DocumentsList.vue';
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 </script>

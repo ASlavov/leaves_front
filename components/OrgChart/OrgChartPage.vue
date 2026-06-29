@@ -46,7 +46,9 @@
       </button>
     </div>
 
-    <div class="flex-grow flex flex-col items-center overflow-x-auto overflow-y-visible w-full pb-8">
+    <div
+      class="flex-grow flex flex-col items-center overflow-x-auto overflow-y-visible w-full pb-8"
+    >
       <template v-if="centralStore.orgChartStore.loading && !editMode">
         <div class="animate-pulse space-y-4 flex flex-col items-center">
           <div class="w-48 h-16 bg-gray-200 dark:bg-neutral-700 rounded"></div>

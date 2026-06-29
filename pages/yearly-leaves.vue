@@ -9,7 +9,7 @@
   </div>
   <!-- End Content -->
 </template>
-<script setup>
+<script setup lang="ts">
 definePageMeta({ middleware: ['auth'] as any, ssr: false });
 /*onMounted(async () => {
   try {

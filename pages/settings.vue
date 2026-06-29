@@ -73,7 +73,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ middleware: ['auth'] as any, ssr: false });
 import { ref, computed, watch, onMounted, h, type Component } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useCentralStore } from '@/stores/centralStore';
@@ -90,6 +89,7 @@ import WorkWeekSettings from '~/components/Settings/WorkWeekSettings.vue';
 import PublicHolidays from '~/components/Settings/PublicHolidays.vue';
 import Invitations from '~/components/Settings/Invitations.vue';
 import DocumentSources from '~/components/Settings/DocumentSources.vue';
+definePageMeta({ middleware: ['auth'] as any, ssr: false });
 
 // ---------------------------------------------------------------------------
 // Icon factory — produces a 16×16 Heroicons-style SVG component
