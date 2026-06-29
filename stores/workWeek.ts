@@ -11,6 +11,7 @@ export const useWorkWeekStore = defineStore('workWeekStore', () => {
   const days = ref<number[]>([1, 2, 3, 4, 5]);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const loaded = ref(false);
   const { t } = useI18n();
 
   const setError = (msg: string | null) => {
@@ -19,13 +20,16 @@ export const useWorkWeekStore = defineStore('workWeekStore', () => {
 
   function reset() {
     days.value = [1, 2, 3, 4, 5];
+    loaded.value = false;
   }
 
   async function fetchWorkWeek() {
+    if (loaded.value) return;
     loading.value = true;
     try {
       const data = await getWorkWeekComposable();
       days.value = data.days;
+      loaded.value = true;
     } catch (err: any) {
       setError(t('errors.workWeek.fetchFailed'));
       throw err;

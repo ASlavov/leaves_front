@@ -14,6 +14,7 @@ export const useOrgChartStore = defineStore('orgChartStore', () => {
     nodes.value = [];
     error.value = null;
     loading.value = false;
+    loaded.value = false;
   };
 
   const setError = (msg: string | null) => {
@@ -50,7 +51,10 @@ export const useOrgChartStore = defineStore('orgChartStore', () => {
     return assignChildren(null); // Return root nodes
   });
 
-  const fetchOrgChart = async () => {
+  const loaded = ref(false);
+
+  const fetchOrgChart = async (force = false) => {
+    if (loaded.value && !force) return;
     try {
       loading.value = true;
       setError(null);
@@ -63,6 +67,7 @@ export const useOrgChartStore = defineStore('orgChartStore', () => {
           if (n.position !== null && n.position !== undefined) n.position = Number(n.position);
         });
         nodes.value = res;
+        loaded.value = true;
       }
     } catch (err: any) {
       console.error(err);

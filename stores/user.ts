@@ -101,7 +101,7 @@ export const useUserStore = defineStore('userStore', () => {
         if (String(targetUserId) === String(userId.value)) {
           await loadUserProfile();
         } else {
-          await getAllUsers();
+          await getAllUsers(true); // force refresh — data changed
         }
         try {
           await departmentsStore.getAll();
@@ -143,7 +143,7 @@ export const useUserStore = defineStore('userStore', () => {
       loading.value = true;
       setError(null);
       await deleteUserComposable(userId);
-      await getAllUsers();
+      await getAllUsers(true); // force refresh — user was deleted
     } catch (err) {
       setError(t('errors.users.deleteFailed'));
       throw err;
@@ -181,7 +181,7 @@ export const useUserStore = defineStore('userStore', () => {
         hireDate,
       });
 
-      await getAllUsers();
+      await getAllUsers(true); // force refresh — user was added
       try {
         await departmentsStore.getAll();
       } catch (e) {
@@ -195,16 +195,16 @@ export const useUserStore = defineStore('userStore', () => {
     }
   }
 
-  async function getAllUsers() {
-    if (userId.value) {
-      try {
-        loading.value = true;
-        allUsers.value = Object.values(await getAllUsersComposable());
-      } catch (err) {
-        setError(t('errors.user.fetchUsersFailed'));
-      } finally {
-        loading.value = false;
-      }
+  async function getAllUsers(force = false) {
+    if (!userId.value) return;
+    if (!force && allUsers.value.length > 0) return; // already loaded
+    try {
+      loading.value = true;
+      allUsers.value = Object.values(await getAllUsersComposable());
+    } catch (err) {
+      setError(t('errors.user.fetchUsersFailed'));
+    } finally {
+      loading.value = false;
     }
   }
 

@@ -13,6 +13,7 @@ export const useSettingsStore = defineStore('settings', () => {
     doc_source_file: true,
   });
   const loading = ref(false);
+  const loaded = ref(false);
 
   function reset() {
     documentSources.value = {
@@ -20,14 +21,17 @@ export const useSettingsStore = defineStore('settings', () => {
       doc_source_sharepoint: true,
       doc_source_file: true,
     };
+    loaded.value = false;
   }
 
   async function fetchDocumentSources() {
+    if (loaded.value) return;
     try {
       loading.value = true;
       const result: any = await fetchDocumentSourcesComposable();
       if (result) {
         documentSources.value = result;
+        loaded.value = true;
       }
     } catch (e) {
       console.error('Error fetching document sources:', e);

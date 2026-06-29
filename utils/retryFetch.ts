@@ -1,22 +1,24 @@
-export default async function retryFetch<T = unknown>(
+// In-flight deduplication: concurrent calls with the same key share one Promise.
+// This eliminates the duplicate simultaneous requests observed across all stores
+// (getAllUsers 14x, getAllForAllUsers 11x, departments/getAll 8x, etc.)
+const inFlight = new Map<string, Promise<unknown>>();
+
+async function doFetch<T>(
   url: string,
-  options: Record<string, unknown> = {},
-  retries: number = 3,
-  delay: number = 1000,
+  options: Record<string, unknown>,
+  retries: number,
+  delay: number,
 ): Promise<T> {
   for (let i = 0; i < retries; i++) {
     try {
-      // $fetch automatically throws on 4xx and 5xx errors
       const response = (await $fetch(url, options)) as T;
 
-      // If the API explicitly returns 200 OK but packages errors inside the body:
       if (response && typeof response === 'object' && 'statusCode' in response) {
         const resp = response as { statusCode: number };
         if (resp.statusCode === 401) {
           await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
           throw new Error('Unauthorized');
         }
-
         if (resp.statusCode === 403) {
           throw new Error('Forbidden');
         }
@@ -24,51 +26,60 @@ export default async function retryFetch<T = unknown>(
 
       return response;
     } catch (error: any) {
-      // Retrieve the HTTP Status Code from the thrown FetchError
       const status = (error as any).response?.status || (error as any).statusCode;
 
-      // Do NOT retry client errors (400s)
       if (status === 401) {
         console.error('Authentication Error: 401');
         await $fetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
-
         if (import.meta.client) {
           const currentPath = window.location.pathname;
-          // Do NOT redirect if we are already on the auth pages or if this is an explicit login attempt
           if (!currentPath.includes('/auth/login') && !url.includes('/api/auth/login')) {
             window.location.href = '/auth/login';
           }
         }
-        throw error; // Immediately break and throw the error back to the caller
+        throw error;
       }
 
       if (status === 403) {
         console.error('Authorization Error: 403 Forbidden');
-        throw error; // Break and throw, but do NOT logout
+        throw error;
       }
 
       if (status === 400 || status === 422) {
-        throw error; // Don't retry client errors
+        throw error;
       }
 
-      // Never retry non-idempotent methods when the server responded — a 500 on a
-      // POST/PATCH means the request reached the server, so retrying risks duplicates.
-      // Only retry if there is no status (pure network failure).
       const method = ((options.method as string) || 'GET').toUpperCase();
       if (['POST', 'PATCH'].includes(method) && status) {
         throw error;
       }
 
-      // Only retry on network errors or 500s. Rethrow if it's the last attempt.
       if (i === retries - 1) {
         throw error;
       }
 
-      // Exponential backoff
       await new Promise((resolve) => setTimeout(resolve, delay));
       delay *= 2;
     }
   }
 
   throw new Error('Fetch failed after maximum retries');
+}
+
+export default function retryFetch<T = unknown>(
+  url: string,
+  options: Record<string, unknown> = {},
+  retries: number = 3,
+  delay: number = 1000,
+): Promise<T> {
+  // Build a stable dedup key. Body is included so POST /entitlement/get?userId=1
+  // and POST /entitlement/get?userId=2 are correctly treated as distinct.
+  const key = `${((options.method as string) || 'GET').toUpperCase()}:${url}:${JSON.stringify(options.body ?? null)}`;
+
+  const existing = inFlight.get(key);
+  if (existing) return existing as Promise<T>;
+
+  const promise = doFetch<T>(url, options, retries, delay).finally(() => inFlight.delete(key));
+  inFlight.set(key, promise);
+  return promise;
 }
