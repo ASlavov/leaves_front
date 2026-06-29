@@ -58,12 +58,17 @@ const runInitCode = async () => {
   }
 };
 
-// router.afterEach handles the initial load and any hard navigations.
-// The userAuthed watcher below handles login/logout transitions.
-// Both share the initInProgress mutex so they never run concurrently.
+// router.afterEach covers client-side navigations (link clicks, router.push).
+// On Netlify SSG a hard refresh hydrates an already-resolved route without
+// triggering router.afterEach, so onMounted() calls runInitCode() directly
+// as the explicit fallback. The initInProgress mutex prevents duplicate runs.
 router.afterEach(runInitCode);
 
 onMounted(async () => {
+  // Explicit initial trigger — covers refresh/direct URL on SSG deployments
+  // where router.afterEach does not fire during hydration.
+  await runInitCode();
+
   watch(
     () => userAuthed.value,
     async (newValue, oldValue) => {
@@ -76,8 +81,8 @@ onMounted(async () => {
         router.push('/auth/login');
       }
     },
-    // NOT immediate — router.afterEach already covers the initial check,
-    // so { immediate: true } here was the source of the duplicate concurrent init.
+    // Not immediate — the explicit runInitCode() call above covers initial load.
+    // This watcher only reacts to login/logout cookie changes mid-session.
   );
 
   watch(
