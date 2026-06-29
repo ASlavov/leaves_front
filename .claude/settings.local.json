@@ -60,7 +60,9 @@
       "Bash(xargs ls *)",
       "Bash(echo \"exit: $?\")",
       "PowerShell(Head 20 *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(del \"C:\\\\Users\\\\User\\\\Desktop\\\\new_intelligence\\\\intelligence\\\\playwright.investigate.config.ts\")",
+      "Bash(del \"C:\\\\Users\\\\User\\\\Desktop\\\\new_intelligence\\\\intelligence\\\\e2e\\\\investigate-reports-403.ts\")"
     ]
   }
 }

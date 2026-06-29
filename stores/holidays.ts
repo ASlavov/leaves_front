@@ -20,6 +20,7 @@ export const useHolidaysStore = defineStore('holidaysStore', () => {
   const holidays = ref<PublicHoliday[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const loaded = ref(false);
   const { t } = useI18n();
 
   const setError = (msg: string | null) => {
@@ -28,13 +29,17 @@ export const useHolidaysStore = defineStore('holidaysStore', () => {
 
   function reset() {
     holidays.value = [];
+    loaded.value = false;
   }
 
   async function fetchHolidays(year?: number) {
+    // Skip if already loaded for this session and no specific year is requested
+    if (loaded.value && !year) return;
     loading.value = true;
     try {
       const data = await getHolidaysComposable(year);
       holidays.value = sortHolidays(data);
+      if (!year) loaded.value = true;
     } catch (err: any) {
       setError(t('errors.holidays.fetchFailed'));
       throw err;

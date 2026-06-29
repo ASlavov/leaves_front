@@ -73,16 +73,16 @@
             >
               <SharedUserAvatar :user="user" :size="50" />
             </div>
-            <div class="col-span-1 lg:col-span-2">
+            <div class="col-span-1 lg:col-span-2 min-w-0 truncate">
               {{ user.firstName || '' }}
             </div>
-            <div class="col-span-1 lg:col-span-2">
+            <div class="col-span-1 lg:col-span-2 min-w-0 truncate">
               {{ user.lastName || '' }}
             </div>
-            <div class="col-span-1 lg:col-span-2">
+            <div class="col-span-1 lg:col-span-2 min-w-0 truncate">
               {{ user?.profile?.job_title || '' }}
             </div>
-            <div class="col-span-1 lg:col-span-2">
+            <div class="col-span-1 lg:col-span-2 min-w-0 truncate">
               {{ user?.department?.name || '' }}
             </div>
             <div

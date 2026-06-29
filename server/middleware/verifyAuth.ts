@@ -1,78 +1,41 @@
-// server/middleware/verifySession.ts
-import { defineEventHandler, getCookie, createError } from 'h3';
-import { verifyJWT } from '~/server/utils/auth';
+import { defineEventHandler, createError } from 'h3';
 import { setCookie, useRuntimeConfig } from '#imports';
 
 export default defineEventHandler(async (event) => {
-  // Check if the request path starts with `/api/auth`
   const url = event.path || '';
 
-  if (!url.startsWith('/api')) {
+  if (!url.startsWith('/api') || url.startsWith('/api/auth')) {
     return;
   }
 
-  // Exempt authentication routes from session verification
-  if (url.startsWith('/api/auth')) {
-    return;
-  }
+  const session = await getUserSession(event);
 
-  // Read the auth_token from the cookie
-  const authToken = getCookie(event, 'auth_token');
-
-  // If no token is present, we cannot verify. The request will proceed but event.context will not have auth data.
-  if (!authToken) {
+  if (!session?.token) {
     setCookie(event, 'user_authed', 'false', {
       httpOnly: false,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 0,
     });
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Not authenticated',
-    });
+    throw createError({ statusCode: 403, statusMessage: 'Not authenticated' });
   }
 
-  try {
-    // Verify the JWT and extract the payload
-    const payload = verifyJWT(authToken);
+  event.context.token = session.token;
+  event.context.requestingUserId = session.userId;
 
-    if (!payload.userId || !payload.token) {
-      setCookie(event, 'user_authed', '', { expires: new Date(0) });
-      throw new Error('Invalid JWT payload');
-    }
+  const config = useRuntimeConfig();
+  const isSecure = process.env.NODE_ENV === 'production';
+  const maxAge = config.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 60 * 8;
 
-    // Attach user info to event.context for use in API handlers
-    event.context.requestingUserId = payload.userId;
-    event.context.token = payload.token;
-
-    const config = useRuntimeConfig();
-    const maxAge = config.env === 'local' ? 60 * 60 * 24 * 365 : 60 * 15;
-
+  // Slide the session window forward on every active (non-notification) request.
+  // setUserSession re-encrypts and re-seals the cookie with a fresh maxAge.
+  if (!url.startsWith('/api/notifications/get')) {
+    await setUserSession(event, { userId: session.userId, token: session.token }, { maxAge });
     setCookie(event, 'user_authed', 'true', {
       httpOnly: false,
-      secure: true,
+      secure: isSecure,
       sameSite: 'strict',
-      maxAge: maxAge,
-    });
-
-    if (!url.startsWith('/api/notifications/get')) {
-      setCookie(event, 'auth_token', authToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: maxAge,
-      });
-    }
-  } catch (error: any) {
-    console.error('JWT verification failed:', error);
-    // Clear the invalid cookie to prevent repeated failures
-    setCookie(event, 'auth_token', '', { expires: new Date(0) });
-    setCookie(event, 'user_authed', '', { expires: new Date(0) });
-    // Throw an error to block unauthorized access
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Invalid or expired authentication token',
+      maxAge,
     });
   }
 });

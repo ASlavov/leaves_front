@@ -59,7 +59,7 @@
       </template>
     </div>
     <div
-      class="info-actions pt-[30px] flex gap-[25px] 2xl:flex-row flex-col items-start xl:items-center"
+      class="info-actions pt-[30px] flex flex-wrap gap-[12px] items-center"
     >
       <button
         v-if="permissionsStore.can('profile_info', 'modify')"

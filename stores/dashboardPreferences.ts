@@ -17,6 +17,7 @@ export const useDashboardPreferencesStore = defineStore('dashboardPreferencesSto
   const previewPreferences = ref<DashboardPreferences | null>(null);
   const loading = ref<boolean>(false);
   const error = ref<string | null>(null);
+  const loaded = ref(false);
 
   const setError = (msg: string | null) => {
     error.value = msg;
@@ -27,6 +28,7 @@ export const useDashboardPreferencesStore = defineStore('dashboardPreferencesSto
     previewPreferences.value = null;
     error.value = null;
     loading.value = false;
+    loaded.value = false;
   };
 
   const activePreferences = computed<DashboardPreferences>(
@@ -58,6 +60,7 @@ export const useDashboardPreferencesStore = defineStore('dashboardPreferencesSto
   };
 
   const fetchPreferences = async () => {
+    if (loaded.value) return;
     try {
       loading.value = true;
       setError(null);
@@ -71,6 +74,7 @@ export const useDashboardPreferencesStore = defineStore('dashboardPreferencesSto
         if (res.hiddenLeaveTypes) merged.hiddenLeaveTypes = res.hiddenLeaveTypes;
       }
       preferences.value = merged;
+      loaded.value = true;
     } catch (err: any) {
       console.error('Failed to fetch dashboard preferences', err);
       // Fails silently back to defaults

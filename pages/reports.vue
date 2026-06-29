@@ -177,13 +177,19 @@ const saveCustomization = () => {
   customizeOpen.value = false;
 };
 
-const fetchData = () => {
-  reportsStore.fetchSummary(
-    Number(yearStr.value),
-    selectedDeptIds.value,
-    selectedTypeIds.value,
-    selectedUserIds.value,
-  );
+const fetchData = async () => {
+  try {
+    await reportsStore.fetchSummary(
+      Number(yearStr.value),
+      selectedDeptIds.value,
+      selectedTypeIds.value,
+      selectedUserIds.value,
+    );
+  } catch (err: any) {
+    if (err?.status === 403 || err?.statusCode === 403) {
+      navigateTo('/auth/login');
+    }
+  }
 };
 
 watch([yearStr, selectedDeptIds, selectedTypeIds, selectedUserIds], fetchData, { immediate: true });

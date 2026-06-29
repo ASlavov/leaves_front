@@ -1,5 +1,5 @@
 <template>
-  <div ref="dropdownRef" class="relative">
+  <div ref="dropdownRef" class="relative" @click.self="focusInput">
     <div
       class="custom-scrollbar relative overflow-y-auto max-h-40 ps-0.5 pe-9 min-h-[40px] flex items-center flex-wrap w-full border border-[#DFEAF2] rounded-[8px] text-start text-[14px] transition-all hover:border-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-400 dark:hover:border-neutral-400 cursor-text"
       @click="focusInput"
@@ -50,9 +50,12 @@
         </svg>
       </div>
     </div>
+    <Teleport to="body">
     <div
       v-if="isOpen"
-      class="absolute mt-2 z-[110] w-full max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-neutral-900 dark:border-neutral-700 overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+      ref="teleportedDropdown"
+      class="fixed z-[300] max-h-72 p-1 space-y-0.5 bg-white border border-gray-200 rounded-lg shadow-xl dark:bg-neutral-900 dark:border-neutral-700 overflow-hidden overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+      :style="dropdownStyle"
     >
       <div
         v-if="hasOptions"
@@ -104,11 +107,12 @@
         </div>
       </div>
     </div>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import SharedUserAvatar from '@/components/shared/UserAvatar.vue';
 import type { User } from '~/types';
@@ -136,6 +140,26 @@ const inputValue = ref('');
 const isOpen = ref(false);
 const toBeFocused = ref<HTMLInputElement | null>(null);
 const dropdownRef = ref<HTMLElement | null>(null);
+const teleportedDropdown = ref<HTMLElement | null>(null);
+
+const dropdownStyle = ref<Record<string, string>>({});
+
+const updateDropdownPosition = () => {
+  if (!dropdownRef.value) return;
+  const rect = dropdownRef.value.getBoundingClientRect();
+  dropdownStyle.value = {
+    top: `${rect.bottom + 4}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+  };
+};
+
+watch(isOpen, async (open) => {
+  if (open) {
+    await nextTick();
+    updateDropdownPosition();
+  }
+});
 
 const selectedOptions = computed({
   get() {
@@ -199,7 +223,8 @@ const deselectAllOptions = () => {
   inputValue.value = '';
 };
 
-onClickOutside(dropdownRef, () => {
+onClickOutside(dropdownRef, (e) => {
+  if (teleportedDropdown.value?.contains(e.target as Node)) return;
   isOpen.value = false;
 });
 </script>

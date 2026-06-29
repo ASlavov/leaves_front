@@ -49,7 +49,7 @@ export const useCentralStore = defineStore('centralStore', () => {
   };
 
   async function init() {
-    // we're assuming user is authed
+    if (initialized.value) return; // Defensive guard — callers should check too
     try {
       if (userStore.userId) {
         // Run fundamental store initializations first
