@@ -28,20 +28,25 @@ const authStore = centralStore.authStore;
 
 const userAuthed = useCookie<string | boolean | undefined>('user_authed');
 
-// Mutex: prevents router.afterEach and the userAuthed watcher from triggering
-// concurrent inits. Without this, both fire at app mount and race each other,
-// causing every store to be initialised twice and doubling all API calls.
+// Plain module-level flags — reset to false on every page load, never touched
+// by pinia-plugin-persistedstate or any other persistence layer.
+// centralStore.initialized was used here before but pinia-persistedstate was
+// restoring it as `true` from a previous session, causing runInitCode() to
+// short-circuit and leave the page empty (most visibly after a light-mode switch).
 let initInProgress = false;
+let sessionInitDone = false;
 
 const runInitCode = async () => {
   const isAuthed = userAuthed.value === 'true' || userAuthed.value === true;
-  if (!isAuthed || centralStore.initialized || initInProgress) return;
+  if (!isAuthed || sessionInitDone || initInProgress) return;
 
   initInProgress = true;
+  sessionInitDone = true; // block re-entry immediately; reset on failure below
   try {
     await authStore.me();
     await centralStore.init();
   } catch (error: unknown) {
+    sessionInitDone = false; // allow retry if init failed
     console.error('runInitCode error:', error);
     const status = (error as any)?.status ?? (error as any)?.statusCode;
     if (status === 403 || status === 401) {
@@ -78,6 +83,7 @@ onMounted(async () => {
       if (isNewAuthed && !isOldAuthed) {
         await runInitCode();
       } else if (!isNewAuthed && isOldAuthed) {
+        sessionInitDone = false; // reset so next login triggers a fresh init
         router.push('/auth/login');
       }
     },
