@@ -70,25 +70,33 @@ const runInitCode = async () => {
 router.afterEach(runInitCode);
 
 onMounted(async () => {
-  // Explicit initial trigger — covers refresh/direct URL on SSG deployments
-  // where router.afterEach does not fire during hydration.
-  await runInitCode();
-
+  // { immediate: true } is essential for SSG (Netlify static) deployments.
+  //
+  // On a hard refresh, Nuxt hydrates from the build-time __NUXT_DATA__ state
+  // which has no user cookies (they weren't available at build time). So
+  // useCookie('user_authed').value starts as null/undefined. The watcher fires
+  // immediately with null → does nothing. Then Vue's reactive system reads
+  // document.cookie and updates userAuthed to 'true'. The watcher fires AGAIN
+  // with 'true' → runInitCode() is called at the right moment.
+  //
+  // Without immediate:true, a one-shot onMounted call fires at the wrong time
+  // (when the cookie is still null from SSG state) and nothing re-triggers it.
   watch(
     () => userAuthed.value,
     async (newValue, oldValue) => {
       const isNewAuthed = newValue === 'true' || newValue === true;
       const isOldAuthed = oldValue === 'true' || oldValue === true;
 
-      if (isNewAuthed && !isOldAuthed) {
+      if (isNewAuthed) {
+        // Covers: initial hydration update null→'true', and post-logout re-login
         await runInitCode();
-      } else if (!isNewAuthed && isOldAuthed) {
-        sessionInitDone = false; // reset so next login triggers a fresh init
+      } else if (isOldAuthed) {
+        // Covers: logout — cookie disappeared
+        sessionInitDone = false;
         router.push('/auth/login');
       }
     },
-    // Not immediate — the explicit runInitCode() call above covers initial load.
-    // This watcher only reacts to login/logout cookie changes mid-session.
+    { immediate: true },
   );
 
   watch(
